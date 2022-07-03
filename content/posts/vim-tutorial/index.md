@@ -1,10 +1,31 @@
 ---
-title: "Vim Tutorial"
+title: "The amazing vim"
+tags: [vim]
+categories: [vim]
 date: 2022-05-09T19:28:12+08:00
 ---
 
 Search a word quickly: put cursor on the word, press `/` and press `<C-R>` `<C-W>`.
 
+&nbsp;
+## 缩写的含义(Meaning of abbreviations)
+Operation
+* d - delete
+* y - yank(copy, 因为c被占了)
+* c - change
+* r - replace
+* v - visual select
+
+Scope or location
+* i - inside
+* a - around
+* f - forward
+* t - to
+
+Object
+* w - word
+* s - sentence
+* p - paragraph
 
 &nbsp;
 ## Bookmark
@@ -55,25 +76,52 @@ Search a word quickly: put cursor on the word, press `/` and press `<C-R>` `<C-W
 * `gUap`: 将光标所在位置的*段落*转为大写
 
 
+&nbsp;
+## Search and replace
+
+### case 1: search and convert to uppercase/lowercase
+我直觉想到的方式是`%s/html/HTML/gc`
+
+这种方式在简单情况下也行, 比较灵活且直观, 但是对于复杂文件不够通用且容易出错
+
+还有一种方式是先搜索, 然后一步步替换
+* 搜索: `/\vhtml\C`
+* 替换: 执行命令`gUgn`, 然后使用`n`和`.`来重复操作下一个选中项.
+
+> `gn`命令进对于sreach的匹配项使用, 类似于`n`, 但会将下一个匹配项(若光标停在match上, 那则选中当前匹配项)
+> 转为visual模式选中的状态.
+
+> 其实对于简单的文本, `n`和`.`也可以简化为`.`. 唯一的坏处就是如果两个匹配的距离太大, 
+> 你不能确认是否search了你想要的内容.
+
+
+### case 2: search the text seleted in *visual mode*
+> vim 本身并未提供这个功能, 需要借助一个脚本来完成
+
+[search the text selected in visual mode](#search-text-selected-in-visual-mode)
+
+
+
+&nbsp;
 ## 单词间跳转
+
 `w`: Move cursor to begin of next word.  
 `b`: Move cursor to begin of last word.  
 `e`: Move cursor to end of next word.
 
 
-#### Trick
+### Trick
 `w`/`b`配合`ce`使用可达到在某一行中快速移动到某个单词, 然后删除该单词开始edit.
 
 `daw`: 即 Delete A Word, 可以删除一个完整的单词, 无论当前光标的位置在哪.
 
 &nbsp;
-## Good plugin & script
+## Good plugins
 > Reference: [The Ultimate vimrc](https://github.com/amix/vimrc)
 
 ### TODO
 
-
-### Installed
+### Installed 
 [NERD Commneter - 快速注释](https://github.com/preservim/nerdcommenter#settings)
 
 [NERD Tree - 目录树](https://github.com/preservim/nerdtree)
@@ -83,3 +131,21 @@ Search a word quickly: put cursor on the word, press `/` and press `<C-R>` `<C-W
 * Usage: `gf`: 在当前window打开文件. `<C-w><C-f>`: **new vertical windows**中打开文件.
 
 [Ack.vim - 快速定位内容](https://github.com/mileszs/ack.vim)
+
+[LeaderF - Like Ctrlp but better?](https://github.com/Yggdroot/LeaderF)
+
+[barbaric - normal模式切换英文输入法](https://github.com/rlue/vim-barbaric)
+
+&nbsp;
+## Helpful script
+### search text selected in visual mode
+```vimrc
+xnoremap * :<C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
+xnoremap # :<C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
+function! s:VSetSearch(cmdtype)
+let temp = @s
+norm! gv"sy
+let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
+let @s = temp
+endfunction
+```
