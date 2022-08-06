@@ -59,7 +59,7 @@ Use same source file `tmp.c` above.
 Run `gcc -MM -MF dp.txt tmp.c`. File `dp.txt` will be created and filled with dependecies of `tmp.c` except system header files.
 
 ## -MD
-`-MD` is same as `-M -F <file>`. But the filename is basd on the object file but replacing `.o` with `.d`.   
+`-MD` is same as `-M -MF <file>`. But the filename is basd on the object file but replacing `.o` with `.d`.   
   
 **Little Demo**  
 Use same source file `tmp.c` above.  
@@ -71,7 +71,7 @@ Run `gcc -MD tmp.c`. File `tmp.d` will be created and filled with all dependecie
 ```
 
 ## -MMD
-`-MMD` is same as `-MD -F <file>`. Also named on object file but replacing `.o` with `.d`.  
+`-MMD` is same as `-MM -MF <file>`. Also named on object file but replacing `.o` with `.d`.  
   
 **Little Demo**  
 Use same source file `tmp.c` above.  
