@@ -123,3 +123,22 @@ else
 
     printf("INPUT: 0x%x, RESULT: 0x%x\n", x, rst);
 ```
+
+&nbsp;
+## 字符/字符数组的大小写转换
+```c
+#define TO_LOWER(c) (unsigned char)((c >= 'A' && c <= 'Z') ? (c | 0x20) : c)
+#define TO_UPPER(c) (unsigned char)((c >= 'a' && c <= 'z') ? (c & ~0x20) : c)
+
+#define TO_LOWER_STR(s, len) { \
+    for (int i = 0; i < len && s[i] != '\0'; i++) { \
+        s[i] = TO_LOWER(s[i]); \
+    } \
+}
+
+#define TO_UPPER_STR(s, len) {\
+    for (int i = 0; i < len && s[i] != '\0'; i++) { \
+        s[i] = TO_UPPER(s[i]); \
+    } \
+}
+```
