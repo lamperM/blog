@@ -1,4 +1,180 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Soben's Secret Base</title><link>https://wangloo.github.io/blog/</link><description>Recent content on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Sat, 04 Jun 2022 11:52:51 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>MicroKernel Learning: SeL4</title><link>https://wangloo.github.io/blog/posts/microkernel/sel4/</link><pubDate>Sat, 04 Jun 2022 11:52:51 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/microkernel/sel4/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/microkernel/sel4/ -&lt;h2 id="sel4-capabilities">seL4 Capabilities&lt;/h2>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Soben's Secret Base</title><link>https://wangloo.github.io/blog/</link><description>Recent content on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Sun, 03 Jul 2022 09:44:13 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Bit Operation Hacks</title><link>https://wangloo.github.io/blog/posts/codestyle/bit-operation-hacks/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/codestyle/bit-operation-hacks/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/codestyle/bit-operation-hacks/ -&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">unsigned&lt;/span> &lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">v&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">((&lt;/span>&lt;span style="color:#111">v&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">v&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">))&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;v is a power of 2&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;v is not a power of 2&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="统计一个数的二进制中1的数量">统计一个数的二进制中1的数量&lt;/h2>
+&lt;p>依然是利用&lt;code>v &amp;amp; (v -1)&lt;/code>的运算结果会将v的最低位的&lt;code>1&lt;/code>(如果有的话)置&lt;code>0&lt;/code>.&lt;/p>
+&lt;p>循环执行此操作就可统计v中&lt;code>1&lt;/code>的数量.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#75af00">numberof1&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">v&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">count&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">while&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">v&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">count&lt;/span>&lt;span style="color:#f92672">++&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">v&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">v&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">v&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">count&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="将一个数向上取整为2的幂">将一个数向上取整为2的幂&lt;/h2>
+&lt;p>用一个&lt;code>1&lt;/code>一直左移, 直到比这个数大为止.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">uint32_t&lt;/span> &lt;span style="color:#75af00">roundup_pow_op_two&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#00a8c8">uint32_t&lt;/span> &lt;span style="color:#111">x&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">uint32_t&lt;/span> &lt;span style="color:#111">ret&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">while&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">ret&lt;/span> &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#111">x&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">ret&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">ret&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">ret&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="向上向下对齐-检查是否对齐">向上/向下对齐, 检查是否对齐&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/* uintptr_t 代表指针的位数
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * 加uintptr_t转换的原因是: (void *)不能进行运算
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define IS_ALIGNED(X, align) (((uintptr_t)(const void *)(X)) % (align) == 0)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define ALIGN_UP(X, align) (((X) + ((align) - 1)) &amp;amp; ~((align) - 1))
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define ALIGN_DOWN(x, align) ((X) &amp;amp; ~((align) - 1))
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define X (0x12345675)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define align (1 &amp;lt;&amp;lt; 2)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">v&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">IS_ALIGNED&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">X&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">align&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#111">v&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Given X(0x%x) is not align to 0x%08x&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">X&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">align&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;After align up, new X = 0x%x&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">ALIGN_UP&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">X&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">align&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;After align down, new X = 0x%x&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">ALIGN_DOWN&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">X&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">align&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Give X(0x%x) is aligned to 0x%08x&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">X&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">align&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;After align up, new X = 0x%x&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">ALIGN_UP&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">X&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">align&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;After align down, new X = 0x%x&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">ALIGN_DOWN&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">X&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">align&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="检查两个有符号数是否异号">检查两个有符号数是否异号&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">x&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">y&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">((&lt;/span>&lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">^&lt;/span> &lt;span style="color:#111">y&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;They have opposite signs&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;They have same signs&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="大小端转换">大小端转换&lt;/h2>
+&lt;p> &lt;/p>
+&lt;h2 id="对某个位的getsetclear操作">对某个位的get/set/clear操作&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define GET_BIT(x, bit) ( ((x) &amp;amp; (1ULL &amp;lt;&amp;lt; (bit))) &amp;gt;&amp;gt; (bit) )
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define SET_BIT(x, bit) ( (x) |= (1ULL &amp;lt;&amp;lt; (bit)) )
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define CLEAR_BIT(x, bit) ( (x) &amp;amp;= ~(1ULL &amp;lt;&amp;lt; (bit)) )
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Release note:&lt;/p>
+&lt;ol>
+&lt;li>添加对&lt;code>unsigned long long&lt;/code>长度的支持&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="sign-extending-from-a-varaiable-bit-width">Sign extending from a varaiable bit-width&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">bits&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">8&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// number of bits representing the number in x
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0xFFC1&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// ready to get sign-extended
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">rst&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// resulting sign-extended number
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#111">mask&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1U&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">bits&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// mask can be pre-computed if bits if fixed.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#111">((&lt;/span>&lt;span style="color:#ae81ff">1U&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#111">bits&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// cut x if it holds more bits
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">rst&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">^&lt;/span> &lt;span style="color:#111">mask&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#111">mask&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// excellent trick!
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;INPUT: 0x%x, RESULT: 0x%x&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">x&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">rst&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/blog/posts/codestyle/bit-operation-hacks/ - @2019 Notepadium.</description></item><item><title>Improving the quality of C code</title><link>https://wangloo.github.io/blog/posts/codestyle/improve_quality/</link><pubDate>Tue, 14 Jun 2022 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/codestyle/improve_quality/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/codestyle/improve_quality/ -&lt;h2 id="添加更多的编译选项comiler-options来防止bug">添加更多的编译选项(comiler options)来防止bug&lt;/h2>
+&lt;p>对于我常用的&lt;code>GCC&lt;/code>, 推荐开启一下的compiler options:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>-Wall&lt;/code>: enable a lot of common warnings&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>-Wno-format-truncation&lt;/code>: warns about the snprintf output buffer not being
+large enough for a corresponding “%s” in the format string.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>-Werror&lt;/code>: turn warnings into errors.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="动态申请的空间到底要不要释放">动态申请的空间到底要不要释放&lt;/h2>
+&lt;p>When using a barebones embedded OS, you absolutely need to tightly manage your memory.&lt;/p>
+&lt;p>但是, 如果你是写应用业务的代码, 特别是在内存足够的场景下. 最好不要手动释放内存,
+因为当线程/进程退出时, 操作系统会自动帮我们释放. &lt;strong>某些情况下, 释放内存的操作会很大程度上增加逻辑的复杂度&lt;/strong>.&lt;/p>
+&lt;blockquote>
+&lt;p>如果你是一个内核程序员, 则必须手动的释放. 不用怀疑.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h3 id="尽可能在创建变量时赋初值">尽可能在创建变量时赋初值&lt;/h3>
+&lt;p>放置某些变量创建后是 &lt;code>magic value&lt;/code>. 而使用这些变量可能不会立马导致错误, 但是这是一个隐患.&lt;/p>
+&lt;p>但这会产生一个问题, 有时我们定义变量之后的不久之后就会对其赋予正确的值, 这时候初值就是
+多余的. 而且维护者可能认为这个值是meaningful, 这就要求我们如果要赋初值, 就要说明这个值
+仅仅是&lt;strong>无意义的&lt;/strong>初值.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h3 id="使用define-enum">使用&lt;code>#define&lt;/code>, &lt;code>enum&lt;/code>&lt;/h3>
+&lt;p>对于代码在不同地方使用的同一个值, 应使用&lt;code>#define&lt;/code>来声明使得代码&lt;strong>maintainable&lt;/strong>.&lt;/p>
+&lt;p>如果这些值有多个且能规划为同一类别, 则还可将&lt;code>#define&lt;/code>的方式换为&lt;code>enum&lt;/code>. 这会使代码更加&lt;strong>meaningful&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>使用&lt;code>enum&lt;/code>使还要注意其所占内存空间在不同架构中可能不同的问题, see &lt;a href="https://www.cnblogs.com/bluettt/p/16041867.html">enum的优势和漏洞&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h3 id="使用typedef优化function-pointer">使用&lt;code>typedef&lt;/code>优化function pointer&lt;/h3>
+&lt;p> &lt;/p>
+&lt;h3 id="重定义一套自己的类型">重定义一套自己的类型&lt;/h3>
+&lt;p>在开发大项目时, 需要考虑可移植性的情况下, 最好利用&lt;code>typedef&lt;/code>对类型进行重定义.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#if SYSTEM1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">typedef&lt;/span> &lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">INT32&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#else
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">typedef&lt;/span> &lt;span style="color:#00a8c8">long&lt;/span> &lt;span style="color:#111">INT32&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#endif
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如上, 对于某些架构&lt;code>int&lt;/code>类型可能不是32bit, 此时就要使用&lt;code>long&lt;/code>. 这种定义的方式会保证我们的系统
+在任何架构中都不会出现类型的bug. 而且也增加了代码的&lt;strong>readability&lt;/strong>.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="善用0">善用&lt;code>~0&lt;/code>&lt;/h2>
+&lt;p>在做嵌入式编程时, 有时在设置掩码(mask)或者其他情况会要用到&lt;strong>全1&lt;/strong>的变量值, 你是否经常这样声明?&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">mask&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0xffff&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>暂且不谈&lt;code>int&lt;/code>类型到底占多少字节的问题. 就像上面一样, 我们程序员经常忘记某个类型的大小,
+而少添加了&lt;code>f&lt;/code>. 会导致变量&lt;code>mask&lt;/code>的值不是全1(32位情况下).&lt;/p>
+&lt;p>这是要变换一下思维, 使用&lt;code>~0&lt;/code>的定义方法就可轻松化解, 无需管变量的类型是什么.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">mask&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">~&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="合理的使用goto语句">合理的使用&lt;code>goto&lt;/code>语句&lt;/h2>
+&lt;p>在大学课堂中, 我们老师说过禁止使用&lt;code>goto&lt;/code>语句, 但却没有给出明确的原因.&lt;/p>
+&lt;p>实际上, &lt;strong>合理的&lt;/strong>使用&lt;code>goto&lt;/code>能够极大的减少程序的冗余度.&lt;/p>
+&lt;p>&lt;code>goto&lt;/code>语句常用于程序出现错误要退出时, 可能有多个情况会使用重复的代码处理,
+例如释放一些allocated memory. 相较于使用&lt;code>flag&lt;/code>, 使用&lt;code>goto&lt;/code>显然更加clearly and readability.&lt;/p>
+&lt;p>所以, 在面对重复的错误处理代码时, 想想能不能用&lt;code>goto&lt;/code>进行优化. 当然, &lt;strong>避免过早优化&lt;/strong>.&lt;/p>
+&lt;blockquote>
+&lt;p>注意, &lt;code>goto&lt;/code>出现的场景其实很受限. Never use a backward &lt;code>goto&lt;/code> or jump into control statements.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="永远为你的函数设置error-return-value">永远为你的函数设置error return value&lt;/h2>
+&lt;p>一旦你的函数可能被其他人调用, 那么养成设置return value的习惯. 即便你现在的实现
+并不会产生任何错误, 也请返回&lt;code>success&lt;/code>.&lt;/p>
+&lt;p>这样做的原因是, caller可以根据你的定义做错误判断, 即便以后你的实现加上了出错情况,
+上层的代码也不需要修改.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="变量类型的选择">变量类型的选择&lt;/h2>
+&lt;ul>
+&lt;li>名字, 特定不变的字符串使用&lt;code>const char *&lt;/code>, 甚至&lt;code>const char const*&lt;/code>&lt;/li>
+&lt;li>长度使用&lt;code>size_t&lt;/code>&lt;/li>
+&lt;li>表示类型的参数尽可能使用&lt;code>enum&lt;/code>&lt;/li>
+&lt;li>循环变量i使用&lt;code>signed&lt;/code>, 避免溢出后出错&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="reference">Reference&lt;/h2>
+&lt;p>&lt;a href="https://www.msweet.org/blog/2020-12-31-how-i-improve-my-c-code-quality.html">How I Improve My (C) Code Quality&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.codeproject.com/Articles/357065/Ten-Fallacies-of-Good-C-Code">Ten Fallacies of Good C Code&lt;/a>&lt;/p>
+- https://wangloo.github.io/blog/posts/codestyle/improve_quality/ - @2019 Notepadium.</description></item><item><title>MicroKernel Learning: SeL4</title><link>https://wangloo.github.io/blog/posts/microkernel/sel4/</link><pubDate>Sat, 04 Jun 2022 11:52:51 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/microkernel/sel4/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/microkernel/sel4/ -&lt;h2 id="sel4-capabilities">seL4 Capabilities&lt;/h2>
 &lt;p>In seL4, capabilities are stored in &lt;strong>C-space&lt;/strong>. C-space is a hierarchical data structure very similar to &lt;strong>page table&lt;/strong>.&lt;/p>
 &lt;ul>
 &lt;li>page table is a mapping from virtual address to physical address.&lt;/li>
@@ -302,7 +478,30 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-- https://wangloo.github.io/blog/posts/html-css-learning/0/ - @2019 Notepadium.</description></item><item><title>Vim Tutorial</title><link>https://wangloo.github.io/blog/posts/vim-tutorial/</link><pubDate>Mon, 09 May 2022 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/vim-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/vim-tutorial/ -&lt;p>Search a word quickly: put cursor on the word, press &lt;code>/&lt;/code> and press &lt;code>&amp;lt;C-R&amp;gt;&lt;/code> &lt;code>&amp;lt;C-W&amp;gt;&lt;/code>.&lt;/p>
+- https://wangloo.github.io/blog/posts/html-css-learning/0/ - @2019 Notepadium.</description></item><item><title>The amazing vim</title><link>https://wangloo.github.io/blog/posts/vim-tutorial/</link><pubDate>Mon, 09 May 2022 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/vim-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/vim-tutorial/ -&lt;p>Search a word quickly: put cursor on the word, press &lt;code>/&lt;/code> and press &lt;code>&amp;lt;C-R&amp;gt;&lt;/code> &lt;code>&amp;lt;C-W&amp;gt;&lt;/code>.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="缩写的含义meaning-of-abbreviations">缩写的含义(Meaning of abbreviations)&lt;/h2>
+&lt;p>Operation&lt;/p>
+&lt;ul>
+&lt;li>d - delete&lt;/li>
+&lt;li>y - yank(copy, 因为c被占了)&lt;/li>
+&lt;li>c - change&lt;/li>
+&lt;li>r - replace&lt;/li>
+&lt;li>v - visual select&lt;/li>
+&lt;/ul>
+&lt;p>Scope or location&lt;/p>
+&lt;ul>
+&lt;li>i - inside&lt;/li>
+&lt;li>a - around&lt;/li>
+&lt;li>f - forward&lt;/li>
+&lt;li>t - to&lt;/li>
+&lt;/ul>
+&lt;p>Object&lt;/p>
+&lt;ul>
+&lt;li>w - word&lt;/li>
+&lt;li>s - sentence&lt;/li>
+&lt;li>p - paragraph&lt;/li>
+&lt;/ul>
 &lt;p> &lt;/p>
 &lt;h2 id="bookmark">Bookmark&lt;/h2>
 &lt;p>&lt;code>ma&lt;/code>: create bookmark &lt;code>a&lt;/code> inside file.&lt;br>
@@ -356,15 +555,39 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;li>&lt;code>gUaw&lt;/code>: 将光标所在位置的&lt;em>单词&lt;/em>转为大写&lt;/li>
 &lt;li>&lt;code>gUap&lt;/code>: 将光标所在位置的&lt;em>段落&lt;/em>转为大写&lt;/li>
 &lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="search-and-replace">Search and replace&lt;/h2>
+&lt;h3 id="case-1-search-and-convert-to-uppercaselowercase">case 1: search and convert to uppercase/lowercase&lt;/h3>
+&lt;p>我直觉想到的方式是&lt;code>%s/html/HTML/gc&lt;/code>&lt;/p>
+&lt;p>这种方式在简单情况下也行, 比较灵活且直观, 但是对于复杂文件不够通用且容易出错&lt;/p>
+&lt;p>还有一种方式是先搜索, 然后一步步替换&lt;/p>
+&lt;ul>
+&lt;li>搜索: &lt;code>/\vhtml\C&lt;/code>&lt;/li>
+&lt;li>替换: 执行命令&lt;code>gUgn&lt;/code>, 然后使用&lt;code>n&lt;/code>和&lt;code>.&lt;/code>来重复操作下一个选中项.&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>&lt;code>gn&lt;/code>命令进对于sreach的匹配项使用, 类似于&lt;code>n&lt;/code>, 但会将下一个匹配项(若光标停在match上, 那则选中当前匹配项)
+转为visual模式选中的状态.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>其实对于简单的文本, &lt;code>n&lt;/code>和&lt;code>.&lt;/code>也可以简化为&lt;code>.&lt;/code>. 唯一的坏处就是如果两个匹配的距离太大,
+你不能确认是否search了你想要的内容.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="case-2-search-the-text-seleted-in-visual-mode">case 2: search the text seleted in &lt;em>visual mode&lt;/em>&lt;/h3>
+&lt;blockquote>
+&lt;p>vim 本身并未提供这个功能, 需要借助一个脚本来完成&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;a href="#search-text-selected-in-visual-mode">search the text selected in visual mode&lt;/a>&lt;/p>
+&lt;p> &lt;/p>
 &lt;h2 id="单词间跳转">单词间跳转&lt;/h2>
 &lt;p>&lt;code>w&lt;/code>: Move cursor to begin of next word.&lt;br>
 &lt;code>b&lt;/code>: Move cursor to begin of last word.&lt;br>
 &lt;code>e&lt;/code>: Move cursor to end of next word.&lt;/p>
-&lt;h4 id="trick-2">Trick&lt;/h4>
+&lt;h3 id="trick-2">Trick&lt;/h3>
 &lt;p>&lt;code>w&lt;/code>/&lt;code>b&lt;/code>配合&lt;code>ce&lt;/code>使用可达到在某一行中快速移动到某个单词, 然后删除该单词开始edit.&lt;/p>
 &lt;p>&lt;code>daw&lt;/code>: 即 Delete A Word, 可以删除一个完整的单词, 无论当前光标的位置在哪.&lt;/p>
 &lt;p> &lt;/p>
-&lt;h2 id="good-plugin--script">Good plugin &amp;amp; script&lt;/h2>
+&lt;h2 id="good-plugins">Good plugins&lt;/h2>
 &lt;blockquote>
 &lt;p>Reference: &lt;a href="https://github.com/amix/vimrc">The Ultimate vimrc&lt;/a>&lt;/p>
 &lt;/blockquote>
@@ -378,7 +601,20 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;li>Usage: &lt;code>gf&lt;/code>: 在当前window打开文件. &lt;code>&amp;lt;C-w&amp;gt;&amp;lt;C-f&amp;gt;&lt;/code>: &lt;strong>new vertical windows&lt;/strong>中打开文件.&lt;/li>
 &lt;/ul>
 &lt;p>&lt;a href="https://github.com/mileszs/ack.vim">Ack.vim - 快速定位内容&lt;/a>&lt;/p>
-- https://wangloo.github.io/blog/posts/vim-tutorial/ - @2019 Notepadium.</description></item><item><title>reveal.js Tutorial</title><link>https://wangloo.github.io/blog/posts/revealjs-tutorial/</link><pubDate>Sun, 08 May 2022 19:34:44 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/revealjs-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/revealjs-tutorial/ -&lt;h1 id="change-code-theme">Change code theme&lt;/h1>
+&lt;p>&lt;a href="https://github.com/Yggdroot/LeaderF">LeaderF - Like Ctrlp but better?&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/rlue/vim-barbaric">barbaric - normal模式切换英文输入法&lt;/a>&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="helpful-script">Helpful script&lt;/h2>
+&lt;h3 id="search-text-selected-in-visual-mode">search text selected in visual mode&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-vimrc" data-lang="vimrc">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">xnoremap&lt;/span> * :&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">C&lt;/span>&lt;span style="color:#111">-&lt;/span>&lt;span style="color:#75af00">u&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#75af00">call&lt;/span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">SID&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#75af00">VSetSearch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/&amp;#39;&lt;/span>&lt;span style="color:#111">)&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#d88200">/&amp;lt;C-R&amp;gt;=@/&lt;/span>&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#75af00">xnoremap&lt;/span> # :&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">C&lt;/span>&lt;span style="color:#111">-&lt;/span>&lt;span style="color:#75af00">u&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#75af00">call&lt;/span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">SID&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#75af00">VSetSearch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;?&amp;#39;&lt;/span>&lt;span style="color:#111">)&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>?&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">C&lt;/span>&lt;span style="color:#111">-&lt;/span>&lt;span style="color:#75af00">R&lt;/span>&lt;span style="color:#111">&amp;gt;=&lt;/span>@/&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">function&lt;/span>&lt;span style="color:#111">!&lt;/span> &lt;span style="color:#75af00">s&lt;/span>:&lt;span style="color:#75af00">VSetSearch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">cmdtype&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#75af00">temp&lt;/span> &lt;span style="color:#111">=&lt;/span> @&lt;span style="color:#75af00">s&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#75af00">norm&lt;/span>&lt;span style="color:#111">!&lt;/span> &lt;span style="color:#75af00">gv&lt;/span>&amp;#34;&lt;span style="color:#75af00">sy&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">let&lt;/span> @/ &lt;span style="color:#111">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;\V&amp;#39;&lt;/span> . &lt;span style="color:#75af00">substitute&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">escape&lt;/span>&lt;span style="color:#111">(&lt;/span>@&lt;span style="color:#75af00">s&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">a&lt;/span>:&lt;span style="color:#75af00">cmdtype&lt;/span>.&lt;span style="color:#d88200">&amp;#39;\&amp;#39;&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#d88200">&amp;#39;\n&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;\\n&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;g&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">let&lt;/span> @&lt;span style="color:#75af00">s&lt;/span> &lt;span style="color:#111">=&lt;/span> &lt;span style="color:#75af00">temp&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">endfunction&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/blog/posts/vim-tutorial/ - @2019 Notepadium.</description></item><item><title>reveal.js Tutorial</title><link>https://wangloo.github.io/blog/posts/revealjs-tutorial/</link><pubDate>Sun, 08 May 2022 19:34:44 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/revealjs-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/revealjs-tutorial/ -&lt;h1 id="change-code-theme">Change code theme&lt;/h1>
 &lt;p>Default use &lt;code>monokai.css&lt;/code>. see &lt;a href="https://revealjs.com/code/">官方文档&lt;/a>&lt;/p>
 &lt;p>修改需要下载新的&lt;code>css&lt;/code>放到&lt;code>plugin/highlight/&lt;/code>目录下.&lt;/p>
 &lt;p>其他可用的&lt;code>css&lt;/code>在&lt;a href="https://github.com/highlightjs/highlight.js/tree/main/src/styles">highlight.js仓库&lt;/a>中下载.&lt;/p>
@@ -465,295 +701,4 @@ Unified syntax is newer and better, and those &lt;code>#&lt;/code> and &lt;code>
 &lt;blockquote>
 &lt;p>&lt;code>sp&lt;/code> is an alias of &lt;code>sp_el0&lt;/code>. Do NOT treat &lt;code>sp&lt;/code> as general-purpose register.&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/blog/posts/armv8/register/ - @2019 Notepadium.</description></item><item><title>Numberical Analysis Exam</title><link>https://wangloo.github.io/blog/posts/numberical-analysis/</link><pubDate>Sat, 07 May 2022 18:04:58 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/numberical-analysis/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/numberical-analysis/ -&lt;p>&lt;img src="qingdao-tzjt.JPG" alt="qingdao">&lt;/p>
-&lt;h1 id="考试大纲">考试大纲&lt;/h1>
-&lt;p>🎯 To Reader:&lt;/p>
-&lt;p>This blog is JUST FOR EXAMINATION! If you are interested in numberical analysis, please quit this web.
-I try to sort out the knowledge points of the course, just to pass the exam.&lt;/p>
-&lt;p>Based on the course of Professor Zhong Erjie of UESTC.&lt;/p>
-&lt;p>💢 &lt;strong>I hate mathematics!&lt;/strong>&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="第二章-非线性方程方程组的求解">第二章 非线性方程/方程组的求解&lt;/h2>
-&lt;h3 id="1-二分法及迭代">1. 二分法及迭代&lt;/h3>
-&lt;ul>
-&lt;li>二分法误差估计定理&lt;/li>
-&lt;/ul>
-&lt;h3 id="2-不动点迭代">2. 不动点迭代&lt;/h3>
-&lt;ul>
-&lt;li>不动点及不动点迭代的概念&lt;/li>
-&lt;li>迭代格式的选择? 是否收敛?&lt;/li>
-&lt;li>迭代的初值是否合适?&lt;/li>
-&lt;/ul>
-&lt;h3 id="3-牛顿法解非线性方程">3. 牛顿法解非线性方程&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 如果函数&lt;code>f(x)&lt;/code>是线性的, 那么它的求根问题就会简化. 牛顿法实质上是一种线性化方法, 将非线性方程逐步归结为某种线性方程来求解.&lt;/p>
-&lt;/blockquote>
-&lt;p>牛顿法的迭代格式:
-$$
-x^{k+1} = x^k - \frac{f(x^k)}{f^&amp;rsquo;(x^k)}
-$$&lt;/p>
-&lt;h3 id="4-弦截法">4. 弦截法&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 弦截法是牛顿法的一个改进. 牛顿法求根时需要计算&lt;code>f'(x)&lt;/code>, 而导数的计算往往困难. 弦截法使用&lt;em>差商&lt;/em>来回避导数的计算.&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="5-收敛阶">5. 收敛阶&lt;/h3>
-&lt;h3 id="6-非线性方程组的牛顿迭代格式">6. 非线性方程组的牛顿迭代格式&lt;/h3>
-&lt;ul>
-&lt;li>雅可比矩阵是什么?&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="第三章-直接法解线性方程组">第三章 直接法解线性方程组&lt;/h2>
-&lt;h3 id="1-gauss消元法">1. Gauss消元法&lt;/h3>
-&lt;p>求解过程的算法复杂度为&lt;code>O(n^2)&lt;/code>, 消元过程的算法复杂度为&lt;code>O(n^3)&lt;/code>.&lt;/p>
-&lt;h3 id="2-直接三角分解法doolittle分解法">2. 直接三角分解法(Doolittle分解法)&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: &lt;code>直接&lt;/code>意味着可以由A的元素直接计算L和U, 不需要任何的中间步骤.&lt;/p>
-&lt;/blockquote>
-&lt;p>一旦L和U得到, 求解&lt;code>Ax=b&lt;/code>就可以等价表示为求解两个三角形方程组:&lt;/p>
-&lt;ol>
-&lt;li>Ly=b, 求y&lt;/li>
-&lt;li>Ux=y. 求x&lt;/li>
-&lt;/ol>
-&lt;p> &lt;/p>
-&lt;h2 id="第四章-迭代法解线性方程组">第四章 迭代法解线性方程组&lt;/h2>
-&lt;blockquote>
-&lt;p>背景: 对于线性方程组&lt;code>Ax=b&lt;/code>, 当A为低阶稠密矩阵时, [选主元消去法]是求解的有效方法.&lt;br>
-但是实际情况中A大都是&lt;em>巨型的稀疏矩阵&lt;/em>, 这是采用迭代法来求解是合适的. 迭代法可以利用A中有大量零元素的特点.&lt;/p>
-&lt;/blockquote>
-&lt;ul>
-&lt;li>迭代法&lt;em>不一定&lt;/em>最终能够逼近方程组的解, 认识误差向量的概念.&lt;/li>
-&lt;/ul>
-&lt;h3 id="1-jacobi迭代">1. Jacobi迭代&lt;/h3>
-&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=2&amp;amp;spm_id_from=pageDriver">雅可比迭代格式和收敛性的判别&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=4&amp;amp;t=76.0">快速计算Bj的特征值&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=4&amp;amp;t=268.1">Jacobi迭代由A直接看出Bj&lt;/a>&lt;/p>
-&lt;h3 id="2-seidel迭代">2. Seidel迭代&lt;/h3>
-&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=6">Seidel迭代收敛格式和收敛性的判别&lt;/a>&lt;/p>
-&lt;p>Seidel迭代独有的判断收敛性的方式: 若A为&lt;code>对称阵&lt;/code>, 且A&lt;code>正定&lt;/code>, 那么迭代收敛.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="第五章-插值法">第五章 插值法&lt;/h2>
-&lt;h3 id="1-插值方法与插值问题">1. 插值方法与插值问题&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 仅已知某些点和该点的函数值的情况下, 如何模拟一个插值函数&lt;code>P(x)&lt;/code>, 使得误差最小.&lt;/p>
-&lt;/blockquote>
-&lt;ul>
-&lt;li>什么是插值函数P(x)? 被插函数? 插值节点? 插值余项?&lt;/li>
-&lt;/ul>
-&lt;h3 id="2-多项式插值">2. 多项式插值&lt;/h3>
-&lt;ul>
-&lt;li>可证明多项式P(x)存在唯一.&lt;/li>
-&lt;li>多项式插值通过解方程组就能得到解&lt;code>(a0, a1,..., an)&lt;/code>.&lt;/li>
-&lt;/ul>
-&lt;h3 id="3-拉格朗日插值公式">3. 拉格朗日插值公式&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 虽然上面的多项式插值能否解决n+1个点的光滑函数, 且解是唯一的. 但是&lt;strong>解方程组是很麻烦的&lt;/strong>.&lt;/p>
-&lt;/blockquote>
-&lt;p>拉格朗日插值公式:
-$$
-L_n(x) = l_0(x)y_0 + l_1(x)y_1 + \dots + l_n(x)y_n
-$$
-插值基函数:&lt;/p>
-&lt;p>插值条件(插值系数):
-$$
-y_0 = f(x_0), y_1 = f(x_1), \dots,y_n = f(x_n)
-$$&lt;/p>
-&lt;p>误差余项Rn(x)&lt;/p>
-&lt;h3 id="4-牛顿插值公式">4. 牛顿插值公式&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 给定5个插值节点及其函数值, 可以得到L4(x); 由于某种原因, 需要加入一个新的插值节点. Lagrange插值法之前的计算结果(l)均失效, 需要重新计算. 非常的不方便.&lt;/p>
-&lt;/blockquote>
-&lt;ul>
-&lt;li>牛顿法是基于&lt;strong>差商&lt;/strong>的概念. 导数是差商的极限.&lt;/li>
-&lt;li>差商的差商是高阶差商.&lt;/li>
-&lt;/ul>
-&lt;p>牛顿插值法的插值函数(以二次插值举例):
-$$
-P(x) = a_0 + a_1(x-x_0) + a_2(x-x_0)(x-x_1)
-$$
-需要做的就是解出系数&lt;code>a0,a1,...&lt;/code>.&lt;/p>
-&lt;p>所以引入差商的符号:
-$$
-a_1=f[x_0,x_1]=\frac{f(x_1)-f(x_0)}{x_1-x_0}
-$$
-$$
-a_2=f[x_0,x_1,x_2]=\frac{f[x_1,x_2]-f[x_0,x_1]}{x_2-x_0}
-$$&lt;/p>
-&lt;h3 id="5-hermite插值">5. Hermite插值&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 有时我们已知的条件不都是函数值, 也有导数值. 例如已知两个点的函数值和两个点的导数值, 可以应用Heimite插值法得到三次多项式.&lt;/p>
-&lt;/blockquote>
-&lt;p>求Hermite插值函数的方法: 构造差商表, &lt;strong>重复节点特殊处理&lt;/strong>.&lt;/p>
-&lt;p>Hermite插值方法的余项证明与Langrange插值法相同.&lt;/p>
-&lt;h3 id="6-分段低次插值">6. 分段低次插值&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 次数太高的多项式插值的效果不好. 比如龙格现象.&lt;/p>
-&lt;/blockquote>
-&lt;ul>
-&lt;li>分段: 把被插值函数所在的大区间分成一个个的小区间.&lt;/li>
-&lt;li>低次: 每个小区间上用次数不超过&lt;code>3&lt;/code>的函数来逼近&lt;/li>
-&lt;/ul>
-&lt;h4 id="61-分段线性插值">6.1 分段线性插值&lt;/h4>
-&lt;p>就是分段折线&lt;/p>
-&lt;p>分段线性插值的优点:&lt;/p>
-&lt;ol>
-&lt;li>简单&lt;/li>
-&lt;li>当二阶导数趋近0时, 一定收敛&lt;/li>
-&lt;/ol>
-&lt;p>分段线性插值的缺点:&lt;/p>
-&lt;ol>
-&lt;li>分段折线不光滑, 分段点处不能求导.&lt;/li>
-&lt;/ol>
-&lt;h4 id="62-分段hermite插值">6.2 分段Hermite插值&lt;/h4>
-&lt;blockquote>
-&lt;p>背景: 为了解决分段线性插值的缺点(存在尖点).&lt;/p>
-&lt;/blockquote>
-&lt;p>已知函数在(n+1)个点的函数值值以及其导数值, 去构造一阶连续可导函数.&lt;/p>
-&lt;p>分段Hermite插值根据(n+1)个已知点划分为(n+1)个区间. 这样在每个小区间上都已知&lt;code>4&lt;/code>个条件, 可以使用&lt;code>3&lt;/code>次Hermite插值.&lt;/p>
-&lt;p>结论: 已知(2n+2)个条件的情况下, 居然只得到&lt;strong>一阶连续可微函数&lt;/strong>. 结论太差!&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="第六章-拟合">第六章 拟合&lt;/h2>
-&lt;p>🔍 &lt;strong>插值, 拟合, 逼近的区别&lt;/strong>&lt;/p>
-&lt;h4 id="1-最佳平方逼近">1. 最佳平方逼近&lt;/h4>
-&lt;h4 id="2-最小二乘法">2. 最小二乘法&lt;/h4>
-&lt;blockquote>
-&lt;p>背景: 已知不共线的三点, 如何确定一条&lt;strong>可信&lt;/strong>的直线.&lt;/p>
-&lt;/blockquote>
-&lt;p>三个点可以用插值来模拟二次多项式, 但题目要求了用一次多项式, 这是插值无法做到的.&lt;/p>
-&lt;p>不共线的三点不可能同时经过一条直线, 所以要用逼近的思想. 找一条近似的直线, 使得&lt;strong>误差&lt;/strong>最小.&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>与插值的区别&lt;/strong>: 插值是明确给出&lt;code>n+1&lt;/code>个插值条件, 得到&lt;code>n&lt;/code>次多项式.&lt;/li>
-&lt;li>&lt;strong>如何定义误差最小?&lt;/strong>: 函数间的距离.&lt;/li>
-&lt;/ul>
-&lt;h3 id="1-线性拟合">1. 线性拟合&lt;/h3>
-&lt;p>拟合的函数是&lt;code>n&lt;/code>次多项式, 可转化为超定方程&lt;code>GX&lt;/code>.&lt;/p>
-&lt;ul>
-&lt;li>其中规定&lt;code>G&lt;/code>为系数矩阵, &lt;code>X&lt;/code>为变量的列向量.&lt;/li>
-&lt;li>同时定义列向量&lt;code>F&lt;/code>为给出的函数值.&lt;/li>
-&lt;li>&lt;code>GX=F&lt;/code>是超定方程组, 没有准确解. 得到残差最小的解的方法即&lt;strong>最小二乘法&lt;/strong>.&lt;/li>
-&lt;/ul>
-&lt;p>所以线性拟合的残差&lt;code>r = |GX - F|&lt;/code>, 而找到目标函数的宗旨就是使&lt;code>r&lt;/code>最小. 使用&lt;strong>初等变分原理&lt;/strong>将这个问题转化为&lt;strong>正规方程组&lt;/strong>求解的问题.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="第七章-数值积分">第七章 数值积分&lt;/h2>
-&lt;blockquote>
-&lt;p>背景: 定积分的计算中可能无法找到原函数的情况. 考虑定积分的本质是一句具体的数, 我们的目标就是找到这个数的近似值, 越接近越好.&lt;/p>
-&lt;/blockquote>
-&lt;p>解决的两种思路: &lt;code>积分中值定理&lt;/code> 和 &lt;code>插值型求积公式(近似被积函数)&lt;/code>.&lt;/p>
-&lt;h3 id="1-积分中值定理">1. 积分中值定理&lt;/h3>
-&lt;p>基本的积分中值定理:
-$$
-\int_{a}^{b}f(x)dx = f(\xi)(b-a)
-$$&lt;/p>
-&lt;p>将一个区域的面积转化为矩形的面积. 如何确定矩形的高呢? &lt;code>左矩阵&lt;/code>, &lt;code>右矩阵&lt;/code>, &lt;code>中间矩阵&lt;/code>, &lt;code>梯形公式&lt;/code>.&lt;/p>
-&lt;p>更常用的积分公式是 在乘积函数积分中, 如果&lt;code>g(x)&lt;/code>不变号, 则有:
-$$
-\int_{a}^{b}g(x)f(x)dx =f(\xi)\int_{a}^{b}g(x)dx
-$$&lt;/p>
-&lt;h3 id="2-插值型求积公式">2. 插值型求积公式&lt;/h3>
-&lt;p>在被积函数很复杂的情况下, 可以对其进行近似处理, 例如使用&lt;code>Lagrange插值法&lt;/code>.&lt;/p>
-&lt;h4 id="二次插值-simpson公式">二次插值: Simpson公式&lt;/h4>
-&lt;p>取二次插值的步长&lt;code>h=(b-a)/2&lt;/code>, 即增加一个插值节点&lt;code>(b-a)/2&lt;/code>, Simpson公式化简的结果为:
-$$
-\int_{a}^{b}f(x)dx = \frac{b-a}{6}[f(a)+4f(\frac{a+b}{2})+f(b)]+R[f]
-$$&lt;/p>
-&lt;p>📌 Simpson公式满足&lt;code>3&lt;/code>阶代数精度. 虽然它只是二次插值得到的.&lt;/p>
-&lt;h3 id="3-余项">3. 余项&lt;/h3>
-&lt;ul>
-&lt;li>插值型求积公式的余项, 即对应的插值方法(如Lagrange, Newton)的余项在区间上的积分.&lt;/li>
-&lt;li>梯形公式方法的余项可以用&lt;strong>积分中值定理&lt;/strong>来优化.&lt;/li>
-&lt;li>Simpson公式的余项&lt;strong>不能&lt;/strong>使用积分中值定理来优化, 因为不满足保号的条件.&lt;/li>
-&lt;/ul>
-&lt;h3 id="4-衡量求积公式的好坏">4. 衡量求积公式的好坏&lt;/h3>
-&lt;p>&lt;strong>代数精度&lt;/strong>: 不是一种误差, 而是对误差的描述.&lt;/p>
-&lt;p>如何得知某个公式的代数精度: 只要带入一个m次多项式验证余项是否为0即可.&lt;/p>
-&lt;h3 id="5复合求积公式">5.复合求积公式&lt;/h3>
-&lt;p>为了提高精度通常把积分区间分为若干个子区间, 再在每个子区间上应用低阶求积公式.&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>复合梯形公式&lt;/code>: 将区间等分.&lt;/li>
-&lt;li>&lt;code>复合simpson公式&lt;/code>: 将区间偶数等分.&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="第八章-常微分方程初值问题数值解法">第八章 常微分方程初值问题数值解法&lt;/h2>
-&lt;p>将研究的内容进一步限定为: &lt;code>一阶初值问题&lt;/code>, &lt;code>单步法&lt;/code>.&lt;/p>
-&lt;blockquote>
-&lt;p>背景: 在无法给出解析表达式时如果利用数值方法求出&lt;code>y&lt;/code>的近似解?&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="1-简单的数值方法">1. 简单的数值方法&lt;/h3>
-&lt;h4 id="11-euler公式">1.1 Euler公式&lt;/h4>
-&lt;p>使用&lt;code>一阶向前差商&lt;/code>近似替代&lt;code>y'&lt;/code>. 得到递推的数列表达式:
-$$
-y_{n+1} = y_{n} + hf(x_n,y_n), n=0,1,2,&amp;hellip;
-$$&lt;/p>
-&lt;p>&lt;strong>误差&lt;/strong>: Euler法使用的近似代替只有&lt;code>一阶精度&lt;/code>, 所以误差很大. 此时有两种解决方案:&lt;/p>
-&lt;ol>
-&lt;li>加细步长&lt;code>h&lt;/code>, 若不行再加细. 总是能得到正确的, 如果你不嫌弃带来的计算变得缓慢的问题.&lt;/li>
-&lt;li>换方法.&lt;/li>
-&lt;/ol>
-&lt;h4 id="12-梯形公式">1.2 梯形公式&lt;/h4>
-&lt;blockquote>
-&lt;p>背景:为得到比Euler法精度更高的计算公式. 梯形公式具有&lt;code>二阶&lt;/code>精度.&lt;/p>
-&lt;/blockquote>
-&lt;p>对&lt;code>y' = f(x,y)&lt;/code>的两端进行&lt;strong>局部的&lt;/strong>积分, 然后用梯形公式近似计算右边.&lt;/p>
-&lt;h4 id="13-改进euler公式">1.3 改进Euler公式&lt;/h4>
-&lt;p>先用欧拉公式求得一个&lt;code>近似的yn+1&lt;/code>, 带入梯形公式, 得到&lt;code>矫正的yn+1&lt;/code>.&lt;/p>
-- https://wangloo.github.io/blog/posts/numberical-analysis/ - @2019 Notepadium.</description></item><item><title>LaTeX Vim Tutorial</title><link>https://wangloo.github.io/blog/posts/latex-vim-tutorial/</link><pubDate>Wed, 04 May 2022 17:07:51 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/latex-vim-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/latex-vim-tutorial/ -&lt;h2 id="use-plugin-vimtex">Use plugin &lt;code>vimtex&lt;/code>&lt;/h2>
-&lt;p>Vim build-in support of LaTeX files is just OK. When we need more excellent exprience, good plugins is very recommended.&lt;/p>
-&lt;p>&lt;a href="https://github.com/lervag/vimtex#configuration">vimtex&lt;/a> is a nice and modern vim plugin for LaTeX files.&lt;/p>
-&lt;p>&lt;strong>Useful Futures of vimtex IMO&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>&amp;lt;leader&amp;gt;ll&lt;/code> Complier. By default, it will auto-complier when you type &lt;code>:w&lt;/code>.&lt;/li>
-&lt;li>&lt;code>&amp;lt;leader&amp;gt;lt&lt;/code> Open content tree as a sidebar.&lt;/li>
-&lt;li>&lt;code>&amp;lt;leader&amp;gt;lv&lt;/code> View PDF with configured PDF viewer.&lt;/li>
-&lt;li>&lt;code>&amp;lt;leader&amp;gt;li&lt;/code> File information.&lt;/li>
-&lt;li>&lt;code>cse&lt;/code> Change surrounding &lt;code>\begin \end&lt;/code> environment.&lt;/li>
-&lt;li>&lt;code>tse&lt;/code> Exchange between &lt;code>\begin{env}&lt;/code> and &lt;code>\begin{env*}&lt;/code>.&lt;/li>
-&lt;li>&lt;code>tsc&lt;/code> Exchange between &lt;code>\command{}&lt;/code> and &lt;code>\command*{}&lt;/code>.&lt;/li>
-&lt;/ul>
-&lt;p> 
- &lt;/p>
-&lt;h2 id="add-support-of-simplified-chinese">Add Support of Simplified Chinese&lt;/h2>
-&lt;h3 id="install-xetex">Install &lt;code>xetex&lt;/code>&lt;/h3>
-&lt;p>I use &lt;code>xetex&lt;/code> to add supports for Chinese fonts in LaTex files. Actually the magician is amacro package of &lt;code>xetex&lt;/code> named &lt;code>xeCJK&lt;/code>.&lt;/p>
-&lt;p>And &lt;code>xetex&lt;/code> is included in&lt;code>texlive&lt;/code>. so we install it from source:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install texlive-xetex
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="install-chinese-font">Install Chinese Font&lt;/h3>
-&lt;p>If there is no Chinese font in your system, you must install one. I choose WinQingYuan microhei as a instance.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install ttf-wqy
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Excute &lt;code>fc-list&lt;/code> to check if install successfully, here is excepted output:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>fc-list &lt;span style="color:#111">|&lt;/span> grep wqy
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/usr/share/fonts/truetype/wqy/wqy-microhei.ttc: WenQuanYi Micro Hei,文泉驛微米黑,文泉驿微米黑:style&lt;span style="color:#f92672">=&lt;/span>Regular
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/share/fonts/truetype/wqy/wqy-microhei.ttc: WenQuanYi Micro Hei Mono,文泉驛等寬微米黑,文泉驿等宽微米黑:style&lt;span style="color:#f92672">=&lt;/span>Regular
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="configure-your-tex-file">Configure your tex file&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-latex" data-lang="latex">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">\documentclass&lt;/span> &lt;span style="color:#111">{&lt;/span>article&lt;span style="color:#111">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">\usepackage&lt;/span>&lt;span style="color:#111">{&lt;/span>xeCJK&lt;span style="color:#111">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">\setCJKmainfont&lt;/span>&lt;span style="color:#111">{&lt;/span>WenQuanYi Micro Hei&lt;span style="color:#111">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">\begin&lt;/span>&lt;span style="color:#111">{&lt;/span>document&lt;span style="color:#111">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Hello, LaTeX!
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>你好, LaTex!
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">\end&lt;/span>&lt;span style="color:#111">{&lt;/span>document&lt;span style="color:#111">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Complier it and see, the Chinese font is displayed!&lt;/p>
-&lt;p> 
- &lt;/p>
-&lt;h2 id="confusing-tools">Confusing Tools&lt;/h2>
-&lt;h3 id="difference-between-pdfluaxetex-and-pdfluaxelatex">Difference between {pdf,lua,xe}Tex and {pdf,lua,xe}LaTeX&lt;/h3>
-&lt;p>If a &lt;code>.tex&lt;/code>file starts with &lt;code>\documentclass&lt;/code>, it&amp;rsquo;s a &lt;em>LaTex&lt;/em> format file rather than the &lt;em>Plain Tex&lt;/em> format file.&lt;/p>
-&lt;p>The LaTeX format file has some specific macro like &lt;code>\documentclass&lt;/code> that cannot be compliered by &lt;code>[pdf]Tex&lt;/code>, so that&amp;rsquo;s the job of &lt;code>[pdf]LaTeX&lt;/code>. Same goes for other engines.&lt;/p>
-&lt;h3 id="what-is-xetexxelatex">What is &lt;code>xetex/xelatex&lt;/code>?&lt;/h3>
-&lt;p>&lt;code>xetex/xelatex&lt;/code> is one of the TeX/LaTeX engines. Others are &lt;code>pdfTex&lt;/code>, &lt;code>LuaTex&lt;/code>, etc. &lt;a href="https://fr.wikipedia.org/wiki/XeTeX">Wiki&lt;/a>&lt;/p>
-&lt;p>&lt;code>xetex/xelatex&lt;/code> add fonts and character sets support for TeX/LaTeX file.&lt;/p>
-&lt;ul>
-&lt;li>Treat input as Unicode&lt;/li>
-&lt;li>Allow us to use many system fonts in LaTeX file easily&lt;/li>
-&lt;/ul>
-&lt;h3 id="what-is-latexmk">What is &lt;code>latexmk&lt;/code>?&lt;/h3>
-&lt;p>LaTeXmk 是一个集成化的命令行工具, it must work with one LaTeX engine.&lt;/p>
-&lt;p>The fundamental issue that &lt;code>latexmk&lt;/code> solves is that the number of runs of &lt;code>[pdf]latex&lt;/code> is highly dynamically dependent on the document and the class file used. &lt;code>latex&lt;/code> just need to be run once a time.&lt;/p>
-&lt;h3 id="different-between-ctexmiktextexlive-">Different between &lt;code>CTeX&lt;/code>/&lt;code>MiKTeX&lt;/code>/&lt;code>TeXlive&lt;/code> ?&lt;/h3>
-&lt;p>They are all 包含与.tex文件关联的各种编辑、查看工具、常用宏包及文档.&lt;/p>
-&lt;p>&lt;a href="http://www.ctex.org/HomePage">CTex&lt;/a> packages add complete Chinese support based on &lt;a href="https://miktex.org/">MiKTeX&lt;/a>.&lt;/p>
-&lt;ul>
-&lt;li>CTex is only avilable in windows.&lt;/li>
-&lt;/ul>
-- https://wangloo.github.io/blog/posts/latex-vim-tutorial/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/blog/posts/armv8/register/ - @2019 Notepadium.</description></item></channel></rss>
