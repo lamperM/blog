@@ -89,7 +89,23 @@
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">rst&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">^&lt;/span> &lt;span style="color:#111">mask&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#111">mask&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// excellent trick!
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;INPUT: 0x%x, RESULT: 0x%x&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">x&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">rst&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/blog/posts/codestyle/bit-operation-hacks/ - @2019 Notepadium.</description></item><item><title>Improving the quality of C code</title><link>https://wangloo.github.io/blog/posts/codestyle/improve_quality/</link><pubDate>Tue, 14 Jun 2022 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/codestyle/improve_quality/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/codestyle/improve_quality/ -&lt;h2 id="添加更多的编译选项comiler-options来防止bug">添加更多的编译选项(comiler options)来防止bug&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="字符字符数组的大小写转换">字符/字符数组的大小写转换&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define TO_LOWER(c) (unsigned char)((c &amp;gt;= &amp;#39;A&amp;#39; &amp;amp;&amp;amp; c &amp;lt;= &amp;#39;Z&amp;#39;) ? (c | 0x20) : c)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define TO_UPPER(c) (unsigned char)((c &amp;gt;= &amp;#39;a&amp;#39; &amp;amp;&amp;amp; c &amp;lt;= &amp;#39;z&amp;#39;) ? (c &amp;amp; ~0x20) : c)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define TO_LOWER_STR(s, len) { \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> for (int i = 0; i &amp;lt; len &amp;amp;&amp;amp; s[i] != &amp;#39;\0&amp;#39;; i++) { \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> s[i] = TO_LOWER(s[i]); \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> } \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">}
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define TO_UPPER_STR(s, len) {\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> for (int i = 0; i &amp;lt; len &amp;amp;&amp;amp; s[i] != &amp;#39;\0&amp;#39;; i++) { \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> s[i] = TO_UPPER(s[i]); \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> } \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">}
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/blog/posts/codestyle/bit-operation-hacks/ - @2019 Notepadium.</description></item><item><title>Improving the quality of C code</title><link>https://wangloo.github.io/blog/posts/codestyle/improve_quality/</link><pubDate>Tue, 14 Jun 2022 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/codestyle/improve_quality/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/codestyle/improve_quality/ -&lt;h2 id="添加更多的编译选项comiler-options来防止bug">添加更多的编译选项(comiler options)来防止bug&lt;/h2>
 &lt;p>对于我常用的&lt;code>GCC&lt;/code>, 推荐开启一下的compiler options:&lt;/p>
 &lt;ul>
 &lt;li>
