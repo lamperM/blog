@@ -1,4 +1,31 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Soben's Secret Base</title><link>https://wangloo.github.io/blog/</link><description>Recent content on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Sun, 03 Jul 2022 09:44:13 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Numberical Analysis Exam</title><link>https://wangloo.github.io/blog/posts/numberical-analysis/</link><pubDate>Sat, 07 May 2022 18:04:58 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/numberical-analysis/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/numberical-analysis/ -&lt;p>&lt;img src="qingdao-tzjt.JPG" alt="qingdao">&lt;/p>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Soben's Secret Base</title><link>https://wangloo.github.io/blog/</link><description>Recent content on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Wed, 20 Jul 2022 11:54:13 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>ARMv8-A Register</title><link>https://wangloo.github.io/blog/posts/armv8/register/</link><pubDate>Sat, 07 May 2022 20:19:44 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/armv8/register/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/armv8/register/ -&lt;h1 id="classification">Classification&lt;/h1>
+&lt;h2 id="general-purpose-register">General-purpose Register&lt;/h2>
+&lt;ol>
+&lt;li>&lt;code>x0-x7&lt;/code> 参数寄存器: Restore function parameters and return vaule.&lt;/li>
+&lt;li>&lt;code>x9-x15&lt;/code> caller-saved 临时寄存器: callee 默认可以直接使用来保存临时变量, 不需要保存和恢复. 如果 caller 在里面存储了非临时信息, 那么在函数调用之前应当由 caller 负责保存.&lt;/li>
+&lt;li>&lt;code>x19-x28&lt;/code> callee-saved 寄存器: callee 应该避免使用. 如果必须要使用，那么在返回前必须恢复.&lt;/li>
+&lt;li>special registers:
+&lt;ul>
+&lt;li>&lt;code>x8&lt;/code> restore indirect result. Commonly used when returning a struct.&lt;/li>
+&lt;li>&lt;code>x18&lt;/code> platform reserved register.&lt;/li>
+&lt;li>&lt;code>x29&lt;/code> frame pointer register(FP).&lt;/li>
+&lt;li>&lt;code>x30&lt;/code> link register(LR).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>All general-purpose register &lt;code>xN&lt;/code> is 64-bit width. They all have corresponding &lt;code>wN&lt;/code> register using the lower 32-bit of &lt;code>xN&lt;/code>. And write to &lt;code>wN&lt;/code> will clear the upper 32bit of &lt;code>xN&lt;/code>.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="special-register-per-el">Special Register per EL&lt;/h2>
+&lt;ol>
+&lt;li>&lt;code>sp_el0/1/2/3&lt;/code> stack pointer register of each EL.&lt;/li>
+&lt;li>&lt;code>elr_el1/2/3&lt;/code> exception link register of each EL except EL0.&lt;/li>
+&lt;li>&lt;code>spsr_el1/2/3&lt;/code> save program status register of each EL except EL0.&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>&lt;code>sp&lt;/code> is an alias of &lt;code>sp_el0&lt;/code>. Do NOT treat &lt;code>sp&lt;/code> as general-purpose register.&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/blog/posts/armv8/register/ - @2019 Notepadium.</description></item><item><title>Numberical Analysis Exam</title><link>https://wangloo.github.io/blog/posts/numberical-analysis/</link><pubDate>Sat, 07 May 2022 18:04:58 +0800</pubDate><guid>https://wangloo.github.io/blog/posts/numberical-analysis/</guid><description>Soben's Secret Base https://wangloo.github.io/blog/posts/numberical-analysis/ -&lt;p>&lt;img src="qingdao-tzjt.JPG" alt="qingdao">&lt;/p>
 &lt;h1 id="考试大纲">考试大纲&lt;/h1>
 &lt;p>🎯 To Reader:&lt;/p>
 &lt;p>This blog is JUST FOR EXAMINATION! If you are interested in numberical analysis, please quit this web.
