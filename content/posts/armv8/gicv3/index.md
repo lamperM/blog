@@ -54,7 +54,7 @@ GICv3架构由以下逻辑组件构成:
 
 The Distributor, Redistributor  一起组成了 *IRI(Interrupt Routing Infrastructure)*.
 
-<img src="C:\Users\wangloo\AppData\Roaming\Typora\typora-user-images\image-20220910140243327.png" alt="image-20220910140243327" style="zoom:50%;" />
+![iri](./IRI.png){width="10px"}
 
 ### Distributor
 
@@ -99,7 +99,7 @@ The Distributor, Redistributor  一起组成了 *IRI(Interrupt Routing Infrastru
 
 ## 中断的状态转换
 
-<img src="C:\Users\wangloo\AppData\Roaming\Typora\typora-user-images\image-20220910120359079.png" alt="image-20220910120359079" style="zoom: 67%;" />
+![](./int-lifestyle.png)
 
 1. 生成中断. 中断可能来自外部信号, 或者软件生成(SGI)
 2. Distribute.  IRI 负责中断的分组, 优先级屏蔽等. 将合适的中断发送到CPU Interface.
