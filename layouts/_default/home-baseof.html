@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ block "title" . }} Homepage {{ end }}</title>
+    <style>
+      html {
+        font-family: "Rubik", sans-serif;
+      }
+
+      header nav {
+        font-size: 20px;
+        font-weight: 700;
+        display: flex;
+        justify-content: right;
+        gap: 25px;
+        border-bottom: 2px solid gray;
+        padding-bottom: 5px;
+      }
+
+      header nav a:first-child {
+        color: black;
+        margin-right: auto;
+      }
+
+      a:link,
+      a:visited {
+        color: blue;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Code that all your templates share, like a header -->
+    {{ block "main" . }}
+    <!-- The part of the page that begins to differ between templates -->
+    {{ end }} {{ block "footer" . }}
+    <!-- More shared code, perhaps a footer but that can be overridden if need be in  -->
+    {{ end }}
+  </body>
+</html>

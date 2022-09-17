@@ -1,56 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+{{define "title"}}
+{{.Title}}
+{{end}}
 
-<head>
-  <meta charset="UTF-8" />
-  <title>Homepage 🌈</title>
-  <style>
-    html {
-      font-family: 'Rubik', sans-serif;
-    }
-
-    header nav {
-      font-size: 20px;
-      font-weight: 700;
-      display: flex;
-      justify-content: right;
-      gap: 25px;
-      border-bottom: 2px solid gray;
-      padding-bottom: 5px;
-    }
-
-    header nav a:first-child {
-      color: black;
-      margin-right: auto;
-    }
-
-    a:link,
-    a:visited {
-      color: blue;
-      text-decoration: none;
-    }
-  </style>
-</head>
-
-<body>
-  <div>
-    <header>
-      <nav class="head">
-        <a href="/">Wangloo's home 🏡</a>
-        <a href="/posts">Blog</a>
-        <a href="/about">About</a>
-        <a href="/contact">Contact</a>
-      </nav>
-
-      <div>
-        <p>Welcome to wangloo's Home! 😎</p>
-        <p>Other contents are under renovation, please wait.... 🧫</p>
-      </div>
-    </header>
-    <section>
-
-    </section>
-  </div>
-</body>
-
-</html>
+{{define "main"}}
+<div>
+  <header>
+    <nav class="head">
+      <a href="/">Wangloo's home 🏡</a>
+      <a href="/posts">Blog</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </header>
+  <section>
+    <div class="home-content">{{.Content}}</div>
+  </section>
+</div>
+{{end}}
