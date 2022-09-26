@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Dynamic link on Soben's Secret Base</title><link>https://wangloo.github.io/tags/dynamic-link/</link><description>Recent content in Dynamic link on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Sun, 26 Jun 2022 19:50:45 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/dynamic-link/index.xml" rel="self" type="application/rss+xml"/><item><title>Dynamic Link</title><link>https://wangloo.github.io/posts/os-learning/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os-learning/dynamic-link/</guid><description>静态链接带来的问题 像是libc这种几乎每个程序都要用到的库, 如果是静态的, 那么不仅意外着每个程序的 可执行文件很大, 浪费磁盘空间. 并且当程序加载到内存时, 可能许多程序都会用到printf , 使得内存中会存在好多份的printf源码.
+维护和更新难. 一旦静态链接的其中一个目标文件更新, 所有的可执行程序都要重新链接.
+不满足局部性原理. 上面提到, 内存中同时存在多份的printf源码会破坏局部性原理的. 显然如果所有的程序共享一份printf源码的想法更好. 即动态加载.
+可移植性差. 静态链接, 只要有一个依赖目标文件的实现不同, 软件厂商就得专门发布一个 版本. 而动态链接则信赖客户电脑上的动态库, 相当于一个中间层.
+ 动态链接的过程 对比静态链接使用ld链接器在编译后即执行链接, 动态链接则是将链接过程推迟到运行时, 即装载到内存时.
+这样, 链接器在链接产生可执行文件时就有两种做法:
+对于静态符号, 按照静态链接的规则进行地址引用重定位 对于动态符号, 链接器则仅标记其为动态链接中的符号, 不进行处理. 而是等到装载时由 专门的动态链接器来完成动态符号的链接工作. ⁉️ 链接器如何确定一个符号是静态的or动态的?
+在动态共享对象(.so)中保存了完整的动态符号表*, 表中存在的符号即为动态的, 否则为静态.
+Linux的C语言运行库glib的动态链接版本叫libc.so. 它在外存上只保存一份, 所有的程序 都可以在运行时使用它. 所以千万不要删掉它.
+动态链接有一定的性能损失, 因为每次运行程序时都要重新链接, 并不像静态链接是一劳永逸的. 也有例如延迟绑定对性能进行优化的方法, 大概仅有5%的损耗, 与带来的便利相比可以忽略不计.</description></item></channel></rss>

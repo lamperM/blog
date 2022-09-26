@@ -1,4 +1,299 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Sat, 10 Sep 2022 21:51:49 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>A64 Instruction Set</title><link>https://wangloo.github.io/posts/armv8/a64_isa/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64_isa/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/a64_isa/ -&lt;h1 id="loadstore-addressing">Load/Store Addressing&lt;/h1>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Sat, 10 Sep 2022 21:51:49 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Html Css Learning note (0)</title><link>https://wangloo.github.io/posts/html-css-learning/0/</link><pubDate>Tue, 17 May 2022 11:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/html-css-learning/0/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/html-css-learning/0/ -&lt;h1 id="get-start">Get start&lt;/h1>
+&lt;h2 id="what-is-htmlcss">What is HTML&amp;amp;CSS?&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>HTML is resonsible for the content of the page. That&amp;rsquo;s the text, images, buttons, etc.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>CSS is resonsible for the presentation of the content. That&amp;rsquo;s the color, layout, etc.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Web &lt;strong>designers&lt;/strong> create the overall look and fell of a website.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Web &lt;strong>developers&lt;/strong> implement the design using &lt;strong>HTML, CSS and JavaScript code&lt;/strong>.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="configure-vim-as-html-code-editor">Configure VIM as HTML code-editor&lt;/h2>
+&lt;blockquote>
+&lt;p>Finally in the arms of &lt;code>vscode&lt;/code> 🙉&lt;/p>
+&lt;/blockquote>
+&lt;p>Add vim plugin:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://emmet.io/">emmet&lt;/a>: Coding HTML faster.&lt;/li>
+&lt;/ul>
+&lt;p>CSS autocomplete key: &lt;code>&amp;lt;C-x&amp;gt; &amp;lt;C-o&amp;gt;&lt;/code>&lt;/p>
+&lt;p>HTML and CSS live previes plugin: &lt;a href="https://github.com/turbio/bracey.vim">bracey&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/turbio/bracey.vim/issues/21">urlopen error solution&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h1 id="html-fundamentals">HTML Fundamentals&lt;/h1>
+&lt;h2 id="anatomy-of-an-html-element">Anatomy of an HTML element&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">p&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span> THML is a markup language&lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">p&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The HTML element is composed of &lt;code>opening tag&lt;/code>, &lt;code>content&lt;/code>, &lt;code>closing tag&lt;/code>.&lt;/p>
+&lt;h2 id="html-good-styles">HTML good styles&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>&amp;lt;img/&amp;gt;&lt;/code> element should add &lt;code>alt&lt;/code> attritube at all time, for the convenience of the blind.&lt;/li>
+&lt;li>An important principle in web design is &lt;code>making the HTML elements meaningful&lt;/code>. That is &lt;a href="https://www.thoughtco.com/why-use-semantic-html-3468271">semantic HTML&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h1 id="css-fundamentals">CSS Fundamentals&lt;/h1>
+&lt;p>CSS describes the visual style and presentation of the contend in HTML.&lt;/p>
+&lt;h2 id="anatomy-of-an-html-element-1">Anatomy of an HTML element&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">h1&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">color&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">blue&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">text-align&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">center&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">font-size&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#ae81ff">20&lt;/span>&lt;span style="color:#00a8c8">px&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>h1 is &lt;code>Seletor&lt;/code>, every &lt;code>style&lt;/code> has &lt;code>proporty&lt;/code> and &lt;code>value&lt;/code>.&lt;/p>
+&lt;h2 id="css-good-styles">CSS good styles&lt;/h2>
+&lt;ul>
+&lt;li>Class selector is more commonly used than ID selector, as &lt;code>ID&lt;/code> is &lt;em>unique&lt;/em> in HTML. For scalability, &lt;strong>remember always using class selector&lt;/strong>.&lt;/li>
+&lt;li>We should always specify all the four state of &lt;code>&amp;lt;a&amp;gt;&lt;/code> element in order, which including &lt;code>link&lt;/code>, &lt;code>visited&lt;/code>, &lt;code>hover&lt;/code> and &lt;code>active&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="priority-conflicts-between-selectors">Priority conflicts between selectors&lt;/h2>
+&lt;p>CSS style priority from high to low:&lt;/p>
+&lt;ol>
+&lt;li>Inline style(style attribute in HTML)&lt;/li>
+&lt;li>ID selector&lt;/li>
+&lt;li>class or pseudo-class selector&lt;/li>
+&lt;li>element selector&lt;/li>
+&lt;li>universal element selector&lt;/li>
+&lt;/ol>
+&lt;p> &lt;/p>
+&lt;h1 id="the-css-box-model">The CSS box model&lt;/h1>
+&lt;p>The box model defines how elements are displayed on a webpage and how they are sized.&lt;br>
+In the box model, every element on a webpage can be seen as a rectangular box.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h1 id="universal-element--body-element">Universal element &amp;amp; &lt;code>&amp;lt;body&amp;gt;&lt;/code> element&lt;/h1>
+&lt;p>Styles in &lt;code>&amp;lt;body&amp;gt;&lt;/code> selector take effect because of inheritance. But the text-independent elements do not support inheritance.&lt;br>
+That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;s styles take effect on all element.&lt;/p>
+&lt;p>When we want to set padding and margin of all elements to &lt;code>0&lt;/code>. Must put the code in universal element selector.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h1 id="inline-elements--block-elements">Inline elements &amp;amp; Block elements&lt;/h1>
+&lt;p>Inline elements:&lt;/p>
+&lt;ul>
+&lt;li>Occupies only the space necessary for its content.&lt;/li>
+&lt;li>Box model applies in different way: &lt;strong>heights and widths do no apply&lt;/strong>.&lt;/li>
+&lt;li>Paddings and margins are applied &lt;strong>only horizontally&lt;/strong>(left and right).&lt;/li>
+&lt;/ul>
+&lt;p>Block elements:&lt;/p>
+&lt;ul>
+&lt;li>100% of parent&amp;rsquo;s width&lt;/li>
+&lt;li>vertivally, one after another&lt;/li>
+&lt;/ul>
+&lt;p>Inline-Block elements:&lt;/p>
+&lt;ul>
+&lt;li>Good example is &lt;code>&amp;lt;img&amp;gt;&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h1 id="the-3-ways-of-building-layouts-with-css">The 3 ways of building layouts with CSS&lt;/h1>
+&lt;p>&lt;code>Float Layouts&lt;/code>: The &lt;strong>old way of building layouts&lt;/strong>, using the float CSS property. Still used, but getting outdated fase.&lt;/p>
+&lt;ul>
+&lt;li>Element is removed from the normal flow: &lt;em>out of&lt;/em> flow. Like absolutely positioning.&lt;/li>
+&lt;li>Text and inline elements will wrap around the floated elements. Different from absolutely elements.&lt;/li>
+&lt;li>The container will &lt;em>NOT&lt;/em> adjust its height to the elements.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;code>FlexBox&lt;/code>: Modern way of laying out elements in a &lt;strong>1-dimensional row&lt;/strong> without using floats. Prefect for &lt;strong>component layouts&lt;/strong>.&lt;/p>
+&lt;ul>
+&lt;li>One of its most useful applications is &lt;strong>vertical centering&lt;/strong>.&lt;/li>
+&lt;li>Flex container property:
+&lt;ul>
+&lt;li>&lt;code>gap&lt;/code>: To create space between items.&lt;/li>
+&lt;li>&lt;code>justify-content&lt;/code>: To align items along main axis(&lt;strong>horizontally&lt;/strong>, by default)&lt;/li>
+&lt;li>&lt;code>align-items&lt;/code>: To align items along cross axis(&lt;strong>vertically&lt;/strong>, by dedauly)&lt;/li>
+&lt;li>&lt;code>flex-wrap&lt;/code>: To allow items to &lt;strong>wrap into a new line&lt;/strong> if they are too large&lt;/li>
+&lt;li>&lt;code>align-content&lt;/code>: Only applies when there are multiple lines(flex-wrap: wrap)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Flex Items property:
+&lt;ul>
+&lt;li>&lt;code>align-self&lt;/code>: To overwrite align-items for individual flex items.&lt;/li>
+&lt;li>&lt;code>flex-grow&lt;/code>: To allow an element to &lt;strong>grow&lt;/strong>.&lt;/li>
+&lt;li>&lt;code>flex-shrink&lt;/code>: To allow an element to &lt;strong>shrink&lt;/strong>.&lt;/li>
+&lt;li>&lt;code>flex-basis&lt;/code>: To define an item&amp;rsquo;s width, &lt;strong>instead of the width&lt;/strong> property.&lt;/li>
+&lt;li>&lt;code>flex&lt;/code>: &lt;strong>Recommended shorthand&lt;/strong> for flex-grow, -shrink, -basis.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;code>CSS Grid&lt;/code>: For laying out elements in a fully-fledged &lt;strong>2-dimensional grid&lt;/strong>. Perfect for page layouts and complex components.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>CSS grid is a set of &lt;strong>CSS properties&lt;/strong> for building &lt;strong>2-dimensional&lt;/strong> layouts&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>The main idea behind CSS Grid is that we &lt;strong>divide a container element into rows and columns&lt;/strong> that can be filled with its child elements&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>CSS grid is &lt;strong>not meant to replace flexbox!&lt;/strong>. Instead, they work perfectly together. Need a &lt;strong>1D&lt;/strong> layouts? Use flexbox. Need a &lt;strong>2D&lt;/strong> layout? Use CSS grid&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Grid container&lt;/p>
+&lt;ul>
+&lt;li>grid-template-rows/grid-template-columns: To establish the grid &lt;strong>row and column tracks&lt;/strong>. One length uniit for each track. Any unit can be used, new &lt;strong>fr&lt;/strong> fills unused space&lt;/li>
+&lt;li>row-gap/colum-gap: To &lt;strong>create empty space&lt;/strong> between tracks&lt;/li>
+&lt;li>justify-items/align-items: To align items inside rows/columns(&lt;strong>horizontally/vertically&lt;/strong>)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Grid items&lt;/p>
+&lt;ul>
+&lt;li>grid-column/grid-row: To &lt;strong>place a grid item&lt;/strong> into a specific cell, based on line numbers. span keyword can be used to span an item across more cells&lt;/li>
+&lt;li>justify-self/align-self: To &lt;strong>overwrite&lt;/strong> justify-items/align-items for single items&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+- https://wangloo.github.io/posts/html-css-learning/0/ - @2019 Notepadium.</description></item><item><title>The amazing vim</title><link>https://wangloo.github.io/posts/vim-tutorial/</link><pubDate>Mon, 09 May 2022 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/vim-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/vim-tutorial/ -&lt;p>Search a word quickly: put cursor on the word, press &lt;code>/&lt;/code> and press &lt;code>&amp;lt;C-R&amp;gt;&lt;/code> &lt;code>&amp;lt;C-W&amp;gt;&lt;/code>.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="缩写的含义meaning-of-abbreviations">缩写的含义(Meaning of abbreviations)&lt;/h2>
+&lt;p>Operation&lt;/p>
+&lt;ul>
+&lt;li>d - delete&lt;/li>
+&lt;li>y - yank(copy, 因为c被占了)&lt;/li>
+&lt;li>c - change&lt;/li>
+&lt;li>r - replace&lt;/li>
+&lt;li>v - visual select&lt;/li>
+&lt;/ul>
+&lt;p>Scope or location&lt;/p>
+&lt;ul>
+&lt;li>i - inside&lt;/li>
+&lt;li>a - around&lt;/li>
+&lt;li>f - forward&lt;/li>
+&lt;li>t - to&lt;/li>
+&lt;/ul>
+&lt;p>Object&lt;/p>
+&lt;ul>
+&lt;li>w - word&lt;/li>
+&lt;li>s - sentence&lt;/li>
+&lt;li>p - paragraph&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="bookmark">Bookmark&lt;/h2>
+&lt;p>&lt;code>ma&lt;/code>: create bookmark &lt;code>a&lt;/code> inside file.&lt;br>
+&lt;code>mA&lt;/code>: create global bookmark &lt;code>A&lt;/code>.&lt;br>
+&lt;code>`a&lt;/code>: jump to bookmark &lt;code>a&lt;/code>.&lt;/p>
+&lt;p>&lt;code>:marks&lt;/code>: display all bookmarks&lt;/p>
+&lt;h2 id="缩进-indent">缩进: indent&lt;/h2>
+&lt;p>&lt;code>&amp;gt;&lt;/code>: increase indent&lt;br>
+&lt;code>&amp;lt;&lt;/code>: decrease indent&lt;br>
+&lt;code>=&lt;/code>: auto indent&lt;/p>
+&lt;h3 id="trick">Trick&lt;/h3>
+&lt;blockquote>
+&lt;p>以下命令都可以配合visual mode使用&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;code>&amp;gt;&amp;gt;&lt;/code>: 增加当前行的缩进&lt;/p>
+&lt;p>&lt;code>gg=G&lt;/code>: 缩进全文, 无论当前光标在哪&lt;/p>
+&lt;h2 id="find-and-tail">&lt;code>F&lt;/code>ind and &lt;code>T&lt;/code>ail&lt;/h2>
+&lt;p>&lt;code>f(&lt;/code>: 从当前cursor处向右查找下一个&lt;code>(&lt;/code>, 并将光标移动到&lt;code>(&lt;/code>处.&lt;br>
+&lt;code>F(&lt;/code>: Like &lt;code>f(&lt;/code>, but 向左查找.&lt;br>
+&lt;code>t(&lt;/code>: Like &lt;code>f(&lt;/code>, but 将cursor移动到&lt;code>(&lt;/code>的前一个.&lt;br>
+&lt;code>T(&lt;/code>: You can guess.&lt;/p>
+&lt;h4 id="trick-1">Trick&lt;/h4>
+&lt;p>&lt;code>vt(c&lt;/code>: With visual, 删除当前光标到下一个&lt;code>(&lt;/code>前的所有内容.&lt;/p>
+&lt;p>&lt;code>;&lt;/code>/&lt;code>,&lt;/code>: 查找下一个/上一个 &lt;code>f/F/t/T&lt;/code> 的内容.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="大小写转换">大小写转换&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>cmd&lt;/th>
+&lt;th>description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>g~&lt;/code>&lt;/td>
+&lt;td>翻转大小写&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>gu&lt;/code>&lt;/td>
+&lt;td>转换为小写&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>gU&lt;/code>&lt;/td>
+&lt;td>转换为大写&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>以上命令(严格来说叫操作符)需要配合&lt;strong>动作命令&lt;/strong>来使用.&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>gUaw&lt;/code>: 将光标所在位置的&lt;em>单词&lt;/em>转为大写&lt;/li>
+&lt;li>&lt;code>gUap&lt;/code>: 将光标所在位置的&lt;em>段落&lt;/em>转为大写&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="search-and-replace">Search and replace&lt;/h2>
+&lt;h3 id="case-1-search-and-convert-to-uppercaselowercase">case 1: search and convert to uppercase/lowercase&lt;/h3>
+&lt;p>我直觉想到的方式是&lt;code>%s/html/HTML/gc&lt;/code>&lt;/p>
+&lt;p>这种方式在简单情况下也行, 比较灵活且直观, 但是对于复杂文件不够通用且容易出错&lt;/p>
+&lt;p>还有一种方式是先搜索, 然后一步步替换&lt;/p>
+&lt;ul>
+&lt;li>搜索: &lt;code>/\vhtml\C&lt;/code>&lt;/li>
+&lt;li>替换: 执行命令&lt;code>gUgn&lt;/code>, 然后使用&lt;code>n&lt;/code>和&lt;code>.&lt;/code>来重复操作下一个选中项.&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>&lt;code>gn&lt;/code>命令进对于sreach的匹配项使用, 类似于&lt;code>n&lt;/code>, 但会将下一个匹配项(若光标停在match上, 那则选中当前匹配项)
+转为visual模式选中的状态.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>其实对于简单的文本, &lt;code>n&lt;/code>和&lt;code>.&lt;/code>也可以简化为&lt;code>.&lt;/code>. 唯一的坏处就是如果两个匹配的距离太大,
+你不能确认是否search了你想要的内容.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="case-2-search-the-text-seleted-in-visual-mode">case 2: search the text seleted in &lt;em>visual mode&lt;/em>&lt;/h3>
+&lt;blockquote>
+&lt;p>vim 本身并未提供这个功能, 需要借助一个脚本来完成&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;a href="#search-text-selected-in-visual-mode">search the text selected in visual mode&lt;/a>&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="单词间跳转">单词间跳转&lt;/h2>
+&lt;p>&lt;code>w&lt;/code>: Move cursor to begin of next word.&lt;br>
+&lt;code>b&lt;/code>: Move cursor to begin of last word.&lt;br>
+&lt;code>e&lt;/code>: Move cursor to end of next word.&lt;/p>
+&lt;h3 id="trick-2">Trick&lt;/h3>
+&lt;p>&lt;code>w&lt;/code>/&lt;code>b&lt;/code>配合&lt;code>ce&lt;/code>使用可达到在某一行中快速移动到某个单词, 然后删除该单词开始edit.&lt;/p>
+&lt;p>&lt;code>daw&lt;/code>: 即 Delete A Word, 可以删除一个完整的单词, 无论当前光标的位置在哪.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="good-plugins">Good plugins&lt;/h2>
+&lt;blockquote>
+&lt;p>Reference: &lt;a href="https://github.com/amix/vimrc">The Ultimate vimrc&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="todo">TODO&lt;/h3>
+&lt;h3 id="installed">Installed&lt;/h3>
+&lt;p>&lt;a href="https://github.com/preservim/nerdcommenter#settings">NERD Commneter - 快速注释&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/preservim/nerdtree">NERD Tree - 目录树&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/amix/open_file_under_cursor.vim">Open File Under Cursor - 打开光标处的文件目录&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>不支持&lt;code>vim-plug&lt;/code>安装. 直接clone源码到&lt;code>plugged&lt;/code>目录即可.&lt;/li>
+&lt;li>Usage: &lt;code>gf&lt;/code>: 在当前window打开文件. &lt;code>&amp;lt;C-w&amp;gt;&amp;lt;C-f&amp;gt;&lt;/code>: &lt;strong>new vertical windows&lt;/strong>中打开文件.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;a href="https://github.com/mileszs/ack.vim">Ack.vim - 快速定位内容&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/Yggdroot/LeaderF">LeaderF - Like Ctrlp but better?&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/rlue/vim-barbaric">barbaric - normal模式切换英文输入法&lt;/a>&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="helpful-script">Helpful script&lt;/h2>
+&lt;h3 id="search-text-selected-in-visual-mode">search text selected in visual mode&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-vimrc" data-lang="vimrc">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">xnoremap&lt;/span> * :&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">C&lt;/span>&lt;span style="color:#111">-&lt;/span>&lt;span style="color:#75af00">u&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#75af00">call&lt;/span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">SID&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#75af00">VSetSearch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/&amp;#39;&lt;/span>&lt;span style="color:#111">)&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#d88200">/&amp;lt;C-R&amp;gt;=@/&lt;/span>&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#75af00">xnoremap&lt;/span> # :&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">C&lt;/span>&lt;span style="color:#111">-&lt;/span>&lt;span style="color:#75af00">u&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#75af00">call&lt;/span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">SID&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#75af00">VSetSearch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;?&amp;#39;&lt;/span>&lt;span style="color:#111">)&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>?&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">C&lt;/span>&lt;span style="color:#111">-&lt;/span>&lt;span style="color:#75af00">R&lt;/span>&lt;span style="color:#111">&amp;gt;=&lt;/span>@/&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">function&lt;/span>&lt;span style="color:#111">!&lt;/span> &lt;span style="color:#75af00">s&lt;/span>:&lt;span style="color:#75af00">VSetSearch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">cmdtype&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#75af00">temp&lt;/span> &lt;span style="color:#111">=&lt;/span> @&lt;span style="color:#75af00">s&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#75af00">norm&lt;/span>&lt;span style="color:#111">!&lt;/span> &lt;span style="color:#75af00">gv&lt;/span>&amp;#34;&lt;span style="color:#75af00">sy&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">let&lt;/span> @/ &lt;span style="color:#111">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;\V&amp;#39;&lt;/span> . &lt;span style="color:#75af00">substitute&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">escape&lt;/span>&lt;span style="color:#111">(&lt;/span>@&lt;span style="color:#75af00">s&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">a&lt;/span>:&lt;span style="color:#75af00">cmdtype&lt;/span>.&lt;span style="color:#d88200">&amp;#39;\&amp;#39;&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#d88200">&amp;#39;\n&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;\\n&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;g&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">let&lt;/span> @&lt;span style="color:#75af00">s&lt;/span> &lt;span style="color:#111">=&lt;/span> &lt;span style="color:#75af00">temp&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">endfunction&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/vim-tutorial/ - @2019 Notepadium.</description></item><item><title>reveal.js Tutorial</title><link>https://wangloo.github.io/posts/revealjs-tutorial/</link><pubDate>Sun, 08 May 2022 19:34:44 +0800</pubDate><guid>https://wangloo.github.io/posts/revealjs-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/revealjs-tutorial/ -&lt;h1 id="change-code-theme">Change code theme&lt;/h1>
+&lt;p>Default use &lt;code>monokai.css&lt;/code>. see &lt;a href="https://revealjs.com/code/">官方文档&lt;/a>&lt;/p>
+&lt;p>修改需要下载新的&lt;code>css&lt;/code>放到&lt;code>plugin/highlight/&lt;/code>目录下.&lt;/p>
+&lt;p>其他可用的&lt;code>css&lt;/code>在&lt;a href="https://github.com/highlightjs/highlight.js/tree/main/src/styles">highlight.js仓库&lt;/a>中下载.&lt;/p>
+&lt;h1 id="align">Align&lt;/h1>
+&lt;h2 id="slide-align">Slide Align&lt;/h2>
+&lt;p>取消center对齐方式:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">Reveal&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">initialize&lt;/span>&lt;span style="color:#111">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">center&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">...&lt;/span> &lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>所有slide左对齐: &lt;a href="https://github.com/hakimel/reveal.js/issues/1897">https://github.com/hakimel/reveal.js/issues/1897&lt;/a>&lt;/p>
+&lt;p>用markdown写的方式下使某一幻灯片左对齐: &lt;a href="https://github.com/hakimel/reveal.js/issues/890#issuecomment-129735291">https://github.com/hakimel/reveal.js/issues/890#issuecomment-129735291&lt;/a>&lt;/p>
+- https://wangloo.github.io/posts/revealjs-tutorial/ - @2019 Notepadium.</description></item><item><title>A64 Instruction Set</title><link>https://wangloo.github.io/posts/armv8/a64_isa/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64_isa/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/a64_isa/ -&lt;h1 id="loadstore-addressing">Load/Store Addressing&lt;/h1>
 &lt;h2 id="addressing-mode">Addressing mode&lt;/h2>
 &lt;ol>
 &lt;li>Base register - &lt;code>w0=[x1]&lt;/code>&lt;/li>
@@ -473,45 +768,4 @@ Give you a little demo about my point.&lt;/p>
 &lt;li>&lt;a href="https://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html#Preprocessor-Options">GNU GCC options&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://programmer.group/gcc-m-mm-mmd-mf-mt.html">GCC -M, -MM, -MMD, -MF, -MT&lt;/a>&lt;/li>
 &lt;/ol>
-- https://wangloo.github.io/posts/gcc_-m_related/gcc_-m_related/ - @2019 Notepadium.</description></item><item><title>Second Blog</title><link>https://wangloo.github.io/posts/second-blog/second-blog/</link><pubDate>Tue, 26 Apr 2022 15:32:11 +0800</pubDate><guid>https://wangloo.github.io/posts/second-blog/second-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/second-blog/second-blog/ -&lt;p>This is my second blog.&lt;/p>
-&lt;blockquote>
-&lt;p>Wish you have a good life.&lt;/p>
-&lt;/blockquote>
-&lt;ul>
-&lt;li>happy&lt;/li>
-&lt;li>smile&lt;/li>
-&lt;/ul>
-&lt;p>&lt;img src="https://wangloo.github.io/img/test.jpg" alt="">
-&lt;img src="https://wangloo.github.io/test.jpg" alt="">
-&lt;img src="test.jpg" alt="">
-&lt;img src="img/test.jpg" alt="">
-&lt;img src="https://wangloo.github.io/blog/img/test.jpg" alt="">&lt;/p>
-&lt;figure>&lt;img src="https://wangloo.github.io/blog/img/test.jpg"/>&lt;figcaption>
-&lt;h4>sunset&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>&lt;img src="images/test.jpg" alt="sunset">&lt;/p>
-- https://wangloo.github.io/posts/second-blog/second-blog/ - @2019 Notepadium.</description></item><item><title>First Blog</title><link>https://wangloo.github.io/posts/first-blog/first-blog/</link><pubDate>Tue, 26 Apr 2022 15:13:07 +0800</pubDate><guid>https://wangloo.github.io/posts/first-blog/first-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/first-blog/first-blog/ -&lt;p>This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">void&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;hello, hugo&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/first-blog/first-blog/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/gcc_-m_related/gcc_-m_related/ - @2019 Notepadium.</description></item></channel></rss>

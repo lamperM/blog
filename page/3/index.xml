@@ -1,0 +1,42 @@
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Sat, 10 Sep 2022 21:51:49 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Second Blog</title><link>https://wangloo.github.io/posts/second-blog/second-blog/</link><pubDate>Tue, 26 Apr 2022 15:32:11 +0800</pubDate><guid>https://wangloo.github.io/posts/second-blog/second-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/second-blog/second-blog/ -&lt;p>This is my second blog.&lt;/p>
+&lt;blockquote>
+&lt;p>Wish you have a good life.&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>happy&lt;/li>
+&lt;li>smile&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://wangloo.github.io/img/test.jpg" alt="">
+&lt;img src="https://wangloo.github.io/test.jpg" alt="">
+&lt;img src="test.jpg" alt="">
+&lt;img src="img/test.jpg" alt="">
+&lt;img src="https://wangloo.github.io/blog/img/test.jpg" alt="">&lt;/p>
+&lt;figure>&lt;img src="https://wangloo.github.io/blog/img/test.jpg"/>&lt;figcaption>
+&lt;h4>sunset&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>&lt;img src="images/test.jpg" alt="sunset">&lt;/p>
+- https://wangloo.github.io/posts/second-blog/second-blog/ - @2019 Notepadium.</description></item><item><title>First Blog</title><link>https://wangloo.github.io/posts/first-blog/first-blog/</link><pubDate>Tue, 26 Apr 2022 15:13:07 +0800</pubDate><guid>https://wangloo.github.io/posts/first-blog/first-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/first-blog/first-blog/ -&lt;p>This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">void&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;hello, hugo&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/first-blog/first-blog/ - @2019 Notepadium.</description></item></channel></rss>

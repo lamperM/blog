@@ -430,7 +430,269 @@ Light Gray 0;37 White 1;37
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> s[i] = TO_UPPER(s[i]); \
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> } \
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">}
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ - @2019 Notepadium.</description></item><item><title>Improving the quality of C code</title><link>https://wangloo.github.io/posts/codestyle/improve_quality/</link><pubDate>Tue, 14 Jun 2022 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/improve_quality/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/improve_quality/ -&lt;h2 id="添加更多的编译选项comiler-options来防止bug">添加更多的编译选项(comiler options)来防止bug&lt;/h2>
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ - @2019 Notepadium.</description></item><item><title>Stack and Heap</title><link>https://wangloo.github.io/posts/os-learning/stack-and-heap/</link><pubDate>Tue, 28 Jun 2022 16:41:54 +0800</pubDate><guid>https://wangloo.github.io/posts/os-learning/stack-and-heap/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os-learning/stack-and-heap/ -&lt;p> &lt;/p>
+&lt;h2 id="堆的含义">堆的含义&lt;/h2>
+&lt;p>我们都知道&lt;code>malloc&lt;/code>动态申请的变量是存放在堆中. 所以相比栈来说, 堆是动态的.&lt;/p>
+&lt;p>堆占据进程虚拟地址空间的大部分, 我们可能通过堆来申请&lt;code>1GB&lt;/code>的数组, 但是栈通常不行
+, 大多也就几兆的空间.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="堆空间的管理">堆空间的管理&lt;/h2>
+&lt;p>进程中堆空间的管理是&lt;code>运行库&lt;/code>负责的, 在Linux中是&lt;code>GLIBC&lt;/code>.&lt;/p>
+&lt;p>运行库在初始化时会像操作系统申请一大块的堆空间, 再为每个进行分别分配需求. 当然,
+如果某些程序的需求过大, 运行库也可以使用&lt;code>mmap&lt;/code>系统调用直接向操作系统申请, 然后
+返回给用户进程.&lt;/p>
+&lt;blockquote>
+&lt;p>GLIBC的&lt;code>malloc&lt;/code>函数的处理方式是: 对于小于&lt;code>128KB&lt;/code>的申请, 会从运行库&amp;quot;批发的&amp;quot;堆空间
+里分出一块来; 但若申请的空间过大, 则使用&lt;code>mmap&lt;/code>系统调用来创建匿名空间分配给用户.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>Linux中虚拟地址块(VMA)的管理使用了红黑树, 可以用于运行库管理自己向操作系统
+&amp;ldquo;批发&amp;quot;的堆空间. 使得用户程序动态申请和释放内存性能提高.&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/os-learning/stack-and-heap/ - @2019 Notepadium.</description></item><item><title>Dynamic Link</title><link>https://wangloo.github.io/posts/os-learning/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os-learning/dynamic-link/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os-learning/dynamic-link/ -&lt;h2 id="静态链接带来的问题">静态链接带来的问题&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>像是&lt;code>libc&lt;/code>这种几乎每个程序都要用到的库, 如果是静态的, 那么不仅意外着每个程序的
+可执行文件很大, 浪费磁盘空间. 并且当程序加载到内存时, 可能许多程序都会用到&lt;code>printf&lt;/code>
+, 使得内存中会存在好多份的&lt;code>printf&lt;/code>源码.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>维护和更新难. 一旦静态链接的其中一个目标文件更新, 所有的可执行程序都要重新链接.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>不满足局部性原理. 上面提到, 内存中同时存在多份的&lt;code>printf&lt;/code>源码会破坏&lt;em>局部性原理&lt;/em>的.
+显然如果所有的程序共享一份&lt;code>printf&lt;/code>源码的想法更好. 即动态加载.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>可移植性差. 静态链接, 只要有一个依赖目标文件的实现不同, 软件厂商就得专门发布一个
+版本. 而动态链接则信赖客户电脑上的&lt;em>动态库&lt;/em>, 相当于一个中间层.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p> &lt;/p>
+&lt;h2 id="动态链接的过程">动态链接的过程&lt;/h2>
+&lt;p>对比静态链接使用&lt;code>ld&lt;/code>链接器在编译后即执行链接, 动态链接则是将链接过程推迟到&lt;strong>运行时&lt;/strong>,
+即装载到内存时.&lt;/p>
+&lt;p>这样, 链接器在链接产生可执行文件时就有两种做法:&lt;/p>
+&lt;ul>
+&lt;li>对于静态符号, 按照静态链接的规则进行&lt;em>地址引用重定位&lt;/em>&lt;/li>
+&lt;li>对于动态符号, 链接器则仅标记其为动态链接中的符号, 不进行处理. 而是等到装载时由
+专门的&lt;em>动态链接器&lt;/em>来完成动态符号的链接工作.&lt;/li>
+&lt;/ul>
+&lt;p>⁉️ 链接器如何确定一个符号是静态的or动态的?&lt;/p>
+&lt;p>在动态共享对象(&lt;em>.so)中保存了完整的&lt;/em>动态符号表*, 表中存在的符号即为动态的, 否则为静态.&lt;/p>
+&lt;blockquote>
+&lt;p>Linux的C语言运行库&lt;code>glib&lt;/code>的动态链接版本叫&lt;code>libc.so&lt;/code>. 它在外存上只保存一份, 所有的程序
+都可以在运行时使用它. 所以千万不要删掉它.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>动态链接有一定的性能损失, 因为每次运行程序时都要重新链接, 并不像静态链接是一劳永逸的.
+也有例如&lt;code>延迟绑定&lt;/code>对性能进行优化的方法, 大概仅有5%的损耗, 与带来的便利相比可以忽略不计.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="地址无关代码">地址无关代码&lt;/h2>
+&lt;p>GCC生成动态库时需要添加参数&lt;code>-fPIC&lt;/code>, 含义就是生成地址无关码&lt;/p>
+&lt;p>地址无关码的含义是生成的目标文件中&lt;strong>不包含任何的绝对地址引用&lt;/strong>, 全都是&lt;strong>相对地址&lt;/strong>.
+若动态链接库中的代码段包含绝对地址引用, 即在动态加载该动态库时进行了&lt;em>重定位&lt;/em>,
+会根据动态库加载到内存的位置对代码段进行了修改.&lt;/p>
+&lt;p>这样一来, 该动态库就变为该进程独享的了, 因为&lt;strong>其他程序将对该动态库的映射肯定各不相同.&lt;/strong>
+所以, 每个程序在动态加载时都需要重新加载一遍动态库到内存中, 也就失去了&lt;strong>节省内存&lt;/strong>
+这个特性.&lt;/p>
+&lt;p>而如果该动态库中全部使用相对地址, 那么加载时也就不需要进行重定位, 即所有的程序都可以
+共享这些地址无关代码.&lt;/p>
+&lt;blockquote>
+&lt;p>上面说PIC的动态库不需要重定位其实是错误的, 只不过它的重定位过程不需要修改代码段,
+而是设置了一个放置在数据段的&lt;em>GOT&lt;/em>表来实现代码段部分的地址无关特性.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>现在貌似GCC ARM版本在编译动态库时强制使用-fPIC选项, 否则会报错. 对此我不是
+非常确定!&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>一般来说, 不将主程序编译为地址无关码. 因为主程序不需要共享, 而且地址无关码的调用
+需要两个指令: &lt;code>计算地址&lt;/code> + &lt;code>跳转&lt;/code>. 多了一步根据偏移得到绝对地址.&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/os-learning/dynamic-link/ - @2019 Notepadium.</description></item><item><title>ELF 文件的链接与加载</title><link>https://wangloo.github.io/posts/os-learning/elf-format/</link><pubDate>Mon, 20 Jun 2022 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os-learning/elf-format/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os-learning/elf-format/ -&lt;h2 id="elf-is-a-file-format">&lt;code>ELF&lt;/code> is a file format&lt;/h2>
+&lt;p>Files in &lt;code>ELF&lt;/code> format includes:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Type&lt;/th>
+&lt;th>description&lt;/th>
+&lt;th>实例&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Relocatable File&lt;/td>
+&lt;td>这些文件包含了代码和data, 可以被用来链接成可执行文件或共享目标文件.&lt;/td>
+&lt;td>&lt;code>.o&lt;/code>, &lt;code>.a&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Executable File&lt;/td>
+&lt;td>直接可执行的文件&lt;/td>
+&lt;td>&lt;code>/bin/ls&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Shared Object File&lt;/td>
+&lt;td>Including code and data. 链接器可将其与其他Relocatable File或Shared Object File结合, 生成新的目标文件. 动态链接器可将其与Executable File结合, 作为进程映像的一部分来运行.&lt;/td>
+&lt;td>&lt;code>.so&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Core Dump File&lt;/td>
+&lt;td>Restore critical infomation when process is terminated unexpectedly&lt;/td>
+&lt;td>&lt;code>core dump&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;blockquote>
+&lt;p>📌 &lt;code>file&lt;/code> command in Linux can output the format of a file.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="elf-文件组成的结构">ELF 文件组成的结构&lt;/h2>
+&lt;pre tabindex="0">&lt;code>+---------------------------------+
+| ELF Header | 包含描述整个ELF的基本信息, 如版本, 入口地址...
++---------------------------------+
+| .text |
++---------------------------------+
+| .data |
++---------------------------------+ 紧接着是各个段
+| .bss |
++---------------------------------+
+| ... |
+| other sections |
++---------------------------------+
+| | 段表: 与段相关最重要的结构
+| Section Header table | 描述了每个段的name, length, authority...
+| |
++---------------------------------+
+| String tables |
+| Symbol tables |
++---------------------------------+
+&lt;/code>&lt;/pre>&lt;p> &lt;/p>
+&lt;h2 id="分析elf文件的工具">分析ELF文件的工具&lt;/h2>
+&lt;h3 id="1-objdump">1. objdump&lt;/h3>
+&lt;h3 id="2-readelf">2. readelf&lt;/h3>
+&lt;p> &lt;/p>
+&lt;h2 id="为什么目标文件中代码和数据要分开放">为什么目标文件中代码和数据要分开放?&lt;/h2>
+&lt;p>一方面, 程序被加载进内存后, 代码段和数据段分别被映射到&lt;strong>两个virtual memory region&lt;/strong>.
+通过MMU的支持, 可以将代码段的区域设置为只读, 防止恶意篡改.&lt;/p>
+&lt;p>另一方面, 当下CPU Cache多划分为&lt;em>Instruction Cache&lt;/em>和&lt;em>Data Cache&lt;/em>, 再配合互相独立的
+地址区域能够提高&lt;strong>局部性原理&lt;/strong>的效果.&lt;/p>
+&lt;p>最后, 代码段可以被多个进程共享(例如都调用同一外部函数), 节省内存空间.&lt;/p>
+&lt;blockquote>
+&lt;p>针对嵌入式设备, 如果内存空间不够大, 只读的代码段可存放在ROM中&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="关于静态库">关于静态库&lt;/h2>
+&lt;p>一个静态库可以简单的看作是 a set of object file.&lt;br>
+这些 object file 可能包括: 输入输出相关的&lt;code>printf.o&lt;/code>, &lt;code>scanf.o&lt;/code>, 日期时间相关的&lt;code>time.o&lt;/code>, &lt;code>date.o&lt;/code>等.&lt;/p>
+&lt;p>❓ 为什么不直接提供这些&lt;em>目标文件&lt;/em>呢?&lt;/p>
+&lt;p>这些&lt;strong>零散的&lt;/strong>文件若直接提供给使用者, 很大程度上造成文件传输, 管理等方面的不便.&lt;br>
+于是人们通常使用&lt;code>ar&lt;/code>压缩程序将这些目标文件压缩到一起.&lt;/p>
+&lt;p>❓ 如何查看一个静态库是由哪些object file压缩到一起的?&lt;/p>
+&lt;p>Shell command&lt;code>ar -t libc.a&lt;/code> 可以查看&lt;code>libc.a&lt;/code>中包含的所有object files.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="elf文件加载-运行流程">ELF文件加载-运行流程&lt;/h2>
+&lt;blockquote>
+&lt;p>废了半天劲编译生成的ELF文件, 想要最终跑起来则包含的instruction and data必须要在内存中.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="静态加载与动态加载">静态加载与动态加载&lt;/h3>
+&lt;p>我们能想到的最简单的办法是: 把整个ELF的&lt;strong>所有指令和数据&lt;/strong>在运行之前就全部load到内存中. 这就是&lt;em>静态加载&lt;/em>.&lt;/p>
+&lt;p>更加高效的做法是: 充分利用&lt;em>局部性原理&lt;/em>, 将指令和数据划分为&lt;strong>模块&lt;/strong>, 只有当该模块被使用时, 才load进内存,
+否则就在外存中老老实实呆着. 这就是&lt;em>动态加载&lt;/em>.&lt;/p>
+&lt;h3 id="动态加载的步骤">动态加载的步骤&lt;/h3>
+&lt;p>借助&lt;em>虚拟内存&lt;/em>技术, 上面提到的&lt;strong>模块&lt;/strong>的概念可以自然的被&lt;strong>页&lt;/strong>(page)代替.
+我们将所有的指令和数据按照page为单位划分.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>运行该ELF的线程被创建时, 其virtual space范围被划定, 但其页表是空的, 没有任何映射.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>OS读取ELF Header, 建立virtual space与&lt;strong>ELF文件&lt;/strong>的映射关系. 这个映射关系的表达方式是一个特殊的&lt;strong>数据结构&lt;/strong>.
+建立该映射关系的原因是: 当程序运行到某个地址发现该页表项是空的(例如 &lt;code>call 0x1234&lt;/code>), 那么必然触发&lt;code>page fault&lt;/code>.
+由OS负责到&lt;em>特定的外存地址&lt;/em>将页面加载到physical memory中.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>OS要想知道缺失的内容在ELF文件的哪个位置, 就是利用该映射, 即某个数据结构
+&lt;/code>&lt;/pre>&lt;ol start="3">
+&lt;li>physical memory中有了所需的指令或数据后, 还需建立visual memory到physical memory的映射, 即在&lt;em>页表项&lt;/em>中写入.
+随着程序的运行, 会继续触发&lt;code>page fault&lt;/code>, 从ELF中不断load page到physical memory, 建立缺页visual addr处的页表映射,
+最终填补成一个完整的pagetable.&lt;/li>
+&lt;/ol>
+&lt;p> &lt;/p>
+&lt;h2 id="段地址对齐技术">段地址对齐技术&lt;/h2>
+&lt;blockquote>
+&lt;p>由前面动态加载的步骤可知, ELF文件中的代码和数据被按page划分. 并只有在用到时才被加载到内存,
+并建立&lt;code>虚拟内存-物理内存&lt;/code>的映射.&lt;/p>
+&lt;/blockquote>
+&lt;p>假设一个ELF有三个段需要被&lt;code>LOAD&lt;/code>, ELF段表如下:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Segment&lt;/th>
+&lt;th>Length&lt;/th>
+&lt;th>offset&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>SEG 0&lt;/td>
+&lt;td>127 B&lt;/td>
+&lt;td>34 B&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SEG 1&lt;/td>
+&lt;td>9899 B&lt;/td>
+&lt;td>164 B&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SEG 2&lt;/td>
+&lt;td>1988 B&lt;/td>
+&lt;td>0 B&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="-这三个段在elf文件中的布局如何">❓ 这三个段在ELF文件中的布局如何?&lt;/h3>
+&lt;p>根据前面ELF文件格式的介绍, 这三个段必然是挨着的(简单考虑, ELF中仅有这三个段).&lt;/p>
+&lt;h3 id="-这三个段在物理内存中的布局">❓ 这三个段在物理内存中的布局?&lt;/h3>
+&lt;p>发生&lt;code>page fault&lt;/code>之后, OS会为页面分配合适的物理页面, 如利用&lt;code>buddy system&lt;/code>等.&lt;/p>
+&lt;p>可以保证&lt;em>段内&lt;/em>的连续, 不能保证&lt;em>段与段&lt;/em>是连续的.&lt;/p>
+&lt;blockquote>
+&lt;p>未使用段对齐技术之前, &lt;code>SEG0&lt;/code>的长度不足一页, 但是也给它分配一页的空间. 同理为&lt;code>SEG1&lt;/code>分配两页, &lt;code>SEG2&lt;/code>分配一页.
+总共占用 &lt;code>1+2+1=5&lt;/code>个物理页.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="-这三个段在用户virtual-addrspace下的布局如何">❓ 这三个段在用户virtual addrspace下的布局如何?&lt;/h3>
+&lt;p>todo&lt;/p>
+&lt;h3 id="-何为段地址对齐技术">❓ 何为段地址对齐技术?&lt;/h3>
+&lt;p>上面说了, 在为这三个段分配物理内存时, 虽然他们的真实大小远小于5个页面, 但由于简单采用: &lt;code>每个段的开头必须是page align&lt;/code>,
+导致实际上产生了巨大的&lt;strong>内部碎片&lt;/strong>.&lt;/p>
+&lt;p>段地址对齐实际上就是在为ELF文件中的段分配物理内存时, 不考虑其段的独立性, 强制按照&lt;code>page&lt;/code>来划分. 划分的行为如下图所示.
+结果就是仅需占用&lt;code>3&lt;/code>个物理页面.&lt;/p>
+&lt;pre tabindex="0">&lt;code>+---+---------------+
+| P | SEG0 |
+| A +---------------+
+| G | |
+| E | |
++---+ |
+| P | SEG1 |
+| A | |
+| G | |
+| E | |
++---+ |
+| P +---------------+
+| A | |
+| G | SEG2 |
+| E | |
++---+---------------+
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>目前, gcc(更准确是说是GUN ld)默认启用段对齐技术. 各个段的虚拟地址并不是&lt;code>page align&lt;/code>.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>🍀 物理页面到虚拟页面的映射阶段, 那些&lt;em>同时包含&lt;/em>两个段的页面会被映射两次, 即一个物理页面对应两个
+虚拟页.&lt;/p>
+&lt;p>原因是: 在一个页面的不同段可能&lt;strong>权限不同&lt;/strong>, 所以不能使用同一映射.&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/os-learning/elf-format/ - @2019 Notepadium.</description></item><item><title>Improving the quality of C code</title><link>https://wangloo.github.io/posts/codestyle/improve_quality/</link><pubDate>Tue, 14 Jun 2022 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/improve_quality/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/improve_quality/ -&lt;h2 id="添加更多的编译选项comiler-options来防止bug">添加更多的编译选项(comiler options)来防止bug&lt;/h2>
 &lt;p>对于我常用的&lt;code>GCC&lt;/code>, 推荐开启一下的compiler options:&lt;/p>
 &lt;ul>
 &lt;li>
@@ -673,299 +935,4 @@ show up for the ribbon cutting without building anything worth a damn.&lt;/p>
 with you. You&amp;rsquo;re going to have to pass it on.&lt;/p>
 &lt;p>Thank you very much. And Congratulations to the Class of 2019!&lt;/p>
 &lt;p>&lt;a href="https://www.youtube.com/watch?v=2C2VJwGBRRw&amp;amp;t=80s">YouTube vidio&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/ - @2019 Notepadium.</description></item><item><title>Html Css Learning note (0)</title><link>https://wangloo.github.io/posts/html-css-learning/0/</link><pubDate>Tue, 17 May 2022 11:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/html-css-learning/0/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/html-css-learning/0/ -&lt;h1 id="get-start">Get start&lt;/h1>
-&lt;h2 id="what-is-htmlcss">What is HTML&amp;amp;CSS?&lt;/h2>
-&lt;ul>
-&lt;li>
-&lt;p>HTML is resonsible for the content of the page. That&amp;rsquo;s the text, images, buttons, etc.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>CSS is resonsible for the presentation of the content. That&amp;rsquo;s the color, layout, etc.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Web &lt;strong>designers&lt;/strong> create the overall look and fell of a website.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Web &lt;strong>developers&lt;/strong> implement the design using &lt;strong>HTML, CSS and JavaScript code&lt;/strong>.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="configure-vim-as-html-code-editor">Configure VIM as HTML code-editor&lt;/h2>
-&lt;blockquote>
-&lt;p>Finally in the arms of &lt;code>vscode&lt;/code> 🙉&lt;/p>
-&lt;/blockquote>
-&lt;p>Add vim plugin:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://emmet.io/">emmet&lt;/a>: Coding HTML faster.&lt;/li>
-&lt;/ul>
-&lt;p>CSS autocomplete key: &lt;code>&amp;lt;C-x&amp;gt; &amp;lt;C-o&amp;gt;&lt;/code>&lt;/p>
-&lt;p>HTML and CSS live previes plugin: &lt;a href="https://github.com/turbio/bracey.vim">bracey&lt;/a>&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://github.com/turbio/bracey.vim/issues/21">urlopen error solution&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h1 id="html-fundamentals">HTML Fundamentals&lt;/h1>
-&lt;h2 id="anatomy-of-an-html-element">Anatomy of an HTML element&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">p&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span> THML is a markup language&lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">p&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The HTML element is composed of &lt;code>opening tag&lt;/code>, &lt;code>content&lt;/code>, &lt;code>closing tag&lt;/code>.&lt;/p>
-&lt;h2 id="html-good-styles">HTML good styles&lt;/h2>
-&lt;ul>
-&lt;li>&lt;code>&amp;lt;img/&amp;gt;&lt;/code> element should add &lt;code>alt&lt;/code> attritube at all time, for the convenience of the blind.&lt;/li>
-&lt;li>An important principle in web design is &lt;code>making the HTML elements meaningful&lt;/code>. That is &lt;a href="https://www.thoughtco.com/why-use-semantic-html-3468271">semantic HTML&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h1 id="css-fundamentals">CSS Fundamentals&lt;/h1>
-&lt;p>CSS describes the visual style and presentation of the contend in HTML.&lt;/p>
-&lt;h2 id="anatomy-of-an-html-element-1">Anatomy of an HTML element&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">h1&lt;/span> &lt;span style="color:#111">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">color&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">blue&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">text-align&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">center&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">font-size&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#ae81ff">20&lt;/span>&lt;span style="color:#00a8c8">px&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>h1 is &lt;code>Seletor&lt;/code>, every &lt;code>style&lt;/code> has &lt;code>proporty&lt;/code> and &lt;code>value&lt;/code>.&lt;/p>
-&lt;h2 id="css-good-styles">CSS good styles&lt;/h2>
-&lt;ul>
-&lt;li>Class selector is more commonly used than ID selector, as &lt;code>ID&lt;/code> is &lt;em>unique&lt;/em> in HTML. For scalability, &lt;strong>remember always using class selector&lt;/strong>.&lt;/li>
-&lt;li>We should always specify all the four state of &lt;code>&amp;lt;a&amp;gt;&lt;/code> element in order, which including &lt;code>link&lt;/code>, &lt;code>visited&lt;/code>, &lt;code>hover&lt;/code> and &lt;code>active&lt;/code>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="priority-conflicts-between-selectors">Priority conflicts between selectors&lt;/h2>
-&lt;p>CSS style priority from high to low:&lt;/p>
-&lt;ol>
-&lt;li>Inline style(style attribute in HTML)&lt;/li>
-&lt;li>ID selector&lt;/li>
-&lt;li>class or pseudo-class selector&lt;/li>
-&lt;li>element selector&lt;/li>
-&lt;li>universal element selector&lt;/li>
-&lt;/ol>
-&lt;p> &lt;/p>
-&lt;h1 id="the-css-box-model">The CSS box model&lt;/h1>
-&lt;p>The box model defines how elements are displayed on a webpage and how they are sized.&lt;br>
-In the box model, every element on a webpage can be seen as a rectangular box.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h1 id="universal-element--body-element">Universal element &amp;amp; &lt;code>&amp;lt;body&amp;gt;&lt;/code> element&lt;/h1>
-&lt;p>Styles in &lt;code>&amp;lt;body&amp;gt;&lt;/code> selector take effect because of inheritance. But the text-independent elements do not support inheritance.&lt;br>
-That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;s styles take effect on all element.&lt;/p>
-&lt;p>When we want to set padding and margin of all elements to &lt;code>0&lt;/code>. Must put the code in universal element selector.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h1 id="inline-elements--block-elements">Inline elements &amp;amp; Block elements&lt;/h1>
-&lt;p>Inline elements:&lt;/p>
-&lt;ul>
-&lt;li>Occupies only the space necessary for its content.&lt;/li>
-&lt;li>Box model applies in different way: &lt;strong>heights and widths do no apply&lt;/strong>.&lt;/li>
-&lt;li>Paddings and margins are applied &lt;strong>only horizontally&lt;/strong>(left and right).&lt;/li>
-&lt;/ul>
-&lt;p>Block elements:&lt;/p>
-&lt;ul>
-&lt;li>100% of parent&amp;rsquo;s width&lt;/li>
-&lt;li>vertivally, one after another&lt;/li>
-&lt;/ul>
-&lt;p>Inline-Block elements:&lt;/p>
-&lt;ul>
-&lt;li>Good example is &lt;code>&amp;lt;img&amp;gt;&lt;/code>.&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h1 id="the-3-ways-of-building-layouts-with-css">The 3 ways of building layouts with CSS&lt;/h1>
-&lt;p>&lt;code>Float Layouts&lt;/code>: The &lt;strong>old way of building layouts&lt;/strong>, using the float CSS property. Still used, but getting outdated fase.&lt;/p>
-&lt;ul>
-&lt;li>Element is removed from the normal flow: &lt;em>out of&lt;/em> flow. Like absolutely positioning.&lt;/li>
-&lt;li>Text and inline elements will wrap around the floated elements. Different from absolutely elements.&lt;/li>
-&lt;li>The container will &lt;em>NOT&lt;/em> adjust its height to the elements.&lt;/li>
-&lt;/ul>
-&lt;p>&lt;code>FlexBox&lt;/code>: Modern way of laying out elements in a &lt;strong>1-dimensional row&lt;/strong> without using floats. Prefect for &lt;strong>component layouts&lt;/strong>.&lt;/p>
-&lt;ul>
-&lt;li>One of its most useful applications is &lt;strong>vertical centering&lt;/strong>.&lt;/li>
-&lt;li>Flex container property:
-&lt;ul>
-&lt;li>&lt;code>gap&lt;/code>: To create space between items.&lt;/li>
-&lt;li>&lt;code>justify-content&lt;/code>: To align items along main axis(&lt;strong>horizontally&lt;/strong>, by default)&lt;/li>
-&lt;li>&lt;code>align-items&lt;/code>: To align items along cross axis(&lt;strong>vertically&lt;/strong>, by dedauly)&lt;/li>
-&lt;li>&lt;code>flex-wrap&lt;/code>: To allow items to &lt;strong>wrap into a new line&lt;/strong> if they are too large&lt;/li>
-&lt;li>&lt;code>align-content&lt;/code>: Only applies when there are multiple lines(flex-wrap: wrap)&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Flex Items property:
-&lt;ul>
-&lt;li>&lt;code>align-self&lt;/code>: To overwrite align-items for individual flex items.&lt;/li>
-&lt;li>&lt;code>flex-grow&lt;/code>: To allow an element to &lt;strong>grow&lt;/strong>.&lt;/li>
-&lt;li>&lt;code>flex-shrink&lt;/code>: To allow an element to &lt;strong>shrink&lt;/strong>.&lt;/li>
-&lt;li>&lt;code>flex-basis&lt;/code>: To define an item&amp;rsquo;s width, &lt;strong>instead of the width&lt;/strong> property.&lt;/li>
-&lt;li>&lt;code>flex&lt;/code>: &lt;strong>Recommended shorthand&lt;/strong> for flex-grow, -shrink, -basis.&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>&lt;code>CSS Grid&lt;/code>: For laying out elements in a fully-fledged &lt;strong>2-dimensional grid&lt;/strong>. Perfect for page layouts and complex components.&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>CSS grid is a set of &lt;strong>CSS properties&lt;/strong> for building &lt;strong>2-dimensional&lt;/strong> layouts&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>The main idea behind CSS Grid is that we &lt;strong>divide a container element into rows and columns&lt;/strong> that can be filled with its child elements&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>CSS grid is &lt;strong>not meant to replace flexbox!&lt;/strong>. Instead, they work perfectly together. Need a &lt;strong>1D&lt;/strong> layouts? Use flexbox. Need a &lt;strong>2D&lt;/strong> layout? Use CSS grid&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Grid container&lt;/p>
-&lt;ul>
-&lt;li>grid-template-rows/grid-template-columns: To establish the grid &lt;strong>row and column tracks&lt;/strong>. One length uniit for each track. Any unit can be used, new &lt;strong>fr&lt;/strong> fills unused space&lt;/li>
-&lt;li>row-gap/colum-gap: To &lt;strong>create empty space&lt;/strong> between tracks&lt;/li>
-&lt;li>justify-items/align-items: To align items inside rows/columns(&lt;strong>horizontally/vertically&lt;/strong>)&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>Grid items&lt;/p>
-&lt;ul>
-&lt;li>grid-column/grid-row: To &lt;strong>place a grid item&lt;/strong> into a specific cell, based on line numbers. span keyword can be used to span an item across more cells&lt;/li>
-&lt;li>justify-self/align-self: To &lt;strong>overwrite&lt;/strong> justify-items/align-items for single items&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-- https://wangloo.github.io/posts/html-css-learning/0/ - @2019 Notepadium.</description></item><item><title>The amazing vim</title><link>https://wangloo.github.io/posts/vim-tutorial/</link><pubDate>Mon, 09 May 2022 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/vim-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/vim-tutorial/ -&lt;p>Search a word quickly: put cursor on the word, press &lt;code>/&lt;/code> and press &lt;code>&amp;lt;C-R&amp;gt;&lt;/code> &lt;code>&amp;lt;C-W&amp;gt;&lt;/code>.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="缩写的含义meaning-of-abbreviations">缩写的含义(Meaning of abbreviations)&lt;/h2>
-&lt;p>Operation&lt;/p>
-&lt;ul>
-&lt;li>d - delete&lt;/li>
-&lt;li>y - yank(copy, 因为c被占了)&lt;/li>
-&lt;li>c - change&lt;/li>
-&lt;li>r - replace&lt;/li>
-&lt;li>v - visual select&lt;/li>
-&lt;/ul>
-&lt;p>Scope or location&lt;/p>
-&lt;ul>
-&lt;li>i - inside&lt;/li>
-&lt;li>a - around&lt;/li>
-&lt;li>f - forward&lt;/li>
-&lt;li>t - to&lt;/li>
-&lt;/ul>
-&lt;p>Object&lt;/p>
-&lt;ul>
-&lt;li>w - word&lt;/li>
-&lt;li>s - sentence&lt;/li>
-&lt;li>p - paragraph&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="bookmark">Bookmark&lt;/h2>
-&lt;p>&lt;code>ma&lt;/code>: create bookmark &lt;code>a&lt;/code> inside file.&lt;br>
-&lt;code>mA&lt;/code>: create global bookmark &lt;code>A&lt;/code>.&lt;br>
-&lt;code>`a&lt;/code>: jump to bookmark &lt;code>a&lt;/code>.&lt;/p>
-&lt;p>&lt;code>:marks&lt;/code>: display all bookmarks&lt;/p>
-&lt;h2 id="缩进-indent">缩进: indent&lt;/h2>
-&lt;p>&lt;code>&amp;gt;&lt;/code>: increase indent&lt;br>
-&lt;code>&amp;lt;&lt;/code>: decrease indent&lt;br>
-&lt;code>=&lt;/code>: auto indent&lt;/p>
-&lt;h3 id="trick">Trick&lt;/h3>
-&lt;blockquote>
-&lt;p>以下命令都可以配合visual mode使用&lt;/p>
-&lt;/blockquote>
-&lt;p>&lt;code>&amp;gt;&amp;gt;&lt;/code>: 增加当前行的缩进&lt;/p>
-&lt;p>&lt;code>gg=G&lt;/code>: 缩进全文, 无论当前光标在哪&lt;/p>
-&lt;h2 id="find-and-tail">&lt;code>F&lt;/code>ind and &lt;code>T&lt;/code>ail&lt;/h2>
-&lt;p>&lt;code>f(&lt;/code>: 从当前cursor处向右查找下一个&lt;code>(&lt;/code>, 并将光标移动到&lt;code>(&lt;/code>处.&lt;br>
-&lt;code>F(&lt;/code>: Like &lt;code>f(&lt;/code>, but 向左查找.&lt;br>
-&lt;code>t(&lt;/code>: Like &lt;code>f(&lt;/code>, but 将cursor移动到&lt;code>(&lt;/code>的前一个.&lt;br>
-&lt;code>T(&lt;/code>: You can guess.&lt;/p>
-&lt;h4 id="trick-1">Trick&lt;/h4>
-&lt;p>&lt;code>vt(c&lt;/code>: With visual, 删除当前光标到下一个&lt;code>(&lt;/code>前的所有内容.&lt;/p>
-&lt;p>&lt;code>;&lt;/code>/&lt;code>,&lt;/code>: 查找下一个/上一个 &lt;code>f/F/t/T&lt;/code> 的内容.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="大小写转换">大小写转换&lt;/h2>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>cmd&lt;/th>
-&lt;th>description&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>&lt;code>g~&lt;/code>&lt;/td>
-&lt;td>翻转大小写&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;code>gu&lt;/code>&lt;/td>
-&lt;td>转换为小写&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;code>gU&lt;/code>&lt;/td>
-&lt;td>转换为大写&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>以上命令(严格来说叫操作符)需要配合&lt;strong>动作命令&lt;/strong>来使用.&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>gUaw&lt;/code>: 将光标所在位置的&lt;em>单词&lt;/em>转为大写&lt;/li>
-&lt;li>&lt;code>gUap&lt;/code>: 将光标所在位置的&lt;em>段落&lt;/em>转为大写&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="search-and-replace">Search and replace&lt;/h2>
-&lt;h3 id="case-1-search-and-convert-to-uppercaselowercase">case 1: search and convert to uppercase/lowercase&lt;/h3>
-&lt;p>我直觉想到的方式是&lt;code>%s/html/HTML/gc&lt;/code>&lt;/p>
-&lt;p>这种方式在简单情况下也行, 比较灵活且直观, 但是对于复杂文件不够通用且容易出错&lt;/p>
-&lt;p>还有一种方式是先搜索, 然后一步步替换&lt;/p>
-&lt;ul>
-&lt;li>搜索: &lt;code>/\vhtml\C&lt;/code>&lt;/li>
-&lt;li>替换: 执行命令&lt;code>gUgn&lt;/code>, 然后使用&lt;code>n&lt;/code>和&lt;code>.&lt;/code>来重复操作下一个选中项.&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>&lt;code>gn&lt;/code>命令进对于sreach的匹配项使用, 类似于&lt;code>n&lt;/code>, 但会将下一个匹配项(若光标停在match上, 那则选中当前匹配项)
-转为visual模式选中的状态.&lt;/p>
-&lt;/blockquote>
-&lt;blockquote>
-&lt;p>其实对于简单的文本, &lt;code>n&lt;/code>和&lt;code>.&lt;/code>也可以简化为&lt;code>.&lt;/code>. 唯一的坏处就是如果两个匹配的距离太大,
-你不能确认是否search了你想要的内容.&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="case-2-search-the-text-seleted-in-visual-mode">case 2: search the text seleted in &lt;em>visual mode&lt;/em>&lt;/h3>
-&lt;blockquote>
-&lt;p>vim 本身并未提供这个功能, 需要借助一个脚本来完成&lt;/p>
-&lt;/blockquote>
-&lt;p>&lt;a href="#search-text-selected-in-visual-mode">search the text selected in visual mode&lt;/a>&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="单词间跳转">单词间跳转&lt;/h2>
-&lt;p>&lt;code>w&lt;/code>: Move cursor to begin of next word.&lt;br>
-&lt;code>b&lt;/code>: Move cursor to begin of last word.&lt;br>
-&lt;code>e&lt;/code>: Move cursor to end of next word.&lt;/p>
-&lt;h3 id="trick-2">Trick&lt;/h3>
-&lt;p>&lt;code>w&lt;/code>/&lt;code>b&lt;/code>配合&lt;code>ce&lt;/code>使用可达到在某一行中快速移动到某个单词, 然后删除该单词开始edit.&lt;/p>
-&lt;p>&lt;code>daw&lt;/code>: 即 Delete A Word, 可以删除一个完整的单词, 无论当前光标的位置在哪.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="good-plugins">Good plugins&lt;/h2>
-&lt;blockquote>
-&lt;p>Reference: &lt;a href="https://github.com/amix/vimrc">The Ultimate vimrc&lt;/a>&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="todo">TODO&lt;/h3>
-&lt;h3 id="installed">Installed&lt;/h3>
-&lt;p>&lt;a href="https://github.com/preservim/nerdcommenter#settings">NERD Commneter - 快速注释&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://github.com/preservim/nerdtree">NERD Tree - 目录树&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://github.com/amix/open_file_under_cursor.vim">Open File Under Cursor - 打开光标处的文件目录&lt;/a>&lt;/p>
-&lt;ul>
-&lt;li>不支持&lt;code>vim-plug&lt;/code>安装. 直接clone源码到&lt;code>plugged&lt;/code>目录即可.&lt;/li>
-&lt;li>Usage: &lt;code>gf&lt;/code>: 在当前window打开文件. &lt;code>&amp;lt;C-w&amp;gt;&amp;lt;C-f&amp;gt;&lt;/code>: &lt;strong>new vertical windows&lt;/strong>中打开文件.&lt;/li>
-&lt;/ul>
-&lt;p>&lt;a href="https://github.com/mileszs/ack.vim">Ack.vim - 快速定位内容&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://github.com/Yggdroot/LeaderF">LeaderF - Like Ctrlp but better?&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://github.com/rlue/vim-barbaric">barbaric - normal模式切换英文输入法&lt;/a>&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="helpful-script">Helpful script&lt;/h2>
-&lt;h3 id="search-text-selected-in-visual-mode">search text selected in visual mode&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-vimrc" data-lang="vimrc">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">xnoremap&lt;/span> * :&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">C&lt;/span>&lt;span style="color:#111">-&lt;/span>&lt;span style="color:#75af00">u&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#75af00">call&lt;/span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">SID&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#75af00">VSetSearch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/&amp;#39;&lt;/span>&lt;span style="color:#111">)&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#d88200">/&amp;lt;C-R&amp;gt;=@/&lt;/span>&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#75af00">xnoremap&lt;/span> # :&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">C&lt;/span>&lt;span style="color:#111">-&lt;/span>&lt;span style="color:#75af00">u&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#75af00">call&lt;/span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">SID&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#75af00">VSetSearch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;?&amp;#39;&lt;/span>&lt;span style="color:#111">)&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>?&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">C&lt;/span>&lt;span style="color:#111">-&lt;/span>&lt;span style="color:#75af00">R&lt;/span>&lt;span style="color:#111">&amp;gt;=&lt;/span>@/&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&amp;lt;&lt;/span>&lt;span style="color:#75af00">CR&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">function&lt;/span>&lt;span style="color:#111">!&lt;/span> &lt;span style="color:#75af00">s&lt;/span>:&lt;span style="color:#75af00">VSetSearch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">cmdtype&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#75af00">temp&lt;/span> &lt;span style="color:#111">=&lt;/span> @&lt;span style="color:#75af00">s&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#75af00">norm&lt;/span>&lt;span style="color:#111">!&lt;/span> &lt;span style="color:#75af00">gv&lt;/span>&amp;#34;&lt;span style="color:#75af00">sy&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">let&lt;/span> @/ &lt;span style="color:#111">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;\V&amp;#39;&lt;/span> . &lt;span style="color:#75af00">substitute&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">escape&lt;/span>&lt;span style="color:#111">(&lt;/span>@&lt;span style="color:#75af00">s&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">a&lt;/span>:&lt;span style="color:#75af00">cmdtype&lt;/span>.&lt;span style="color:#d88200">&amp;#39;\&amp;#39;&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#d88200">&amp;#39;\n&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;\\n&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;g&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">let&lt;/span> @&lt;span style="color:#75af00">s&lt;/span> &lt;span style="color:#111">=&lt;/span> &lt;span style="color:#75af00">temp&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#00a8c8">endfunction&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/vim-tutorial/ - @2019 Notepadium.</description></item><item><title>reveal.js Tutorial</title><link>https://wangloo.github.io/posts/revealjs-tutorial/</link><pubDate>Sun, 08 May 2022 19:34:44 +0800</pubDate><guid>https://wangloo.github.io/posts/revealjs-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/revealjs-tutorial/ -&lt;h1 id="change-code-theme">Change code theme&lt;/h1>
-&lt;p>Default use &lt;code>monokai.css&lt;/code>. see &lt;a href="https://revealjs.com/code/">官方文档&lt;/a>&lt;/p>
-&lt;p>修改需要下载新的&lt;code>css&lt;/code>放到&lt;code>plugin/highlight/&lt;/code>目录下.&lt;/p>
-&lt;p>其他可用的&lt;code>css&lt;/code>在&lt;a href="https://github.com/highlightjs/highlight.js/tree/main/src/styles">highlight.js仓库&lt;/a>中下载.&lt;/p>
-&lt;h1 id="align">Align&lt;/h1>
-&lt;h2 id="slide-align">Slide Align&lt;/h2>
-&lt;p>取消center对齐方式:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">Reveal&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">initialize&lt;/span>&lt;span style="color:#111">({&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">center&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">...&lt;/span> &lt;span style="color:#111">})&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>所有slide左对齐: &lt;a href="https://github.com/hakimel/reveal.js/issues/1897">https://github.com/hakimel/reveal.js/issues/1897&lt;/a>&lt;/p>
-&lt;p>用markdown写的方式下使某一幻灯片左对齐: &lt;a href="https://github.com/hakimel/reveal.js/issues/890#issuecomment-129735291">https://github.com/hakimel/reveal.js/issues/890#issuecomment-129735291&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/revealjs-tutorial/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/ - @2019 Notepadium.</description></item></channel></rss>
