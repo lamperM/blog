@@ -1,4 +1,4 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Sat, 10 Sep 2022 21:51:49 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Html Css Learning note (0)</title><link>https://wangloo.github.io/posts/html-css-learning/0/</link><pubDate>Tue, 17 May 2022 11:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/html-css-learning/0/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/html-css-learning/0/ -&lt;h1 id="get-start">Get start&lt;/h1>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Html Css Learning note (0)</title><link>https://wangloo.github.io/posts/html-css-learning/0/</link><pubDate>Tue, 17 May 2022 11:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/html-css-learning/0/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/html-css-learning/0/ -&lt;h1 id="get-start">Get start&lt;/h1>
 &lt;h2 id="what-is-htmlcss">What is HTML&amp;amp;CSS?&lt;/h2>
 &lt;ul>
 &lt;li>
@@ -144,7 +144,7 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-- https://wangloo.github.io/posts/html-css-learning/0/ - @2019 Notepadium.</description></item><item><title>The amazing vim</title><link>https://wangloo.github.io/posts/vim-tutorial/</link><pubDate>Mon, 09 May 2022 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/vim-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/vim-tutorial/ -&lt;p>Search a word quickly: put cursor on the word, press &lt;code>/&lt;/code> and press &lt;code>&amp;lt;C-R&amp;gt;&lt;/code> &lt;code>&amp;lt;C-W&amp;gt;&lt;/code>.&lt;/p>
+- https://wangloo.github.io/posts/html-css-learning/0/ - @2019 Notepadium.</description></item><item><title>我的 vim 调教随笔</title><link>https://wangloo.github.io/posts/vim-tutorial/</link><pubDate>Mon, 09 May 2022 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/vim-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/vim-tutorial/ -&lt;p>Search a word quickly: put cursor on the word, press &lt;code>/&lt;/code> and press &lt;code>&amp;lt;C-R&amp;gt;&lt;/code> &lt;code>&amp;lt;C-W&amp;gt;&lt;/code>.&lt;/p>
 &lt;p> &lt;/p>
 &lt;h2 id="缩写的含义meaning-of-abbreviations">缩写的含义(Meaning of abbreviations)&lt;/h2>
 &lt;p>Operation&lt;/p>
@@ -169,29 +169,68 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;li>p - paragraph&lt;/li>
 &lt;/ul>
 &lt;p> &lt;/p>
-&lt;h2 id="bookmark">Bookmark&lt;/h2>
+&lt;h2 id="书签-bookmark">书签: Bookmark&lt;/h2>
 &lt;p>&lt;code>ma&lt;/code>: create bookmark &lt;code>a&lt;/code> inside file.&lt;br>
 &lt;code>mA&lt;/code>: create global bookmark &lt;code>A&lt;/code>.&lt;br>
 &lt;code>`a&lt;/code>: jump to bookmark &lt;code>a&lt;/code>.&lt;/p>
 &lt;p>&lt;code>:marks&lt;/code>: display all bookmarks&lt;/p>
 &lt;h2 id="缩进-indent">缩进: indent&lt;/h2>
-&lt;p>&lt;code>&amp;gt;&lt;/code>: increase indent&lt;br>
-&lt;code>&amp;lt;&lt;/code>: decrease indent&lt;br>
-&lt;code>=&lt;/code>: auto indent&lt;/p>
-&lt;h3 id="trick">Trick&lt;/h3>
-&lt;blockquote>
-&lt;p>以下命令都可以配合visual mode使用&lt;/p>
-&lt;/blockquote>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>&amp;gt;&lt;/code>: increase indent , &lt;code>&amp;lt;&lt;/code>: decrease indent ,&lt;code>=&lt;/code>: auto indent&lt;/p>
+&lt;/li>
+&lt;li>
 &lt;p>&lt;code>&amp;gt;&amp;gt;&lt;/code>: 增加当前行的缩进&lt;/p>
+&lt;/li>
+&lt;li>
 &lt;p>&lt;code>gg=G&lt;/code>: 缩进全文, 无论当前光标在哪&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>以上命令都可以配合visual mode使用&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="自动缩进的规则">自动缩进的规则&lt;/h3>
+&lt;p>主要有四种可用缩进的方式, 分别是:&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;#39;autoindent&amp;#39; 沿用上一行的缩进。
+&amp;#39;smartindent&amp;#39; 类似 &amp;#39;autoindent&amp;#39;，但是可以识别一些 C 语法以能在合适的地方
+增加 / 减少缩进。
+&amp;#39;cindent&amp;#39; 比上面两个更聪明；可以设置不同的缩进风格。
+&amp;#39;indentexpr&amp;#39; 最灵活的一个: 根据表达式来计算缩进。若此选项非空，则优先于其它
+选项覆盖。参见 indent-expression 。
+&lt;/code>&lt;/pre>&lt;p>自定义的快速命令:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-vimrc" data-lang="vimrc">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">command&lt;/span> &lt;span style="color:#75af00">IndentOff&lt;/span> &lt;span style="color:#75af00">setl&lt;/span> &lt;span style="color:#75af00">noai&lt;/span> &lt;span style="color:#75af00">nocin&lt;/span> &lt;span style="color:#75af00">nosi&lt;/span> &lt;span style="color:#75af00">indentexpr&lt;/span>&lt;span style="color:#111">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#75af00">command&lt;/span> &lt;span style="color:#75af00">IndentOn&lt;/span> &lt;span style="color:#75af00">setl&lt;/span> &lt;span style="color:#75af00">ai&lt;/span> &lt;span style="color:#75af00">cin&lt;/span> &lt;span style="color:#75af00">si&lt;/span> &lt;span style="color:#75715e">&amp;#34;indentexpr can&amp;#39;t be re-enabled.&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&lt;span style="color:#75af00">command&lt;/span> &lt;span style="color:#75af00">IndentStatus&lt;/span> &lt;span style="color:#75af00">set&lt;/span> &lt;span style="color:#75af00">ai&lt;/span>? &lt;span style="color:#75af00">si&lt;/span>? &lt;span style="color:#75af00">cin&lt;/span>? &lt;span style="color:#75af00">indentexpr&lt;/span>?&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>&lt;code>cindent&lt;/code> 不一定对所有的语言都有效果. 只是 C-like 风格, 其中一个要求是顶层函数必须在第一列中含有 &lt;code>{&lt;/code>.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>只有当&lt;code>indentexpr&lt;/code>计算不出当前需要缩进几格时(return -1), 才使用上面的三个规则. 它是优先级最高的.&lt;/p>
+&lt;/blockquote>
 &lt;h2 id="find-and-tail">&lt;code>F&lt;/code>ind and &lt;code>T&lt;/code>ail&lt;/h2>
 &lt;p>&lt;code>f(&lt;/code>: 从当前cursor处向右查找下一个&lt;code>(&lt;/code>, 并将光标移动到&lt;code>(&lt;/code>处.&lt;br>
 &lt;code>F(&lt;/code>: Like &lt;code>f(&lt;/code>, but 向左查找.&lt;br>
 &lt;code>t(&lt;/code>: Like &lt;code>f(&lt;/code>, but 将cursor移动到&lt;code>(&lt;/code>的前一个.&lt;br>
 &lt;code>T(&lt;/code>: You can guess.&lt;/p>
-&lt;h4 id="trick-1">Trick&lt;/h4>
+&lt;h4 id="trick">Trick&lt;/h4>
 &lt;p>&lt;code>vt(c&lt;/code>: With visual, 删除当前光标到下一个&lt;code>(&lt;/code>前的所有内容.&lt;/p>
 &lt;p>&lt;code>;&lt;/code>/&lt;code>,&lt;/code>: 查找下一个/上一个 &lt;code>f/F/t/T&lt;/code> 的内容.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="substitute-and-global">&lt;code>S&lt;/code>ubstitute and &lt;code>G&lt;/code>lobal&lt;/h2>
+&lt;blockquote>
+&lt;p>See: &lt;code>:help :s&lt;/code> and &lt;code>:help :g&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;p>这两个都属于vim的命令. vim 的替换和sed 的&lt;code>s&lt;/code>命令使用方式基本一致. 就不多介绍了.&lt;/p>
+&lt;p>而 vim 的 global 命令和sed有些许差别. 使用Sed删除包含个字符串的行的指令为: &lt;code>sed '/STRING/d' input_file&lt;/code>, 而在vim中则多了一个&lt;strong>g&lt;/strong>前缀, &lt;code>:g/STRING/d&lt;/code>.&lt;/p>
+&lt;p>global 可以和 substitute 结合使用, 例如想要在包含某个字符串的行中替换&lt;code>good&lt;/code>为&lt;code>excellent&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>:g/STRING/s/good/excellent/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>TODO:&lt;/p>
+&lt;ol>
+&lt;li>More [cmd] in global. &lt;a href="https://vim.fandom.com/wiki/Power_of_g">Power of g | Vim Tips Wiki | Fandom&lt;/a>&lt;/li>
+&lt;li>vim subtitute使用的正则表达式集包含 &lt;code>\zs&lt;/code>和&lt;code>\ze&lt;/code>, 然而 sed 没有(Sed 为 POSIX Basic Regular Expression).&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
 &lt;p> &lt;/p>
 &lt;h2 id="大小写转换">大小写转换&lt;/h2>
 &lt;table>
@@ -245,13 +284,47 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;/blockquote>
 &lt;p>&lt;a href="#search-text-selected-in-visual-mode">search the text selected in visual mode&lt;/a>&lt;/p>
 &lt;p> &lt;/p>
+&lt;h2 id="visual-block-模式">Visual Block 模式&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>选中后, 编辑所有行: &lt;code>I&lt;/code>(captial i), 编辑完成后按两次&lt;code>ESC&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>重复visual 选中上次的 block: Normal模式下&lt;code>gv&lt;/code>即可.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
 &lt;h2 id="单词间跳转">单词间跳转&lt;/h2>
 &lt;p>&lt;code>w&lt;/code>: Move cursor to begin of next word.&lt;br>
 &lt;code>b&lt;/code>: Move cursor to begin of last word.&lt;br>
 &lt;code>e&lt;/code>: Move cursor to end of next word.&lt;/p>
-&lt;h3 id="trick-2">Trick&lt;/h3>
+&lt;h3 id="trick-1">Trick&lt;/h3>
 &lt;p>&lt;code>w&lt;/code>/&lt;code>b&lt;/code>配合&lt;code>ce&lt;/code>使用可达到在某一行中快速移动到某个单词, 然后删除该单词开始edit.&lt;/p>
 &lt;p>&lt;code>daw&lt;/code>: 即 Delete A Word, 可以删除一个完整的单词, 无论当前光标的位置在哪.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="编辑二进制十六进制文件">编辑二进制/十六进制文件&lt;/h2>
+&lt;p>可以使用&lt;code>xxd&lt;/code>命令将一个文件中的文本转换为hex格式显示. 在vim中键入&lt;code>:%!xxd&lt;/code> 即可. 得到的效果如下:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-xxd" data-lang="xxd">0000000: 5468 6973 2069 7320 6120 7465 7374 0a41 This is a test.A
+0000010: 6e6f 7468 6572 206c 696e 650a 416e 6420 nother line.And
+0000020: 7965 7420 616e 6f74 6865 720a yet another.
+&lt;/code>&lt;/pre>&lt;p>后面的对应文本是自动生成的, 仅需要修改十六进制的部分即可. 修改完成后, 要返回原本的模式, 键入&lt;code>:%!xxd -r&lt;/code>.&lt;/p>
+&lt;blockquote>
+&lt;p>可通过设置文本格式对十六进制内存高亮显示 &lt;code>set ft=xxd&lt;/code>.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="如何同步-vim-dotfiles">如何同步 VIM Dotfiles&lt;/h2>
+&lt;p>vim 的 dotfiles 主要包含&lt;code>.vimrc&lt;/code>和&lt;code>.vim/&lt;/code>中的插件.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>对于&lt;code>.vimrc&lt;/code>, 我选择使用mackup 软件和其他system dotfiles 一起备份. &lt;a href="https://github.com/wangloo/dotfiles">Git repo&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>对于 plugins, 传统的管理插件的方式(使用&lt;code>vim-plug&lt;/code>), 也就是放在&lt;code>~/.vim/plugged/&lt;/code>目录中的, 可以通过&lt;code>:PlugInstall&lt;/code>命令在新机器上重新从网上克隆. 能够保证使用的是新版本.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>VIM 8.0 之后, 引入 &lt;em>pack system&lt;/em> 新的插件管理方式. 对于这类的插件, 我们直接利用&lt;code>submodule&lt;/code>加入另一个备份的 &lt;a href="https://github.com/wangloo/vimpack">Git repo&lt;/a>. 使用方法见&lt;code>README&lt;/code>.&lt;/p>
+&lt;/li>
+&lt;/ul>
 &lt;p> &lt;/p>
 &lt;h2 id="good-plugins">Good plugins&lt;/h2>
 &lt;blockquote>

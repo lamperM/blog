@@ -1,4 +1,4 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Sat, 10 Sep 2022 21:51:49 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GICv3 - for ARMV8</title><link>https://wangloo.github.io/posts/armv8/gicv3/</link><pubDate>Sat, 10 Sep 2022 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/gicv3/ -&lt;h1 id="gicv3generic-interrupt-controller---version-3">GICV3(Generic Interrupt Controller - version 3)&lt;/h1>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GICv3 - for ARMV8</title><link>https://wangloo.github.io/posts/armv8/gicv3/</link><pubDate>Sat, 10 Sep 2022 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/gicv3/ -&lt;h1 id="gicv3generic-interrupt-controller---version-3">GICV3(Generic Interrupt Controller - version 3)&lt;/h1>
 &lt;h2 id="关于gic">关于GIC&lt;/h2>
 &lt;p>GIC即中断控制器, 负责管理中断的接收, 屏蔽, 路由等相关任务, 并向系统程序员提供配置的接口.&lt;/p>
 &lt;p>GIC与异常模型协作完成中断的整个生命周期, GIC主要负责&lt;code>中断源-产生IRQ/FIQ信号&lt;/code>这段路, 关于处理IRQ/FIQ则是由CPU内部的&lt;em>异常模型&lt;/em>来完成.&lt;/p>
@@ -33,7 +33,7 @@
 &lt;li>Interrupt Translation Service components (ITS). 可选, 暂不介绍&lt;/li>
 &lt;/ul>
 &lt;p>The Distributor, Redistributor 一起组成了 &lt;em>IRI(Interrupt Routing Infrastructure)&lt;/em>.&lt;/p>
-&lt;!-- raw HTML omitted -->
+&lt;p>&lt;img src="./IRI.png" alt="iri">{width=&amp;ldquo;10px&amp;rdquo;}&lt;/p>
 &lt;h3 id="distributor">Distributor&lt;/h3>
 &lt;p>控制SPI和SGI的路由. 对于 SPI, 提供了一下接口:&lt;/p>
 &lt;ul>
@@ -78,7 +78,7 @@
 &lt;p>关于 CPU interface 寄存器是以 &lt;code>ICC_&lt;/code> 为前缀, 还有 &lt;code>ICV&lt;/code> for vitual interrupt, &lt;code>ICH&lt;/code> for hypervisor configuration.&lt;/p>
 &lt;/blockquote>
 &lt;h2 id="中断的状态转换">中断的状态转换&lt;/h2>
-&lt;!-- raw HTML omitted -->
+&lt;p>&lt;img src="./int-lifestyle.png" alt="">&lt;/p>
 &lt;ol>
 &lt;li>生成中断. 中断可能来自外部信号, 或者软件生成(SGI)&lt;/li>
 &lt;li>Distribute. IRI 负责中断的分组, 优先级屏蔽等. 将合适的中断发送到CPU Interface.&lt;/li>
