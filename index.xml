@@ -449,7 +449,7 @@ Light Gray 0;37 White 1;37
 &lt;p>Linux中虚拟地址块(VMA)的管理使用了红黑树, 可以用于运行库管理自己向操作系统
 &amp;ldquo;批发&amp;quot;的堆空间. 使得用户程序动态申请和释放内存性能提高.&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/posts/os-learning/stack-and-heap/ - @2019 Notepadium.</description></item><item><title>Dynamic Link</title><link>https://wangloo.github.io/posts/os-learning/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os-learning/dynamic-link/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os-learning/dynamic-link/ -&lt;h2 id="静态链接带来的问题">静态链接带来的问题&lt;/h2>
+- https://wangloo.github.io/posts/os-learning/stack-and-heap/ - @2019 Notepadium.</description></item><item><title>动态链接</title><link>https://wangloo.github.io/posts/os-learning/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os-learning/dynamic-link/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os-learning/dynamic-link/ -&lt;h2 id="静态链接带来的问题">静态链接带来的问题&lt;/h2>
 &lt;ol>
 &lt;li>
 &lt;p>像是&lt;code>libc&lt;/code>这种几乎每个程序都要用到的库, 如果是静态的, 那么不仅意外着每个程序的
@@ -489,14 +489,13 @@ Light Gray 0;37 White 1;37
 也有例如&lt;code>延迟绑定&lt;/code>对性能进行优化的方法, 大概仅有5%的损耗, 与带来的便利相比可以忽略不计.&lt;/p>
 &lt;/blockquote>
 &lt;p> &lt;/p>
-&lt;h2 id="地址无关代码">地址无关代码&lt;/h2>
+&lt;h2 id="地址无关代码-pic">地址无关代码 PIC&lt;/h2>
 &lt;p>GCC生成动态库时需要添加参数&lt;code>-fPIC&lt;/code>, 含义就是生成地址无关码&lt;/p>
-&lt;p>地址无关码的含义是生成的目标文件中&lt;strong>不包含任何的绝对地址引用&lt;/strong>, 全都是&lt;strong>相对地址&lt;/strong>.
-若动态链接库中的代码段包含绝对地址引用, 即在动态加载该动态库时进行了&lt;em>重定位&lt;/em>,
-会根据动态库加载到内存的位置对代码段进行了修改.&lt;/p>
-&lt;p>这样一来, 该动态库就变为该进程独享的了, 因为&lt;strong>其他程序将对该动态库的映射肯定各不相同.&lt;/strong>
-所以, 每个程序在动态加载时都需要重新加载一遍动态库到内存中, 也就失去了&lt;strong>节省内存&lt;/strong>
-这个特性.&lt;/p>
+&lt;p>地址无关码的含义是代码中&lt;strong>不包含任何的绝对地址引用&lt;/strong>, 全都是&lt;strong>相对地址&lt;/strong>.&lt;/p>
+&lt;ul>
+&lt;li>对于&lt;strong>模块内&lt;/strong>的跳转/数据引用, 使用相对的跳转/加载指令. 例如ARM指令集中的&lt;code>B&lt;/code>, &lt;code>ADR&lt;/code>, 经过汇编器之后, 目标的地址都会转为相对于该指令(PC)的偏移.&lt;/li>
+&lt;li>对于&lt;strong>模块间&lt;/strong>的跳转/数据引用, 借用&lt;em>GOT表&lt;/em>来间接实现地址无关.&lt;/li>
+&lt;/ul>
 &lt;p>而如果该动态库中全部使用相对地址, 那么加载时也就不需要进行重定位, 即所有的程序都可以
 共享这些地址无关代码.&lt;/p>
 &lt;blockquote>
