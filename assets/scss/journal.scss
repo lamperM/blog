@@ -84,22 +84,22 @@ h3 {
 
 h1 {
   font-size: $h1;
-  margin: 20px auto;
+  margin: 60px auto 30px auto;
 }
 
 h2 {
   font-size: $h1 - 2 * $h-diff;
-  margin: 20px auto;
+  margin: 40px auto 20px auto;
 }
 
 h3 {
   font-size: $h1 - 3 * $h-diff;
-  margin: 20px auto;
+  margin: 30px auto 10px auto;
 }
 
 h4 {
   font-size: $h1 - 3 * $h-diff;
-  padding: 20px auto;
+  padding: 10px auto;
 }
 
 h5 {
@@ -150,6 +150,9 @@ pre {
   }
   code {
     padding: 0;
+    * {
+      color: inherit;
+    }
   }
 }
 

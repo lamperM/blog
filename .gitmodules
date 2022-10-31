@@ -1,9 +1,3 @@
-[submodule "themes/geekdoc"]
-	path = themes/geekdoc
-	url = https://github.com/thegeeklab/hugo-geekdoc
-[submodule "themes/hugo-notepadium"]
-	path = themes/hugo-notepadium
-	url = https://github.com/cntrump/hugo-notepadium.git
 [submodule "themes/diary"]
 	path = themes/diary
 	url = https://github.com/AmazingRise/hugo-theme-diary
