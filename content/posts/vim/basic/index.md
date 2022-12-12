@@ -187,6 +187,14 @@ global 可以和 substitute 结合使用, 例如想要在包含某个字符串�
 
 &nbsp;
 
+## 删除光标前/后的所有字符
+
+1. `d^` -- delete to first non-whitespace character in the line
+2. `d0` -- delete to beginning of the line
+3. `c-u` in **insert mode**. Same as bash command shortkeys, see [here](https://ss64.com/bash/syntax-keyboard.html)
+
+
+
 ## 如何同步 VIM Dotfiles
 
 vim 的 dotfiles 主要包含`.vimrc`和`.vim/`中的插件.
@@ -197,6 +205,8 @@ vim 的 dotfiles 主要包含`.vimrc`和`.vim/`中的插件.
 * VIM 8.0 之后, 引入 *pack system* 新的插件管理方式. 对于这类的插件, 我们直接利用`submodule`加入另一个备份的 [Git repo](https://github.com/wangloo/vimpack). 使用方法见`README`.
 
 &nbsp;
+
+
 
 ## Good plugins
 > Reference: [The Ultimate vimrc](https://github.com/amix/vimrc)
@@ -209,6 +219,7 @@ vim 的 dotfiles 主要包含`.vimrc`和`.vim/`中的插件.
 [NERD Tree - 目录树](https://github.com/preservim/nerdtree)
 
 [Open File Under Cursor - 打开光标处的文件目录](https://github.com/amix/open_file_under_cursor.vim)
+
 * 不支持`vim-plug`安装. 直接clone源码到`plugged`目录即可.
 * Usage: `gf`: 在当前window打开文件. `<C-w><C-f>`: **new vertical windows**中打开文件.
 

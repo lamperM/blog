@@ -1,6 +1,6 @@
 ---
 title: "ARMv8-A MMU 介绍"
-date: 2022-09-30T08:01:33+08:00w
+date: 2022-09-29T08:01:33+08:00
 ---
 
 ## Introduction
@@ -186,4 +186,10 @@ I: Disable/Enable Instruction Cache
 ### TTBR
 
 存储页表的基地址
+
+
+
+## AArch32 虚拟内存系统
+
+ARMv8 AArch32 的虚拟内存系统向后兼容ARMv7, 与ARMv7的基本一致.
 

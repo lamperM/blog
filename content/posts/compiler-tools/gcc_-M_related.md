@@ -1,12 +1,13 @@
 ---
 title: "GCC '-M' and Related Parameters"
 date: 2022-04-26T19:08:22+08:00
+tags: ["gcc"]
 ---
 As we all know, there are huge number of parameters for GCC. With them, we can make many things possible. Now we talk about -M and related ones.
 After reading this article, you will know the meaning of there magic parameters. And I will put some little demos follows. Finally, we will see what can they do in really project. Let's go ahead.  
 ## -M
 Output the dependencies of the input source file. Incluing the names of itself and all included files.    
-  
+
 **Little Demo**  
 Suppose we have source file `tmp.c`:
 ```c
@@ -44,7 +45,7 @@ tmp.o: /home/wanglu/demo/tmp.c /usr/include/stdc-predef.h \
 ```
 ## -MM
 Like `-M` but do NOT output system header files.  
-  
+
 **Little Demo**  
 Use same source file `tmp.c` above.  
 Run `gcc -MM tmp.c`. Output dependencies except system header files.
@@ -53,14 +54,14 @@ tmp.o: /home/wanglu/demo/tmp.c /home/wanglu/demo/tmp.h
 ```
 ## -MF
 Use with `-M` or `-MM`. Specify output dependencies to file instead of STDOUT.  
-  
+
 **Little Demo**  
 Use same source file `tmp.c` above.  
 Run `gcc -MM -MF dp.txt tmp.c`. File `dp.txt` will be created and filled with dependecies of `tmp.c` except system header files.
 
 ## -MD
 `-MD` is same as `-M -MF <file>`. But the filename is basd on the object file but replacing `.o` with `.d`.   
-  
+
 **Little Demo**  
 Use same source file `tmp.c` above.  
 Run `gcc -MD tmp.c`. File `tmp.d` will be created and filled with all dependecies.
@@ -72,7 +73,7 @@ Run `gcc -MD tmp.c`. File `tmp.d` will be created and filled with all dependecie
 
 ## -MMD
 `-MMD` is same as `-MM -MF <file>`. Also named on object file but replacing `.o` with `.d`.  
-  
+
 **Little Demo**  
 Use same source file `tmp.c` above.  
 Run `gcc -MMD tmp.c`. File `tmp.d` will be created and filled with dependecies except system header files.
@@ -93,8 +94,8 @@ Actually, we do two things in order:
 
 ## Summary
 Hope this article can give you a clear understanding of M-related parameters in GCC. We can sometimes find them in large projects' makefile. It's very useful to automatic build dependency for header files. So try to use them in your current or next project.
-  
-  
+
+
 ## Reference
 1. [GNU GCC options](https://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html#Preprocessor-Options)
 2. [GCC -M, -MM, -MMD, -MF, -MT](https://programmer.group/gcc-m-mm-mmd-mf-mt.html) 
