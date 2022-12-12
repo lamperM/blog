@@ -1,4 +1,231 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GICv3 - for ARMV8</title><link>https://wangloo.github.io/posts/armv8/gicv3/</link><pubDate>Sat, 10 Sep 2022 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/gicv3/ -&lt;h1 id="gicv3generic-interrupt-controller---version-3">GICV3(Generic Interrupt Controller - version 3)&lt;/h1>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/compiler-tools/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/compiler-tools/gnu_tools/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/compiler-tools/gnu_tools/ -&lt;p>..&lt;/p>
+&lt;h2 id="nm---列出符号">nm - 列出符号&lt;/h2>
+&lt;p>&lt;a href="https://sourceware.org/binutils/docs/binutils/nm.html">nm (GNU Binary Utilities) (sourceware.org)&lt;/a>&lt;/p>
+&lt;pre tabindex="0">&lt;code>0x7bdc: 0x00007d97 0x00000000 0x00000000 0x00000000
+0x7bec: 0x00000000(ebx) 0x00000000(esi) 0x00000000(edi) 0x00000000 (ebp)
+0x7bfc: 0x00007c4d (elr of boot_main) 0x8ec031fa 0x8ec08ed8 0xa864e4d0
+0x7c0c: 0xb0fa7502 0xe464e6d1 0x7502a864 0xe6dfb0fa
+0x7c1c: 0x16010f60 0x200f7c78 0xc88366c0 0xc0220f01
+0x7c2c: 0x087c31ea 0x10b86600 0x8ed88e00 0x66d08ec0
+&lt;/code>&lt;/pre>- https://wangloo.github.io/posts/compiler-tools/gnu_tools/ - @2019 Notepadium.</description></item><item><title>Makefile 一些技巧</title><link>https://wangloo.github.io/posts/compiler-tools/makefile_tricks/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/compiler-tools/makefile_tricks/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/compiler-tools/makefile_tricks/ -&lt;p>..&lt;/p>
+&lt;h3 id="使用shell-变量">使用shell 变量&lt;/h3>
+&lt;p>Make 将 &lt;code>$$var&lt;/code> 转义为&lt;code>$var&lt;/code>, 供shell处理.&lt;/p>
+&lt;p>demo(源自6.828 根目录&lt;code>GNUmakefile&lt;/code>):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">handin-check&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @if &lt;span style="color:#8be9fd;font-style:italic">test&lt;/span> -n &lt;span style="color:#f1fa8c">&amp;#34;`git status -s`&amp;#34;&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span> &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> git status -s; &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">read&lt;/span> -p &lt;span style="color:#f1fa8c">&amp;#34;Untracked files will not be handed in. Continue? [y/N] &amp;#34;&lt;/span> r; &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">test&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$$&lt;/span>&lt;span style="color:#f1fa8c">r&amp;#34;&lt;/span> &lt;span style="color:#ff79c6">=&lt;/span> y; &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> &lt;span style="color:#ff79c6">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>以上demo还使用了 test 命令来终止make的执行, 如果用户没有输入&lt;code>y&lt;/code>, make将会终止执行&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/compiler-tools/makefile_tricks/ - @2019 Notepadium.</description></item><item><title>Armv8 Kernel Monitor</title><link>https://wangloo.github.io/posts/os-learning/monitor/</link><pubDate>Fri, 28 Oct 2022 22:56:19 +0800</pubDate><guid>https://wangloo.github.io/posts/os-learning/monitor/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os-learning/monitor/ -&lt;p> &lt;/p>
+&lt;h2 id="kernel-monitor-是什么">Kernel Monitor 是什么&lt;/h2>
+&lt;p>Kernel Monitor 是一个适配我们微内核操作系统的 Kernel 调试和监控系统. 它能实现内核的动态调试和监控. 同时, 它还接管内核的同步异常和系统错误, 使开发者能够了解发生异常时系统的状态.&lt;/p>
+&lt;p>Kernel Monitor 具有一定的可扩展性, 例如通过统计内核中存储的 TCB 来实时监控系统中所有线程的状态. 可根据开发者的需求添加统计的对象, 如 Endpoint, Capability等.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="kernel-monitor-总体设计">Kernel Monitor 总体设计&lt;/h2>
+&lt;p>Kernel Monitor 系统包含 Clinet 和 Server 两个部分. 简单来说, Client 负责处理用户输入, 并将输入进行解析, 封装为 一系列基础命令. 发送给 Server. Server 负责执行这些 基础的命令, 如设置断点, 查看某个地址的值等.&lt;/p>
+&lt;p>整个系统有&lt;em>两种架构&lt;/em>: 本地 Monitor 和远程 Monitor.&lt;/p>
+&lt;p>本地monitor 和远程 monitor 的区别是: &lt;strong>Monitor Client 的位置在哪, 是否与 Server 在同一个机器上&lt;/strong>.&lt;/p>
+&lt;blockquote>
+&lt;p>先说 Monitor Server, 它必须嵌入要调试的 Kernel 中, &lt;strong>位于一个地址空间&lt;/strong>, 方便操作 Kernel 的内存.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="本地-monitor">本地 Monitor&lt;/h3>
+&lt;p>在本地 Monitor 中, client 和 sever 都位于目标机(Target)上, 目标机通常是开发板.&lt;/p>
+&lt;p>对于 AArch64 体系结构来说, 最多有四个异常等级(EL0-EL3). &lt;!-- raw HTML omitted -->Client 可以运行在EL2.&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;p>&lt;img src="./%E6%9C%AC%E5%9C%B0monitor.png" alt="image-20221029141414942">&lt;/p>
+&lt;h3 id="远程-monitor">远程 Monitor&lt;/h3>
+&lt;p>远程 Monitor 架构则不同, &lt;!-- raw HTML omitted -->Clinet 运行在宿主机(Host)上&lt;!-- raw HTML omitted -->, 通常是Linux. 它与 Server 的通信是通过网络/UART实现的.&lt;/p>
+&lt;p>&lt;img src="./%E8%BF%9C%E7%A8%8Bmonitor.png" alt="image-20221029142002468">&lt;/p>
+&lt;blockquote>
+&lt;p>Monitor Client 运行在本地和远程对于实现的难度和用户体验有影响.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>如果 Client 实现在本地, 则 Client 无需实现网口和串口的驱动, 但Monitor 输入输出的串口与操作系统本身的串口相同, 信息冗杂在一起不易查看; 同时, 如果 Client 实现在本地, 那么对于ELF的解析需要在无操作系统提供的库支持下完成, 可能比较复杂.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果 Client 实现在远程, 即为 Linux 上的一个APP. 那么它和 Server 的通信就需要通过外部的网口或者串口(对于我们使用的64位开发板只引出了一个串口, 所以只能使用网口). 需要在 Server 上实现网口的驱动, 这部分比较复杂. 但是好处是 Client 的实现简单很多, 因为有 Linux APP 运行环境的支持. 同时, 远程 Monitor 架构下, Monitor 和 操作系统自身的输入输出分开, 用户可读性更好.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;p>Server 是嵌入到Kernel的代码中, 与Client进行交互. 它是整个 Monitor 系统的后端, 负责实现基础的调试操作. 例如, 设置断点, 内存的读写, 寄存器的读写等.&lt;/p>
+&lt;ul>
+&lt;li>由于Server与 Kernel 位于同一个地址空间, 所以查看/修改内存的值是非常方便的. 对于寄存器也是同理.&lt;/li>
+&lt;li>断点(Breakpoint), 监视点(Watchpoint), 单步执行(Soft step)的实现依赖与 ARMv8 提供的的 &lt;a href="https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Learn%20the%20Architecture/V8A%20Self-hosted%20debug.pdf?revision=5eff4cc6-b4ca-4017-a07d-2957307058cb">self-hosted debug&lt;/a> 支持.&lt;/li>
+&lt;/ul>
+&lt;p>同时, Server 还负责监视系统中所有的 同步异常和系统错误. 一旦发生, 可在 Monitor 中查看某些内存, 寄存器的值定位问题发生的原因.&lt;/p>
+&lt;h3 id="monitor-client-设计">Monitor Client 设计&lt;/h3>
+&lt;p>Client 的构成可分为三个模块 :&lt;/p>
+&lt;ul>
+&lt;li>用户交互模块&lt;/li>
+&lt;li>符号处理模块&lt;/li>
+&lt;li>消息收发模块&lt;/li>
+&lt;/ul>
+&lt;p>用户交互模块负责处理用户的输入输出, 调用其他两个模块完成调试命令.&lt;/p>
+&lt;p>符号处理模块负责解析可执行文件(ELF), 并建立静态符号表, 存储符号和地址的对应关系. 将用户输入的符号解析为虚拟地址, 或者反向解析.&lt;/p>
+&lt;p>消息收发模块负责处理用户的输入, 将其转化为基础, 标准的命令, 发送给Server执行. Client 和 Server之间通信的数据包协议可以使用 &lt;a href="https://sourceware.org/gdb/onlinedocs/gdb/Remote-Protocol.html">GDB Remote Serial Protocol&lt;/a> (以下简称RSP协议), 或者自己规定一个协议也是可行的.&lt;/p>
+&lt;blockquote>
+&lt;p>RSP协议支持三种基础命令:&lt;/p>
+&lt;ol>
+&lt;li>寄存器相关&lt;/li>
+&lt;li>内存相关&lt;/li>
+&lt;li>程序控制命令&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
+&lt;h3 id="启用-monitor-时-kernel-启动流程">启用 Monitor 时 Kernel 启动流程&lt;/h3>
+&lt;ol>
+&lt;li>Kernel 首先做必要的初始化, GIC, 异常向量表, MMU等.&lt;/li>
+&lt;li>将控制权交给 Monitor, 等待用户输入.&lt;/li>
+&lt;/ol>
+&lt;p> &lt;/p>
+&lt;h2 id="kernel-debug-过程示例">Kernel debug 过程示例&lt;/h2>
+&lt;h3 id="示例一-查看变量-var-的值">示例一: 查看变量 &lt;code>var&lt;/code> 的值&lt;/h3>
+&lt;ol>
+&lt;li>用户输入 &lt;code>print var&lt;/code> 指令.&lt;/li>
+&lt;li>由符号处理模块, 将&lt;code>var&lt;/code>符号转为var 虚拟地址.&lt;/li>
+&lt;li>由消息收发指令将请求封装为RSP协议包格式, 并发送到 Monitor Server.&lt;/li>
+&lt;li>执行流程交给 Monitor Server, 它访问该地址, 将内容封装发回 Monitor Client.&lt;/li>
+&lt;li>Client 输出&lt;code>var&lt;/code>的值, 继续等待用户输入&lt;/li>
+&lt;/ol>
+&lt;h3 id="示例二-添加断点到-main-函数">示例二: 添加断点到 &lt;code>main&lt;/code> 函数&lt;/h3>
+&lt;ol>
+&lt;li>用户输入 &lt;code>break main&lt;/code> 指令&lt;/li>
+&lt;li>由符号处理模块, 解析得到 &lt;code>main&lt;/code> 函数的地址.&lt;/li>
+&lt;li>消息收发模块将请求封装为RSP包格式, 发送到Monitor Server.&lt;/li>
+&lt;li>执行流程交给 Server. 它执行 &lt;em>breakpoint exception 指令&lt;/em>, 并设置相关软件断点相关寄存器&lt;/li>
+&lt;li>执行流交给 Kernel, 直到达到断点处(可使用地址+ContextID双重验证), 触发Debug异常&lt;/li>
+&lt;li>Debug异常属于同步异常, 由 Monitor 系统接管, 回到 Client 继续等待用户输入&lt;/li>
+&lt;/ol>
+&lt;h3 id="示例三-单步执行">示例三: 单步执行&lt;/h3>
+&lt;ol>
+&lt;li>用户输入 &lt;code>step&lt;/code> 指令&lt;/li>
+&lt;li>消息收发模块将请求封装为RSP包格式, 发送到 Monitor Server.&lt;/li>
+&lt;li>执行流程交给 Server, 启用 software step. 然执行一次异常返回, 回到Kernel 继续执行.&lt;/li>
+&lt;li>因为启用了 Software step, 回到 Kernel 执行完一条指令后, 就会触发 Debug异常&lt;/li>
+&lt;li>Debug 异常属于同步异常, 由 Monitor 系统接管, 回到 Client 继续等待用户输入&lt;/li>
+&lt;/ol>
+&lt;p> &lt;/p>
+&lt;h2 id="其他拓展功能">其他拓展功能&lt;/h2>
+&lt;p>back trace&lt;/p>
+&lt;p>性能分析&lt;/p>
+- https://wangloo.github.io/posts/os-learning/monitor/ - @2019 Notepadium.</description></item><item><title>ARMv8-A MMU 介绍</title><link>https://wangloo.github.io/posts/armv8/mmu/</link><pubDate>Thu, 29 Sep 2022 08:01:33 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/mmu/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/mmu/ -&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>MMU: 专用于将虚拟地址转换为物理地址. 通常配合分页机制来工作.&lt;/p>
+&lt;p>页表: 页表中的表项包含提供虚拟地址和物理地址之间的映射.&lt;/p>
+&lt;p>MMU就是直接访问页表, 并且通过将频繁使用的映射缓存到TLB中.&lt;/p>
+&lt;h3 id="mmu-的结构">MMU 的结构&lt;/h3>
+&lt;p>MMU是一种硬件, 可以通过在适当的安全状态下对其进行配置. 每个Core都有自己的MMU, 每个MMU包括:&lt;/p>
+&lt;ol>
+&lt;li>一个TLB, 缓存最近访问的映射.&lt;/li>
+&lt;li>一个Table Walk Unit, 从内存中查询页表, 得到最终的虚拟地址-物理地址的映射.&lt;/li>
+&lt;/ol>
+&lt;p>MMU 控制着整个系统的缓存策略, 内存属性和访问权限. MMU开启后, 软件发出的所有内存访问都使用虚拟地址, 要求MMU为每次访问进行地址转换.&lt;/p>
+&lt;h3 id="mmu-的配置">MMU 的配置&lt;/h3>
+&lt;p>在启用MMU前, 必须告知其页表存放的位置.&lt;/p>
+&lt;h3 id="mmu-地址转换的过程">MMU 地址转换的过程&lt;/h3>
+&lt;p>对于每个转换请求, MMU首先检查TLB是否已经对该地址缓存, 如果该地址未缓存, 则需要遍历页表.&lt;/p>
+&lt;p>页表遍历单元在页表中搜索相关的映射表项.&lt;/p>
+&lt;ul>
+&lt;li>一旦找到映射, MMU就会检查权限和属性. 决定允许本次访问, 或者发出故障信号.&lt;/li>
+&lt;li>若未找到映射, 则触发缺页异常.&lt;/li>
+&lt;/ul>
+&lt;h3 id="页表的工作原理">页表的工作原理&lt;/h3>
+&lt;p>页表的工作方式是将虚拟地址空间和物理地址空间划分为大小相等的块, 称为页面.&lt;/p>
+&lt;p>页表中的每个表项对应着一块虚拟地址空间中的块, 表项的值就是这块虚拟地址空间对应的物理地址块, 以及访问物理地址时要使用的属性.&lt;/p>
+&lt;p>在查表过程中, 将虚拟地址分为两部分:&lt;/p>
+&lt;ul>
+&lt;li>高阶位用作页表的索引. 用来找到对应的物理块&lt;/li>
+&lt;li>低地址是块内的偏移量, 不会因为映射而改变. 页表项中的物理地址与该偏移组合形成用于访问内存的物理地址.&lt;/li>
+&lt;/ul>
+&lt;h4 id="多级页表">多级页表&lt;/h4>
+&lt;p>实际实现中, 多采用多级页表的方案, 各级页表自定向下组成树的形式, 协作实现虚拟到物理地址的转换.&lt;/p>
+&lt;p>树中的分支成为页目录, 页目录中的表项不是直接存储目标物理地址, 而是下一级页表的地址; 最后一级页表的表项中保存着目标物理地址.&lt;/p>
+&lt;blockquote>
+&lt;p>多级页表是减小页表占用存储空间过大的有效方案.&lt;/p>
+&lt;/blockquote>
+&lt;p>顶级页表将地址空间划分为大块, 每个表项可以指向大小相等的内存块. 也可以指向将块进行再次细分的下一级页表. 支持大块的优点:&lt;/p>
+&lt;ul>
+&lt;li>大的内存块需要查表的次数更少&lt;/li>
+&lt;li>提升TLB的效率, 因为一个TLB表项覆盖更大的内存区域.&lt;/li>
+&lt;/ul>
+&lt;p>凡事都是有利有弊, 使用大块也增加了内存浪费, 实际使用时需要根据需要来权衡.&lt;/p>
+&lt;h2 id="内存类型">内存类型&lt;/h2>
+&lt;h3 id="普通类型内存">普通类型内存&lt;/h3>
+&lt;p>普通类型的内存是弱一致性的(weakly ordered)内存模型, 没有额外的约束, 可以提供最高的内存访问性能.&lt;/p>
+&lt;p>通常代码段, 数据段以及其他数据都放在普通内存中.&lt;/p>
+&lt;p>普通内存允许处理器做很多优化, 如分支预测, 数据预取, Cache line预取, 乱序执行等.&lt;/p>
+&lt;h3 id="设备类型内存">设备类型内存&lt;/h3>
+&lt;p>CPU访问设备内存会有很多限制, 如不能进行数据预取等. 设备类型的内存严格按照指令的顺序来执行的.&lt;/p>
+&lt;p>设备类型内容通常留给设备来访问, 例如中断控制器(GIC), 串口, 定时器等.&lt;/p>
+&lt;h2 id="两套页表">两套页表&lt;/h2>
+&lt;ul>
+&lt;li>当CPU访问的地址属于&lt;em>用户空间&lt;/em>时, MMU会自动选择&lt;strong>TTBR0&lt;/strong>指向的页表.&lt;/li>
+&lt;li>当CPU访问的地址属于&lt;em>内核空间&lt;/em>时. MMU会自动选择&lt;strong>TTBR1&lt;/strong>指向的页表&lt;/li>
+&lt;/ul>
+&lt;p>EL2和EL3没有TTBR1, 只有TTBR0. 也就意味着:&lt;/p>
+&lt;p>• If EL2 is using AArch64, it can only use Virtual Addresses in the range 0x0 to 0x0000FFFF_FFFFFFFF.
+• If EL3 is using AArch64, it can only use Virtual Addresses in the range 0x0 to 0x0000FFFF_FFFFFFFF.&lt;/p>
+&lt;h2 id="越权-越界">越权, 越界&lt;/h2>
+&lt;p>在未使用虚拟地址空间之前, 所有的用户程序都可以访问全部的物理内存, 所以恶意程序可以修改其他程序的内存数据, 这使得整个系统处于危险的状态. 每个进程的地址空间都要受到保护, 以免被其他进程有意/无意的破坏.&lt;/p>
+&lt;p>现代操作系统中, 每个进程都有独立的虚拟地址空间. 在进程的角度上, 它拥有整个虚拟地址空间. 不同的进程可以同时使用一个虚拟地址, MMU通过页表将其映射到合适的物理地址.&lt;/p>
+&lt;h3 id="两个物理地址空间">两个物理地址空间&lt;/h3>
+&lt;p>ARMv8 体系结构定义两个物理地址空间: secure address space 和 non-secure address space.&lt;/p>
+&lt;p>理论上, 安全和非安全的地址空间是相互独立的, 然而现实中大多数系统都将安全和非安全视为访问控制的属性. 正常(非安全)世界只能访问非安全的物理内存; 而安全世界可以访问这两个地址空间.&lt;/p>
+&lt;h3 id="armv8-mmu权限控制">ARMv8 MMU权限控制&lt;/h3>
+&lt;p>程序请求某个地址时, MMU需要进行权限检查. 如果请求的地址是数据, 则检查读写权限; 如果请求的是地址, 则检查其可执行权限.&lt;/p>
+&lt;p>ARMv8 页表项的AP字段控制该不同异常等级下, 页面的读写权限.&lt;/p>
+&lt;p>[表格]&lt;/p>
+&lt;p>ARMv8 页表项的PNX字段和XN/UXN字段来设置CPU是否对这个页面有执行权限.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>当系统有两套页表时, UXN是用来设置用户空间页面是否有可执行权限; PXN 用来设置特权空间的页面是否有可执行权限.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>若系统只有一套页表, 则通过XN字段控制&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="页表的结构">页表的结构&lt;/h2>
+&lt;h3 id="地址宽度">地址宽度&lt;/h3>
+&lt;p>48bit&lt;/p>
+&lt;h3 id="页面粒度">页面粒度&lt;/h3>
+&lt;p>页面粒度表示一次最小分配内存块的大小. AArch64支持三种页的大小, 4KB, 16KB, 64KB. 支持哪一种是由实现定义的。创建页表的代码能够读取系统寄存器&lt;code>ID_AA64MMFR0_EL1&lt;/code>，以找出哪些是受支持的大小。Cortex-A53处理器支持所有三种尺寸，但有些处理器的早期版本并非如此，例如Cortex-A57，它不支持16K粒度。&lt;/p>
+&lt;h3 id="aarch64-页表项结构">AArch64 页表项结构&lt;/h3>
+&lt;h4 id="无效页表项">无效页表项&lt;/h4>
+&lt;h4 id="table">table&lt;/h4>
+&lt;h4 id="block">block&lt;/h4>
+&lt;h3 id="页表结构4kb页面为例">页表结构(4KB页面为例)&lt;/h3>
+&lt;p>以4KB页面粒度, 虚拟地址宽度为 48位. 使用4级页表.&lt;/p>
+&lt;p>48位地址每层转换有9个地址位，即每层512个条目，最后12位选择4kB内的一个字节，直接来自原始地址&lt;/p>
+&lt;h2 id="虚拟地址到物理地址的转换过程">虚拟地址到物理地址的转换过程&lt;/h2>
+&lt;p>当处理器为获取指令或数据访问发出一个64位的虚拟地址时，MMU硬件将虚拟地址转换为相应的物理地址。对于虚拟地址，前16位[63:47]必须全部为0或1，否则地址将触发故障。&lt;/p>
+&lt;h3 id="non-secure-and-secure-access">Non-secure and secure access&lt;/h3>
+&lt;p>ARMv8-A架构定义了两种安全状态:安全的和非安全的。它还定义了两个物理地址空间:安全的和非安全的. 正常(非安全)世界只能访问非安全物理地址空间。安全世界可以访问两个物理地址空间。这也是通过转换表来控制的。&lt;/p>
+&lt;p>在非安全状态下，转换表中的NS位和NSTable位将被忽略。只能访问非安全内存。在安全状态下，NS位和NSTable位控制虚拟地址转换为安全物理地址还是非安全物理地址。&lt;/p>
+&lt;p>You can use SCR_EL3.SIF 来禁用安全世界访问非安全地址.&lt;/p>
+&lt;h2 id="相关的寄存器">相关的寄存器&lt;/h2>
+&lt;p>与地址转换相关的寄存器主要有以下几个:&lt;/p>
+&lt;ol>
+&lt;li>转换控制寄存器(TCR)&lt;/li>
+&lt;li>系统控制寄存器(SCTLR)&lt;/li>
+&lt;li>页表基地址寄存器(TTBR)&lt;/li>
+&lt;/ol>
+&lt;h3 id="tcr">TCR&lt;/h3>
+&lt;p>IPS: 配置地址转换后输出物理地址的最大值&lt;/p>
+&lt;p>TxSz: 配置输入地址的最大值, 即虚拟地址的宽度&lt;/p>
+&lt;p>TG1: 配置TTBR1页表的页面粒度大小&lt;/p>
+&lt;p>SHx: 配置TTBRx相关内存的Cache共享属性&lt;/p>
+&lt;p>ORGNx:&lt;/p>
+&lt;p>IRGNx:&lt;/p>
+&lt;h3 id="sctlr">SCTLR&lt;/h3>
+&lt;p>M: Disable/Enable MMU地址转换&lt;/p>
+&lt;p>C: Disable/Enable Data Cache&lt;/p>
+&lt;p>I: Disable/Enable Instruction Cache&lt;/p>
+&lt;h3 id="ttbr">TTBR&lt;/h3>
+&lt;p>存储页表的基地址&lt;/p>
+&lt;h2 id="aarch32-虚拟内存系统">AArch32 虚拟内存系统&lt;/h2>
+&lt;p>ARMv8 AArch32 的虚拟内存系统向后兼容ARMv7, 与ARMv7的基本一致.&lt;/p>
+- https://wangloo.github.io/posts/armv8/mmu/ - @2019 Notepadium.</description></item><item><title>GICv3 - for ARMV8</title><link>https://wangloo.github.io/posts/armv8/gicv3/</link><pubDate>Sat, 10 Sep 2022 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/gicv3/ -&lt;h1 id="gicv3generic-interrupt-controller---version-3">GICV3(Generic Interrupt Controller - version 3)&lt;/h1>
 &lt;h2 id="关于gic">关于GIC&lt;/h2>
 &lt;p>GIC即中断控制器, 负责管理中断的接收, 屏蔽, 路由等相关任务, 并向系统程序员提供配置的接口.&lt;/p>
 &lt;p>GIC与异常模型协作完成中断的整个生命周期, GIC主要负责&lt;code>中断源-产生IRQ/FIQ信号&lt;/code>这段路, 关于处理IRQ/FIQ则是由CPU内部的&lt;em>异常模型&lt;/em>来完成.&lt;/p>
@@ -211,7 +438,7 @@
 &lt;h2 id="编程指导">编程指导&lt;/h2>
 &lt;h3 id="初始化">初始化&lt;/h3>
 &lt;p>由于 &lt;em>Distributor&lt;/em> 整个系统共享的, 所以必须在其他核启动之前, 由主核完成初始化. 然后当所有核都启动后, 各自完成各自 &lt;em>Redistributor&lt;/em> 和 &lt;em>CPU interface&lt;/em> 的初始化工作.&lt;/p>
-- https://wangloo.github.io/posts/armv8/gicv3/ - @2019 Notepadium.</description></item><item><title>Useful Shell Script Examples</title><link>https://wangloo.github.io/posts/shell-script/</link><pubDate>Wed, 20 Jul 2022 11:54:13 +0800</pubDate><guid>https://wangloo.github.io/posts/shell-script/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/shell-script/ -&lt;h2 id="判断执行脚本时带的参数">判断执行脚本时带的参数&lt;/h2>
+- https://wangloo.github.io/posts/armv8/gicv3/ - @2019 Notepadium.</description></item><item><title>Useful Shell Script Examples</title><link>https://wangloo.github.io/posts/shell/shell-script/</link><pubDate>Wed, 20 Jul 2022 11:54:13 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-script/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/shell/shell-script/ -&lt;h2 id="判断执行脚本时带的参数">判断执行脚本时带的参数&lt;/h2>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$#&lt;/span> -ne &lt;span style="color:#bd93f9">1&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;ONE parameter is needed&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">exit&lt;/span> -1
@@ -323,7 +550,7 @@ Light Gray 0;37 White 1;37
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>INFO &lt;span style="color:#f1fa8c">&amp;#34;This is an infomation&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>WARN &lt;span style="color:#f1fa8c">&amp;#34;This is a log&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/shell-script/ - @2019 Notepadium.</description></item><item><title>Bit Operation Hacks</title><link>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ -&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/shell/shell-script/ - @2019 Notepadium.</description></item><item><title>Bit Operation Hacks</title><link>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ -&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> v;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> ((v &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> (v &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>)) &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>)
@@ -691,247 +918,4 @@ Light Gray 0;37 White 1;37
 虚拟页.&lt;/p>
 &lt;p>原因是: 在一个页面的不同段可能&lt;strong>权限不同&lt;/strong>, 所以不能使用同一映射.&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/posts/os-learning/elf-format/ - @2019 Notepadium.</description></item><item><title>Improving the quality of C code</title><link>https://wangloo.github.io/posts/codestyle/improve_quality/</link><pubDate>Tue, 14 Jun 2022 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/improve_quality/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/improve_quality/ -&lt;h2 id="添加更多的编译选项comiler-options来防止bug">添加更多的编译选项(comiler options)来防止bug&lt;/h2>
-&lt;p>对于我常用的&lt;code>GCC&lt;/code>, 推荐开启一下的compiler options:&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;code>-Wall&lt;/code>: enable a lot of common warnings&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;code>-Wno-format-truncation&lt;/code>: warns about the snprintf output buffer not being
-large enough for a corresponding “%s” in the format string.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;code>-Werror&lt;/code>: turn warnings into errors.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="动态申请的空间到底要不要释放">动态申请的空间到底要不要释放&lt;/h2>
-&lt;p>When using a barebones embedded OS, you absolutely need to tightly manage your memory.&lt;/p>
-&lt;p>但是, 如果你是写应用业务的代码, 特别是在内存足够的场景下. 最好不要手动释放内存,
-因为当线程/进程退出时, 操作系统会自动帮我们释放. &lt;strong>某些情况下, 释放内存的操作会很大程度上增加逻辑的复杂度&lt;/strong>.&lt;/p>
-&lt;blockquote>
-&lt;p>如果你是一个内核程序员, 则必须手动的释放. 不用怀疑.&lt;/p>
-&lt;/blockquote>
-&lt;p> &lt;/p>
-&lt;h3 id="尽可能在创建变量时赋初值">尽可能在创建变量时赋初值&lt;/h3>
-&lt;p>放置某些变量创建后是 &lt;code>magic value&lt;/code>. 而使用这些变量可能不会立马导致错误, 但是这是一个隐患.&lt;/p>
-&lt;p>但这会产生一个问题, 有时我们定义变量之后的不久之后就会对其赋予正确的值, 这时候初值就是
-多余的. 而且维护者可能认为这个值是meaningful, 这就要求我们如果要赋初值, 就要说明这个值
-仅仅是&lt;strong>无意义的&lt;/strong>初值.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h3 id="使用define-enum">使用&lt;code>#define&lt;/code>, &lt;code>enum&lt;/code>&lt;/h3>
-&lt;p>对于代码在不同地方使用的同一个值, 应使用&lt;code>#define&lt;/code>来声明使得代码&lt;strong>maintainable&lt;/strong>.&lt;/p>
-&lt;p>如果这些值有多个且能规划为同一类别, 则还可将&lt;code>#define&lt;/code>的方式换为&lt;code>enum&lt;/code>. 这会使代码更加&lt;strong>meaningful&lt;/strong>&lt;/p>
-&lt;blockquote>
-&lt;p>使用&lt;code>enum&lt;/code>使还要注意其所占内存空间在不同架构中可能不同的问题, see &lt;a href="https://www.cnblogs.com/bluettt/p/16041867.html">enum的优势和漏洞&lt;/a>&lt;/p>
-&lt;/blockquote>
-&lt;p> &lt;/p>
-&lt;h3 id="使用typedef优化function-pointer">使用&lt;code>typedef&lt;/code>优化function pointer&lt;/h3>
-&lt;p> &lt;/p>
-&lt;h3 id="重定义一套自己的类型">重定义一套自己的类型&lt;/h3>
-&lt;p>在开发大项目时, 需要考虑可移植性的情况下, 最好利用&lt;code>typedef&lt;/code>对类型进行重定义.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#if SYSTEM1
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> &lt;span style="color:#ff79c6">typedef&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> INT32;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#else
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> &lt;span style="color:#ff79c6">typedef&lt;/span> &lt;span style="color:#8be9fd">long&lt;/span> INT32;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#endif
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如上, 对于某些架构&lt;code>int&lt;/code>类型可能不是32bit, 此时就要使用&lt;code>long&lt;/code>. 这种定义的方式会保证我们的系统
-在任何架构中都不会出现类型的bug. 而且也增加了代码的&lt;strong>readability&lt;/strong>.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="善用0">善用&lt;code>~0&lt;/code>&lt;/h2>
-&lt;p>在做嵌入式编程时, 有时在设置掩码(mask)或者其他情况会要用到&lt;strong>全1&lt;/strong>的变量值, 你是否经常这样声明?&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> mask &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0xffff&lt;/span>;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>暂且不谈&lt;code>int&lt;/code>类型到底占多少字节的问题. 就像上面一样, 我们程序员经常忘记某个类型的大小,
-而少添加了&lt;code>f&lt;/code>. 会导致变量&lt;code>mask&lt;/code>的值不是全1(32位情况下).&lt;/p>
-&lt;p>这是要变换一下思维, 使用&lt;code>~0&lt;/code>的定义方法就可轻松化解, 无需管变量的类型是什么.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> mask &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">~&lt;/span>&lt;span style="color:#bd93f9">0&lt;/span>;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
-&lt;h2 id="合理的使用goto语句">合理的使用&lt;code>goto&lt;/code>语句&lt;/h2>
-&lt;p>在大学课堂中, 我们老师说过禁止使用&lt;code>goto&lt;/code>语句, 但却没有给出明确的原因.&lt;/p>
-&lt;p>实际上, &lt;strong>合理的&lt;/strong>使用&lt;code>goto&lt;/code>能够极大的减少程序的冗余度.&lt;/p>
-&lt;p>&lt;code>goto&lt;/code>语句常用于程序出现错误要退出时, 可能有多个情况会使用重复的代码处理,
-例如释放一些allocated memory. 相较于使用&lt;code>flag&lt;/code>, 使用&lt;code>goto&lt;/code>显然更加clearly and readability.&lt;/p>
-&lt;p>所以, 在面对重复的错误处理代码时, 想想能不能用&lt;code>goto&lt;/code>进行优化. 当然, &lt;strong>避免过早优化&lt;/strong>.&lt;/p>
-&lt;blockquote>
-&lt;p>注意, &lt;code>goto&lt;/code>出现的场景其实很受限. Never use a backward &lt;code>goto&lt;/code> or jump into control statements.&lt;/p>
-&lt;/blockquote>
-&lt;p> &lt;/p>
-&lt;h2 id="永远为你的函数设置error-return-value">永远为你的函数设置error return value&lt;/h2>
-&lt;p>一旦你的函数可能被其他人调用, 那么养成设置return value的习惯. 即便你现在的实现
-并不会产生任何错误, 也请返回&lt;code>success&lt;/code>.&lt;/p>
-&lt;p>这样做的原因是, caller可以根据你的定义做错误判断, 即便以后你的实现加上了出错情况,
-上层的代码也不需要修改.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="变量类型的选择">变量类型的选择&lt;/h2>
-&lt;ul>
-&lt;li>名字, 特定不变的字符串使用&lt;code>const char *&lt;/code>, 甚至&lt;code>const char const*&lt;/code>&lt;/li>
-&lt;li>长度使用&lt;code>size_t&lt;/code>&lt;/li>
-&lt;li>表示类型的参数尽可能使用&lt;code>enum&lt;/code>&lt;/li>
-&lt;li>循环变量i使用&lt;code>signed&lt;/code>, 避免溢出后出错&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="reference">Reference&lt;/h2>
-&lt;p>&lt;a href="https://www.msweet.org/blog/2020-12-31-how-i-improve-my-c-code-quality.html">How I Improve My (C) Code Quality&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://www.codeproject.com/Articles/357065/Ten-Fallacies-of-Good-C-Code">Ten Fallacies of Good C Code&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/codestyle/improve_quality/ - @2019 Notepadium.</description></item><item><title>MicroKernel Learning: SeL4</title><link>https://wangloo.github.io/posts/microkernel/sel4/</link><pubDate>Sat, 04 Jun 2022 11:52:51 +0800</pubDate><guid>https://wangloo.github.io/posts/microkernel/sel4/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/microkernel/sel4/ -&lt;h2 id="sel4-capabilities">seL4 Capabilities&lt;/h2>
-&lt;p>In seL4, capabilities are stored in &lt;strong>C-space&lt;/strong>. C-space is a hierarchical data structure very similar to &lt;strong>page table&lt;/strong>.&lt;/p>
-&lt;ul>
-&lt;li>page table is a mapping from virtual address to physical address.&lt;/li>
-&lt;li>C-space is a mapping from &lt;strong>object ID&lt;/strong> to &lt;strong>capability&lt;/strong>.&lt;/li>
-&lt;li>Kernel object is made up of several &lt;strong>C-nodes&lt;/strong>, just like a page table made up of individual page tables.&lt;/li>
-&lt;li>Each C-nodes is an array of cap &lt;em>slots&lt;/em>, which contain capability.&lt;/li>
-&lt;/ul>
-&lt;p>Inaccessible to userland, you can never hold an &lt;strong>actual capability&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>You can only hold a reference to capability, which pointers into C-space(slot addresses)&lt;/li>
-&lt;li>These C-space addresses are called &lt;strong>CPTRs&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>You don&amp;rsquo;t need to do the transform, because this is typically extracted in some libs.&lt;/p>
-&lt;/blockquote>
-&lt;p>Capabilities convey specific privilege (acces rights)&lt;/p>
-&lt;ul>
-&lt;li>Read, Write, Execute, GrantReply(&lt;code>call&lt;/code>), Grant(&lt;code>cap transfer&lt;/code>)&lt;/li>
-&lt;/ul>
-&lt;p>Main operations on capabilities:&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>Invoke&lt;/code>perform operation on object referred to by cap.
-&lt;ul>
-&lt;li>For example, map some frame into memory. You need to have capabilities to both the frame and address space.&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>Copy&lt;/code>|&lt;code>Mint&lt;/code>|&lt;code>Grant&lt;/code>: create copy of cap with &lt;strong>same/lesser&lt;/strong> privilege.&lt;/li>
-&lt;li>&lt;code>Move&lt;/code>|&lt;code>Mutate&lt;/code>: transfer to different address with &lt;strong>same/lesser&lt;/strong> privilege.
-&lt;ul>
-&lt;li>Between C-space or within C-space.&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>Delete&lt;/code>: invalidate slot(cleans up object if this is the only cap to it)&lt;/li>
-&lt;li>&lt;code>Revoke&lt;/code>: delete any derived(eg. copied or minted) caps&lt;/li>
-&lt;/ul>
-&lt;h3 id="capability-derivation">Capability Derivation&lt;/h3>
-&lt;h4 id="mint-operation">MINT OPERATION&lt;/h4>
-&lt;p>The &lt;strong>Mint&lt;/strong> operation creates a new, less powerful cap&lt;/p>
-&lt;ul>
-&lt;li>Can add badge&lt;/li>
-&lt;li>Can strip access rights, eg &lt;code>RW-&amp;gt;RO&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>mint(dest, src, rights, badge)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>The first two arguement are &lt;strong>capability pointers(CPTR)&lt;/strong> to a C-space(represented by C-node), which are references inside C-node.&lt;/li>
-&lt;li>The &lt;strong>destination C-node cap&lt;/strong> must allow modification&lt;/li>
-&lt;li>Then you have the rights and the &lt;em>batch&lt;/em> of the new cap.&lt;/li>
-&lt;/ul>
-&lt;p>📌 This is an alternative of sending addressed capabilities by &lt;strong>IPC operation&lt;/strong>.
-That is what operating system do to set up protection domains for &lt;strong>user level process&lt;/strong>.&lt;/p>
-&lt;h4 id="copy-operation">COPY OPERATION&lt;/h4>
-&lt;blockquote>
-&lt;p>Copy as a version of &lt;em>Mint&lt;/em>.&lt;/p>
-&lt;/blockquote>
-&lt;p> &lt;/p>
-&lt;h2 id="sel4-kernel-objects">seL4 Kernel Objects&lt;/h2>
-&lt;p>In file &lt;code>libsel4\include\sel4\objecttype.h&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">typedef&lt;/span> &lt;span style="color:#ff79c6">enum&lt;/span> api_object {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_UntypedObject,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_TCBObject,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_EndpointObject,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_NotificationObject,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_CapTableObject,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#ifdef CONFIG_KERNEL_MCS
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> seL4_SchedContextObject,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_ReplyObject,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#endif
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> seL4_NonArchObjectTypeCount,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} seL4_ObjectType;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
-&lt;h2 id="sel4-system-calls">seL4 System Calls&lt;/h2>
-&lt;p>seL4 has &lt;code>11&lt;/code> syscalls:&lt;/p>
-&lt;p>&lt;code>Yield()&lt;/code>: invokes scheduler&lt;/p>
-&lt;ul>
-&lt;li>does NOT require a capability!&lt;/li>
-&lt;/ul>
-&lt;p>&lt;code>Send()&lt;/code>,&lt;code>Recv()&lt;/code> and variants/combinations thereof: IPC operations&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>Call()&lt;/code>,&lt;code>ReplyRecv()&lt;/code>: usually invokes by client/server&lt;/li>
-&lt;li>&lt;code>Send()&lt;/code>, &lt;code>NBSend()&lt;/code>: send-only and non-blocking version of it.&lt;/li>
-&lt;li>&lt;code>Recv()&lt;/code>, &lt;code>NBRecv()&lt;/code>, &lt;code>NBSendRecv()&lt;/code>&lt;/li>
-&lt;li>&lt;code>Wait()&lt;/code>, &lt;code>NBWait()&lt;/code>, &lt;code>NBSendWait()&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>We just use &lt;code>Call()&lt;/code> normally, the others are only for bootstrapping protocols and exception handling.&lt;/p>
-&lt;/blockquote>
-&lt;p>Call() is atomic Send() + reply-object setup + Wait()&lt;/p>
-&lt;ul>
-&lt;li>cannot be simulated with one-way operations!&lt;/li>
-&lt;/ul>
-&lt;p>ReplyRecv() is NBSend() + Recv()&lt;/p>
-&lt;h3 id="different-object-support-different-operations">Different object support different operations&lt;/h3>
-&lt;h4 id="endpoints">ENDPOINTS&lt;/h4>
-&lt;p>Endpoints support all 10 IPC variants.&lt;/p>
-&lt;h4 id="notifications">NOTIFICATIONS&lt;/h4>
-&lt;p>Notifications support:&lt;/p>
-&lt;ul>
-&lt;li>NBSend() - aliased as Signal()&lt;/li>
-&lt;li>Wait()&lt;/li>
-&lt;li>NBWait() - aliased as Poll()&lt;/li>
-&lt;/ul>
-&lt;h4 id="other-objects">OTHER OBJECTS&lt;/h4>
-&lt;p>Other objects only supports &lt;code>Call()&lt;/code> operation.&lt;/p>
-&lt;ul>
-&lt;li>Appear as (kernel-implemented) servers. If you invoking a method on an object, this is done by treating the object as a kernel-implemented server. And you invoke it with a &lt;code>call()&lt;/code> operation just as you do a normal server invocation.&lt;/li>
-&lt;li>Each of these kernel objects has a different kernel-defined protocol
-&lt;ul>
-&lt;li>operations encoded in message tag&lt;/li>
-&lt;li>parameters passed in message words&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Mostly hidden behind &lt;strong>syscall&lt;/strong> wrappers, user do not need to know this details.&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="sel4-ipc">seL4 IPC&lt;/h2>
-&lt;blockquote>
-&lt;p>IPC in seL4 is a way to realize &lt;strong>cross-domain&lt;/strong> invocation.&lt;/p>
-&lt;/blockquote>
-&lt;p>seL4 IPC is not a mechanism for shipping data. Transfering data is axillary but not the primary purpose.&lt;/p>
-&lt;p>seL4 IPC is a protected procedure call, a user-controlled context switch(from clients context into server context).&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="sel4-threads">seL4 Threads&lt;/h2>
-&lt;h3 id="creating-a-thread">Creating a thread&lt;/h3>
-&lt;ol>
-&lt;li>Obtain a TCB object&lt;/li>
-&lt;li>Set attributes: V-space, C-space, fault endpoint, IPC buffer&lt;/li>
-&lt;li>Set Scheduling parameters:
-&lt;ul>
-&lt;li>priority, scheduling context, timeout endpoint(maybe MCP)&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Set architecture-related registers&lt;/li>
-&lt;/ol>
-&lt;h3 id="threads-and-stacks">Threads and Stacks&lt;/h3>
-&lt;p>Stacks are completely user-managed, kernel doesn&amp;rsquo;t care!&lt;/p>
-&lt;blockquote>
-&lt;p>Kernel only preserves SP.. on context switch&lt;/p>
-&lt;/blockquote>
-&lt;p>Stack location, allocation, size must be managed by &lt;strong>userland&lt;/strong>.&lt;/p>
-&lt;p>Kernel beware of stack overflow&lt;/p>
-- https://wangloo.github.io/posts/microkernel/sel4/ - @2019 Notepadium.</description></item><item><title>HuGo Configuration</title><link>https://wangloo.github.io/posts/hugo/</link><pubDate>Sat, 21 May 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/hugo/ -&lt;h1 id="emoji-support">Emoji Support&lt;/h1>
-&lt;p>&lt;a href="https://stackoverflow.com/questions/41047920/adding-emoji-to-a-hugo-page-variable">Adding emoji tutorial&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://www.webfx.com/tools/emoji-cheat-sheet/">Emoji chart&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/hugo/ - @2019 Notepadium.</description></item><item><title>2019 Stanford Commencement Timcook</title><link>https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/</link><pubDate>Wed, 18 May 2022 19:32:38 +0800</pubDate><guid>https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/ -&lt;h1 id="content">Content&lt;/h1>
-&lt;p>Fourteen years ago, Steve stood on this stage and told your predecessors &amp;ldquo;Your time is limited. So don&amp;rsquo;t waste is living someone else&amp;rsquo;s life.&amp;rdquo;&lt;/p>
-&lt;p>So what is true then is true now. Don&amp;rsquo;t waste your time living someone else&amp;rsquo;s life.
-Don&amp;rsquo;t try to emulate the people who came before you to the exclusion of
-everything else, contorting into a shape that doesn&amp;rsquo;t fit.&lt;/p>
-&lt;p>Graduates, the fact is, when your time comes, and it will, you will never be ready.
-But you&amp;rsquo;re not suppposed to be. Find the hope in the unexpected. Find the hope
-int the challenge. Find your vision on the solitary road. Don&amp;rsquo;t get distracted.
-There are too many people who want credit without responsibility. Too many who
-show up for the ribbon cutting without building anything worth a damn.&lt;/p>
-&lt;p>Be different. Leave something worthy. And always remember that you can&amp;rsquo;t take it
-with you. You&amp;rsquo;re going to have to pass it on.&lt;/p>
-&lt;p>Thank you very much. And Congratulations to the Class of 2019!&lt;/p>
-&lt;p>&lt;a href="https://www.youtube.com/watch?v=2C2VJwGBRRw&amp;amp;t=80s">YouTube vidio&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/os-learning/elf-format/ - @2019 Notepadium.</description></item></channel></rss>
