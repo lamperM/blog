@@ -39,13 +39,7 @@ dev dev
 - https://wangloo.github.io/posts/git/ - @2019 Notepadium.</description></item><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/compiler-tools/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/compiler-tools/gnu_tools/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/compiler-tools/gnu_tools/ -&lt;p>..&lt;/p>
 &lt;h2 id="nm---列出符号">nm - 列出符号&lt;/h2>
 &lt;p>&lt;a href="https://sourceware.org/binutils/docs/binutils/nm.html">nm (GNU Binary Utilities) (sourceware.org)&lt;/a>&lt;/p>
-&lt;pre tabindex="0">&lt;code>0x7bdc: 0x00007d97 0x00000000 0x00000000 0x00000000
-0x7bec: 0x00000000(ebx) 0x00000000(esi) 0x00000000(edi) 0x00000000 (ebp)
-0x7bfc: 0x00007c4d (elr of boot_main) 0x8ec031fa 0x8ec08ed8 0xa864e4d0
-0x7c0c: 0xb0fa7502 0xe464e6d1 0x7502a864 0xe6dfb0fa
-0x7c1c: 0x16010f60 0x200f7c78 0xc88366c0 0xc0220f01
-0x7c2c: 0x087c31ea 0x10b86600 0x8ed88e00 0x66d08ec0
-&lt;/code>&lt;/pre>- https://wangloo.github.io/posts/compiler-tools/gnu_tools/ - @2019 Notepadium.</description></item><item><title>Makefile 一些技巧</title><link>https://wangloo.github.io/posts/compiler-tools/makefile_tricks/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/compiler-tools/makefile_tricks/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/compiler-tools/makefile_tricks/ -&lt;p>..&lt;/p>
+- https://wangloo.github.io/posts/compiler-tools/gnu_tools/ - @2019 Notepadium.</description></item><item><title>Makefile 一些技巧</title><link>https://wangloo.github.io/posts/compiler-tools/makefile_tricks/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/compiler-tools/makefile_tricks/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/compiler-tools/makefile_tricks/ -&lt;p>..&lt;/p>
 &lt;h3 id="使用shell-变量">使用shell 变量&lt;/h3>
 &lt;p>Make 将 &lt;code>$$var&lt;/code> 转义为&lt;code>$var&lt;/code>, 供shell处理.&lt;/p>
 &lt;p>demo(源自6.828 根目录&lt;code>GNUmakefile&lt;/code>):&lt;/p>
@@ -282,7 +276,7 @@ dev dev
 &lt;/blockquote>
 &lt;h2 id="中断类型">中断类型&lt;/h2>
 &lt;h3 id="locality-specific-peripheral-interrupt-lpi">Locality-specific Peripheral Interrupt (LPI)&lt;/h3>
-&lt;p>LPIs are always &lt;a href="https://en.wikipedia.org/wiki/Message_Signaled_Interrupts">message-based interrupts&lt;/a> interrupts. 这里不做介绍.&lt;a href="https://en.wikipedia.org/wiki/Message_Signaled_Interrupts">&lt;/a>&lt;/p>
+&lt;p>LPIs are always &lt;a href="https://en.wikipedia.org/wiki/Message_Signaled_Interrupts">message-based interrupts&lt;/a> interrupts. 这里不做介绍.&lt;a href="https://en.wikipedia.org/wiki/Message_Signaled_Interrupts">wiki&lt;/a>&lt;/p>
 &lt;h3 id="private-peripheral-interrupt-ppi">Private Peripheral Interrupt (PPI)&lt;/h3>
 &lt;p>PPI是路由到&lt;strong>单个CPU&lt;/strong>的外设中断, 不同的CPU可以使用相同的中断号. 例如, 所有CPU都可以使用中断号16表示私有的定时器中断.&lt;/p>
 &lt;h3 id="shared-peripheral-interrupt-spi">Shared Peripheral Interrupt (SPI)&lt;/h3>
@@ -357,7 +351,7 @@ dev dev
 &lt;p>❓ EOI 和 deactivated 分开进行暂时还不知道应用场景.&lt;/p>
 &lt;/blockquote>
 &lt;h2 id="中断id-intid">中断ID: INTID&lt;/h2>
-&lt;p>INTID 是中断的标识符, 它的最大值是&lt;em>实现定义&lt;/em>的.&lt;/p>
+&lt;p>INTID 是中断的标识符, 它的最大值是&lt;em>实现定义&lt;/em>的, 可以在&lt;code>GICD_TYPER.IDbits&lt;/code>中读取。&lt;/p>
 &lt;p>INTID按照中断类型分类的, 对照表如下:&lt;/p>
 &lt;table>
 &lt;thead>
@@ -588,7 +582,7 @@ Light Gray 0;37 White 1;37
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>INFO &lt;span style="color:#f1fa8c">&amp;#34;This is an infomation&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>WARN &lt;span style="color:#f1fa8c">&amp;#34;This is a log&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/shell/shell-script/ - @2019 Notepadium.</description></item><item><title>Bit Operation Hacks</title><link>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ -&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/shell/shell-script/ - @2019 Notepadium.</description></item><item><title>C 语言位操作技巧</title><link>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ -&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> v;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> ((v &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> (v &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>)) &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>)
