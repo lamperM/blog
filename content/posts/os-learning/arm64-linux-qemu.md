@@ -96,7 +96,7 @@ tracefs /sys/kernel/tracing tracefs defaults        0       0
 
 下载源码：[Releases · strace/strace (github.com)](https://github.com/strace/strace/releases)
 
-编译&&安装
+编译&&安装:
 
 ```sh
 # 确定编译的参数

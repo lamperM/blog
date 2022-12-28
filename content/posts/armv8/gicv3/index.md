@@ -29,7 +29,7 @@ GIC与异常模型协作完成中断的整个生命周期, GIC主要负责`中�
 
 ### Locality-specific Peripheral Interrupt (LPI)  
 
-LPIs are always [message-based interrupts](https://en.wikipedia.org/wiki/Message_Signaled_Interrupts) interrupts.   这里不做介绍.[](https://en.wikipedia.org/wiki/Message_Signaled_Interrupts)
+LPIs are always [message-based interrupts](https://en.wikipedia.org/wiki/Message_Signaled_Interrupts) interrupts.   这里不做介绍.[wiki](https://en.wikipedia.org/wiki/Message_Signaled_Interrupts)
 
 ### Private Peripheral Interrupt (PPI)  
 
@@ -114,7 +114,7 @@ The Distributor, Redistributor  一起组成了 *IRI(Interrupt Routing Infrastru
 
 ## 中断ID: INTID
 
-INTID 是中断的标识符, 它的最大值是*实现定义*的.
+INTID 是中断的标识符, 它的最大值是*实现定义*的, 可以在`GICD_TYPER.IDbits`中读取。
 
 INTID按照中断类型分类的, 对照表如下:
 

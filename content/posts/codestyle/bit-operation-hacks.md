@@ -1,8 +1,9 @@
 ---
-title: "Bit Operation Hacks"
+title: "C 语言位操作技巧"
 date: 2022-07-03T09:44:13+08:00
-description: Some hacks about bit-operation. Updating...
 tags: [c, weapons]
+description: Some hacks about bit-operation. Updating...
+
 ---
 
 ## 判断一个数是否为2的幂
