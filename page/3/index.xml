@@ -1,4 +1,234 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>LaTeX Vim Tutorial</title><link>https://wangloo.github.io/posts/latex-vim-tutorial/</link><pubDate>Wed, 04 May 2022 17:07:51 +0800</pubDate><guid>https://wangloo.github.io/posts/latex-vim-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/latex-vim-tutorial/ -&lt;h2 id="use-plugin-vimtex">Use plugin &lt;code>vimtex&lt;/code>&lt;/h2>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Numberical Analysis Exam</title><link>https://wangloo.github.io/posts/numberical-analysis/</link><pubDate>Sat, 07 May 2022 18:04:58 +0800</pubDate><guid>https://wangloo.github.io/posts/numberical-analysis/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/numberical-analysis/ -&lt;p>&lt;img src="qingdao-tzjt.JPG" alt="qingdao">&lt;/p>
+&lt;h1 id="考试大纲">考试大纲&lt;/h1>
+&lt;p>🎯 To Reader:&lt;/p>
+&lt;p>This blog is JUST FOR EXAMINATION! If you are interested in numberical analysis, please quit this web.
+I try to sort out the knowledge points of the course, just to pass the exam.&lt;/p>
+&lt;p>Based on the course of Professor Zhong Erjie of UESTC.&lt;/p>
+&lt;p>💢 &lt;strong>I hate mathematics!&lt;/strong>&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="第二章-非线性方程方程组的求解">第二章 非线性方程/方程组的求解&lt;/h2>
+&lt;h3 id="1-二分法及迭代">1. 二分法及迭代&lt;/h3>
+&lt;ul>
+&lt;li>二分法误差估计定理&lt;/li>
+&lt;/ul>
+&lt;h3 id="2-不动点迭代">2. 不动点迭代&lt;/h3>
+&lt;ul>
+&lt;li>不动点及不动点迭代的概念&lt;/li>
+&lt;li>迭代格式的选择? 是否收敛?&lt;/li>
+&lt;li>迭代的初值是否合适?&lt;/li>
+&lt;/ul>
+&lt;h3 id="3-牛顿法解非线性方程">3. 牛顿法解非线性方程&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 如果函数&lt;code>f(x)&lt;/code>是线性的, 那么它的求根问题就会简化. 牛顿法实质上是一种线性化方法, 将非线性方程逐步归结为某种线性方程来求解.&lt;/p>
+&lt;/blockquote>
+&lt;p>牛顿法的迭代格式:
+$$
+x^{k+1} = x^k - \frac{f(x^k)}{f^&amp;rsquo;(x^k)}
+$$&lt;/p>
+&lt;h3 id="4-弦截法">4. 弦截法&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 弦截法是牛顿法的一个改进. 牛顿法求根时需要计算&lt;code>f'(x)&lt;/code>, 而导数的计算往往困难. 弦截法使用&lt;em>差商&lt;/em>来回避导数的计算.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="5-收敛阶">5. 收敛阶&lt;/h3>
+&lt;h3 id="6-非线性方程组的牛顿迭代格式">6. 非线性方程组的牛顿迭代格式&lt;/h3>
+&lt;ul>
+&lt;li>雅可比矩阵是什么?&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="第三章-直接法解线性方程组">第三章 直接法解线性方程组&lt;/h2>
+&lt;h3 id="1-gauss消元法">1. Gauss消元法&lt;/h3>
+&lt;p>求解过程的算法复杂度为&lt;code>O(n^2)&lt;/code>, 消元过程的算法复杂度为&lt;code>O(n^3)&lt;/code>.&lt;/p>
+&lt;h3 id="2-直接三角分解法doolittle分解法">2. 直接三角分解法(Doolittle分解法)&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: &lt;code>直接&lt;/code>意味着可以由A的元素直接计算L和U, 不需要任何的中间步骤.&lt;/p>
+&lt;/blockquote>
+&lt;p>一旦L和U得到, 求解&lt;code>Ax=b&lt;/code>就可以等价表示为求解两个三角形方程组:&lt;/p>
+&lt;ol>
+&lt;li>Ly=b, 求y&lt;/li>
+&lt;li>Ux=y. 求x&lt;/li>
+&lt;/ol>
+&lt;p> &lt;/p>
+&lt;h2 id="第四章-迭代法解线性方程组">第四章 迭代法解线性方程组&lt;/h2>
+&lt;blockquote>
+&lt;p>背景: 对于线性方程组&lt;code>Ax=b&lt;/code>, 当A为低阶稠密矩阵时, [选主元消去法]是求解的有效方法.&lt;br>
+但是实际情况中A大都是&lt;em>巨型的稀疏矩阵&lt;/em>, 这是采用迭代法来求解是合适的. 迭代法可以利用A中有大量零元素的特点.&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>迭代法&lt;em>不一定&lt;/em>最终能够逼近方程组的解, 认识误差向量的概念.&lt;/li>
+&lt;/ul>
+&lt;h3 id="1-jacobi迭代">1. Jacobi迭代&lt;/h3>
+&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=2&amp;amp;spm_id_from=pageDriver">雅可比迭代格式和收敛性的判别&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=4&amp;amp;t=76.0">快速计算Bj的特征值&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=4&amp;amp;t=268.1">Jacobi迭代由A直接看出Bj&lt;/a>&lt;/p>
+&lt;h3 id="2-seidel迭代">2. Seidel迭代&lt;/h3>
+&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=6">Seidel迭代收敛格式和收敛性的判别&lt;/a>&lt;/p>
+&lt;p>Seidel迭代独有的判断收敛性的方式: 若A为&lt;code>对称阵&lt;/code>, 且A&lt;code>正定&lt;/code>, 那么迭代收敛.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="第五章-插值法">第五章 插值法&lt;/h2>
+&lt;h3 id="1-插值方法与插值问题">1. 插值方法与插值问题&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 仅已知某些点和该点的函数值的情况下, 如何模拟一个插值函数&lt;code>P(x)&lt;/code>, 使得误差最小.&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>什么是插值函数P(x)? 被插函数? 插值节点? 插值余项?&lt;/li>
+&lt;/ul>
+&lt;h3 id="2-多项式插值">2. 多项式插值&lt;/h3>
+&lt;ul>
+&lt;li>可证明多项式P(x)存在唯一.&lt;/li>
+&lt;li>多项式插值通过解方程组就能得到解&lt;code>(a0, a1,..., an)&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;h3 id="3-拉格朗日插值公式">3. 拉格朗日插值公式&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 虽然上面的多项式插值能否解决n+1个点的光滑函数, 且解是唯一的. 但是&lt;strong>解方程组是很麻烦的&lt;/strong>.&lt;/p>
+&lt;/blockquote>
+&lt;p>拉格朗日插值公式:
+$$
+L_n(x) = l_0(x)y_0 + l_1(x)y_1 + \dots + l_n(x)y_n
+$$
+插值基函数:&lt;/p>
+&lt;p>插值条件(插值系数):
+$$
+y_0 = f(x_0), y_1 = f(x_1), \dots,y_n = f(x_n)
+$$&lt;/p>
+&lt;p>误差余项Rn(x)&lt;/p>
+&lt;h3 id="4-牛顿插值公式">4. 牛顿插值公式&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 给定5个插值节点及其函数值, 可以得到L4(x); 由于某种原因, 需要加入一个新的插值节点. Lagrange插值法之前的计算结果(l)均失效, 需要重新计算. 非常的不方便.&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>牛顿法是基于&lt;strong>差商&lt;/strong>的概念. 导数是差商的极限.&lt;/li>
+&lt;li>差商的差商是高阶差商.&lt;/li>
+&lt;/ul>
+&lt;p>牛顿插值法的插值函数(以二次插值举例):
+$$
+P(x) = a_0 + a_1(x-x_0) + a_2(x-x_0)(x-x_1)
+$$
+需要做的就是解出系数&lt;code>a0,a1,...&lt;/code>.&lt;/p>
+&lt;p>所以引入差商的符号:
+$$
+a_1=f[x_0,x_1]=\frac{f(x_1)-f(x_0)}{x_1-x_0}
+$$
+$$
+a_2=f[x_0,x_1,x_2]=\frac{f[x_1,x_2]-f[x_0,x_1]}{x_2-x_0}
+$$&lt;/p>
+&lt;h3 id="5-hermite插值">5. Hermite插值&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 有时我们已知的条件不都是函数值, 也有导数值. 例如已知两个点的函数值和两个点的导数值, 可以应用Heimite插值法得到三次多项式.&lt;/p>
+&lt;/blockquote>
+&lt;p>求Hermite插值函数的方法: 构造差商表, &lt;strong>重复节点特殊处理&lt;/strong>.&lt;/p>
+&lt;p>Hermite插值方法的余项证明与Langrange插值法相同.&lt;/p>
+&lt;h3 id="6-分段低次插值">6. 分段低次插值&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 次数太高的多项式插值的效果不好. 比如龙格现象.&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>分段: 把被插值函数所在的大区间分成一个个的小区间.&lt;/li>
+&lt;li>低次: 每个小区间上用次数不超过&lt;code>3&lt;/code>的函数来逼近&lt;/li>
+&lt;/ul>
+&lt;h4 id="61-分段线性插值">6.1 分段线性插值&lt;/h4>
+&lt;p>就是分段折线&lt;/p>
+&lt;p>分段线性插值的优点:&lt;/p>
+&lt;ol>
+&lt;li>简单&lt;/li>
+&lt;li>当二阶导数趋近0时, 一定收敛&lt;/li>
+&lt;/ol>
+&lt;p>分段线性插值的缺点:&lt;/p>
+&lt;ol>
+&lt;li>分段折线不光滑, 分段点处不能求导.&lt;/li>
+&lt;/ol>
+&lt;h4 id="62-分段hermite插值">6.2 分段Hermite插值&lt;/h4>
+&lt;blockquote>
+&lt;p>背景: 为了解决分段线性插值的缺点(存在尖点).&lt;/p>
+&lt;/blockquote>
+&lt;p>已知函数在(n+1)个点的函数值值以及其导数值, 去构造一阶连续可导函数.&lt;/p>
+&lt;p>分段Hermite插值根据(n+1)个已知点划分为(n+1)个区间. 这样在每个小区间上都已知&lt;code>4&lt;/code>个条件, 可以使用&lt;code>3&lt;/code>次Hermite插值.&lt;/p>
+&lt;p>结论: 已知(2n+2)个条件的情况下, 居然只得到&lt;strong>一阶连续可微函数&lt;/strong>. 结论太差!&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="第六章-拟合">第六章 拟合&lt;/h2>
+&lt;p>🔍 &lt;strong>插值, 拟合, 逼近的区别&lt;/strong>&lt;/p>
+&lt;h4 id="1-最佳平方逼近">1. 最佳平方逼近&lt;/h4>
+&lt;h4 id="2-最小二乘法">2. 最小二乘法&lt;/h4>
+&lt;blockquote>
+&lt;p>背景: 已知不共线的三点, 如何确定一条&lt;strong>可信&lt;/strong>的直线.&lt;/p>
+&lt;/blockquote>
+&lt;p>三个点可以用插值来模拟二次多项式, 但题目要求了用一次多项式, 这是插值无法做到的.&lt;/p>
+&lt;p>不共线的三点不可能同时经过一条直线, 所以要用逼近的思想. 找一条近似的直线, 使得&lt;strong>误差&lt;/strong>最小.&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>与插值的区别&lt;/strong>: 插值是明确给出&lt;code>n+1&lt;/code>个插值条件, 得到&lt;code>n&lt;/code>次多项式.&lt;/li>
+&lt;li>&lt;strong>如何定义误差最小?&lt;/strong>: 函数间的距离.&lt;/li>
+&lt;/ul>
+&lt;h3 id="1-线性拟合">1. 线性拟合&lt;/h3>
+&lt;p>拟合的函数是&lt;code>n&lt;/code>次多项式, 可转化为超定方程&lt;code>GX&lt;/code>.&lt;/p>
+&lt;ul>
+&lt;li>其中规定&lt;code>G&lt;/code>为系数矩阵, &lt;code>X&lt;/code>为变量的列向量.&lt;/li>
+&lt;li>同时定义列向量&lt;code>F&lt;/code>为给出的函数值.&lt;/li>
+&lt;li>&lt;code>GX=F&lt;/code>是超定方程组, 没有准确解. 得到残差最小的解的方法即&lt;strong>最小二乘法&lt;/strong>.&lt;/li>
+&lt;/ul>
+&lt;p>所以线性拟合的残差&lt;code>r = |GX - F|&lt;/code>, 而找到目标函数的宗旨就是使&lt;code>r&lt;/code>最小. 使用&lt;strong>初等变分原理&lt;/strong>将这个问题转化为&lt;strong>正规方程组&lt;/strong>求解的问题.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="第七章-数值积分">第七章 数值积分&lt;/h2>
+&lt;blockquote>
+&lt;p>背景: 定积分的计算中可能无法找到原函数的情况. 考虑定积分的本质是一句具体的数, 我们的目标就是找到这个数的近似值, 越接近越好.&lt;/p>
+&lt;/blockquote>
+&lt;p>解决的两种思路: &lt;code>积分中值定理&lt;/code> 和 &lt;code>插值型求积公式(近似被积函数)&lt;/code>.&lt;/p>
+&lt;h3 id="1-积分中值定理">1. 积分中值定理&lt;/h3>
+&lt;p>基本的积分中值定理:
+$$
+\int_{a}^{b}f(x)dx = f(\xi)(b-a)
+$$&lt;/p>
+&lt;p>将一个区域的面积转化为矩形的面积. 如何确定矩形的高呢? &lt;code>左矩阵&lt;/code>, &lt;code>右矩阵&lt;/code>, &lt;code>中间矩阵&lt;/code>, &lt;code>梯形公式&lt;/code>.&lt;/p>
+&lt;p>更常用的积分公式是 在乘积函数积分中, 如果&lt;code>g(x)&lt;/code>不变号, 则有:
+$$
+\int_{a}^{b}g(x)f(x)dx =f(\xi)\int_{a}^{b}g(x)dx
+$$&lt;/p>
+&lt;h3 id="2-插值型求积公式">2. 插值型求积公式&lt;/h3>
+&lt;p>在被积函数很复杂的情况下, 可以对其进行近似处理, 例如使用&lt;code>Lagrange插值法&lt;/code>.&lt;/p>
+&lt;h4 id="二次插值-simpson公式">二次插值: Simpson公式&lt;/h4>
+&lt;p>取二次插值的步长&lt;code>h=(b-a)/2&lt;/code>, 即增加一个插值节点&lt;code>(b-a)/2&lt;/code>, Simpson公式化简的结果为:
+$$
+\int_{a}^{b}f(x)dx = \frac{b-a}{6}[f(a)+4f(\frac{a+b}{2})+f(b)]+R[f]
+$$&lt;/p>
+&lt;p>📌 Simpson公式满足&lt;code>3&lt;/code>阶代数精度. 虽然它只是二次插值得到的.&lt;/p>
+&lt;h3 id="3-余项">3. 余项&lt;/h3>
+&lt;ul>
+&lt;li>插值型求积公式的余项, 即对应的插值方法(如Lagrange, Newton)的余项在区间上的积分.&lt;/li>
+&lt;li>梯形公式方法的余项可以用&lt;strong>积分中值定理&lt;/strong>来优化.&lt;/li>
+&lt;li>Simpson公式的余项&lt;strong>不能&lt;/strong>使用积分中值定理来优化, 因为不满足保号的条件.&lt;/li>
+&lt;/ul>
+&lt;h3 id="4-衡量求积公式的好坏">4. 衡量求积公式的好坏&lt;/h3>
+&lt;p>&lt;strong>代数精度&lt;/strong>: 不是一种误差, 而是对误差的描述.&lt;/p>
+&lt;p>如何得知某个公式的代数精度: 只要带入一个m次多项式验证余项是否为0即可.&lt;/p>
+&lt;h3 id="5复合求积公式">5.复合求积公式&lt;/h3>
+&lt;p>为了提高精度通常把积分区间分为若干个子区间, 再在每个子区间上应用低阶求积公式.&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>复合梯形公式&lt;/code>: 将区间等分.&lt;/li>
+&lt;li>&lt;code>复合simpson公式&lt;/code>: 将区间偶数等分.&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="第八章-常微分方程初值问题数值解法">第八章 常微分方程初值问题数值解法&lt;/h2>
+&lt;p>将研究的内容进一步限定为: &lt;code>一阶初值问题&lt;/code>, &lt;code>单步法&lt;/code>.&lt;/p>
+&lt;blockquote>
+&lt;p>背景: 在无法给出解析表达式时如果利用数值方法求出&lt;code>y&lt;/code>的近似解?&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="1-简单的数值方法">1. 简单的数值方法&lt;/h3>
+&lt;h4 id="11-euler公式">1.1 Euler公式&lt;/h4>
+&lt;p>使用&lt;code>一阶向前差商&lt;/code>近似替代&lt;code>y'&lt;/code>. 得到递推的数列表达式:
+$$
+y_{n+1} = y_{n} + hf(x_n,y_n), n=0,1,2,&amp;hellip;
+$$&lt;/p>
+&lt;p>&lt;strong>误差&lt;/strong>: Euler法使用的近似代替只有&lt;code>一阶精度&lt;/code>, 所以误差很大. 此时有两种解决方案:&lt;/p>
+&lt;ol>
+&lt;li>加细步长&lt;code>h&lt;/code>, 若不行再加细. 总是能得到正确的, 如果你不嫌弃带来的计算变得缓慢的问题.&lt;/li>
+&lt;li>换方法.&lt;/li>
+&lt;/ol>
+&lt;h4 id="12-梯形公式">1.2 梯形公式&lt;/h4>
+&lt;blockquote>
+&lt;p>背景:为得到比Euler法精度更高的计算公式. 梯形公式具有&lt;code>二阶&lt;/code>精度.&lt;/p>
+&lt;/blockquote>
+&lt;p>对&lt;code>y' = f(x,y)&lt;/code>的两端进行&lt;strong>局部的&lt;/strong>积分, 然后用梯形公式近似计算右边.&lt;/p>
+&lt;h4 id="13-改进euler公式">1.3 改进Euler公式&lt;/h4>
+&lt;p>先用欧拉公式求得一个&lt;code>近似的yn+1&lt;/code>, 带入梯形公式, 得到&lt;code>矫正的yn+1&lt;/code>.&lt;/p>
+- https://wangloo.github.io/posts/numberical-analysis/ - @2019 Notepadium.</description></item><item><title>LaTeX Vim Tutorial</title><link>https://wangloo.github.io/posts/latex-vim-tutorial/</link><pubDate>Wed, 04 May 2022 17:07:51 +0800</pubDate><guid>https://wangloo.github.io/posts/latex-vim-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/latex-vim-tutorial/ -&lt;h2 id="use-plugin-vimtex">Use plugin &lt;code>vimtex&lt;/code>&lt;/h2>
 &lt;p>Vim build-in support of LaTeX files is just OK. When we need more excellent exprience, good plugins is very recommended.&lt;/p>
 &lt;p>&lt;a href="https://github.com/lervag/vimtex#configuration">vimtex&lt;/a> is a nice and modern vim plugin for LaTeX files.&lt;/p>
 &lt;p>&lt;strong>Useful Futures of vimtex IMO&lt;/strong>&lt;/p>

@@ -1,4 +1,42 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/compiler-tools/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/compiler-tools/gnu_tools/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/compiler-tools/gnu_tools/ -&lt;p>..&lt;/p>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>git 宝典</title><link>https://wangloo.github.io/posts/git/</link><pubDate>Tue, 13 Dec 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/git/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/git/ -&lt;h2 id="合并操作-git-merge">合并操作: git merge&lt;/h2>
+&lt;p>merge 有两种方式:&lt;/p>
+&lt;ul>
+&lt;li>fast-forward&lt;/li>
+&lt;li>three-way merger&lt;/li>
+&lt;/ul>
+&lt;h3 id="fast-forward-merge">Fast-forward Merge&lt;/h3>
+&lt;p>假设合并的双方为&lt;code>main&lt;/code>为&lt;code>dev&lt;/code>, 如果其中一个是另一个的祖先, 此时直接移动HEAD到前方即可, 称为fast-forward.&lt;/p>
+&lt;p>例如, 当前在main, 执行&lt;code>git merge dev&lt;/code>的过程如下:&lt;/p>
+&lt;pre tabindex="0">&lt;code> main main
+| |
+M1 --- M2 ===&amp;gt; M1 --- M2 -- F1
+\ |
+\--- F1 dev
+|
+dev
+&lt;/code>&lt;/pre>&lt;h3 id="three-way-merge">three-way Merge&lt;/h3>
+&lt;p>合并的两者不构成直接的祖先-孩子关系, 产生了分叉. 此时进行合并就需要有个基准(参考), 对于两边相较于基准的每个diff来说:&lt;/p>
+&lt;ul>
+&lt;li>合并的两者都在基准上进行了改动, 且改动不一致, &lt;strong>标记为冲突&lt;/strong>&lt;/li>
+&lt;li>如果该diff&lt;strong>仅在其中一方&lt;/strong>有改动, 那么就保留此次改动&lt;/li>
+&lt;/ul>
+&lt;p>合并时使用的参考就是&lt;strong>两个合并commit的最近公共祖先&lt;/strong>, 这种借助三个commit(main, dev, 公共祖先)才能完成的合并操作就叫做 three-way merge.&lt;/p>
+&lt;p>例如, 当前在main, 执行&lt;code>git merge dev&lt;/code>的过程如下:&lt;/p>
+&lt;pre tabindex="0">&lt;code> main main
+| |
+M1 --- M2 --- M3 ===&amp;gt; M1 --- M2 --- M3 --- M4
+\ \ /
+\--- F1 \--- F1 ---
+| |
+dev dev
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>three-way 的合并方式如果发生了冲突, 会产生一次额外的 merge commit, 下面介绍它&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="什么情况下-merge-commit-没有任何diff">什么情况下 merge commit 没有任何diff?&lt;/h3>
+&lt;p>按照上面的例子, three-way merge 发生冲突后会产生一次额外的merge commit, 即M4. 如果这是去查看M4 相较前一次commit的diff, 有时是没有的, 有时又会产生diff.&lt;/p>
+&lt;p>如果在解决冲突的过程中, 我们仅仅是接收了 M2,M3 或者F1的修改, 那么此时merge commit就不会有diff.&lt;/p>
+&lt;p>然而, 在解决冲突时, 我们也可以不采用来自两条路径的修改, 做一次新的修改(可以说, 同时接收两条diff就是这种情况), 此时查看merge commit的diff就是有内容的.&lt;/p>
+- https://wangloo.github.io/posts/git/ - @2019 Notepadium.</description></item><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/compiler-tools/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/compiler-tools/gnu_tools/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/compiler-tools/gnu_tools/ -&lt;p>..&lt;/p>
 &lt;h2 id="nm---列出符号">nm - 列出符号&lt;/h2>
 &lt;p>&lt;a href="https://sourceware.org/binutils/docs/binutils/nm.html">nm (GNU Binary Utilities) (sourceware.org)&lt;/a>&lt;/p>
 &lt;pre tabindex="0">&lt;code>0x7bdc: 0x00007d97 0x00000000 0x00000000 0x00000000
@@ -737,185 +775,4 @@ Light Gray 0;37 White 1;37
 &lt;p>一般来说, 不将主程序编译为地址无关码. 因为主程序不需要共享, 而且地址无关码的调用
 需要两个指令: &lt;code>计算地址&lt;/code> + &lt;code>跳转&lt;/code>. 多了一步根据偏移得到绝对地址.&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/posts/os-learning/dynamic-link/ - @2019 Notepadium.</description></item><item><title>ELF 文件的链接与加载</title><link>https://wangloo.github.io/posts/os-learning/elf-format/</link><pubDate>Mon, 20 Jun 2022 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os-learning/elf-format/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os-learning/elf-format/ -&lt;h2 id="elf-is-a-file-format">&lt;code>ELF&lt;/code> is a file format&lt;/h2>
-&lt;p>Files in &lt;code>ELF&lt;/code> format includes:&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>Type&lt;/th>
-&lt;th>description&lt;/th>
-&lt;th>实例&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>Relocatable File&lt;/td>
-&lt;td>这些文件包含了代码和data, 可以被用来链接成可执行文件或共享目标文件.&lt;/td>
-&lt;td>&lt;code>.o&lt;/code>, &lt;code>.a&lt;/code>&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Executable File&lt;/td>
-&lt;td>直接可执行的文件&lt;/td>
-&lt;td>&lt;code>/bin/ls&lt;/code>&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Shared Object File&lt;/td>
-&lt;td>Including code and data. 链接器可将其与其他Relocatable File或Shared Object File结合, 生成新的目标文件. 动态链接器可将其与Executable File结合, 作为进程映像的一部分来运行.&lt;/td>
-&lt;td>&lt;code>.so&lt;/code>&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Core Dump File&lt;/td>
-&lt;td>Restore critical infomation when process is terminated unexpectedly&lt;/td>
-&lt;td>&lt;code>core dump&lt;/code>&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;blockquote>
-&lt;p>📌 &lt;code>file&lt;/code> command in Linux can output the format of a file.&lt;/p>
-&lt;/blockquote>
-&lt;p> &lt;/p>
-&lt;h2 id="elf-文件组成的结构">ELF 文件组成的结构&lt;/h2>
-&lt;pre tabindex="0">&lt;code>+---------------------------------+
-| ELF Header | 包含描述整个ELF的基本信息, 如版本, 入口地址...
-+---------------------------------+
-| .text |
-+---------------------------------+
-| .data |
-+---------------------------------+ 紧接着是各个段
-| .bss |
-+---------------------------------+
-| ... |
-| other sections |
-+---------------------------------+
-| | 段表: 与段相关最重要的结构
-| Section Header table | 描述了每个段的name, length, authority...
-| |
-+---------------------------------+
-| String tables |
-| Symbol tables |
-+---------------------------------+
-&lt;/code>&lt;/pre>&lt;p> &lt;/p>
-&lt;h2 id="分析elf文件的工具">分析ELF文件的工具&lt;/h2>
-&lt;h3 id="1-objdump">1. objdump&lt;/h3>
-&lt;h3 id="2-readelf">2. readelf&lt;/h3>
-&lt;p> &lt;/p>
-&lt;h2 id="为什么目标文件中代码和数据要分开放">为什么目标文件中代码和数据要分开放?&lt;/h2>
-&lt;p>一方面, 程序被加载进内存后, 代码段和数据段分别被映射到&lt;strong>两个virtual memory region&lt;/strong>.
-通过MMU的支持, 可以将代码段的区域设置为只读, 防止恶意篡改.&lt;/p>
-&lt;p>另一方面, 当下CPU Cache多划分为&lt;em>Instruction Cache&lt;/em>和&lt;em>Data Cache&lt;/em>, 再配合互相独立的
-地址区域能够提高&lt;strong>局部性原理&lt;/strong>的效果.&lt;/p>
-&lt;p>最后, 代码段可以被多个进程共享(例如都调用同一外部函数), 节省内存空间.&lt;/p>
-&lt;blockquote>
-&lt;p>针对嵌入式设备, 如果内存空间不够大, 只读的代码段可存放在ROM中&lt;/p>
-&lt;/blockquote>
-&lt;p> &lt;/p>
-&lt;h2 id="关于静态库">关于静态库&lt;/h2>
-&lt;p>一个静态库可以简单的看作是 a set of object file.&lt;br>
-这些 object file 可能包括: 输入输出相关的&lt;code>printf.o&lt;/code>, &lt;code>scanf.o&lt;/code>, 日期时间相关的&lt;code>time.o&lt;/code>, &lt;code>date.o&lt;/code>等.&lt;/p>
-&lt;p>❓ 为什么不直接提供这些&lt;em>目标文件&lt;/em>呢?&lt;/p>
-&lt;p>这些&lt;strong>零散的&lt;/strong>文件若直接提供给使用者, 很大程度上造成文件传输, 管理等方面的不便.&lt;br>
-于是人们通常使用&lt;code>ar&lt;/code>压缩程序将这些目标文件压缩到一起.&lt;/p>
-&lt;p>❓ 如何查看一个静态库是由哪些object file压缩到一起的?&lt;/p>
-&lt;p>Shell command&lt;code>ar -t libc.a&lt;/code> 可以查看&lt;code>libc.a&lt;/code>中包含的所有object files.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="elf文件加载-运行流程">ELF文件加载-运行流程&lt;/h2>
-&lt;blockquote>
-&lt;p>废了半天劲编译生成的ELF文件, 想要最终跑起来则包含的instruction and data必须要在内存中.&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="静态加载与动态加载">静态加载与动态加载&lt;/h3>
-&lt;p>我们能想到的最简单的办法是: 把整个ELF的&lt;strong>所有指令和数据&lt;/strong>在运行之前就全部load到内存中. 这就是&lt;em>静态加载&lt;/em>.&lt;/p>
-&lt;p>更加高效的做法是: 充分利用&lt;em>局部性原理&lt;/em>, 将指令和数据划分为&lt;strong>模块&lt;/strong>, 只有当该模块被使用时, 才load进内存,
-否则就在外存中老老实实呆着. 这就是&lt;em>动态加载&lt;/em>.&lt;/p>
-&lt;h3 id="动态加载的步骤">动态加载的步骤&lt;/h3>
-&lt;p>借助&lt;em>虚拟内存&lt;/em>技术, 上面提到的&lt;strong>模块&lt;/strong>的概念可以自然的被&lt;strong>页&lt;/strong>(page)代替.
-我们将所有的指令和数据按照page为单位划分.&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>运行该ELF的线程被创建时, 其virtual space范围被划定, 但其页表是空的, 没有任何映射.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>OS读取ELF Header, 建立virtual space与&lt;strong>ELF文件&lt;/strong>的映射关系. 这个映射关系的表达方式是一个特殊的&lt;strong>数据结构&lt;/strong>.
-建立该映射关系的原因是: 当程序运行到某个地址发现该页表项是空的(例如 &lt;code>call 0x1234&lt;/code>), 那么必然触发&lt;code>page fault&lt;/code>.
-由OS负责到&lt;em>特定的外存地址&lt;/em>将页面加载到physical memory中.&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;pre tabindex="0">&lt;code>OS要想知道缺失的内容在ELF文件的哪个位置, 就是利用该映射, 即某个数据结构
-&lt;/code>&lt;/pre>&lt;ol start="3">
-&lt;li>physical memory中有了所需的指令或数据后, 还需建立visual memory到physical memory的映射, 即在&lt;em>页表项&lt;/em>中写入.
-随着程序的运行, 会继续触发&lt;code>page fault&lt;/code>, 从ELF中不断load page到physical memory, 建立缺页visual addr处的页表映射,
-最终填补成一个完整的pagetable.&lt;/li>
-&lt;/ol>
-&lt;p> &lt;/p>
-&lt;h2 id="段地址对齐技术">段地址对齐技术&lt;/h2>
-&lt;blockquote>
-&lt;p>由前面动态加载的步骤可知, ELF文件中的代码和数据被按page划分. 并只有在用到时才被加载到内存,
-并建立&lt;code>虚拟内存-物理内存&lt;/code>的映射.&lt;/p>
-&lt;/blockquote>
-&lt;p>假设一个ELF有三个段需要被&lt;code>LOAD&lt;/code>, ELF段表如下:&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>Segment&lt;/th>
-&lt;th>Length&lt;/th>
-&lt;th>offset&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>SEG 0&lt;/td>
-&lt;td>127 B&lt;/td>
-&lt;td>34 B&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>SEG 1&lt;/td>
-&lt;td>9899 B&lt;/td>
-&lt;td>164 B&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>SEG 2&lt;/td>
-&lt;td>1988 B&lt;/td>
-&lt;td>0 B&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h3 id="-这三个段在elf文件中的布局如何">❓ 这三个段在ELF文件中的布局如何?&lt;/h3>
-&lt;p>根据前面ELF文件格式的介绍, 这三个段必然是挨着的(简单考虑, ELF中仅有这三个段).&lt;/p>
-&lt;h3 id="-这三个段在物理内存中的布局">❓ 这三个段在物理内存中的布局?&lt;/h3>
-&lt;p>发生&lt;code>page fault&lt;/code>之后, OS会为页面分配合适的物理页面, 如利用&lt;code>buddy system&lt;/code>等.&lt;/p>
-&lt;p>可以保证&lt;em>段内&lt;/em>的连续, 不能保证&lt;em>段与段&lt;/em>是连续的.&lt;/p>
-&lt;blockquote>
-&lt;p>未使用段对齐技术之前, &lt;code>SEG0&lt;/code>的长度不足一页, 但是也给它分配一页的空间. 同理为&lt;code>SEG1&lt;/code>分配两页, &lt;code>SEG2&lt;/code>分配一页.
-总共占用 &lt;code>1+2+1=5&lt;/code>个物理页.&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="-这三个段在用户virtual-addrspace下的布局如何">❓ 这三个段在用户virtual addrspace下的布局如何?&lt;/h3>
-&lt;p>todo&lt;/p>
-&lt;h3 id="-何为段地址对齐技术">❓ 何为段地址对齐技术?&lt;/h3>
-&lt;p>上面说了, 在为这三个段分配物理内存时, 虽然他们的真实大小远小于5个页面, 但由于简单采用: &lt;code>每个段的开头必须是page align&lt;/code>,
-导致实际上产生了巨大的&lt;strong>内部碎片&lt;/strong>.&lt;/p>
-&lt;p>段地址对齐实际上就是在为ELF文件中的段分配物理内存时, 不考虑其段的独立性, 强制按照&lt;code>page&lt;/code>来划分. 划分的行为如下图所示.
-结果就是仅需占用&lt;code>3&lt;/code>个物理页面.&lt;/p>
-&lt;pre tabindex="0">&lt;code>+---+---------------+
-| P | SEG0 |
-| A +---------------+
-| G | |
-| E | |
-+---+ |
-| P | SEG1 |
-| A | |
-| G | |
-| E | |
-+---+ |
-| P +---------------+
-| A | |
-| G | SEG2 |
-| E | |
-+---+---------------+
-&lt;/code>&lt;/pre>&lt;blockquote>
-&lt;p>目前, gcc(更准确是说是GUN ld)默认启用段对齐技术. 各个段的虚拟地址并不是&lt;code>page align&lt;/code>.&lt;/p>
-&lt;/blockquote>
-&lt;blockquote>
-&lt;p>🍀 物理页面到虚拟页面的映射阶段, 那些&lt;em>同时包含&lt;/em>两个段的页面会被映射两次, 即一个物理页面对应两个
-虚拟页.&lt;/p>
-&lt;p>原因是: 在一个页面的不同段可能&lt;strong>权限不同&lt;/strong>, 所以不能使用同一映射.&lt;/p>
-&lt;/blockquote>
-- https://wangloo.github.io/posts/os-learning/elf-format/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/os-learning/dynamic-link/ - @2019 Notepadium.</description></item></channel></rss>
