@@ -1,9 +1,40 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Operating system on Soben's Secret Base</title><link>https://wangloo.github.io/tags/operating-system/</link><description>Recent content in Operating system on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Tue, 28 Jun 2022 16:41:54 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/operating-system/index.xml" rel="self" type="application/rss+xml"/><item><title>Stack and Heap</title><link>https://wangloo.github.io/posts/os-learning/stack-and-heap/</link><pubDate>Tue, 28 Jun 2022 16:41:54 +0800</pubDate><guid>https://wangloo.github.io/posts/os-learning/stack-and-heap/</guid><description> 堆的含义 我们都知道malloc动态申请的变量是存放在堆中. 所以相比栈来说, 堆是动态的.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Operating System on Soben's Secret Base</title><link>https://wangloo.github.io/tags/operating-system/</link><description>Recent content in Operating System on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Wed, 21 Dec 2022 19:08:22 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/operating-system/index.xml" rel="self" type="application/rss+xml"/><item><title>浅谈 errno 的线程安全问题</title><link>https://wangloo.github.io/posts/os/errno_thread_safe/</link><pubDate>Wed, 21 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/errno_thread_safe/</guid><description>我始终以为，C库中常用的 errno 仅是一个全局变量，使用了全局变量就无法保证线程安全了，因为全局变量在所有线程中都是共享的。
+要实现线程安全的errno 就必须将其设置为线程私有的变量，下面就来看看GCC是如何巧妙的实现的。
+正文 现在的errno定义并非一个全局变量, 而是一个宏定义, 以下是在usr/include/errno中的声明:
+extern int *__errno_location (void); # define errno (*__errno_location ()) 这种方式下其实现原理大概是: __errno_location 函数返回一个int指针, 而这个函数的实现中, 返回的就恰好是实际的errno 变量(与宏同名)的地址, 所以对其解引用就相当于对其值进行操作. 所以, 这种定义规则下, 左值和右值表达式均成立.
+errno = 10; // *__errno_location () = 10 int x = errno; // x = *__errno_location (); __errno_location 的实现就至关重要, 因为如果其返回的变量地址不包含任何技巧的话, 就和原先直接定义全局变量的方式没差了, 说到底能否实现线程安全, 还得看实际保存errno的变量是否为线程独有的. 目前还没有发掘到其精髓, 只是套壳而已.
+以下给出/csu/errno-loc.c中__errno_location 的实现, 与我们预期一致, 返回变量的地址. 而同名变量errno则定义在/csu/errno.c中, 决定了能够实现errno的线程安全.
+int * __errno_location (void) { return &amp;amp;errno; } __thread int errno; &amp;ldquo;__thread&amp;rdquo; 是GCC提供的扩展前缀, 表示该变量将被库处理为线程私有的, 注意这一步是C库完成的, 对程序员透明.</description></item><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/os/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/gnu_tools/</guid><description>..
+nm - 列出符号 nm (GNU Binary Utilities) (sourceware.org)</description></item><item><title>x86/ARMv8 函数调用约定</title><link>https://wangloo.github.io/posts/os/function-call-conventions/</link><pubDate>Mon, 21 Nov 2022 10:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/os/function-call-conventions/</guid><description>符合调用约定使得调用函数能够正常获取参数, callee结束之后能够回到原来位置继续执行.
+X86 调用约定 函数调用 x86架构中, 函数调用以一条call指令为分界.
+在call指令执行之前, 所有的参数必须都躺在栈中, 参数入栈的规则是: 第一个参数最后入栈.
+另外, 执行call指令之前, 必须确保栈指针esp是16-byte对齐. 这项工作是编译器完成的, 如果它判断参数入栈之后的esp 不满足对齐条件, 则会手动调整esp使之对齐. 实现方式见下面例子.
+call 指令的语义是:
+push pc+1 ;push next insttuction mov pc, func ;set pc = new function call 指令之后的下一条指令就是callee的内容了, 至此就算是进入新函数的地盘.
+但是在执行新的任务之前, callee还需要完成栈的转换, 因为此时使用的栈还是caller的.
+push ebp ;preserve location of caller&amp;#39;s stack mov ebp, esp ;new ebp is old esp 此时esp也就是栈指针等于ebp, 这是callee栈的初始条件. 万事俱备, 可以开始执行callee的实际任务了.
+ebp在整个函数执行过程中是固定的, 好处是: 能够快速的或者函数参数, 返回地址.
+函数返回 callee执行完毕后, 需要返回到caller继续执行. 刚才说过, callee的返回地址在栈中, 所以我们要做的是找到返回地址所在的位置, 然后使pc = 返回地址.</description></item><item><title>大小端问题</title><link>https://wangloo.github.io/posts/os/big-little-endian/</link><pubDate>Thu, 17 Nov 2022 10:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/os/big-little-endian/</guid><description>大小端问题的由来 为什么计算机世界需要区分大小端? 内存里存取的单位是字节, 如果所有的数据类型长度都是一个字节, 那就完全不需要大小端了, 每个变量都仅占据单独一个字节.
+例如, 三个变量 a=10, b=20, c=30, 在内存中的布局可能就是:
+┌────────────┐ │ │ │ 10 │ a ├────────────┤ │ │ │ 20 │ b ├────────────┤ │ │ │ 30 │ c ├────────────┤ │ │ │ │ │ │ │ │ │ │ └────────────┘ 但是我们最常使用的数据类型肯定有超过一个字节的, int类型在64位的系统中就占4个字节. 例如变量a=0xaabbccdd
+一个变量的大小一旦超过4个字节, 内存的存取又是以字节位单位的, 那么要把它塞到内存里就必然会产生两种不同存放方式: 先放0xaa还是先放0xdd
+首先, 0xdd是变量a的低8位, 0xaa是最高8位, 这是确定的.
+如果先放0xaa, 即低地址放高位, 就叫做大端, 如左图;
+如果先放0xdd, 即低地址放低位, 就叫小端, 如右图.</description></item><item><title>操作系统——上下文切换</title><link>https://wangloo.github.io/posts/os/context/</link><pubDate>Mon, 14 Nov 2022 22:13:06 +0800</pubDate><guid>https://wangloo.github.io/posts/os/context/</guid><description>本文基于AArch64执行环境, 介绍现代操作系统中上下文切换的相关内容.
+什么是上下文？ 上下文又称“现场”,
+为什么需要上下文切换? (TODO: 为什么说线程是调度的单位?)
+现代操作系统中同时存在着成千上百个线程, 但是一个CPU同一时刻只能运行一个线程, 他们是轮流的占用CPU, 也叫并发执行. (TODO: 如何查看线程切换的间隔?) 线程高频率的切换, 操作系统是如何保证切换到下一个执行的线程时, 它能够继续上次的工作呢?
+什么是上下文? 我们正在看一本书的时候如果被其他的事情打断, 返回时为了能够从上次被打断的位置继续读, 就要在被打断的时候记下来当前是读到了哪个第几页的第几行.
+操作系统对待线程也是如此, 需要保存的用于恢复线程执行的信息就称为线程的上下文.
+那么对于线程来说需要记下的内容有什么呢? 寄存器和栈即可. 拿AArch64架构来距离, 线程的上下文就是:
+通用寄存器x0-x29: 函数调用的参数, 某些计算过程的中间值, 都要用到这些寄存器. 线程的执行流可能在任何时候被打断, 当然这些内容也不能丢. 通用寄存器lr(x30): lr 保存着返回地址, 即当前函数结束之后该返回到哪执行. 栈顶指针 sp: 栈的重要性无需多言. 但是需要说明的是我们保存栈的方式并非将栈中的所有内容保存, 而是保存栈的位置即可. 因为操作系统有别的机制(TODO), 能够保证即便线程不在执行, 属于该线程的栈也不会被破坏. 程序计数器 pc: 被打断的线程如果再次执行, 从哪里执行呢? 显然是被打断指令的下一条(或者重新执行当前). 这个指令的地址当然也需要被保存好. PSTATE: 想一下, 有了以上的内容就能够保证线程完整的恢复之前的环境吗? 其他的例如中断是开还是关, 有哪些标志位(NZCV)被设置了. 这些信息在AArch64中是保存在PSTATE的各个字段中. 如果我们能够有一个适当的逻辑, 在线程切换出去的时候将上下文保存起来, 然后恢复新线程的上下文, 是不是线程切换这件事就能做到了. 如何组织这个保存和恢复的过程在下面会介绍到.
+Linux 如何处理上下文切换 另一种处理上下文切换的思路 协程的上下文 协程是用户级别的线程,
+协程之间的切换不进入内核 切换协程只能是某个协程主动放弃控制权 我们在这里讨论一下协程切换时需要保存的上下文是否与线程有所不同.</description></item><item><title>Stack and Heap</title><link>https://wangloo.github.io/posts/os/stack-and-heap/</link><pubDate>Tue, 28 Jun 2022 16:41:54 +0800</pubDate><guid>https://wangloo.github.io/posts/os/stack-and-heap/</guid><description> 堆的含义 我们都知道malloc动态申请的变量是存放在堆中. 所以相比栈来说, 堆是动态的.
 堆占据进程虚拟地址空间的大部分, 我们可能通过堆来申请1GB的数组, 但是栈通常不行 , 大多也就几兆的空间.
  堆空间的管理 进程中堆空间的管理是运行库负责的, 在Linux中是GLIBC.
 运行库在初始化时会像操作系统申请一大块的堆空间, 再为每个进行分别分配需求. 当然, 如果某些程序的需求过大, 运行库也可以使用mmap系统调用直接向操作系统申请, 然后 返回给用户进程.
 GLIBC的malloc函数的处理方式是: 对于小于128KB的申请, 会从运行库&amp;quot;批发的&amp;quot;堆空间 里分出一块来; 但若申请的空间过大, 则使用mmap系统调用来创建匿名空间分配给用户.
-Linux中虚拟地址块(VMA)的管理使用了红黑树, 可以用于运行库管理自己向操作系统 &amp;ldquo;批发&amp;quot;的堆空间. 使得用户程序动态申请和释放内存性能提高.</description></item><item><title>动态链接</title><link>https://wangloo.github.io/posts/os-learning/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os-learning/dynamic-link/</guid><description>静态链接带来的问题 像是libc这种几乎每个程序都要用到的库, 如果是静态的, 那么不仅意外着每个程序的 可执行文件很大, 浪费磁盘空间. 并且当程序加载到内存时, 可能许多程序都会用到printf , 使得内存中会存在好多份的printf源码.
+Linux中虚拟地址块(VMA)的管理使用了红黑树, 可以用于运行库管理自己向操作系统 &amp;ldquo;批发&amp;quot;的堆空间. 使得用户程序动态申请和释放内存性能提高.</description></item><item><title>动态链接</title><link>https://wangloo.github.io/posts/os/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os/dynamic-link/</guid><description>静态链接带来的问题 像是libc这种几乎每个程序都要用到的库, 如果是静态的, 那么不仅意外着每个程序的 可执行文件很大, 浪费磁盘空间. 并且当程序加载到内存时, 可能许多程序都会用到printf , 使得内存中会存在好多份的printf源码.
 维护和更新难. 一旦静态链接的其中一个目标文件更新, 所有的可执行程序都要重新链接.
 不满足局部性原理. 上面提到, 内存中同时存在多份的printf源码会破坏局部性原理的. 显然如果所有的程序共享一份printf源码的想法更好. 即动态加载.
 可移植性差. 静态链接, 只要有一个依赖目标文件的实现不同, 软件厂商就得专门发布一个 版本. 而动态链接则信赖客户电脑上的动态库, 相当于一个中间层.
@@ -12,4 +43,5 @@ Linux中虚拟地址块(VMA)的管理使用了红黑树, 可以用于运行库�
 对于静态符号, 按照静态链接的规则进行地址引用重定位 对于动态符号, 链接器则仅标记其为动态链接中的符号, 不进行处理. 而是等到装载时由 专门的动态链接器来完成动态符号的链接工作. ⁉️ 链接器如何确定一个符号是静态的or动态的?
 在动态共享对象(.so)中保存了完整的动态符号表*, 表中存在的符号即为动态的, 否则为静态.
 Linux的C语言运行库glib的动态链接版本叫libc.so. 它在外存上只保存一份, 所有的程序 都可以在运行时使用它. 所以千万不要删掉它.
-动态链接有一定的性能损失, 因为每次运行程序时都要重新链接, 并不像静态链接是一劳永逸的. 也有例如延迟绑定对性能进行优化的方法, 大概仅有5%的损耗, 与带来的便利相比可以忽略不计.</description></item></channel></rss>
+动态链接有一定的性能损失, 因为每次运行程序时都要重新链接, 并不像静态链接是一劳永逸的. 也有例如延迟绑定对性能进行优化的方法, 大概仅有5%的损耗, 与带来的便利相比可以忽略不计.</description></item><item><title>ELF 文件的链接与加载</title><link>https://wangloo.github.io/posts/os/elf-format/</link><pubDate>Mon, 20 Jun 2022 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os/elf-format/</guid><description>ELF is a file format Files in ELF format includes:
+Type description 实例 Relocatable File 这些文件包含了代码和data, 可以被用来链接成可执行文件或共享目标文件. .o, .a Executable File 直接可执行的文件 /bin/ls Shared Object File Including code and data. 链接器可将其与其他Relocatable File或Shared Object File结合, 生成新的目标文件. 动态链接器可将其与Executable File结合, 作为进程映像的一部分来运行. .so Core Dump File Restore critical infomation when process is terminated unexpectedly core dump 📌 file command in Linux can output the format of a file.</description></item></channel></rss>

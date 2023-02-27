@@ -1,0 +1,537 @@
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>reveal.js Tutorial</title><link>https://wangloo.github.io/posts/revealjs/</link><pubDate>Sun, 08 May 2022 19:34:44 +0800</pubDate><guid>https://wangloo.github.io/posts/revealjs/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/revealjs/ -&lt;h1 id="change-code-theme">Change code theme&lt;/h1>
+&lt;p>Default use &lt;code>monokai.css&lt;/code>. see &lt;a href="https://revealjs.com/code/">官方文档&lt;/a>&lt;/p>
+&lt;p>修改需要下载新的&lt;code>css&lt;/code>放到&lt;code>plugin/highlight/&lt;/code>目录下.&lt;/p>
+&lt;p>其他可用的&lt;code>css&lt;/code>在&lt;a href="https://github.com/highlightjs/highlight.js/tree/main/src/styles">highlight.js仓库&lt;/a>中下载.&lt;/p>
+&lt;h1 id="align">Align&lt;/h1>
+&lt;h2 id="slide-align">Slide Align&lt;/h2>
+&lt;p>取消center对齐方式:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>Reveal.initialize({
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> center&lt;span style="color:#ff79c6">:&lt;/span> &lt;span style="color:#ff79c6">false&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ... })
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>所有slide左对齐: &lt;a href="https://github.com/hakimel/reveal.js/issues/1897">https://github.com/hakimel/reveal.js/issues/1897&lt;/a>&lt;/p>
+&lt;p>用markdown写的方式下使某一幻灯片左对齐: &lt;a href="https://github.com/hakimel/reveal.js/issues/890#issuecomment-129735291">https://github.com/hakimel/reveal.js/issues/890#issuecomment-129735291&lt;/a>&lt;/p>
+- https://wangloo.github.io/posts/revealjs/ - @2019 Notepadium.</description></item><item><title>A64 Instruction Set</title><link>https://wangloo.github.io/posts/armv8/a64_isa/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64_isa/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/a64_isa/ -&lt;h1 id="loadstore-addressing">Load/Store Addressing&lt;/h1>
+&lt;h2 id="addressing-mode">Addressing mode&lt;/h2>
+&lt;ol>
+&lt;li>Base register - &lt;code>w0=[x1]&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>ldr w0, [x1]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>Offset addressing mode - &lt;code>w0=[x1+12]&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>ldr w0, [x1, &lt;span style="color:#bd93f9">12&lt;/span>]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>Pre-index addressing mode - &lt;code>x1+=12; w0=[x1]&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>ldr w0, [x1, &lt;span style="color:#bd93f9">12&lt;/span>]&lt;span style="color:#ff79c6">!&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>Post-index addressing mode - &lt;code>w0=[x1]; x1+=12&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>ldr w0, [x1], &lt;span style="color:#bd93f9">12&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="loadstore-instruction-example">Load/store instruction example&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// load a byte from x1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ldrb w0, [x1]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// load a signed byte from x1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ldrsb w0, [x1]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// store a 32-bit word to address in x1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>str w0, [x1]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// load two 32-bit words from stack, then add 8-byte to sp
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ldp w0, w1, [sp], &lt;span style="color:#bd93f9">8&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// store two 64-bit words at [sp-96] and subtract 96-byte from sp.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>stp x1, x2, [sp, &lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">96&lt;/span>]&lt;span style="color:#ff79c6">!&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// load 32-bit immediate from literal pool(addr: 0x12345678)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ldr w0, &lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">0x12345678&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="interesting-features">Interesting Features&lt;/h1>
+&lt;h2 id="-before-the-immediate-value">&amp;lsquo;#&amp;rsquo; before the immediate value&lt;/h2>
+&lt;ul>
+&lt;li>A64 assembly language does not require the &lt;code>#&lt;/code> to introduce constant immediate value. But the assembler can also indentify the &lt;code>#&lt;/code>.&lt;/li>
+&lt;li>In armv7, there must be a &lt;code>#&lt;/code> or &lt;code>$&lt;/code> before other than using &lt;code>.syntax unified&lt;/code>. &lt;a href="https://sourceware.org/binutils/docs/as/ARM_002dInstruction_002dSet.html#ARM_002dInstruction_002dSet">About syntax unified&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>&lt;a href="https://stackoverflow.com/questions/21652884/is-the-hash-required-for-immediate-values-in-arm-assembly">Agreed Recommendation&lt;/a>&lt;/p>
+&lt;p>Use &lt;code>.syntax unified&lt;/code> in v7 code, and never use &lt;code>#&lt;/code> on any literal on either v7 or v8.
+Unified syntax is newer and better, and those &lt;code>#&lt;/code> and &lt;code>$&lt;/code> signs are just more code noise.&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/armv8/a64_isa/ - @2019 Notepadium.</description></item><item><title>ARMv8-A Register</title><link>https://wangloo.github.io/posts/armv8/register/</link><pubDate>Sat, 07 May 2022 20:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/register/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/register/ -&lt;h1 id="寄存器分类">寄存器分类&lt;/h1>
+&lt;h2 id="通用寄存器">通用寄存器&lt;/h2>
+&lt;ol>
+&lt;li>&lt;code>x0-x7&lt;/code> 参数寄存器: Restore function parameters and return vaule.&lt;/li>
+&lt;li>&lt;code>x9-x15&lt;/code> caller-saved 临时寄存器: callee 默认可以直接使用来保存临时变量, 不需要保存和恢复. 如果 caller 在里面存储了非临时信息, 那么在函数调用之前应当由 caller 负责保存.&lt;/li>
+&lt;li>&lt;code>x19-x28&lt;/code> callee-saved 寄存器: callee 应该避免使用. 如果必须要使用，那么在返回前必须恢复.&lt;/li>
+&lt;li>special registers:
+&lt;ul>
+&lt;li>&lt;code>x8&lt;/code> restore indirect result. Commonly used when returning a struct.&lt;/li>
+&lt;li>&lt;code>x18&lt;/code> platform reserved register.&lt;/li>
+&lt;li>&lt;code>x29&lt;/code> frame pointer register(FP).&lt;/li>
+&lt;li>&lt;code>x30&lt;/code> link register(LR).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>All general-purpose register &lt;code>xN&lt;/code> is 64-bit width. They all have corresponding &lt;code>wN&lt;/code> register using the lower 32-bit of &lt;code>xN&lt;/code>. And write to &lt;code>wN&lt;/code> will clear the upper 32bit of &lt;code>xN&lt;/code>.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>💫 The different between &lt;strong>Caller-saved&lt;/strong> and &lt;strong>callee-saved&lt;/strong> registers&lt;/p>
+&lt;ul>
+&lt;li>Caller-saved 寄存器又称为&lt;em>临时寄存器&lt;/em>, 常用来存放临时变量. 例如A() 调用 B(), 那么 B() 可以直接使用 caller-saved 寄存器, 也就是说 A() 在调用 B() 之前不会在这些寄存器里保存重要信息(编译器实现), 不能保证调用 B() 前后其值不变. 如果必须要保证, 那么保存和恢复(利用栈)这件事是 A() 来做.&lt;/li>
+&lt;li>Callee-saved 寄存器则相反, 通常持续使用的值会保存到这些寄存器中. 还是拿 A() call B() 来举例. 如果 A() 中的一个变量需要在调用 B() 前后持续有效, 那么它应当保存到 callee-saved 寄存器中. 而且 B() 正常来说不应该动这些寄存器, 如果非得动(例如寄存器不够用), 那么 B() 需要在使用他们的前后进行保存和恢复(利用栈).&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;h2 id="每个el的特殊寄存器">每个EL的特殊寄存器&lt;/h2>
+&lt;ol>
+&lt;li>&lt;code>sp_el0/1/2/3&lt;/code> stack pointer register of each EL.&lt;/li>
+&lt;li>&lt;code>elr_el1/2/3&lt;/code> exception link register of each EL except EL0.&lt;/li>
+&lt;li>&lt;code>spsr_el1/2/3&lt;/code> save program status register of each EL except EL0.&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>&lt;code>sp&lt;/code> is an alias of &lt;code>sp_el0&lt;/code>. Do NOT treat &lt;code>sp&lt;/code> as general-purpose register.&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/armv8/register/ - @2019 Notepadium.</description></item><item><title>Numberical Analysis Exam</title><link>https://wangloo.github.io/posts/numberical-analysis/</link><pubDate>Sat, 07 May 2022 18:04:58 +0800</pubDate><guid>https://wangloo.github.io/posts/numberical-analysis/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/numberical-analysis/ -&lt;p>&lt;img src="qingdao-tzjt.JPG" alt="qingdao">&lt;/p>
+&lt;h1 id="考试大纲">考试大纲&lt;/h1>
+&lt;p>🎯 To Reader:&lt;/p>
+&lt;p>This blog is JUST FOR EXAMINATION! If you are interested in numberical analysis, please quit this web.
+I try to sort out the knowledge points of the course, just to pass the exam.&lt;/p>
+&lt;p>Based on the course of Professor Zhong Erjie of UESTC.&lt;/p>
+&lt;p>💢 &lt;strong>I hate mathematics!&lt;/strong>&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="第二章-非线性方程方程组的求解">第二章 非线性方程/方程组的求解&lt;/h2>
+&lt;h3 id="1-二分法及迭代">1. 二分法及迭代&lt;/h3>
+&lt;ul>
+&lt;li>二分法误差估计定理&lt;/li>
+&lt;/ul>
+&lt;h3 id="2-不动点迭代">2. 不动点迭代&lt;/h3>
+&lt;ul>
+&lt;li>不动点及不动点迭代的概念&lt;/li>
+&lt;li>迭代格式的选择? 是否收敛?&lt;/li>
+&lt;li>迭代的初值是否合适?&lt;/li>
+&lt;/ul>
+&lt;h3 id="3-牛顿法解非线性方程">3. 牛顿法解非线性方程&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 如果函数&lt;code>f(x)&lt;/code>是线性的, 那么它的求根问题就会简化. 牛顿法实质上是一种线性化方法, 将非线性方程逐步归结为某种线性方程来求解.&lt;/p>
+&lt;/blockquote>
+&lt;p>牛顿法的迭代格式:
+$$
+x^{k+1} = x^k - \frac{f(x^k)}{f^&amp;rsquo;(x^k)}
+$$&lt;/p>
+&lt;h3 id="4-弦截法">4. 弦截法&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 弦截法是牛顿法的一个改进. 牛顿法求根时需要计算&lt;code>f'(x)&lt;/code>, 而导数的计算往往困难. 弦截法使用&lt;em>差商&lt;/em>来回避导数的计算.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="5-收敛阶">5. 收敛阶&lt;/h3>
+&lt;h3 id="6-非线性方程组的牛顿迭代格式">6. 非线性方程组的牛顿迭代格式&lt;/h3>
+&lt;ul>
+&lt;li>雅可比矩阵是什么?&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="第三章-直接法解线性方程组">第三章 直接法解线性方程组&lt;/h2>
+&lt;h3 id="1-gauss消元法">1. Gauss消元法&lt;/h3>
+&lt;p>求解过程的算法复杂度为&lt;code>O(n^2)&lt;/code>, 消元过程的算法复杂度为&lt;code>O(n^3)&lt;/code>.&lt;/p>
+&lt;h3 id="2-直接三角分解法doolittle分解法">2. 直接三角分解法(Doolittle分解法)&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: &lt;code>直接&lt;/code>意味着可以由A的元素直接计算L和U, 不需要任何的中间步骤.&lt;/p>
+&lt;/blockquote>
+&lt;p>一旦L和U得到, 求解&lt;code>Ax=b&lt;/code>就可以等价表示为求解两个三角形方程组:&lt;/p>
+&lt;ol>
+&lt;li>Ly=b, 求y&lt;/li>
+&lt;li>Ux=y. 求x&lt;/li>
+&lt;/ol>
+&lt;p> &lt;/p>
+&lt;h2 id="第四章-迭代法解线性方程组">第四章 迭代法解线性方程组&lt;/h2>
+&lt;blockquote>
+&lt;p>背景: 对于线性方程组&lt;code>Ax=b&lt;/code>, 当A为低阶稠密矩阵时, [选主元消去法]是求解的有效方法.&lt;br>
+但是实际情况中A大都是&lt;em>巨型的稀疏矩阵&lt;/em>, 这是采用迭代法来求解是合适的. 迭代法可以利用A中有大量零元素的特点.&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>迭代法&lt;em>不一定&lt;/em>最终能够逼近方程组的解, 认识误差向量的概念.&lt;/li>
+&lt;/ul>
+&lt;h3 id="1-jacobi迭代">1. Jacobi迭代&lt;/h3>
+&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=2&amp;amp;spm_id_from=pageDriver">雅可比迭代格式和收敛性的判别&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=4&amp;amp;t=76.0">快速计算Bj的特征值&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=4&amp;amp;t=268.1">Jacobi迭代由A直接看出Bj&lt;/a>&lt;/p>
+&lt;h3 id="2-seidel迭代">2. Seidel迭代&lt;/h3>
+&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=6">Seidel迭代收敛格式和收敛性的判别&lt;/a>&lt;/p>
+&lt;p>Seidel迭代独有的判断收敛性的方式: 若A为&lt;code>对称阵&lt;/code>, 且A&lt;code>正定&lt;/code>, 那么迭代收敛.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="第五章-插值法">第五章 插值法&lt;/h2>
+&lt;h3 id="1-插值方法与插值问题">1. 插值方法与插值问题&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 仅已知某些点和该点的函数值的情况下, 如何模拟一个插值函数&lt;code>P(x)&lt;/code>, 使得误差最小.&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>什么是插值函数P(x)? 被插函数? 插值节点? 插值余项?&lt;/li>
+&lt;/ul>
+&lt;h3 id="2-多项式插值">2. 多项式插值&lt;/h3>
+&lt;ul>
+&lt;li>可证明多项式P(x)存在唯一.&lt;/li>
+&lt;li>多项式插值通过解方程组就能得到解&lt;code>(a0, a1,..., an)&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;h3 id="3-拉格朗日插值公式">3. 拉格朗日插值公式&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 虽然上面的多项式插值能否解决n+1个点的光滑函数, 且解是唯一的. 但是&lt;strong>解方程组是很麻烦的&lt;/strong>.&lt;/p>
+&lt;/blockquote>
+&lt;p>拉格朗日插值公式:
+$$
+L_n(x) = l_0(x)y_0 + l_1(x)y_1 + \dots + l_n(x)y_n
+$$
+插值基函数:&lt;/p>
+&lt;p>插值条件(插值系数):
+$$
+y_0 = f(x_0), y_1 = f(x_1), \dots,y_n = f(x_n)
+$$&lt;/p>
+&lt;p>误差余项Rn(x)&lt;/p>
+&lt;h3 id="4-牛顿插值公式">4. 牛顿插值公式&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 给定5个插值节点及其函数值, 可以得到L4(x); 由于某种原因, 需要加入一个新的插值节点. Lagrange插值法之前的计算结果(l)均失效, 需要重新计算. 非常的不方便.&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>牛顿法是基于&lt;strong>差商&lt;/strong>的概念. 导数是差商的极限.&lt;/li>
+&lt;li>差商的差商是高阶差商.&lt;/li>
+&lt;/ul>
+&lt;p>牛顿插值法的插值函数(以二次插值举例):
+$$
+P(x) = a_0 + a_1(x-x_0) + a_2(x-x_0)(x-x_1)
+$$
+需要做的就是解出系数&lt;code>a0,a1,...&lt;/code>.&lt;/p>
+&lt;p>所以引入差商的符号:
+$$
+a_1=f[x_0,x_1]=\frac{f(x_1)-f(x_0)}{x_1-x_0}
+$$
+$$
+a_2=f[x_0,x_1,x_2]=\frac{f[x_1,x_2]-f[x_0,x_1]}{x_2-x_0}
+$$&lt;/p>
+&lt;h3 id="5-hermite插值">5. Hermite插值&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 有时我们已知的条件不都是函数值, 也有导数值. 例如已知两个点的函数值和两个点的导数值, 可以应用Heimite插值法得到三次多项式.&lt;/p>
+&lt;/blockquote>
+&lt;p>求Hermite插值函数的方法: 构造差商表, &lt;strong>重复节点特殊处理&lt;/strong>.&lt;/p>
+&lt;p>Hermite插值方法的余项证明与Langrange插值法相同.&lt;/p>
+&lt;h3 id="6-分段低次插值">6. 分段低次插值&lt;/h3>
+&lt;blockquote>
+&lt;p>背景: 次数太高的多项式插值的效果不好. 比如龙格现象.&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>分段: 把被插值函数所在的大区间分成一个个的小区间.&lt;/li>
+&lt;li>低次: 每个小区间上用次数不超过&lt;code>3&lt;/code>的函数来逼近&lt;/li>
+&lt;/ul>
+&lt;h4 id="61-分段线性插值">6.1 分段线性插值&lt;/h4>
+&lt;p>就是分段折线&lt;/p>
+&lt;p>分段线性插值的优点:&lt;/p>
+&lt;ol>
+&lt;li>简单&lt;/li>
+&lt;li>当二阶导数趋近0时, 一定收敛&lt;/li>
+&lt;/ol>
+&lt;p>分段线性插值的缺点:&lt;/p>
+&lt;ol>
+&lt;li>分段折线不光滑, 分段点处不能求导.&lt;/li>
+&lt;/ol>
+&lt;h4 id="62-分段hermite插值">6.2 分段Hermite插值&lt;/h4>
+&lt;blockquote>
+&lt;p>背景: 为了解决分段线性插值的缺点(存在尖点).&lt;/p>
+&lt;/blockquote>
+&lt;p>已知函数在(n+1)个点的函数值值以及其导数值, 去构造一阶连续可导函数.&lt;/p>
+&lt;p>分段Hermite插值根据(n+1)个已知点划分为(n+1)个区间. 这样在每个小区间上都已知&lt;code>4&lt;/code>个条件, 可以使用&lt;code>3&lt;/code>次Hermite插值.&lt;/p>
+&lt;p>结论: 已知(2n+2)个条件的情况下, 居然只得到&lt;strong>一阶连续可微函数&lt;/strong>. 结论太差!&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="第六章-拟合">第六章 拟合&lt;/h2>
+&lt;p>🔍 &lt;strong>插值, 拟合, 逼近的区别&lt;/strong>&lt;/p>
+&lt;h4 id="1-最佳平方逼近">1. 最佳平方逼近&lt;/h4>
+&lt;h4 id="2-最小二乘法">2. 最小二乘法&lt;/h4>
+&lt;blockquote>
+&lt;p>背景: 已知不共线的三点, 如何确定一条&lt;strong>可信&lt;/strong>的直线.&lt;/p>
+&lt;/blockquote>
+&lt;p>三个点可以用插值来模拟二次多项式, 但题目要求了用一次多项式, 这是插值无法做到的.&lt;/p>
+&lt;p>不共线的三点不可能同时经过一条直线, 所以要用逼近的思想. 找一条近似的直线, 使得&lt;strong>误差&lt;/strong>最小.&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>与插值的区别&lt;/strong>: 插值是明确给出&lt;code>n+1&lt;/code>个插值条件, 得到&lt;code>n&lt;/code>次多项式.&lt;/li>
+&lt;li>&lt;strong>如何定义误差最小?&lt;/strong>: 函数间的距离.&lt;/li>
+&lt;/ul>
+&lt;h3 id="1-线性拟合">1. 线性拟合&lt;/h3>
+&lt;p>拟合的函数是&lt;code>n&lt;/code>次多项式, 可转化为超定方程&lt;code>GX&lt;/code>.&lt;/p>
+&lt;ul>
+&lt;li>其中规定&lt;code>G&lt;/code>为系数矩阵, &lt;code>X&lt;/code>为变量的列向量.&lt;/li>
+&lt;li>同时定义列向量&lt;code>F&lt;/code>为给出的函数值.&lt;/li>
+&lt;li>&lt;code>GX=F&lt;/code>是超定方程组, 没有准确解. 得到残差最小的解的方法即&lt;strong>最小二乘法&lt;/strong>.&lt;/li>
+&lt;/ul>
+&lt;p>所以线性拟合的残差&lt;code>r = |GX - F|&lt;/code>, 而找到目标函数的宗旨就是使&lt;code>r&lt;/code>最小. 使用&lt;strong>初等变分原理&lt;/strong>将这个问题转化为&lt;strong>正规方程组&lt;/strong>求解的问题.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="第七章-数值积分">第七章 数值积分&lt;/h2>
+&lt;blockquote>
+&lt;p>背景: 定积分的计算中可能无法找到原函数的情况. 考虑定积分的本质是一句具体的数, 我们的目标就是找到这个数的近似值, 越接近越好.&lt;/p>
+&lt;/blockquote>
+&lt;p>解决的两种思路: &lt;code>积分中值定理&lt;/code> 和 &lt;code>插值型求积公式(近似被积函数)&lt;/code>.&lt;/p>
+&lt;h3 id="1-积分中值定理">1. 积分中值定理&lt;/h3>
+&lt;p>基本的积分中值定理:
+$$
+\int_{a}^{b}f(x)dx = f(\xi)(b-a)
+$$&lt;/p>
+&lt;p>将一个区域的面积转化为矩形的面积. 如何确定矩形的高呢? &lt;code>左矩阵&lt;/code>, &lt;code>右矩阵&lt;/code>, &lt;code>中间矩阵&lt;/code>, &lt;code>梯形公式&lt;/code>.&lt;/p>
+&lt;p>更常用的积分公式是 在乘积函数积分中, 如果&lt;code>g(x)&lt;/code>不变号, 则有:
+$$
+\int_{a}^{b}g(x)f(x)dx =f(\xi)\int_{a}^{b}g(x)dx
+$$&lt;/p>
+&lt;h3 id="2-插值型求积公式">2. 插值型求积公式&lt;/h3>
+&lt;p>在被积函数很复杂的情况下, 可以对其进行近似处理, 例如使用&lt;code>Lagrange插值法&lt;/code>.&lt;/p>
+&lt;h4 id="二次插值-simpson公式">二次插值: Simpson公式&lt;/h4>
+&lt;p>取二次插值的步长&lt;code>h=(b-a)/2&lt;/code>, 即增加一个插值节点&lt;code>(b-a)/2&lt;/code>, Simpson公式化简的结果为:
+$$
+\int_{a}^{b}f(x)dx = \frac{b-a}{6}[f(a)+4f(\frac{a+b}{2})+f(b)]+R[f]
+$$&lt;/p>
+&lt;p>📌 Simpson公式满足&lt;code>3&lt;/code>阶代数精度. 虽然它只是二次插值得到的.&lt;/p>
+&lt;h3 id="3-余项">3. 余项&lt;/h3>
+&lt;ul>
+&lt;li>插值型求积公式的余项, 即对应的插值方法(如Lagrange, Newton)的余项在区间上的积分.&lt;/li>
+&lt;li>梯形公式方法的余项可以用&lt;strong>积分中值定理&lt;/strong>来优化.&lt;/li>
+&lt;li>Simpson公式的余项&lt;strong>不能&lt;/strong>使用积分中值定理来优化, 因为不满足保号的条件.&lt;/li>
+&lt;/ul>
+&lt;h3 id="4-衡量求积公式的好坏">4. 衡量求积公式的好坏&lt;/h3>
+&lt;p>&lt;strong>代数精度&lt;/strong>: 不是一种误差, 而是对误差的描述.&lt;/p>
+&lt;p>如何得知某个公式的代数精度: 只要带入一个m次多项式验证余项是否为0即可.&lt;/p>
+&lt;h3 id="5复合求积公式">5.复合求积公式&lt;/h3>
+&lt;p>为了提高精度通常把积分区间分为若干个子区间, 再在每个子区间上应用低阶求积公式.&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>复合梯形公式&lt;/code>: 将区间等分.&lt;/li>
+&lt;li>&lt;code>复合simpson公式&lt;/code>: 将区间偶数等分.&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="第八章-常微分方程初值问题数值解法">第八章 常微分方程初值问题数值解法&lt;/h2>
+&lt;p>将研究的内容进一步限定为: &lt;code>一阶初值问题&lt;/code>, &lt;code>单步法&lt;/code>.&lt;/p>
+&lt;blockquote>
+&lt;p>背景: 在无法给出解析表达式时如果利用数值方法求出&lt;code>y&lt;/code>的近似解?&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="1-简单的数值方法">1. 简单的数值方法&lt;/h3>
+&lt;h4 id="11-euler公式">1.1 Euler公式&lt;/h4>
+&lt;p>使用&lt;code>一阶向前差商&lt;/code>近似替代&lt;code>y'&lt;/code>. 得到递推的数列表达式:
+$$
+y_{n+1} = y_{n} + hf(x_n,y_n), n=0,1,2,&amp;hellip;
+$$&lt;/p>
+&lt;p>&lt;strong>误差&lt;/strong>: Euler法使用的近似代替只有&lt;code>一阶精度&lt;/code>, 所以误差很大. 此时有两种解决方案:&lt;/p>
+&lt;ol>
+&lt;li>加细步长&lt;code>h&lt;/code>, 若不行再加细. 总是能得到正确的, 如果你不嫌弃带来的计算变得缓慢的问题.&lt;/li>
+&lt;li>换方法.&lt;/li>
+&lt;/ol>
+&lt;h4 id="12-梯形公式">1.2 梯形公式&lt;/h4>
+&lt;blockquote>
+&lt;p>背景:为得到比Euler法精度更高的计算公式. 梯形公式具有&lt;code>二阶&lt;/code>精度.&lt;/p>
+&lt;/blockquote>
+&lt;p>对&lt;code>y' = f(x,y)&lt;/code>的两端进行&lt;strong>局部的&lt;/strong>积分, 然后用梯形公式近似计算右边.&lt;/p>
+&lt;h4 id="13-改进euler公式">1.3 改进Euler公式&lt;/h4>
+&lt;p>先用欧拉公式求得一个&lt;code>近似的yn+1&lt;/code>, 带入梯形公式, 得到&lt;code>矫正的yn+1&lt;/code>.&lt;/p>
+- https://wangloo.github.io/posts/numberical-analysis/ - @2019 Notepadium.</description></item><item><title>LaTeX Vim Tutorial</title><link>https://wangloo.github.io/posts/latex-vim-tutorial/</link><pubDate>Wed, 04 May 2022 17:07:51 +0800</pubDate><guid>https://wangloo.github.io/posts/latex-vim-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/latex-vim-tutorial/ -&lt;h2 id="use-plugin-vimtex">Use plugin &lt;code>vimtex&lt;/code>&lt;/h2>
+&lt;p>Vim build-in support of LaTeX files is just OK. When we need more excellent exprience, good plugins is very recommended.&lt;/p>
+&lt;p>&lt;a href="https://github.com/lervag/vimtex#configuration">vimtex&lt;/a> is a nice and modern vim plugin for LaTeX files.&lt;/p>
+&lt;p>&lt;strong>Useful Futures of vimtex IMO&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>&amp;lt;leader&amp;gt;ll&lt;/code> Complier. By default, it will auto-complier when you type &lt;code>:w&lt;/code>.&lt;/li>
+&lt;li>&lt;code>&amp;lt;leader&amp;gt;lt&lt;/code> Open content tree as a sidebar.&lt;/li>
+&lt;li>&lt;code>&amp;lt;leader&amp;gt;lv&lt;/code> View PDF with configured PDF viewer.&lt;/li>
+&lt;li>&lt;code>&amp;lt;leader&amp;gt;li&lt;/code> File information.&lt;/li>
+&lt;li>&lt;code>cse&lt;/code> Change surrounding &lt;code>\begin \end&lt;/code> environment.&lt;/li>
+&lt;li>&lt;code>tse&lt;/code> Exchange between &lt;code>\begin{env}&lt;/code> and &lt;code>\begin{env*}&lt;/code>.&lt;/li>
+&lt;li>&lt;code>tsc&lt;/code> Exchange between &lt;code>\command{}&lt;/code> and &lt;code>\command*{}&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;p> 
+ &lt;/p>
+&lt;h2 id="add-support-of-simplified-chinese">Add Support of Simplified Chinese&lt;/h2>
+&lt;h3 id="install-xetex">Install &lt;code>xetex&lt;/code>&lt;/h3>
+&lt;p>I use &lt;code>xetex&lt;/code> to add supports for Chinese fonts in LaTex files. Actually the magician is amacro package of &lt;code>xetex&lt;/code> named &lt;code>xeCJK&lt;/code>.&lt;/p>
+&lt;p>And &lt;code>xetex&lt;/code> is included in&lt;code>texlive&lt;/code>. so we install it from source:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install texlive-xetex
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="install-chinese-font">Install Chinese Font&lt;/h3>
+&lt;p>If there is no Chinese font in your system, you must install one. I choose WinQingYuan microhei as a instance.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install ttf-wqy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Excute &lt;code>fc-list&lt;/code> to check if install successfully, here is excepted output:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>fc-list | grep wqy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/usr/share/fonts/truetype/wqy/wqy-microhei.ttc: WenQuanYi Micro Hei,文泉驛微米黑,文泉驿微米黑:style&lt;span style="color:#ff79c6">=&lt;/span>Regular
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/share/fonts/truetype/wqy/wqy-microhei.ttc: WenQuanYi Micro Hei Mono,文泉驛等寬微米黑,文泉驿等宽微米黑:style&lt;span style="color:#ff79c6">=&lt;/span>Regular
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="configure-your-tex-file">Configure your tex file&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-latex" data-lang="latex">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\documentclass&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>article&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\usepackage&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>xeCJK&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\setCJKmainfont&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>WenQuanYi Micro Hei&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\begin&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>document&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Hello, LaTeX!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>你好, LaTex!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\end&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>document&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Complier it and see, the Chinese font is displayed!&lt;/p>
+&lt;p> 
+ &lt;/p>
+&lt;h2 id="confusing-tools">Confusing Tools&lt;/h2>
+&lt;h3 id="difference-between-pdfluaxetex-and-pdfluaxelatex">Difference between {pdf,lua,xe}Tex and {pdf,lua,xe}LaTeX&lt;/h3>
+&lt;p>If a &lt;code>.tex&lt;/code>file starts with &lt;code>\documentclass&lt;/code>, it&amp;rsquo;s a &lt;em>LaTex&lt;/em> format file rather than the &lt;em>Plain Tex&lt;/em> format file.&lt;/p>
+&lt;p>The LaTeX format file has some specific macro like &lt;code>\documentclass&lt;/code> that cannot be compliered by &lt;code>[pdf]Tex&lt;/code>, so that&amp;rsquo;s the job of &lt;code>[pdf]LaTeX&lt;/code>. Same goes for other engines.&lt;/p>
+&lt;h3 id="what-is-xetexxelatex">What is &lt;code>xetex/xelatex&lt;/code>?&lt;/h3>
+&lt;p>&lt;code>xetex/xelatex&lt;/code> is one of the TeX/LaTeX engines. Others are &lt;code>pdfTex&lt;/code>, &lt;code>LuaTex&lt;/code>, etc. &lt;a href="https://fr.wikipedia.org/wiki/XeTeX">Wiki&lt;/a>&lt;/p>
+&lt;p>&lt;code>xetex/xelatex&lt;/code> add fonts and character sets support for TeX/LaTeX file.&lt;/p>
+&lt;ul>
+&lt;li>Treat input as Unicode&lt;/li>
+&lt;li>Allow us to use many system fonts in LaTeX file easily&lt;/li>
+&lt;/ul>
+&lt;h3 id="what-is-latexmk">What is &lt;code>latexmk&lt;/code>?&lt;/h3>
+&lt;p>LaTeXmk 是一个集成化的命令行工具, it must work with one LaTeX engine.&lt;/p>
+&lt;p>The fundamental issue that &lt;code>latexmk&lt;/code> solves is that the number of runs of &lt;code>[pdf]latex&lt;/code> is highly dynamically dependent on the document and the class file used. &lt;code>latex&lt;/code> just need to be run once a time.&lt;/p>
+&lt;h3 id="different-between-ctexmiktextexlive-">Different between &lt;code>CTeX&lt;/code>/&lt;code>MiKTeX&lt;/code>/&lt;code>TeXlive&lt;/code> ?&lt;/h3>
+&lt;p>They are all 包含与.tex文件关联的各种编辑、查看工具、常用宏包及文档.&lt;/p>
+&lt;p>&lt;a href="http://www.ctex.org/HomePage">CTex&lt;/a> packages add complete Chinese support based on &lt;a href="https://miktex.org/">MiKTeX&lt;/a>.&lt;/p>
+&lt;ul>
+&lt;li>CTex is only avilable in windows.&lt;/li>
+&lt;/ul>
+- https://wangloo.github.io/posts/latex-vim-tutorial/ - @2019 Notepadium.</description></item><item><title>Portability Issues</title><link>https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/</link><pubDate>Sun, 01 May 2022 16:41:35 +0800</pubDate><guid>https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/ -&lt;p>When reading C standard documents, we usually see phrases like &amp;ldquo;&lt;strong>Implementation-defined&lt;/strong>&amp;rdquo;, &amp;ldquo;&lt;strong>Unspecified&lt;/strong>&amp;rdquo;,.etc.&lt;/p>
+&lt;p>So, what do they really mean?&lt;/p>
+&lt;h2 id="术语">术语&lt;/h2>
+&lt;p>我们将这些难以直接理解的词汇称为&lt;strong>术语&lt;/strong>，在ANSI C中，术语可以分为描述不可移植代码(unportable), 坏代码(bad), 可移植的代码(portable)三类.&lt;/p>
+&lt;h3 id="unportable-code">unportable code&lt;/h3>
+&lt;p>&lt;strong>Implementation-defined&lt;/strong>&lt;/p>
+&lt;p>需要由编译器设计者决定采取何种行为，他们可能不同，但都不能说是错误的.&lt;br>
+例如：当整型数右移时，是否需要扩展符号位. &lt;a href="https://www.cnblogs.com/bluettt/p/16186598.html">右移代替除法可能导致的灾难&lt;/a>.&lt;/p>
+&lt;p>&lt;strong>unspecified&lt;/strong>&lt;/p>
+&lt;p>在某些正确情况下的做法，标准并未明确规定应该怎样做.&lt;br>
+例如：参数求值的顺序.&lt;/p>
+&lt;h3 id="bad-code">bad code&lt;/h3>
+&lt;p>&lt;strong>undefined&lt;/strong>&lt;/p>
+&lt;p>在某些不正确情况下的做法，但标准并未规定应该怎样做。意味着你可以采取任何行动，可以什么都不做，也可以发出一条警告信息, 或者终止CPU重启等等. 你甚至可以发射核导弹(只要你安装了能发射核导弹的硬件系统).&lt;br>
+例如：当一个有符号整数溢出时该采取什么行动.&lt;/p>
+&lt;p>&lt;strong>constraint&lt;/strong>&lt;/p>
+&lt;p>这是一个必须遵守的限制或要求. 如果你不遵守, 那么你的程序的行为就会变成如上所说的&lt;code>undefined&lt;/code>. 这出现了一种很有意思的情况: 分辨某种东西是否是一个&lt;code>constaint&lt;/code>是很容易的, 因为每个标准的主题都附有一个&lt;code>constraint&lt;/code>小节, 列出了所有的约束条件。&lt;br>
+例如: &lt;code>%&lt;/code>操作符的操作数必须为整型. 所以,在非整型数据上使用&lt;code>%&lt;/code>操作符肯定会导致&lt;code>undefined&lt;/code>.&lt;/p>
+&lt;h3 id="portable-code">portable code&lt;/h3>
+&lt;p>&lt;strong>strictly conforming&lt;/strong>&lt;/p>
+&lt;p>严格遵守标准的. 符合该条件的程序应当是:&lt;/p>
+&lt;ul>
+&lt;li>只使用已确定的特性&lt;/li>
+&lt;li>不突破任何由编译器实现(Implementation-defined)的限制.&lt;/li>
+&lt;li>不使用&lt;code>unspecified&lt;/code>和&lt;code>undefined&lt;/code>特性&lt;/li>
+&lt;/ul>
+&lt;p>这样规定的目的是最大程序保证代码的可移植性. 但符合该术语的代码并不常见, 例如&lt;code>INT_MAX&lt;/code>的值在不同架构的机器上结果可能不同.&lt;/p>
+&lt;p>&lt;strong>comforming&lt;/strong>&lt;/p>
+&lt;p>遵循标准的; 一个遵循标准的程序可以依赖一些对于某种编译器特有的&lt;strong>不可移植&lt;/strong>的特性. 这样一个程序对于某个编译器可能是遵循标准的, 但对于另外一个编译器又是不遵循标准的.&lt;/p>
+- https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/ - @2019 Notepadium.</description></item><item><title>Third Blog</title><link>https://wangloo.github.io/posts/third-blog/</link><pubDate>Sun, 01 May 2022 16:41:35 +0800</pubDate><guid>https://wangloo.github.io/posts/third-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/third-blog/ -&lt;p>&lt;img src="images/test.jpg" alt="sunset">
+&lt;img src="test.jpg" alt="sunset">&lt;/p>
+- https://wangloo.github.io/posts/third-blog/ - @2019 Notepadium.</description></item><item><title>GCC '-M' and Related Parameters</title><link>https://wangloo.github.io/posts/c/gcc_-m_related/</link><pubDate>Tue, 26 Apr 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/gcc_-m_related/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/c/gcc_-m_related/ -&lt;p>As we all know, there are huge number of parameters for GCC. With them, we can make many things possible. Now we talk about -M and related ones.
+After reading this article, you will know the meaning of there magic parameters. And I will put some little demos follows. Finally, we will see what can they do in really project. Let&amp;rsquo;s go ahead.&lt;/p>
+&lt;h2 id="-m">-M&lt;/h2>
+&lt;p>Output the dependencies of the input source file. Incluing the names of itself and all included files.&lt;/p>
+&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
+Suppose we have source file &lt;code>tmp.c&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/* File: tmp.c */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdio.h&amp;gt; // system header file&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;#34;tmp.h&amp;#34; // user defined header file&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If we run &lt;code>gcc -M tmp.c&lt;/code>, we will get messy output like following. Notice that the first two words is object filename and a colon.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>tmp.o: /home/wanglu/demo/tmp.c /usr/include/stdc-predef.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/stdio.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/libc-header-start.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/wordsize.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/long-double.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/gnu/stubs.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/gnu/stubs-64.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/lib/gcc/x86_64-linux-gnu/9/include/stddef.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/lib/gcc/x86_64-linux-gnu/9/include/stdarg.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/timesize.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/typesizes.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/time64.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/__FILE.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/FILE.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/stdio_lim.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /home/wanglu/demo/tmp.h
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="-mm">-MM&lt;/h2>
+&lt;p>Like &lt;code>-M&lt;/code> but do NOT output system header files.&lt;/p>
+&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
+Use same source file &lt;code>tmp.c&lt;/code> above.&lt;br>
+Run &lt;code>gcc -MM tmp.c&lt;/code>. Output dependencies except system header files.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>tmp.o: /home/wanglu/demo/tmp.c /home/wanglu/demo/tmp.h
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="-mf">-MF&lt;/h2>
+&lt;p>Use with &lt;code>-M&lt;/code> or &lt;code>-MM&lt;/code>. Specify output dependencies to file instead of STDOUT.&lt;/p>
+&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
+Use same source file &lt;code>tmp.c&lt;/code> above.&lt;br>
+Run &lt;code>gcc -MM -MF dp.txt tmp.c&lt;/code>. File &lt;code>dp.txt&lt;/code> will be created and filled with dependecies of &lt;code>tmp.c&lt;/code> except system header files.&lt;/p>
+&lt;h2 id="-md">-MD&lt;/h2>
+&lt;p>&lt;code>-MD&lt;/code> is same as &lt;code>-M -MF &amp;lt;file&amp;gt;&lt;/code>. But the filename is basd on the object file but replacing &lt;code>.o&lt;/code> with &lt;code>.d&lt;/code>.&lt;/p>
+&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
+Use same source file &lt;code>tmp.c&lt;/code> above.&lt;br>
+Run &lt;code>gcc -MD tmp.c&lt;/code>. File &lt;code>tmp.d&lt;/code> will be created and filled with all dependecies.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#bd93f9">1&lt;/span> wanglu wanglu &lt;span style="color:#bd93f9">67&lt;/span> 4月 &lt;span style="color:#bd93f9">26&lt;/span> 19:49 tmp.c
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#bd93f9">1&lt;/span> wanglu wanglu &lt;span style="color:#bd93f9">1175&lt;/span> 4月 &lt;span style="color:#bd93f9">26&lt;/span> 20:27 tmp.d
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#bd93f9">1&lt;/span> wanglu wanglu &lt;span style="color:#bd93f9">38&lt;/span> 4月 &lt;span style="color:#bd93f9">26&lt;/span> 19:47 tmp.h
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="-mmd">-MMD&lt;/h2>
+&lt;p>&lt;code>-MMD&lt;/code> is same as &lt;code>-MM -MF &amp;lt;file&amp;gt;&lt;/code>. Also named on object file but replacing &lt;code>.o&lt;/code> with &lt;code>.d&lt;/code>.&lt;/p>
+&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
+Use same source file &lt;code>tmp.c&lt;/code> above.&lt;br>
+Run &lt;code>gcc -MMD tmp.c&lt;/code>. File &lt;code>tmp.d&lt;/code> will be created and filled with dependecies except system header files.&lt;/p>
+&lt;h2 id="application">Application&lt;/h2>
+&lt;p>Here is an important question you may ask me: &lt;em>Why do we struggle to get the dependencies formats? What can they do?&lt;/em>&lt;br>
+If you are familiar with &lt;code>make&lt;/code> and &lt;code>Makefile&lt;/code>, aha, that&amp;rsquo;s it!
+With the help of M-related parameters, you can easily handle the problem of &lt;strong>tracing header files&lt;/strong>.&lt;br>
+Give you a little demo about my point.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>-include *.d
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">%.o&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>%.c
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">$(&lt;/span>CC&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>CFLAGS&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>INCLUDES&lt;span style="color:#ff79c6">)&lt;/span> $&amp;lt; -c -MMD -o &lt;span style="color:#8be9fd;font-style:italic">$@&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Actually, we do two things in order:&lt;/p>
+&lt;ol>
+&lt;li>When complieing source files, we generate dependency files &lt;code>xxx.d&lt;/code> at the same time.&lt;/li>
+&lt;li>After geting &lt;code>xxx.d&lt;/code>, we include them in makefile. As its format is exactly the dependency format required by makefile.&lt;/li>
+&lt;/ol>
+&lt;h2 id="summary">Summary&lt;/h2>
+&lt;p>Hope this article can give you a clear understanding of M-related parameters in GCC. We can sometimes find them in large projects&amp;rsquo; makefile. It&amp;rsquo;s very useful to automatic build dependency for header files. So try to use them in your current or next project.&lt;/p>
+&lt;h2 id="reference">Reference&lt;/h2>
+&lt;ol>
+&lt;li>&lt;a href="https://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html#Preprocessor-Options">GNU GCC options&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://programmer.group/gcc-m-mm-mmd-mf-mt.html">GCC -M, -MM, -MMD, -MF, -MT&lt;/a>&lt;/li>
+&lt;/ol>
+- https://wangloo.github.io/posts/c/gcc_-m_related/ - @2019 Notepadium.</description></item><item><title>Second Blog</title><link>https://wangloo.github.io/posts/second-blog/second-blog/</link><pubDate>Tue, 26 Apr 2022 15:32:11 +0800</pubDate><guid>https://wangloo.github.io/posts/second-blog/second-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/second-blog/second-blog/ -&lt;p>This is my second blog.&lt;/p>
+&lt;blockquote>
+&lt;p>Wish you have a good life.&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>happy&lt;/li>
+&lt;li>smile&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://wangloo.github.io/img/test.jpg" alt="">
+&lt;img src="https://wangloo.github.io/test.jpg" alt="">
+&lt;img src="test.jpg" alt="">
+&lt;img src="img/test.jpg" alt="">
+&lt;img src="https://wangloo.github.io/blog/img/test.jpg" alt="">&lt;/p>
+&lt;figure>&lt;img src="https://wangloo.github.io/blog/img/test.jpg"/>&lt;figcaption>
+&lt;h4>sunset&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>&lt;img src="images/test.jpg" alt="sunset">&lt;/p>
+- https://wangloo.github.io/posts/second-blog/second-blog/ - @2019 Notepadium.</description></item><item><title>First Blog</title><link>https://wangloo.github.io/posts/first-blog/first-blog/</link><pubDate>Tue, 26 Apr 2022 15:13:07 +0800</pubDate><guid>https://wangloo.github.io/posts/first-blog/first-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/first-blog/first-blog/ -&lt;p>This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.
+This is my first blog.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>(&lt;span style="color:#8be9fd">void&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;hello, hugo&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/first-blog/first-blog/ - @2019 Notepadium.</description></item></channel></rss>

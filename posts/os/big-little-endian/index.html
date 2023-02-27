@@ -1,0 +1,59 @@
+<!doctype html><html><head><title>大小端问题</title><meta charset=utf-8><meta name=X-UA-Compatible content="IE=edge"><meta name=google-site-verification content><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name=viewport><meta content="telephone=no" name=format-detection><meta name=description content><meta name=renderer content="webkit"><meta name=theme-color content="#ffffff"><link type=text/css rel=stylesheet href=/vendor/css/bootstrap.min.css><link rel=stylesheet href=/scss/journal.min.a4a96c4dc87303b81206f86623ab533a5c6cc7fe9ac433fcdd808d2089bae63b.css integrity="sha256-pKlsTchzA7gSBvhmI6tTOlxsx/6axDP83YCNIIm65js=" media=screen><link rel=stylesheet href=/scss/dark-mode.min.8d11714119bdb3c376b7eab64344dcd1f183f83f58c906bbe5d8b770bccf9c03.css integrity="sha256-jRFxQRm9s8N2t+q2Q0Tc0fGD+D9YyQa75di3cLzPnAM=" media=screen><script src=/vendor/js/loadCSS.js></script>
+<script>loadCSS("https://fonts.googleapis.com/css?family=Fira+Mono|Material+Icons")</script><script src=/js/toc.js></script>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css><script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js></script>
+<script src=/vendor/js/md5.min.js></script>
+<script>var gitalk=new Gitalk({clientID:"12dfb0f809e5e6afde3d",clientSecret:"72aaf5660b3a7b43b0bffb4d683a605a7ea65dad",repo:"blogcomments_gitalk",owner:"wangloo",admin:["wangloo"],id:md5(location.pathname),distractionFreeMode:"false"});window.onload=function(){gitalk.render("gitalk-container")}</script></head><body><div id=app><div id=sideContainer class=side-container><a class="a-block nav-head false" href=https://wangloo.github.io/><div class=nav-title>Soben's Secret Base</div><div class=nav-subtitle>花有重开日, 人无再少年</div></a><div class=nav-link-list><a class="a-block nav-link-item active" href=/posts>Archive</a>
+<a class="a-block nav-link-item false" href=/tags>Tags</a>
+<a class="a-block nav-link-item false" href=/categories>Categories</a></div><div class=nav-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://risehere.net/>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+@2019 Notepadium.</div></div><div id=extraContainer class=extra-container><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc-content><center>- CATALOG -</center><ul><ul><li><a href=#%e5%a4%a7%e5%b0%8f%e7%ab%af%e9%97%ae%e9%a2%98%e7%9a%84%e7%94%b1%e6%9d%a5 onclick="onNavClick(`#大小端问题的由来-nav`)" id=大小端问题的由来-nav>大小端问题的由来</a></li><li><a href=#%e4%bb%80%e4%b9%88%e6%83%85%e5%86%b5 onclick="onNavClick(`#什么情况-nav`)" id=什么情况-nav>什么情况?</a></li><li><a href=#%e5%a4%a7%e5%b0%8f%e7%ab%af%e5%bd%a2%e5%bc%8f%e7%9a%84%e4%bc%98%e7%bc%ba%e7%82%b9 onclick="onNavClick(`#大小端形式的优缺点-nav`)" id=大小端形式的优缺点-nav>大小端形式的优缺点</a></li></ul></div></div><div class=pagination><a id=globalBackToTop class="pagination-action animated-visibility" href=#top :class="{ invisible: scrollY == 0 }"><i class="material-icons pagination-action-icon">keyboard_arrow_up</i></a>
+<a type=button class=pagination-action id=darkModeToggleButton><span class="material-icons pagination-action-icon" id=darkModeToggleIcon>dark_mode</span></a></div></div><div class=single-column-drawer-container id=drawer v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }"><div class=drawer-content><div class=drawer-menu><a class="a-block drawer-menu-item active" href=/posts>Archive</a>
+<a class="a-block drawer-menu-item false" href=/tags>Tags</a>
+<a class="a-block drawer-menu-item false" href=/categories>Categories</a><div class=toc><div class=toc-content><center>- CATALOG -</center><ul><ul><li><a href=#%e5%a4%a7%e5%b0%8f%e7%ab%af%e9%97%ae%e9%a2%98%e7%9a%84%e7%94%b1%e6%9d%a5 onclick="onNavClick(`#大小端问题的由来-nav`)" id=大小端问题的由来-nav>大小端问题的由来</a></li><li><a href=#%e4%bb%80%e4%b9%88%e6%83%85%e5%86%b5 onclick="onNavClick(`#什么情况-nav`)" id=什么情况-nav>什么情况?</a></li><li><a href=#%e5%a4%a7%e5%b0%8f%e7%ab%af%e5%bd%a2%e5%bc%8f%e7%9a%84%e4%bc%98%e7%bc%ba%e7%82%b9 onclick="onNavClick(`#大小端形式的优缺点-nav`)" id=大小端形式的优缺点-nav>大小端形式的优缺点</a></li></ul></div></div></div></div></div><transition name=fade><div id=drawer-mask v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if=isDrawerOpen v-on:click=toggleDrawer></div></transition><nav id=navBar class="navbar sticky-top navbar-light single-column-nav-container"><div id=navBackground class=nav-background></div><div class="container container-narrow nav-content"><button id=nav_dropdown_btn class=nav-dropdown-toggle type=button v-on:click=toggleDrawer>
+<i class=material-icons>menu</i></button>
+<a id=navTitle class=navbar-brand href=https://wangloo.github.io/>Soben's Secret Base</a>
+<button type=button class=nav-darkmode-toggle id=darkModeToggleButton2>
+<i class=material-icons id=darkModeToggleIcon2>dark_mode</i></button></div></nav><div class=single-column-header-container id=pageHead v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }"><a href=https://wangloo.github.io/><div class=single-column-header-title>Soben's Secret Base</div><div class=single-column-header-subtitle>花有重开日, 人无再少年</div></a></div><div id=content><div id=streamContainer class=stream-container><div class="post-list-container post-list-container-shadow"><div class=post><div class=post-head-wrapper-text-only><div class=post-title>大小端问题<div class=post-meta><time itemprop=datePublished>2022-11-17 10:30</time>
+<i class=material-icons>label</i>
+<a href=/tags/operating-system>Operating System</a>
+&nbsp;
+<i class=material-icons>schedule</i>
+4 min
+7 s.</div></div></div><div class=post-body-wrapper><div class=post-body v-pre><hr><h2 id=大小端问题的由来>大小端问题的由来</h2><p>为什么计算机世界需要区分大小端? <strong>内存里存取的单位是字节</strong>, 如果所有的数据类型长度都是一个字节, 那就完全不需要大小端了, 每个变量都仅占据单独一个字节.</p><p>例如, 三个变量 <code>a=10, b=20, c=30</code>, 在内存中的布局可能就是:</p><pre tabindex=0><code> ┌────────────┐
+ │            │
+ │   10       │ a
+ ├────────────┤
+ │            │
+ │   20       │ b
+ ├────────────┤
+ │            │
+ │   30       │ c
+ ├────────────┤
+ │            │
+ │            │
+ │            │
+ │            │
+ │            │
+ └────────────┘
+</code></pre><p>但是我们最常使用的数据类型肯定有超过一个字节的, <code>int</code>类型在64位的系统中就占<strong>4个字节</strong>. 例如变量<code>a=0xaabbccdd</code></p><p>一个变量的大小一旦超过4个字节, <strong>内存的存取又是以字节位单位的</strong>, 那么要把它塞到内存里就必然会产生两种不同存放方式: <strong>先放<code>0xaa</code>还是先放<code>0xdd</code></strong></p><p>首先, <code>0xdd</code>是变量a的低8位, <code>0xaa</code>是最高8位, 这是确定的.</p><ul><li><p>如果先放<code>0xaa</code>, 即低地址放高位, 就叫做<em>大端</em>, 如左图;</p></li><li><p>如果先放<code>0xdd</code>, 即低地址放低位, 就叫<em>小端</em>, 如右图.</p></li></ul><pre tabindex=0><code>
+    start addr of `a`      start addr of `a`
+    ┌────────────┐         ┌────────────┐
+    │            │         │            │
+    │   aa       │         │   dd       │
+    ├────────────┤         ├────────────┤
+    │            │         │            │
+    │   bb       │         │   cc       │
+    ├────────────┤         ├────────────┤
+    │            │         │            │
+    │   cc       │         │   bb       │
+    ├────────────┤         ├────────────┤
+    │            │         │            │
+    │   dd       │         │   aa       │
+    ├────────────┤         ├────────────┤
+    │            │         │            │
+    │            │         │            │
+    └────────────┘         └────────────┘
+</code></pre><h2 id=什么情况>什么情况?</h2><p>看下面的代码, 猜测输出的结果</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#8be9fd>unsigned</span> <span style=color:#8be9fd>int</span> i <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0x00646c72</span>;
+</span></span><span style=display:flex><span>printf(<span style=color:#f1fa8c>&#34;Hello Wo%s&#34;</span>, <span style=color:#ff79c6>&amp;</span>i);
+</span></span></code></pre></div><p><code>%s</code> 会按字节一直打印内存中的字符, 直到遇到<code>\0</code>. 首先打印的字符便是变量<code>i</code>的地址处的内容.</p><p>如果是小端存储方式, 变量<code>i</code>的地址处的一个字节值是0x72, 即字符<code>r</code>. 以此类推, 所以如果CPU的字节序是小端形式, 那么<code>printf</code>的结果是: Hello world</p><h2 id=大小端形式的优缺点>大小端形式的优缺点</h2><p>小端的优势:</p><ol><li><p>以不同的长度读取变量非常方便, 不用计算地址. 例如<code>u64 a=0x1234</code>, 当<code>(u16)a</code>时, CPU不需要重新计算读取的起始位置, 永远都是变量a的起始地址.</p></li><li><p>Easily to do mathematical computations “because of the 1:1 relationship between address offset and byte number (offset 0 is byte 0), multiple precision math routines are correspondingly easy to write.”</p></li></ol><hr width=100% id=EOF><p style=color:#777>Last modified on 2023-02-27</p></div></div><nav class=post-pagination><a class=newer-posts href=/posts/c/pointers-pointers-list/>Next<br>二级指针操作链表</a>
+<a class=older-posts href=/posts/os/context/>Previous<br>操作系统——上下文切换</a></nav><div class=post-comment-wrapper><div id=gitalk-container></div></div></div></div></div></div><div id=single-column-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://risehere.net/>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+@2019 Notepadium.</div></div><script src=/js/journal.js></script></body></html>

@@ -1,443 +1,1219 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Numberical Analysis Exam</title><link>https://wangloo.github.io/posts/numberical-analysis/</link><pubDate>Sat, 07 May 2022 18:04:58 +0800</pubDate><guid>https://wangloo.github.io/posts/numberical-analysis/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/numberical-analysis/ -&lt;p>&lt;img src="qingdao-tzjt.JPG" alt="qingdao">&lt;/p>
-&lt;h1 id="考试大纲">考试大纲&lt;/h1>
-&lt;p>🎯 To Reader:&lt;/p>
-&lt;p>This blog is JUST FOR EXAMINATION! If you are interested in numberical analysis, please quit this web.
-I try to sort out the knowledge points of the course, just to pass the exam.&lt;/p>
-&lt;p>Based on the course of Professor Zhong Erjie of UESTC.&lt;/p>
-&lt;p>💢 &lt;strong>I hate mathematics!&lt;/strong>&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="第二章-非线性方程方程组的求解">第二章 非线性方程/方程组的求解&lt;/h2>
-&lt;h3 id="1-二分法及迭代">1. 二分法及迭代&lt;/h3>
-&lt;ul>
-&lt;li>二分法误差估计定理&lt;/li>
-&lt;/ul>
-&lt;h3 id="2-不动点迭代">2. 不动点迭代&lt;/h3>
-&lt;ul>
-&lt;li>不动点及不动点迭代的概念&lt;/li>
-&lt;li>迭代格式的选择? 是否收敛?&lt;/li>
-&lt;li>迭代的初值是否合适?&lt;/li>
-&lt;/ul>
-&lt;h3 id="3-牛顿法解非线性方程">3. 牛顿法解非线性方程&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 如果函数&lt;code>f(x)&lt;/code>是线性的, 那么它的求根问题就会简化. 牛顿法实质上是一种线性化方法, 将非线性方程逐步归结为某种线性方程来求解.&lt;/p>
-&lt;/blockquote>
-&lt;p>牛顿法的迭代格式:
-$$
-x^{k+1} = x^k - \frac{f(x^k)}{f^&amp;rsquo;(x^k)}
-$$&lt;/p>
-&lt;h3 id="4-弦截法">4. 弦截法&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 弦截法是牛顿法的一个改进. 牛顿法求根时需要计算&lt;code>f'(x)&lt;/code>, 而导数的计算往往困难. 弦截法使用&lt;em>差商&lt;/em>来回避导数的计算.&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="5-收敛阶">5. 收敛阶&lt;/h3>
-&lt;h3 id="6-非线性方程组的牛顿迭代格式">6. 非线性方程组的牛顿迭代格式&lt;/h3>
-&lt;ul>
-&lt;li>雅可比矩阵是什么?&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="第三章-直接法解线性方程组">第三章 直接法解线性方程组&lt;/h2>
-&lt;h3 id="1-gauss消元法">1. Gauss消元法&lt;/h3>
-&lt;p>求解过程的算法复杂度为&lt;code>O(n^2)&lt;/code>, 消元过程的算法复杂度为&lt;code>O(n^3)&lt;/code>.&lt;/p>
-&lt;h3 id="2-直接三角分解法doolittle分解法">2. 直接三角分解法(Doolittle分解法)&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: &lt;code>直接&lt;/code>意味着可以由A的元素直接计算L和U, 不需要任何的中间步骤.&lt;/p>
-&lt;/blockquote>
-&lt;p>一旦L和U得到, 求解&lt;code>Ax=b&lt;/code>就可以等价表示为求解两个三角形方程组:&lt;/p>
-&lt;ol>
-&lt;li>Ly=b, 求y&lt;/li>
-&lt;li>Ux=y. 求x&lt;/li>
-&lt;/ol>
-&lt;p> &lt;/p>
-&lt;h2 id="第四章-迭代法解线性方程组">第四章 迭代法解线性方程组&lt;/h2>
-&lt;blockquote>
-&lt;p>背景: 对于线性方程组&lt;code>Ax=b&lt;/code>, 当A为低阶稠密矩阵时, [选主元消去法]是求解的有效方法.&lt;br>
-但是实际情况中A大都是&lt;em>巨型的稀疏矩阵&lt;/em>, 这是采用迭代法来求解是合适的. 迭代法可以利用A中有大量零元素的特点.&lt;/p>
-&lt;/blockquote>
-&lt;ul>
-&lt;li>迭代法&lt;em>不一定&lt;/em>最终能够逼近方程组的解, 认识误差向量的概念.&lt;/li>
-&lt;/ul>
-&lt;h3 id="1-jacobi迭代">1. Jacobi迭代&lt;/h3>
-&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=2&amp;amp;spm_id_from=pageDriver">雅可比迭代格式和收敛性的判别&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=4&amp;amp;t=76.0">快速计算Bj的特征值&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=4&amp;amp;t=268.1">Jacobi迭代由A直接看出Bj&lt;/a>&lt;/p>
-&lt;h3 id="2-seidel迭代">2. Seidel迭代&lt;/h3>
-&lt;p>&lt;a href="https://www.bilibili.com/video/BV14F411e7Ji?p=6">Seidel迭代收敛格式和收敛性的判别&lt;/a>&lt;/p>
-&lt;p>Seidel迭代独有的判断收敛性的方式: 若A为&lt;code>对称阵&lt;/code>, 且A&lt;code>正定&lt;/code>, 那么迭代收敛.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="第五章-插值法">第五章 插值法&lt;/h2>
-&lt;h3 id="1-插值方法与插值问题">1. 插值方法与插值问题&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 仅已知某些点和该点的函数值的情况下, 如何模拟一个插值函数&lt;code>P(x)&lt;/code>, 使得误差最小.&lt;/p>
-&lt;/blockquote>
-&lt;ul>
-&lt;li>什么是插值函数P(x)? 被插函数? 插值节点? 插值余项?&lt;/li>
-&lt;/ul>
-&lt;h3 id="2-多项式插值">2. 多项式插值&lt;/h3>
-&lt;ul>
-&lt;li>可证明多项式P(x)存在唯一.&lt;/li>
-&lt;li>多项式插值通过解方程组就能得到解&lt;code>(a0, a1,..., an)&lt;/code>.&lt;/li>
-&lt;/ul>
-&lt;h3 id="3-拉格朗日插值公式">3. 拉格朗日插值公式&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 虽然上面的多项式插值能否解决n+1个点的光滑函数, 且解是唯一的. 但是&lt;strong>解方程组是很麻烦的&lt;/strong>.&lt;/p>
-&lt;/blockquote>
-&lt;p>拉格朗日插值公式:
-$$
-L_n(x) = l_0(x)y_0 + l_1(x)y_1 + \dots + l_n(x)y_n
-$$
-插值基函数:&lt;/p>
-&lt;p>插值条件(插值系数):
-$$
-y_0 = f(x_0), y_1 = f(x_1), \dots,y_n = f(x_n)
-$$&lt;/p>
-&lt;p>误差余项Rn(x)&lt;/p>
-&lt;h3 id="4-牛顿插值公式">4. 牛顿插值公式&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 给定5个插值节点及其函数值, 可以得到L4(x); 由于某种原因, 需要加入一个新的插值节点. Lagrange插值法之前的计算结果(l)均失效, 需要重新计算. 非常的不方便.&lt;/p>
-&lt;/blockquote>
-&lt;ul>
-&lt;li>牛顿法是基于&lt;strong>差商&lt;/strong>的概念. 导数是差商的极限.&lt;/li>
-&lt;li>差商的差商是高阶差商.&lt;/li>
-&lt;/ul>
-&lt;p>牛顿插值法的插值函数(以二次插值举例):
-$$
-P(x) = a_0 + a_1(x-x_0) + a_2(x-x_0)(x-x_1)
-$$
-需要做的就是解出系数&lt;code>a0,a1,...&lt;/code>.&lt;/p>
-&lt;p>所以引入差商的符号:
-$$
-a_1=f[x_0,x_1]=\frac{f(x_1)-f(x_0)}{x_1-x_0}
-$$
-$$
-a_2=f[x_0,x_1,x_2]=\frac{f[x_1,x_2]-f[x_0,x_1]}{x_2-x_0}
-$$&lt;/p>
-&lt;h3 id="5-hermite插值">5. Hermite插值&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 有时我们已知的条件不都是函数值, 也有导数值. 例如已知两个点的函数值和两个点的导数值, 可以应用Heimite插值法得到三次多项式.&lt;/p>
-&lt;/blockquote>
-&lt;p>求Hermite插值函数的方法: 构造差商表, &lt;strong>重复节点特殊处理&lt;/strong>.&lt;/p>
-&lt;p>Hermite插值方法的余项证明与Langrange插值法相同.&lt;/p>
-&lt;h3 id="6-分段低次插值">6. 分段低次插值&lt;/h3>
-&lt;blockquote>
-&lt;p>背景: 次数太高的多项式插值的效果不好. 比如龙格现象.&lt;/p>
-&lt;/blockquote>
-&lt;ul>
-&lt;li>分段: 把被插值函数所在的大区间分成一个个的小区间.&lt;/li>
-&lt;li>低次: 每个小区间上用次数不超过&lt;code>3&lt;/code>的函数来逼近&lt;/li>
-&lt;/ul>
-&lt;h4 id="61-分段线性插值">6.1 分段线性插值&lt;/h4>
-&lt;p>就是分段折线&lt;/p>
-&lt;p>分段线性插值的优点:&lt;/p>
-&lt;ol>
-&lt;li>简单&lt;/li>
-&lt;li>当二阶导数趋近0时, 一定收敛&lt;/li>
-&lt;/ol>
-&lt;p>分段线性插值的缺点:&lt;/p>
-&lt;ol>
-&lt;li>分段折线不光滑, 分段点处不能求导.&lt;/li>
-&lt;/ol>
-&lt;h4 id="62-分段hermite插值">6.2 分段Hermite插值&lt;/h4>
-&lt;blockquote>
-&lt;p>背景: 为了解决分段线性插值的缺点(存在尖点).&lt;/p>
-&lt;/blockquote>
-&lt;p>已知函数在(n+1)个点的函数值值以及其导数值, 去构造一阶连续可导函数.&lt;/p>
-&lt;p>分段Hermite插值根据(n+1)个已知点划分为(n+1)个区间. 这样在每个小区间上都已知&lt;code>4&lt;/code>个条件, 可以使用&lt;code>3&lt;/code>次Hermite插值.&lt;/p>
-&lt;p>结论: 已知(2n+2)个条件的情况下, 居然只得到&lt;strong>一阶连续可微函数&lt;/strong>. 结论太差!&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="第六章-拟合">第六章 拟合&lt;/h2>
-&lt;p>🔍 &lt;strong>插值, 拟合, 逼近的区别&lt;/strong>&lt;/p>
-&lt;h4 id="1-最佳平方逼近">1. 最佳平方逼近&lt;/h4>
-&lt;h4 id="2-最小二乘法">2. 最小二乘法&lt;/h4>
-&lt;blockquote>
-&lt;p>背景: 已知不共线的三点, 如何确定一条&lt;strong>可信&lt;/strong>的直线.&lt;/p>
-&lt;/blockquote>
-&lt;p>三个点可以用插值来模拟二次多项式, 但题目要求了用一次多项式, 这是插值无法做到的.&lt;/p>
-&lt;p>不共线的三点不可能同时经过一条直线, 所以要用逼近的思想. 找一条近似的直线, 使得&lt;strong>误差&lt;/strong>最小.&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>与插值的区别&lt;/strong>: 插值是明确给出&lt;code>n+1&lt;/code>个插值条件, 得到&lt;code>n&lt;/code>次多项式.&lt;/li>
-&lt;li>&lt;strong>如何定义误差最小?&lt;/strong>: 函数间的距离.&lt;/li>
-&lt;/ul>
-&lt;h3 id="1-线性拟合">1. 线性拟合&lt;/h3>
-&lt;p>拟合的函数是&lt;code>n&lt;/code>次多项式, 可转化为超定方程&lt;code>GX&lt;/code>.&lt;/p>
-&lt;ul>
-&lt;li>其中规定&lt;code>G&lt;/code>为系数矩阵, &lt;code>X&lt;/code>为变量的列向量.&lt;/li>
-&lt;li>同时定义列向量&lt;code>F&lt;/code>为给出的函数值.&lt;/li>
-&lt;li>&lt;code>GX=F&lt;/code>是超定方程组, 没有准确解. 得到残差最小的解的方法即&lt;strong>最小二乘法&lt;/strong>.&lt;/li>
-&lt;/ul>
-&lt;p>所以线性拟合的残差&lt;code>r = |GX - F|&lt;/code>, 而找到目标函数的宗旨就是使&lt;code>r&lt;/code>最小. 使用&lt;strong>初等变分原理&lt;/strong>将这个问题转化为&lt;strong>正规方程组&lt;/strong>求解的问题.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="第七章-数值积分">第七章 数值积分&lt;/h2>
-&lt;blockquote>
-&lt;p>背景: 定积分的计算中可能无法找到原函数的情况. 考虑定积分的本质是一句具体的数, 我们的目标就是找到这个数的近似值, 越接近越好.&lt;/p>
-&lt;/blockquote>
-&lt;p>解决的两种思路: &lt;code>积分中值定理&lt;/code> 和 &lt;code>插值型求积公式(近似被积函数)&lt;/code>.&lt;/p>
-&lt;h3 id="1-积分中值定理">1. 积分中值定理&lt;/h3>
-&lt;p>基本的积分中值定理:
-$$
-\int_{a}^{b}f(x)dx = f(\xi)(b-a)
-$$&lt;/p>
-&lt;p>将一个区域的面积转化为矩形的面积. 如何确定矩形的高呢? &lt;code>左矩阵&lt;/code>, &lt;code>右矩阵&lt;/code>, &lt;code>中间矩阵&lt;/code>, &lt;code>梯形公式&lt;/code>.&lt;/p>
-&lt;p>更常用的积分公式是 在乘积函数积分中, 如果&lt;code>g(x)&lt;/code>不变号, 则有:
-$$
-\int_{a}^{b}g(x)f(x)dx =f(\xi)\int_{a}^{b}g(x)dx
-$$&lt;/p>
-&lt;h3 id="2-插值型求积公式">2. 插值型求积公式&lt;/h3>
-&lt;p>在被积函数很复杂的情况下, 可以对其进行近似处理, 例如使用&lt;code>Lagrange插值法&lt;/code>.&lt;/p>
-&lt;h4 id="二次插值-simpson公式">二次插值: Simpson公式&lt;/h4>
-&lt;p>取二次插值的步长&lt;code>h=(b-a)/2&lt;/code>, 即增加一个插值节点&lt;code>(b-a)/2&lt;/code>, Simpson公式化简的结果为:
-$$
-\int_{a}^{b}f(x)dx = \frac{b-a}{6}[f(a)+4f(\frac{a+b}{2})+f(b)]+R[f]
-$$&lt;/p>
-&lt;p>📌 Simpson公式满足&lt;code>3&lt;/code>阶代数精度. 虽然它只是二次插值得到的.&lt;/p>
-&lt;h3 id="3-余项">3. 余项&lt;/h3>
-&lt;ul>
-&lt;li>插值型求积公式的余项, 即对应的插值方法(如Lagrange, Newton)的余项在区间上的积分.&lt;/li>
-&lt;li>梯形公式方法的余项可以用&lt;strong>积分中值定理&lt;/strong>来优化.&lt;/li>
-&lt;li>Simpson公式的余项&lt;strong>不能&lt;/strong>使用积分中值定理来优化, 因为不满足保号的条件.&lt;/li>
-&lt;/ul>
-&lt;h3 id="4-衡量求积公式的好坏">4. 衡量求积公式的好坏&lt;/h3>
-&lt;p>&lt;strong>代数精度&lt;/strong>: 不是一种误差, 而是对误差的描述.&lt;/p>
-&lt;p>如何得知某个公式的代数精度: 只要带入一个m次多项式验证余项是否为0即可.&lt;/p>
-&lt;h3 id="5复合求积公式">5.复合求积公式&lt;/h3>
-&lt;p>为了提高精度通常把积分区间分为若干个子区间, 再在每个子区间上应用低阶求积公式.&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>复合梯形公式&lt;/code>: 将区间等分.&lt;/li>
-&lt;li>&lt;code>复合simpson公式&lt;/code>: 将区间偶数等分.&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="第八章-常微分方程初值问题数值解法">第八章 常微分方程初值问题数值解法&lt;/h2>
-&lt;p>将研究的内容进一步限定为: &lt;code>一阶初值问题&lt;/code>, &lt;code>单步法&lt;/code>.&lt;/p>
-&lt;blockquote>
-&lt;p>背景: 在无法给出解析表达式时如果利用数值方法求出&lt;code>y&lt;/code>的近似解?&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="1-简单的数值方法">1. 简单的数值方法&lt;/h3>
-&lt;h4 id="11-euler公式">1.1 Euler公式&lt;/h4>
-&lt;p>使用&lt;code>一阶向前差商&lt;/code>近似替代&lt;code>y'&lt;/code>. 得到递推的数列表达式:
-$$
-y_{n+1} = y_{n} + hf(x_n,y_n), n=0,1,2,&amp;hellip;
-$$&lt;/p>
-&lt;p>&lt;strong>误差&lt;/strong>: Euler法使用的近似代替只有&lt;code>一阶精度&lt;/code>, 所以误差很大. 此时有两种解决方案:&lt;/p>
-&lt;ol>
-&lt;li>加细步长&lt;code>h&lt;/code>, 若不行再加细. 总是能得到正确的, 如果你不嫌弃带来的计算变得缓慢的问题.&lt;/li>
-&lt;li>换方法.&lt;/li>
-&lt;/ol>
-&lt;h4 id="12-梯形公式">1.2 梯形公式&lt;/h4>
-&lt;blockquote>
-&lt;p>背景:为得到比Euler法精度更高的计算公式. 梯形公式具有&lt;code>二阶&lt;/code>精度.&lt;/p>
-&lt;/blockquote>
-&lt;p>对&lt;code>y' = f(x,y)&lt;/code>的两端进行&lt;strong>局部的&lt;/strong>积分, 然后用梯形公式近似计算右边.&lt;/p>
-&lt;h4 id="13-改进euler公式">1.3 改进Euler公式&lt;/h4>
-&lt;p>先用欧拉公式求得一个&lt;code>近似的yn+1&lt;/code>, 带入梯形公式, 得到&lt;code>矫正的yn+1&lt;/code>.&lt;/p>
-- https://wangloo.github.io/posts/numberical-analysis/ - @2019 Notepadium.</description></item><item><title>LaTeX Vim Tutorial</title><link>https://wangloo.github.io/posts/latex-vim-tutorial/</link><pubDate>Wed, 04 May 2022 17:07:51 +0800</pubDate><guid>https://wangloo.github.io/posts/latex-vim-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/latex-vim-tutorial/ -&lt;h2 id="use-plugin-vimtex">Use plugin &lt;code>vimtex&lt;/code>&lt;/h2>
-&lt;p>Vim build-in support of LaTeX files is just OK. When we need more excellent exprience, good plugins is very recommended.&lt;/p>
-&lt;p>&lt;a href="https://github.com/lervag/vimtex#configuration">vimtex&lt;/a> is a nice and modern vim plugin for LaTeX files.&lt;/p>
-&lt;p>&lt;strong>Useful Futures of vimtex IMO&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>&amp;lt;leader&amp;gt;ll&lt;/code> Complier. By default, it will auto-complier when you type &lt;code>:w&lt;/code>.&lt;/li>
-&lt;li>&lt;code>&amp;lt;leader&amp;gt;lt&lt;/code> Open content tree as a sidebar.&lt;/li>
-&lt;li>&lt;code>&amp;lt;leader&amp;gt;lv&lt;/code> View PDF with configured PDF viewer.&lt;/li>
-&lt;li>&lt;code>&amp;lt;leader&amp;gt;li&lt;/code> File information.&lt;/li>
-&lt;li>&lt;code>cse&lt;/code> Change surrounding &lt;code>\begin \end&lt;/code> environment.&lt;/li>
-&lt;li>&lt;code>tse&lt;/code> Exchange between &lt;code>\begin{env}&lt;/code> and &lt;code>\begin{env*}&lt;/code>.&lt;/li>
-&lt;li>&lt;code>tsc&lt;/code> Exchange between &lt;code>\command{}&lt;/code> and &lt;code>\command*{}&lt;/code>.&lt;/li>
-&lt;/ul>
-&lt;p> 
- &lt;/p>
-&lt;h2 id="add-support-of-simplified-chinese">Add Support of Simplified Chinese&lt;/h2>
-&lt;h3 id="install-xetex">Install &lt;code>xetex&lt;/code>&lt;/h3>
-&lt;p>I use &lt;code>xetex&lt;/code> to add supports for Chinese fonts in LaTex files. Actually the magician is amacro package of &lt;code>xetex&lt;/code> named &lt;code>xeCJK&lt;/code>.&lt;/p>
-&lt;p>And &lt;code>xetex&lt;/code> is included in&lt;code>texlive&lt;/code>. so we install it from source:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install texlive-xetex
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="install-chinese-font">Install Chinese Font&lt;/h3>
-&lt;p>If there is no Chinese font in your system, you must install one. I choose WinQingYuan microhei as a instance.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install ttf-wqy
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Excute &lt;code>fc-list&lt;/code> to check if install successfully, here is excepted output:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>fc-list | grep wqy
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/usr/share/fonts/truetype/wqy/wqy-microhei.ttc: WenQuanYi Micro Hei,文泉驛微米黑,文泉驿微米黑:style&lt;span style="color:#ff79c6">=&lt;/span>Regular
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/share/fonts/truetype/wqy/wqy-microhei.ttc: WenQuanYi Micro Hei Mono,文泉驛等寬微米黑,文泉驿等宽微米黑:style&lt;span style="color:#ff79c6">=&lt;/span>Regular
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="configure-your-tex-file">Configure your tex file&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-latex" data-lang="latex">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\documentclass&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>article&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\usepackage&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>xeCJK&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\setCJKmainfont&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>WenQuanYi Micro Hei&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>C 语言位操作技巧</title><link>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ -&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> v;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\begin&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>document&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Hello, LaTeX!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> ((v &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> (v &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>)) &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;v is a power of 2&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">printf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;v is not a power of 2&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="统计一个数的二进制中1的数量">统计一个数的二进制中1的数量&lt;/h2>
+&lt;p>依然是利用&lt;code>v &amp;amp; (v -1)&lt;/code>的运算结果会将v的最低位的&lt;code>1&lt;/code>(如果有的话)置&lt;code>0&lt;/code>.&lt;/p>
+&lt;p>循环执行此操作就可统计v中&lt;code>1&lt;/code>的数量.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">numberof1&lt;/span>(&lt;span style="color:#8be9fd">int&lt;/span> v) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> count &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>你好, LaTex!
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\end&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>document&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Complier it and see, the Chinese font is displayed!&lt;/p>
-&lt;p> 
- &lt;/p>
-&lt;h2 id="confusing-tools">Confusing Tools&lt;/h2>
-&lt;h3 id="difference-between-pdfluaxetex-and-pdfluaxelatex">Difference between {pdf,lua,xe}Tex and {pdf,lua,xe}LaTeX&lt;/h3>
-&lt;p>If a &lt;code>.tex&lt;/code>file starts with &lt;code>\documentclass&lt;/code>, it&amp;rsquo;s a &lt;em>LaTex&lt;/em> format file rather than the &lt;em>Plain Tex&lt;/em> format file.&lt;/p>
-&lt;p>The LaTeX format file has some specific macro like &lt;code>\documentclass&lt;/code> that cannot be compliered by &lt;code>[pdf]Tex&lt;/code>, so that&amp;rsquo;s the job of &lt;code>[pdf]LaTeX&lt;/code>. Same goes for other engines.&lt;/p>
-&lt;h3 id="what-is-xetexxelatex">What is &lt;code>xetex/xelatex&lt;/code>?&lt;/h3>
-&lt;p>&lt;code>xetex/xelatex&lt;/code> is one of the TeX/LaTeX engines. Others are &lt;code>pdfTex&lt;/code>, &lt;code>LuaTex&lt;/code>, etc. &lt;a href="https://fr.wikipedia.org/wiki/XeTeX">Wiki&lt;/a>&lt;/p>
-&lt;p>&lt;code>xetex/xelatex&lt;/code> add fonts and character sets support for TeX/LaTeX file.&lt;/p>
-&lt;ul>
-&lt;li>Treat input as Unicode&lt;/li>
-&lt;li>Allow us to use many system fonts in LaTeX file easily&lt;/li>
-&lt;/ul>
-&lt;h3 id="what-is-latexmk">What is &lt;code>latexmk&lt;/code>?&lt;/h3>
-&lt;p>LaTeXmk 是一个集成化的命令行工具, it must work with one LaTeX engine.&lt;/p>
-&lt;p>The fundamental issue that &lt;code>latexmk&lt;/code> solves is that the number of runs of &lt;code>[pdf]latex&lt;/code> is highly dynamically dependent on the document and the class file used. &lt;code>latex&lt;/code> just need to be run once a time.&lt;/p>
-&lt;h3 id="different-between-ctexmiktextexlive-">Different between &lt;code>CTeX&lt;/code>/&lt;code>MiKTeX&lt;/code>/&lt;code>TeXlive&lt;/code> ?&lt;/h3>
-&lt;p>They are all 包含与.tex文件关联的各种编辑、查看工具、常用宏包及文档.&lt;/p>
-&lt;p>&lt;a href="http://www.ctex.org/HomePage">CTex&lt;/a> packages add complete Chinese support based on &lt;a href="https://miktex.org/">MiKTeX&lt;/a>.&lt;/p>
-&lt;ul>
-&lt;li>CTex is only avilable in windows.&lt;/li>
-&lt;/ul>
-- https://wangloo.github.io/posts/latex-vim-tutorial/ - @2019 Notepadium.</description></item><item><title>Portability Issues</title><link>https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/</link><pubDate>Sun, 01 May 2022 16:41:35 +0800</pubDate><guid>https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/ -&lt;p>When reading C standard documents, we usually see phrases like &amp;ldquo;&lt;strong>Implementation-defined&lt;/strong>&amp;rdquo;, &amp;ldquo;&lt;strong>Unspecified&lt;/strong>&amp;rdquo;,.etc.&lt;/p>
-&lt;p>So, what do they really mean?&lt;/p>
-&lt;h2 id="术语">术语&lt;/h2>
-&lt;p>我们将这些难以直接理解的词汇称为&lt;strong>术语&lt;/strong>，在ANSI C中，术语可以分为描述不可移植代码(unportable), 坏代码(bad), 可移植的代码(portable)三类.&lt;/p>
-&lt;h3 id="unportable-code">unportable code&lt;/h3>
-&lt;p>&lt;strong>Implementation-defined&lt;/strong>&lt;/p>
-&lt;p>需要由编译器设计者决定采取何种行为，他们可能不同，但都不能说是错误的.&lt;br>
-例如：当整型数右移时，是否需要扩展符号位. &lt;a href="https://www.cnblogs.com/bluettt/p/16186598.html">右移代替除法可能导致的灾难&lt;/a>.&lt;/p>
-&lt;p>&lt;strong>unspecified&lt;/strong>&lt;/p>
-&lt;p>在某些正确情况下的做法，标准并未明确规定应该怎样做.&lt;br>
-例如：参数求值的顺序.&lt;/p>
-&lt;h3 id="bad-code">bad code&lt;/h3>
-&lt;p>&lt;strong>undefined&lt;/strong>&lt;/p>
-&lt;p>在某些不正确情况下的做法，但标准并未规定应该怎样做。意味着你可以采取任何行动，可以什么都不做，也可以发出一条警告信息, 或者终止CPU重启等等. 你甚至可以发射核导弹(只要你安装了能发射核导弹的硬件系统).&lt;br>
-例如：当一个有符号整数溢出时该采取什么行动.&lt;/p>
-&lt;p>&lt;strong>constraint&lt;/strong>&lt;/p>
-&lt;p>这是一个必须遵守的限制或要求. 如果你不遵守, 那么你的程序的行为就会变成如上所说的&lt;code>undefined&lt;/code>. 这出现了一种很有意思的情况: 分辨某种东西是否是一个&lt;code>constaint&lt;/code>是很容易的, 因为每个标准的主题都附有一个&lt;code>constraint&lt;/code>小节, 列出了所有的约束条件。&lt;br>
-例如: &lt;code>%&lt;/code>操作符的操作数必须为整型. 所以,在非整型数据上使用&lt;code>%&lt;/code>操作符肯定会导致&lt;code>undefined&lt;/code>.&lt;/p>
-&lt;h3 id="portable-code">portable code&lt;/h3>
-&lt;p>&lt;strong>strictly conforming&lt;/strong>&lt;/p>
-&lt;p>严格遵守标准的. 符合该条件的程序应当是:&lt;/p>
-&lt;ul>
-&lt;li>只使用已确定的特性&lt;/li>
-&lt;li>不突破任何由编译器实现(Implementation-defined)的限制.&lt;/li>
-&lt;li>不使用&lt;code>unspecified&lt;/code>和&lt;code>undefined&lt;/code>特性&lt;/li>
-&lt;/ul>
-&lt;p>这样规定的目的是最大程序保证代码的可移植性. 但符合该术语的代码并不常见, 例如&lt;code>INT_MAX&lt;/code>的值在不同架构的机器上结果可能不同.&lt;/p>
-&lt;p>&lt;strong>comforming&lt;/strong>&lt;/p>
-&lt;p>遵循标准的; 一个遵循标准的程序可以依赖一些对于某种编译器特有的&lt;strong>不可移植&lt;/strong>的特性. 这样一个程序对于某个编译器可能是遵循标准的, 但对于另外一个编译器又是不遵循标准的.&lt;/p>
-- https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/ - @2019 Notepadium.</description></item><item><title>Third Blog</title><link>https://wangloo.github.io/posts/third-blog/</link><pubDate>Sun, 01 May 2022 16:41:35 +0800</pubDate><guid>https://wangloo.github.io/posts/third-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/third-blog/ -&lt;p>&lt;img src="images/test.jpg" alt="sunset">
-&lt;img src="test.jpg" alt="sunset">&lt;/p>
-- https://wangloo.github.io/posts/third-blog/ - @2019 Notepadium.</description></item><item><title>GCC '-M' and Related Parameters</title><link>https://wangloo.github.io/posts/compiler-tools/gcc_-m_related/</link><pubDate>Tue, 26 Apr 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/compiler-tools/gcc_-m_related/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/compiler-tools/gcc_-m_related/ -&lt;p>As we all know, there are huge number of parameters for GCC. With them, we can make many things possible. Now we talk about -M and related ones.
-After reading this article, you will know the meaning of there magic parameters. And I will put some little demos follows. Finally, we will see what can they do in really project. Let&amp;rsquo;s go ahead.&lt;/p>
-&lt;h2 id="-m">-M&lt;/h2>
-&lt;p>Output the dependencies of the input source file. Incluing the names of itself and all included files.&lt;/p>
-&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
-Suppose we have source file &lt;code>tmp.c&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/* File: tmp.c */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdio.h&amp;gt; // system header file&lt;/span>&lt;span style="color:#ff79c6">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;#34;tmp.h&amp;#34; // user defined header file&lt;/span>&lt;span style="color:#ff79c6">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">while&lt;/span>(v) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> count&lt;span style="color:#ff79c6">++&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> v &lt;span style="color:#ff79c6">=&lt;/span> v &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> (v &lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> count;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If we run &lt;code>gcc -M tmp.c&lt;/code>, we will get messy output like following. Notice that the first two words is object filename and a colon.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>tmp.o: /home/wanglu/demo/tmp.c /usr/include/stdc-predef.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/stdio.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/libc-header-start.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/wordsize.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/long-double.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/gnu/stubs.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/gnu/stubs-64.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/lib/gcc/x86_64-linux-gnu/9/include/stddef.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/lib/gcc/x86_64-linux-gnu/9/include/stdarg.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/timesize.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/typesizes.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/time64.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/__FILE.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/FILE.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/stdio_lim.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /home/wanglu/demo/tmp.h
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="-mm">-MM&lt;/h2>
-&lt;p>Like &lt;code>-M&lt;/code> but do NOT output system header files.&lt;/p>
-&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
-Use same source file &lt;code>tmp.c&lt;/code> above.&lt;br>
-Run &lt;code>gcc -MM tmp.c&lt;/code>. Output dependencies except system header files.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>tmp.o: /home/wanglu/demo/tmp.c /home/wanglu/demo/tmp.h
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="-mf">-MF&lt;/h2>
-&lt;p>Use with &lt;code>-M&lt;/code> or &lt;code>-MM&lt;/code>. Specify output dependencies to file instead of STDOUT.&lt;/p>
-&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
-Use same source file &lt;code>tmp.c&lt;/code> above.&lt;br>
-Run &lt;code>gcc -MM -MF dp.txt tmp.c&lt;/code>. File &lt;code>dp.txt&lt;/code> will be created and filled with dependecies of &lt;code>tmp.c&lt;/code> except system header files.&lt;/p>
-&lt;h2 id="-md">-MD&lt;/h2>
-&lt;p>&lt;code>-MD&lt;/code> is same as &lt;code>-M -MF &amp;lt;file&amp;gt;&lt;/code>. But the filename is basd on the object file but replacing &lt;code>.o&lt;/code> with &lt;code>.d&lt;/code>.&lt;/p>
-&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
-Use same source file &lt;code>tmp.c&lt;/code> above.&lt;br>
-Run &lt;code>gcc -MD tmp.c&lt;/code>. File &lt;code>tmp.d&lt;/code> will be created and filled with all dependecies.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#bd93f9">1&lt;/span> wanglu wanglu &lt;span style="color:#bd93f9">67&lt;/span> 4月 &lt;span style="color:#bd93f9">26&lt;/span> 19:49 tmp.c
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#bd93f9">1&lt;/span> wanglu wanglu &lt;span style="color:#bd93f9">1175&lt;/span> 4月 &lt;span style="color:#bd93f9">26&lt;/span> 20:27 tmp.d
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#bd93f9">1&lt;/span> wanglu wanglu &lt;span style="color:#bd93f9">38&lt;/span> 4月 &lt;span style="color:#bd93f9">26&lt;/span> 19:47 tmp.h
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="-mmd">-MMD&lt;/h2>
-&lt;p>&lt;code>-MMD&lt;/code> is same as &lt;code>-MM -MF &amp;lt;file&amp;gt;&lt;/code>. Also named on object file but replacing &lt;code>.o&lt;/code> with &lt;code>.d&lt;/code>.&lt;/p>
-&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
-Use same source file &lt;code>tmp.c&lt;/code> above.&lt;br>
-Run &lt;code>gcc -MMD tmp.c&lt;/code>. File &lt;code>tmp.d&lt;/code> will be created and filled with dependecies except system header files.&lt;/p>
-&lt;h2 id="application">Application&lt;/h2>
-&lt;p>Here is an important question you may ask me: &lt;em>Why do we struggle to get the dependencies formats? What can they do?&lt;/em>&lt;br>
-If you are familiar with &lt;code>make&lt;/code> and &lt;code>Makefile&lt;/code>, aha, that&amp;rsquo;s it!
-With the help of M-related parameters, you can easily handle the problem of &lt;strong>tracing header files&lt;/strong>.&lt;br>
-Give you a little demo about my point.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>-include *.d
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">%.o&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>%.c
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">$(&lt;/span>CC&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>CFLAGS&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>INCLUDES&lt;span style="color:#ff79c6">)&lt;/span> $&amp;lt; -c -MMD -o &lt;span style="color:#8be9fd;font-style:italic">$@&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Actually, we do two things in order:&lt;/p>
-&lt;ol>
-&lt;li>When complieing source files, we generate dependency files &lt;code>xxx.d&lt;/code> at the same time.&lt;/li>
-&lt;li>After geting &lt;code>xxx.d&lt;/code>, we include them in makefile. As its format is exactly the dependency format required by makefile.&lt;/li>
-&lt;/ol>
-&lt;h2 id="summary">Summary&lt;/h2>
-&lt;p>Hope this article can give you a clear understanding of M-related parameters in GCC. We can sometimes find them in large projects&amp;rsquo; makefile. It&amp;rsquo;s very useful to automatic build dependency for header files. So try to use them in your current or next project.&lt;/p>
-&lt;h2 id="reference">Reference&lt;/h2>
-&lt;ol>
-&lt;li>&lt;a href="https://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html#Preprocessor-Options">GNU GCC options&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://programmer.group/gcc-m-mm-mmd-mf-mt.html">GCC -M, -MM, -MMD, -MF, -MT&lt;/a>&lt;/li>
-&lt;/ol>
-- https://wangloo.github.io/posts/compiler-tools/gcc_-m_related/ - @2019 Notepadium.</description></item><item><title>Second Blog</title><link>https://wangloo.github.io/posts/second-blog/second-blog/</link><pubDate>Tue, 26 Apr 2022 15:32:11 +0800</pubDate><guid>https://wangloo.github.io/posts/second-blog/second-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/second-blog/second-blog/ -&lt;p>This is my second blog.&lt;/p>
-&lt;blockquote>
-&lt;p>Wish you have a good life.&lt;/p>
-&lt;/blockquote>
-&lt;ul>
-&lt;li>happy&lt;/li>
-&lt;li>smile&lt;/li>
-&lt;/ul>
-&lt;p>&lt;img src="https://wangloo.github.io/img/test.jpg" alt="">
-&lt;img src="https://wangloo.github.io/test.jpg" alt="">
-&lt;img src="test.jpg" alt="">
-&lt;img src="img/test.jpg" alt="">
-&lt;img src="https://wangloo.github.io/blog/img/test.jpg" alt="">&lt;/p>
-&lt;figure>&lt;img src="https://wangloo.github.io/blog/img/test.jpg"/>&lt;figcaption>
-&lt;h4>sunset&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>&lt;img src="images/test.jpg" alt="sunset">&lt;/p>
-- https://wangloo.github.io/posts/second-blog/second-blog/ - @2019 Notepadium.</description></item><item><title>First Blog</title><link>https://wangloo.github.io/posts/first-blog/first-blog/</link><pubDate>Tue, 26 Apr 2022 15:13:07 +0800</pubDate><guid>https://wangloo.github.io/posts/first-blog/first-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/first-blog/first-blog/ -&lt;p>This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.
-This is my first blog.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="将一个数向上取整为2的幂">将一个数向上取整为2的幂&lt;/h2>
+&lt;p>用一个&lt;code>1&lt;/code>一直左移, 直到比这个数大为止.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#50fa7b">roundup_pow_op_two&lt;/span>(&lt;span style="color:#ff79c6">const&lt;/span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> x) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> ret &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">while&lt;/span> (ret &lt;span style="color:#ff79c6">&amp;lt;&lt;/span> x) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ret &lt;span style="color:#ff79c6">=&lt;/span> ret &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> ret;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="向上向下对齐-检查是否对齐">向上/向下对齐, 检查是否对齐&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/* uintptr_t 代表指针的位数
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 加uintptr_t转换的原因是: (void *)不能进行运算
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define IS_ALIGNED(X, align) (((uintptr_t)(const void *)(X)) % (align) == 0)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define ALIGN_UP(X, align) (((X) + ((align) - 1)) &amp;amp; ~((align) - 1))
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define ALIGN_DOWN(x, align) ((X) &amp;amp; ~((align) - 1))
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>(&lt;span style="color:#8be9fd">void&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;hello, hugo&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define X (0x12345675)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define align (1 &amp;lt;&amp;lt; 2)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> v &lt;span style="color:#ff79c6">=&lt;/span> IS_ALIGNED(X, align);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#bd93f9">0&lt;/span> &lt;span style="color:#ff79c6">==&lt;/span> v) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;Given X(0x%x) is not align to 0x%08x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, X, align);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;After align up, new X = 0x%x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, ALIGN_UP(X, align));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;After align down, new X = 0x%x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, ALIGN_DOWN(X, align));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#ff79c6">else&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;Give X(0x%x) is aligned to 0x%08x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, X, align);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;After align up, new X = 0x%x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, ALIGN_UP(X, align));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;After align down, new X = 0x%x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, ALIGN_DOWN(X, align));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/first-blog/first-blog/ - @2019 Notepadium.</description></item></channel></rss>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="检查两个有符号数是否异号">检查两个有符号数是否异号&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> x,y;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> ((x &lt;span style="color:#ff79c6">^&lt;/span> y) &lt;span style="color:#ff79c6">&amp;lt;&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;They have opposite signs&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">printf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;They have same signs&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="大小端转换">大小端转换&lt;/h2>
+&lt;p> &lt;/p>
+&lt;h2 id="对某个位的getsetclear操作">对某个位的get/set/clear操作&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define GET_BIT(x, bit) ( ((x) &amp;amp; (1ULL &amp;lt;&amp;lt; (bit))) &amp;gt;&amp;gt; (bit) )
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define SET_BIT(x, bit) ( (x) |= (1ULL &amp;lt;&amp;lt; (bit)) )
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define CLEAR_BIT(x, bit) ( (x) &amp;amp;= ~(1ULL &amp;lt;&amp;lt; (bit)) )
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Release note:&lt;/p>
+&lt;ol>
+&lt;li>添加对&lt;code>unsigned long long&lt;/code>长度的支持&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="sign-extending-from-a-varaiable-bit-width">Sign extending from a varaiable bit-width&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> bits &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">2&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>; &lt;span style="color:#6272a4">// number of bits representing the number in x
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> x &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0xFFC1&lt;/span>; &lt;span style="color:#6272a4">// ready to get sign-extended
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> rst; &lt;span style="color:#6272a4">// resulting sign-extended number
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#ff79c6">const&lt;/span> mask &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1U&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;&lt;/span> (bits &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>); &lt;span style="color:#6272a4">// mask can be pre-computed if bits if fixed.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">=&lt;/span> x &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> ((&lt;span style="color:#bd93f9">1U&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;&lt;/span> bits) &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>); &lt;span style="color:#6272a4">// cut x if it holds more bits
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> rst &lt;span style="color:#ff79c6">=&lt;/span> (x &lt;span style="color:#ff79c6">^&lt;/span> mask) &lt;span style="color:#ff79c6">-&lt;/span> mask; &lt;span style="color:#6272a4">// excellent trick!
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;INPUT: 0x%x, RESULT: 0x%x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, x, rst);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="字符字符数组的大小写转换">字符/字符数组的大小写转换&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define TO_LOWER(c) (unsigned char)((c &amp;gt;= &amp;#39;A&amp;#39; &amp;amp;&amp;amp; c &amp;lt;= &amp;#39;Z&amp;#39;) ? (c | 0x20) : c)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define TO_UPPER(c) (unsigned char)((c &amp;gt;= &amp;#39;a&amp;#39; &amp;amp;&amp;amp; c &amp;lt;= &amp;#39;z&amp;#39;) ? (c &amp;amp; ~0x20) : c)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define TO_LOWER_STR(s, len) { \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> for (int i = 0; i &amp;lt; len &amp;amp;&amp;amp; s[i] != &amp;#39;\0&amp;#39;; i++) { \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> s[i] = TO_LOWER(s[i]); \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> } \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define TO_UPPER_STR(s, len) {\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> for (int i = 0; i &amp;lt; len &amp;amp;&amp;amp; s[i] != &amp;#39;\0&amp;#39;; i++) { \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> s[i] = TO_UPPER(s[i]); \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> } \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ - @2019 Notepadium.</description></item><item><title>Stack and Heap</title><link>https://wangloo.github.io/posts/os/stack-and-heap/</link><pubDate>Tue, 28 Jun 2022 16:41:54 +0800</pubDate><guid>https://wangloo.github.io/posts/os/stack-and-heap/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os/stack-and-heap/ -&lt;p> &lt;/p>
+&lt;h2 id="堆的含义">堆的含义&lt;/h2>
+&lt;p>我们都知道&lt;code>malloc&lt;/code>动态申请的变量是存放在堆中. 所以相比栈来说, 堆是动态的.&lt;/p>
+&lt;p>堆占据进程虚拟地址空间的大部分, 我们可能通过堆来申请&lt;code>1GB&lt;/code>的数组, 但是栈通常不行
+, 大多也就几兆的空间.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="堆空间的管理">堆空间的管理&lt;/h2>
+&lt;p>进程中堆空间的管理是&lt;code>运行库&lt;/code>负责的, 在Linux中是&lt;code>GLIBC&lt;/code>.&lt;/p>
+&lt;p>运行库在初始化时会像操作系统申请一大块的堆空间, 再为每个进行分别分配需求. 当然,
+如果某些程序的需求过大, 运行库也可以使用&lt;code>mmap&lt;/code>系统调用直接向操作系统申请, 然后
+返回给用户进程.&lt;/p>
+&lt;blockquote>
+&lt;p>GLIBC的&lt;code>malloc&lt;/code>函数的处理方式是: 对于小于&lt;code>128KB&lt;/code>的申请, 会从运行库&amp;quot;批发的&amp;quot;堆空间
+里分出一块来; 但若申请的空间过大, 则使用&lt;code>mmap&lt;/code>系统调用来创建匿名空间分配给用户.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>Linux中虚拟地址块(VMA)的管理使用了红黑树, 可以用于运行库管理自己向操作系统
+&amp;ldquo;批发&amp;quot;的堆空间. 使得用户程序动态申请和释放内存性能提高.&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/os/stack-and-heap/ - @2019 Notepadium.</description></item><item><title>动态链接</title><link>https://wangloo.github.io/posts/os/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os/dynamic-link/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os/dynamic-link/ -&lt;h2 id="静态链接带来的问题">静态链接带来的问题&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>像是&lt;code>libc&lt;/code>这种几乎每个程序都要用到的库, 如果是静态的, 那么不仅意外着每个程序的
+可执行文件很大, 浪费磁盘空间. 并且当程序加载到内存时, 可能许多程序都会用到&lt;code>printf&lt;/code>
+, 使得内存中会存在好多份的&lt;code>printf&lt;/code>源码.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>维护和更新难. 一旦静态链接的其中一个目标文件更新, 所有的可执行程序都要重新链接.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>不满足局部性原理. 上面提到, 内存中同时存在多份的&lt;code>printf&lt;/code>源码会破坏&lt;em>局部性原理&lt;/em>的.
+显然如果所有的程序共享一份&lt;code>printf&lt;/code>源码的想法更好. 即动态加载.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>可移植性差. 静态链接, 只要有一个依赖目标文件的实现不同, 软件厂商就得专门发布一个
+版本. 而动态链接则信赖客户电脑上的&lt;em>动态库&lt;/em>, 相当于一个中间层.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p> &lt;/p>
+&lt;h2 id="动态链接的过程">动态链接的过程&lt;/h2>
+&lt;p>对比静态链接使用&lt;code>ld&lt;/code>链接器在编译后即执行链接, 动态链接则是将链接过程推迟到&lt;strong>运行时&lt;/strong>,
+即装载到内存时.&lt;/p>
+&lt;p>这样, 链接器在链接产生可执行文件时就有两种做法:&lt;/p>
+&lt;ul>
+&lt;li>对于静态符号, 按照静态链接的规则进行&lt;em>地址引用重定位&lt;/em>&lt;/li>
+&lt;li>对于动态符号, 链接器则仅标记其为动态链接中的符号, 不进行处理. 而是等到装载时由
+专门的&lt;em>动态链接器&lt;/em>来完成动态符号的链接工作.&lt;/li>
+&lt;/ul>
+&lt;p>⁉️ 链接器如何确定一个符号是静态的or动态的?&lt;/p>
+&lt;p>在动态共享对象(&lt;em>.so)中保存了完整的&lt;/em>动态符号表*, 表中存在的符号即为动态的, 否则为静态.&lt;/p>
+&lt;blockquote>
+&lt;p>Linux的C语言运行库&lt;code>glib&lt;/code>的动态链接版本叫&lt;code>libc.so&lt;/code>. 它在外存上只保存一份, 所有的程序
+都可以在运行时使用它. 所以千万不要删掉它.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>动态链接有一定的性能损失, 因为每次运行程序时都要重新链接, 并不像静态链接是一劳永逸的.
+也有例如&lt;code>延迟绑定&lt;/code>对性能进行优化的方法, 大概仅有5%的损耗, 与带来的便利相比可以忽略不计.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="地址无关代码-pic">地址无关代码 PIC&lt;/h2>
+&lt;p>GCC生成动态库时需要添加参数&lt;code>-fPIC&lt;/code>, 含义就是生成地址无关码&lt;/p>
+&lt;p>地址无关码的含义是代码中&lt;strong>不包含任何的绝对地址引用&lt;/strong>, 全都是&lt;strong>相对地址&lt;/strong>.&lt;/p>
+&lt;ul>
+&lt;li>对于&lt;strong>模块内&lt;/strong>的跳转/数据引用, 使用相对的跳转/加载指令. 例如ARM指令集中的&lt;code>B&lt;/code>, &lt;code>ADR&lt;/code>, 经过汇编器之后, 目标的地址都会转为相对于该指令(PC)的偏移.&lt;/li>
+&lt;li>对于&lt;strong>模块间&lt;/strong>的跳转/数据引用, 借用&lt;em>GOT表&lt;/em>来间接实现地址无关.&lt;/li>
+&lt;/ul>
+&lt;p>而如果该动态库中全部使用相对地址, 那么加载时也就不需要进行重定位, 即所有的程序都可以
+共享这些地址无关代码.&lt;/p>
+&lt;blockquote>
+&lt;p>上面说PIC的动态库不需要重定位其实是错误的, 只不过它的重定位过程不需要修改代码段,
+而是设置了一个放置在数据段的&lt;em>GOT&lt;/em>表来实现代码段部分的地址无关特性.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>现在貌似GCC ARM版本在编译动态库时强制使用-fPIC选项, 否则会报错. 对此我不是
+非常确定!&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>一般来说, 不将主程序编译为地址无关码. 因为主程序不需要共享, 而且地址无关码的调用
+需要两个指令: &lt;code>计算地址&lt;/code> + &lt;code>跳转&lt;/code>. 多了一步根据偏移得到绝对地址.&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/os/dynamic-link/ - @2019 Notepadium.</description></item><item><title>ELF 文件的链接与加载</title><link>https://wangloo.github.io/posts/os/elf-format/</link><pubDate>Mon, 20 Jun 2022 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os/elf-format/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os/elf-format/ -&lt;h2 id="elf-is-a-file-format">&lt;code>ELF&lt;/code> is a file format&lt;/h2>
+&lt;p>Files in &lt;code>ELF&lt;/code> format includes:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Type&lt;/th>
+&lt;th>description&lt;/th>
+&lt;th>实例&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Relocatable File&lt;/td>
+&lt;td>这些文件包含了代码和data, 可以被用来链接成可执行文件或共享目标文件.&lt;/td>
+&lt;td>&lt;code>.o&lt;/code>, &lt;code>.a&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Executable File&lt;/td>
+&lt;td>直接可执行的文件&lt;/td>
+&lt;td>&lt;code>/bin/ls&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Shared Object File&lt;/td>
+&lt;td>Including code and data. 链接器可将其与其他Relocatable File或Shared Object File结合, 生成新的目标文件. 动态链接器可将其与Executable File结合, 作为进程映像的一部分来运行.&lt;/td>
+&lt;td>&lt;code>.so&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Core Dump File&lt;/td>
+&lt;td>Restore critical infomation when process is terminated unexpectedly&lt;/td>
+&lt;td>&lt;code>core dump&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;blockquote>
+&lt;p>📌 &lt;code>file&lt;/code> command in Linux can output the format of a file.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="elf-文件组成的结构">ELF 文件组成的结构&lt;/h2>
+&lt;pre tabindex="0">&lt;code>+---------------------------------+
+| ELF Header | 包含描述整个ELF的基本信息, 如版本, 入口地址...
++---------------------------------+
+| .text |
++---------------------------------+
+| .data |
++---------------------------------+ 紧接着是各个段
+| .bss |
++---------------------------------+
+| ... |
+| other sections |
++---------------------------------+
+| | 段表: 与段相关最重要的结构
+| Section Header table | 描述了每个段的name, length, authority...
+| |
++---------------------------------+
+| String tables |
+| Symbol tables |
++---------------------------------+
+&lt;/code>&lt;/pre>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>字段&lt;/th>
+&lt;th>含义&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>e_machine&lt;/td>
+&lt;td>目标架构&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>e_entry&lt;/td>
+&lt;td>入口地址&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>e_machine&lt;/td>
+&lt;td>目标架构&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>e_phnum&lt;/td>
+&lt;td>number of entries in the &lt;strong>program header table&lt;/strong>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>e_shnum&lt;/td>
+&lt;td>number of entries in the &lt;strong>section header table&lt;/strong>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>e_shoff&lt;/td>
+&lt;td>offset, in bytes, of the section header table&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>e_phoff&lt;/td>
+&lt;td>offset, in bytes, of the program header table&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>e_machine&lt;/td>
+&lt;td>目标架构&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>e_machine&lt;/td>
+&lt;td>目标架构&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="段表">段表&lt;/h3>
+&lt;p>ELF文件中的各个段的基本属性就是保存在&lt;strong>段表&lt;/strong>中，是分析ELF文件最重要的字段。存放了每个段的信息，例如，段名，段的长度，在文件中的偏移，读写权限以及其他属性。&lt;/p>
+&lt;p>编译器、链接器都是依靠段表来定位和访问各个段的属性的。&lt;/p>
+&lt;p>如何找到段表？ &lt;strong>&lt;code>e_shoff&lt;/code>字段&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>使用&lt;code>readelf -S &amp;lt;elfname&amp;gt;&lt;/code> 就能查看ELF文件的段表&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="程序头表">程序头表&lt;/h3>
+&lt;p> &lt;/p>
+&lt;h2 id="分析elf文件的工具">分析ELF文件的工具&lt;/h2>
+&lt;h3 id="1-objdump">1. objdump&lt;/h3>
+&lt;h3 id="2-readelf">2. readelf&lt;/h3>
+&lt;p> &lt;/p>
+&lt;h2 id="为什么目标文件中代码和数据要分开放">为什么目标文件中代码和数据要分开放?&lt;/h2>
+&lt;p>一方面, 程序被加载进内存后, 代码段和数据段分别被映射到&lt;strong>两个virtual memory region&lt;/strong>.
+通过MMU的支持, 可以将代码段的区域设置为只读, 防止恶意篡改.&lt;/p>
+&lt;p>另一方面, 当下CPU Cache多划分为&lt;em>Instruction Cache&lt;/em>和&lt;em>Data Cache&lt;/em>, 再配合互相独立的
+地址区域能够提高&lt;strong>局部性原理&lt;/strong>的效果.&lt;/p>
+&lt;p>最后, 代码段可以被多个进程共享(例如都调用同一外部函数), 节省内存空间.&lt;/p>
+&lt;blockquote>
+&lt;p>针对嵌入式设备, 如果内存空间不够大, 只读的代码段可存放在ROM中&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="关于静态库">关于静态库&lt;/h2>
+&lt;p>一个静态库可以简单的看作是 a set of object file.&lt;br>
+这些 object file 可能包括: 输入输出相关的&lt;code>printf.o&lt;/code>, &lt;code>scanf.o&lt;/code>, 日期时间相关的&lt;code>time.o&lt;/code>, &lt;code>date.o&lt;/code>等.&lt;/p>
+&lt;p>❓ 为什么不直接提供这些&lt;em>目标文件&lt;/em>呢?&lt;/p>
+&lt;p>这些&lt;strong>零散的&lt;/strong>文件若直接提供给使用者, 很大程度上造成文件传输, 管理等方面的不便.&lt;br>
+于是人们通常使用&lt;code>ar&lt;/code>压缩程序将这些目标文件压缩到一起.&lt;/p>
+&lt;p>❓ 如何查看一个静态库是由哪些object file压缩到一起的?&lt;/p>
+&lt;p>Shell command&lt;code>ar -t libc.a&lt;/code> 可以查看&lt;code>libc.a&lt;/code>中包含的所有object files.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="elf文件加载-运行流程">ELF文件加载-运行流程&lt;/h2>
+&lt;blockquote>
+&lt;p>废了半天劲编译生成的ELF文件, 想要最终跑起来则包含的instruction and data必须要在内存中.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="静态加载与动态加载">静态加载与动态加载&lt;/h3>
+&lt;p>我们能想到的最简单的办法是: 把整个ELF的&lt;strong>所有指令和数据&lt;/strong>在运行之前就全部load到内存中. 这就是&lt;em>静态加载&lt;/em>.&lt;/p>
+&lt;p>更加高效的做法是: 充分利用&lt;em>局部性原理&lt;/em>, 将指令和数据划分为&lt;strong>模块&lt;/strong>, 只有当该模块被使用时, 才load进内存,
+否则就在外存中老老实实呆着. 这就是&lt;em>动态加载&lt;/em>.&lt;/p>
+&lt;h3 id="动态加载的步骤">动态加载的步骤&lt;/h3>
+&lt;p>借助&lt;em>虚拟内存&lt;/em>技术, 上面提到的&lt;strong>模块&lt;/strong>的概念可以自然的被&lt;strong>页&lt;/strong>(page)代替.
+我们将所有的指令和数据按照page为单位划分.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>运行该ELF的线程被创建时, 其virtual space范围被划定, 但其页表是空的, 没有任何映射.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>OS读取ELF Header, 建立virtual space与&lt;strong>ELF文件&lt;/strong>的映射关系. 这个映射关系的表达方式是一个特殊的&lt;strong>数据结构&lt;/strong>.
+建立该映射关系的原因是: 当程序运行到某个地址发现该页表项是空的(例如 &lt;code>call 0x1234&lt;/code>), 那么必然触发&lt;code>page fault&lt;/code>.
+由OS负责到&lt;em>特定的外存地址&lt;/em>将页面加载到physical memory中.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>OS要想知道缺失的内容在ELF文件的哪个位置, 就是利用该映射, 即某个数据结构
+&lt;/code>&lt;/pre>&lt;ol start="3">
+&lt;li>physical memory中有了所需的指令或数据后, 还需建立visual memory到physical memory的映射, 即在&lt;em>页表项&lt;/em>中写入.
+随着程序的运行, 会继续触发&lt;code>page fault&lt;/code>, 从ELF中不断load page到physical memory, 建立缺页visual addr处的页表映射,
+最终填补成一个完整的pagetable.&lt;/li>
+&lt;/ol>
+&lt;p> &lt;/p>
+&lt;h2 id="段地址对齐技术">段地址对齐技术&lt;/h2>
+&lt;blockquote>
+&lt;p>由前面动态加载的步骤可知, ELF文件中的代码和数据被按page划分. 并只有在用到时才被加载到内存,
+并建立&lt;code>虚拟内存-物理内存&lt;/code>的映射.&lt;/p>
+&lt;/blockquote>
+&lt;p>假设一个ELF有三个段需要被&lt;code>LOAD&lt;/code>, ELF段表如下:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Segment&lt;/th>
+&lt;th>Length&lt;/th>
+&lt;th>offset&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>SEG 0&lt;/td>
+&lt;td>127 B&lt;/td>
+&lt;td>34 B&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SEG 1&lt;/td>
+&lt;td>9899 B&lt;/td>
+&lt;td>164 B&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SEG 2&lt;/td>
+&lt;td>1988 B&lt;/td>
+&lt;td>0 B&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="-这三个段在elf文件中的布局如何">❓ 这三个段在ELF文件中的布局如何?&lt;/h3>
+&lt;p>根据前面ELF文件格式的介绍, 这三个段必然是挨着的(简单考虑, ELF中仅有这三个段).&lt;/p>
+&lt;h3 id="-这三个段在物理内存中的布局">❓ 这三个段在物理内存中的布局?&lt;/h3>
+&lt;p>发生&lt;code>page fault&lt;/code>之后, OS会为页面分配合适的物理页面, 如利用&lt;code>buddy system&lt;/code>等.&lt;/p>
+&lt;p>可以保证&lt;em>段内&lt;/em>的连续, 不能保证&lt;em>段与段&lt;/em>是连续的.&lt;/p>
+&lt;blockquote>
+&lt;p>未使用段对齐技术之前, &lt;code>SEG0&lt;/code>的长度不足一页, 但是也给它分配一页的空间. 同理为&lt;code>SEG1&lt;/code>分配两页, &lt;code>SEG2&lt;/code>分配一页.
+总共占用 &lt;code>1+2+1=5&lt;/code>个物理页.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="-这三个段在用户virtual-addrspace下的布局如何">❓ 这三个段在用户virtual addrspace下的布局如何?&lt;/h3>
+&lt;p>todo&lt;/p>
+&lt;h3 id="-何为段地址对齐技术">❓ 何为段地址对齐技术?&lt;/h3>
+&lt;p>上面说了, 在为这三个段分配物理内存时, 虽然他们的真实大小远小于5个页面, 但由于简单采用: &lt;code>每个段的开头必须是page align&lt;/code>,
+导致实际上产生了巨大的&lt;strong>内部碎片&lt;/strong>.&lt;/p>
+&lt;p>段地址对齐实际上就是在为ELF文件中的段分配物理内存时, 不考虑其段的独立性, 强制按照&lt;code>page&lt;/code>来划分. 划分的行为如下图所示.
+结果就是仅需占用&lt;code>3&lt;/code>个物理页面.&lt;/p>
+&lt;pre tabindex="0">&lt;code>+---+---------------+
+| P | SEG0 |
+| A +---------------+
+| G | |
+| E | |
++---+ |
+| P | SEG1 |
+| A | |
+| G | |
+| E | |
++---+ |
+| P +---------------+
+| A | |
+| G | SEG2 |
+| E | |
++---+---------------+
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>目前, gcc(更准确是说是GUN ld)默认启用段对齐技术. 各个段的虚拟地址并不是&lt;code>page align&lt;/code>.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>🍀 物理页面到虚拟页面的映射阶段, 那些&lt;em>同时包含&lt;/em>两个段的页面会被映射两次, 即一个物理页面对应两个
+虚拟页.&lt;/p>
+&lt;p>原因是: 在一个页面的不同段可能&lt;strong>权限不同&lt;/strong>, 所以不能使用同一映射.&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/os/elf-format/ - @2019 Notepadium.</description></item><item><title>Improving the quality of C code</title><link>https://wangloo.github.io/posts/codestyle/improve_quality/</link><pubDate>Tue, 14 Jun 2022 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/improve_quality/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/improve_quality/ -&lt;h2 id="添加更多的编译选项comiler-options来防止bug">添加更多的编译选项(comiler options)来防止bug&lt;/h2>
+&lt;p>对于我常用的&lt;code>GCC&lt;/code>, 推荐开启一下的compiler options:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>-Wall&lt;/code>: enable a lot of common warnings&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>-Wno-format-truncation&lt;/code>: warns about the snprintf output buffer not being
+large enough for a corresponding “%s” in the format string.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>-Werror&lt;/code>: turn warnings into errors.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="动态申请的空间到底要不要释放">动态申请的空间到底要不要释放&lt;/h2>
+&lt;p>When using a barebones embedded OS, you absolutely need to tightly manage your memory.&lt;/p>
+&lt;p>但是, 如果你是写应用业务的代码, 特别是在内存足够的场景下. 最好不要手动释放内存,
+因为当线程/进程退出时, 操作系统会自动帮我们释放. &lt;strong>某些情况下, 释放内存的操作会很大程度上增加逻辑的复杂度&lt;/strong>.&lt;/p>
+&lt;blockquote>
+&lt;p>如果你是一个内核程序员, 则必须手动的释放. 不用怀疑.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h3 id="尽可能在创建变量时赋初值">尽可能在创建变量时赋初值&lt;/h3>
+&lt;p>放置某些变量创建后是 &lt;code>magic value&lt;/code>. 而使用这些变量可能不会立马导致错误, 但是这是一个隐患.&lt;/p>
+&lt;p>但这会产生一个问题, 有时我们定义变量之后的不久之后就会对其赋予正确的值, 这时候初值就是
+多余的. 而且维护者可能认为这个值是meaningful, 这就要求我们如果要赋初值, 就要说明这个值
+仅仅是&lt;strong>无意义的&lt;/strong>初值.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h3 id="使用define-enum">使用&lt;code>#define&lt;/code>, &lt;code>enum&lt;/code>&lt;/h3>
+&lt;p>对于代码在不同地方使用的同一个值, 应使用&lt;code>#define&lt;/code>来声明使得代码&lt;strong>maintainable&lt;/strong>.&lt;/p>
+&lt;p>如果这些值有多个且能规划为同一类别, 则还可将&lt;code>#define&lt;/code>的方式换为&lt;code>enum&lt;/code>. 这会使代码更加&lt;strong>meaningful&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>使用&lt;code>enum&lt;/code>使还要注意其所占内存空间在不同架构中可能不同的问题, see &lt;a href="https://www.cnblogs.com/bluettt/p/16041867.html">enum的优势和漏洞&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h3 id="使用typedef优化function-pointer">使用&lt;code>typedef&lt;/code>优化function pointer&lt;/h3>
+&lt;p> &lt;/p>
+&lt;h3 id="重定义一套自己的类型">重定义一套自己的类型&lt;/h3>
+&lt;p>在开发大项目时, 需要考虑可移植性的情况下, 最好利用&lt;code>typedef&lt;/code>对类型进行重定义.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#if SYSTEM1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> &lt;span style="color:#ff79c6">typedef&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> INT32;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#else
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> &lt;span style="color:#ff79c6">typedef&lt;/span> &lt;span style="color:#8be9fd">long&lt;/span> INT32;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#endif
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如上, 对于某些架构&lt;code>int&lt;/code>类型可能不是32bit, 此时就要使用&lt;code>long&lt;/code>. 这种定义的方式会保证我们的系统
+在任何架构中都不会出现类型的bug. 而且也增加了代码的&lt;strong>readability&lt;/strong>.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="善用0">善用&lt;code>~0&lt;/code>&lt;/h2>
+&lt;p>在做嵌入式编程时, 有时在设置掩码(mask)或者其他情况会要用到&lt;strong>全1&lt;/strong>的变量值, 你是否经常这样声明?&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> mask &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0xffff&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>暂且不谈&lt;code>int&lt;/code>类型到底占多少字节的问题. 就像上面一样, 我们程序员经常忘记某个类型的大小,
+而少添加了&lt;code>f&lt;/code>. 会导致变量&lt;code>mask&lt;/code>的值不是全1(32位情况下).&lt;/p>
+&lt;p>这是要变换一下思维, 使用&lt;code>~0&lt;/code>的定义方法就可轻松化解, 无需管变量的类型是什么.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> mask &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">~&lt;/span>&lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="合理的使用goto语句">合理的使用&lt;code>goto&lt;/code>语句&lt;/h2>
+&lt;p>在大学课堂中, 我们老师说过禁止使用&lt;code>goto&lt;/code>语句, 但却没有给出明确的原因.&lt;/p>
+&lt;p>实际上, &lt;strong>合理的&lt;/strong>使用&lt;code>goto&lt;/code>能够极大的减少程序的冗余度.&lt;/p>
+&lt;p>&lt;code>goto&lt;/code>语句常用于程序出现错误要退出时, 可能有多个情况会使用重复的代码处理,
+例如释放一些allocated memory. 相较于使用&lt;code>flag&lt;/code>, 使用&lt;code>goto&lt;/code>显然更加clearly and readability.&lt;/p>
+&lt;p>所以, 在面对重复的错误处理代码时, 想想能不能用&lt;code>goto&lt;/code>进行优化. 当然, &lt;strong>避免过早优化&lt;/strong>.&lt;/p>
+&lt;blockquote>
+&lt;p>注意, &lt;code>goto&lt;/code>出现的场景其实很受限. Never use a backward &lt;code>goto&lt;/code> or jump into control statements.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="永远为你的函数设置error-return-value">永远为你的函数设置error return value&lt;/h2>
+&lt;p>一旦你的函数可能被其他人调用, 那么养成设置return value的习惯. 即便你现在的实现
+并不会产生任何错误, 也请返回&lt;code>success&lt;/code>.&lt;/p>
+&lt;p>这样做的原因是, caller可以根据你的定义做错误判断, 即便以后你的实现加上了出错情况,
+上层的代码也不需要修改.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="变量类型的选择">变量类型的选择&lt;/h2>
+&lt;ul>
+&lt;li>名字, 特定不变的字符串使用&lt;code>const char *&lt;/code>, 甚至&lt;code>const char const*&lt;/code>&lt;/li>
+&lt;li>长度使用&lt;code>size_t&lt;/code>&lt;/li>
+&lt;li>表示类型的参数尽可能使用&lt;code>enum&lt;/code>&lt;/li>
+&lt;li>循环变量i使用&lt;code>signed&lt;/code>, 避免溢出后出错&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="reference">Reference&lt;/h2>
+&lt;p>&lt;a href="https://www.msweet.org/blog/2020-12-31-how-i-improve-my-c-code-quality.html">How I Improve My (C) Code Quality&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.codeproject.com/Articles/357065/Ten-Fallacies-of-Good-C-Code">Ten Fallacies of Good C Code&lt;/a>&lt;/p>
+- https://wangloo.github.io/posts/codestyle/improve_quality/ - @2019 Notepadium.</description></item><item><title>MicroKernel Learning: SeL4</title><link>https://wangloo.github.io/posts/microkernel/sel4/</link><pubDate>Sat, 04 Jun 2022 11:52:51 +0800</pubDate><guid>https://wangloo.github.io/posts/microkernel/sel4/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/microkernel/sel4/ -&lt;h2 id="sel4-capabilities">seL4 Capabilities&lt;/h2>
+&lt;p>In seL4, capabilities are stored in &lt;strong>C-space&lt;/strong>. C-space is a hierarchical data structure very similar to &lt;strong>page table&lt;/strong>.&lt;/p>
+&lt;ul>
+&lt;li>page table is a mapping from virtual address to physical address.&lt;/li>
+&lt;li>C-space is a mapping from &lt;strong>object ID&lt;/strong> to &lt;strong>capability&lt;/strong>.&lt;/li>
+&lt;li>Kernel object is made up of several &lt;strong>C-nodes&lt;/strong>, just like a page table made up of individual page tables.&lt;/li>
+&lt;li>Each C-nodes is an array of cap &lt;em>slots&lt;/em>, which contain capability.&lt;/li>
+&lt;/ul>
+&lt;p>Inaccessible to userland, you can never hold an &lt;strong>actual capability&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>You can only hold a reference to capability, which pointers into C-space(slot addresses)&lt;/li>
+&lt;li>These C-space addresses are called &lt;strong>CPTRs&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>You don&amp;rsquo;t need to do the transform, because this is typically extracted in some libs.&lt;/p>
+&lt;/blockquote>
+&lt;p>Capabilities convey specific privilege (acces rights)&lt;/p>
+&lt;ul>
+&lt;li>Read, Write, Execute, GrantReply(&lt;code>call&lt;/code>), Grant(&lt;code>cap transfer&lt;/code>)&lt;/li>
+&lt;/ul>
+&lt;p>Main operations on capabilities:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>Invoke&lt;/code>perform operation on object referred to by cap.
+&lt;ul>
+&lt;li>For example, map some frame into memory. You need to have capabilities to both the frame and address space.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>Copy&lt;/code>|&lt;code>Mint&lt;/code>|&lt;code>Grant&lt;/code>: create copy of cap with &lt;strong>same/lesser&lt;/strong> privilege.&lt;/li>
+&lt;li>&lt;code>Move&lt;/code>|&lt;code>Mutate&lt;/code>: transfer to different address with &lt;strong>same/lesser&lt;/strong> privilege.
+&lt;ul>
+&lt;li>Between C-space or within C-space.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>Delete&lt;/code>: invalidate slot(cleans up object if this is the only cap to it)&lt;/li>
+&lt;li>&lt;code>Revoke&lt;/code>: delete any derived(eg. copied or minted) caps&lt;/li>
+&lt;/ul>
+&lt;h3 id="capability-derivation">Capability Derivation&lt;/h3>
+&lt;h4 id="mint-operation">MINT OPERATION&lt;/h4>
+&lt;p>The &lt;strong>Mint&lt;/strong> operation creates a new, less powerful cap&lt;/p>
+&lt;ul>
+&lt;li>Can add badge&lt;/li>
+&lt;li>Can strip access rights, eg &lt;code>RW-&amp;gt;RO&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>mint(dest, src, rights, badge)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>The first two arguement are &lt;strong>capability pointers(CPTR)&lt;/strong> to a C-space(represented by C-node), which are references inside C-node.&lt;/li>
+&lt;li>The &lt;strong>destination C-node cap&lt;/strong> must allow modification&lt;/li>
+&lt;li>Then you have the rights and the &lt;em>batch&lt;/em> of the new cap.&lt;/li>
+&lt;/ul>
+&lt;p>📌 This is an alternative of sending addressed capabilities by &lt;strong>IPC operation&lt;/strong>.
+That is what operating system do to set up protection domains for &lt;strong>user level process&lt;/strong>.&lt;/p>
+&lt;h4 id="copy-operation">COPY OPERATION&lt;/h4>
+&lt;blockquote>
+&lt;p>Copy as a version of &lt;em>Mint&lt;/em>.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="sel4-kernel-objects">seL4 Kernel Objects&lt;/h2>
+&lt;p>In file &lt;code>libsel4\include\sel4\objecttype.h&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">typedef&lt;/span> &lt;span style="color:#ff79c6">enum&lt;/span> api_object {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_UntypedObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_TCBObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_EndpointObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_NotificationObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_CapTableObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#ifdef CONFIG_KERNEL_MCS
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> seL4_SchedContextObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_ReplyObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#endif
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> seL4_NonArchObjectTypeCount,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} seL4_ObjectType;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="sel4-system-calls">seL4 System Calls&lt;/h2>
+&lt;p>seL4 has &lt;code>11&lt;/code> syscalls:&lt;/p>
+&lt;p>&lt;code>Yield()&lt;/code>: invokes scheduler&lt;/p>
+&lt;ul>
+&lt;li>does NOT require a capability!&lt;/li>
+&lt;/ul>
+&lt;p>&lt;code>Send()&lt;/code>,&lt;code>Recv()&lt;/code> and variants/combinations thereof: IPC operations&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>Call()&lt;/code>,&lt;code>ReplyRecv()&lt;/code>: usually invokes by client/server&lt;/li>
+&lt;li>&lt;code>Send()&lt;/code>, &lt;code>NBSend()&lt;/code>: send-only and non-blocking version of it.&lt;/li>
+&lt;li>&lt;code>Recv()&lt;/code>, &lt;code>NBRecv()&lt;/code>, &lt;code>NBSendRecv()&lt;/code>&lt;/li>
+&lt;li>&lt;code>Wait()&lt;/code>, &lt;code>NBWait()&lt;/code>, &lt;code>NBSendWait()&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>We just use &lt;code>Call()&lt;/code> normally, the others are only for bootstrapping protocols and exception handling.&lt;/p>
+&lt;/blockquote>
+&lt;p>Call() is atomic Send() + reply-object setup + Wait()&lt;/p>
+&lt;ul>
+&lt;li>cannot be simulated with one-way operations!&lt;/li>
+&lt;/ul>
+&lt;p>ReplyRecv() is NBSend() + Recv()&lt;/p>
+&lt;h3 id="different-object-support-different-operations">Different object support different operations&lt;/h3>
+&lt;h4 id="endpoints">ENDPOINTS&lt;/h4>
+&lt;p>Endpoints support all 10 IPC variants.&lt;/p>
+&lt;h4 id="notifications">NOTIFICATIONS&lt;/h4>
+&lt;p>Notifications support:&lt;/p>
+&lt;ul>
+&lt;li>NBSend() - aliased as Signal()&lt;/li>
+&lt;li>Wait()&lt;/li>
+&lt;li>NBWait() - aliased as Poll()&lt;/li>
+&lt;/ul>
+&lt;h4 id="other-objects">OTHER OBJECTS&lt;/h4>
+&lt;p>Other objects only supports &lt;code>Call()&lt;/code> operation.&lt;/p>
+&lt;ul>
+&lt;li>Appear as (kernel-implemented) servers. If you invoking a method on an object, this is done by treating the object as a kernel-implemented server. And you invoke it with a &lt;code>call()&lt;/code> operation just as you do a normal server invocation.&lt;/li>
+&lt;li>Each of these kernel objects has a different kernel-defined protocol
+&lt;ul>
+&lt;li>operations encoded in message tag&lt;/li>
+&lt;li>parameters passed in message words&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Mostly hidden behind &lt;strong>syscall&lt;/strong> wrappers, user do not need to know this details.&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="sel4-ipc">seL4 IPC&lt;/h2>
+&lt;blockquote>
+&lt;p>IPC in seL4 is a way to realize &lt;strong>cross-domain&lt;/strong> invocation.&lt;/p>
+&lt;/blockquote>
+&lt;p>seL4 IPC is not a mechanism for shipping data. Transfering data is axillary but not the primary purpose.&lt;/p>
+&lt;p>seL4 IPC is a protected procedure call, a user-controlled context switch(from clients context into server context).&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="sel4-threads">seL4 Threads&lt;/h2>
+&lt;h3 id="creating-a-thread">Creating a thread&lt;/h3>
+&lt;ol>
+&lt;li>Obtain a TCB object&lt;/li>
+&lt;li>Set attributes: V-space, C-space, fault endpoint, IPC buffer&lt;/li>
+&lt;li>Set Scheduling parameters:
+&lt;ul>
+&lt;li>priority, scheduling context, timeout endpoint(maybe MCP)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Set architecture-related registers&lt;/li>
+&lt;/ol>
+&lt;h3 id="threads-and-stacks">Threads and Stacks&lt;/h3>
+&lt;p>Stacks are completely user-managed, kernel doesn&amp;rsquo;t care!&lt;/p>
+&lt;blockquote>
+&lt;p>Kernel only preserves SP.. on context switch&lt;/p>
+&lt;/blockquote>
+&lt;p>Stack location, allocation, size must be managed by &lt;strong>userland&lt;/strong>.&lt;/p>
+&lt;p>Kernel beware of stack overflow&lt;/p>
+- https://wangloo.github.io/posts/microkernel/sel4/ - @2019 Notepadium.</description></item><item><title>使用 HuGo 搭建个人网站</title><link>https://wangloo.github.io/posts/hugo/</link><pubDate>Sat, 21 May 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/hugo/ -&lt;h1 id="hugo-基础学习">HuGo 基础学习&lt;/h1>
+&lt;p>本章将解答Hugo是什么, 以及Hugo是如何工作的. 只有了解Hugo的工作机制之后, 才能发挥想象力进行DIY.&lt;/p>
+&lt;p>本章内容大多来自&lt;a href="https://gohugo.io/documentation/">官方手册&lt;/a>或者搜索引擎提供的结果.&lt;/p>
+&lt;h2 id="hugo-项目目录结构">Hugo 项目目录结构&lt;/h2>
+&lt;p>一个hugo 项目通常包含以下内容:&lt;/p>
+&lt;pre tabindex="0">&lt;code>.
+├── archetypes
+├── config.toml
+├── content
+├── data
+├── layouts
+├── public
+├── static
+└── themes
+&lt;/code>&lt;/pre>&lt;p>这里面有些是必须的, 有些是可选的.&lt;/p>
+&lt;p>&lt;strong>archetypes&lt;/strong>&lt;/p>
+&lt;p>定义新创建post时, header的格式.&lt;/p>
+&lt;p>&lt;strong>asserts&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>Note: assets directory is not created by default.&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>config&lt;/strong>&lt;/p>
+&lt;p>Hugo uses the &lt;code>config.toml&lt;/code>, &lt;code>config.yaml&lt;/code>, or &lt;code>config.json&lt;/code> (if found in the site root) as the default site config file.&lt;/p>
+&lt;p>The user can choose to override that default with one or more site config files using the command-line &lt;code>--config&lt;/code> switch.&lt;/p>
+&lt;pre tabindex="0">&lt;code>hugo --config debugconfig.toml
+hugo --config a.toml,b.toml,c.toml
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>Note: config directory is not created by default.&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>content&lt;/strong>&lt;/p>
+&lt;p>显然, 存储所有的post.&lt;/p>
+&lt;p>&lt;strong>data&lt;/strong>&lt;/p>
+&lt;p>This directory is used to store configuration files that can be used by Hugo when generating your website.&lt;/p>
+&lt;p>像是你 website 的一个mini 数据库, 你可以放置 toml, yaml, json格式的文件.&lt;/p>
+&lt;p>&lt;strong>layouts&lt;/strong>&lt;/p>
+&lt;p>Stores templates in the form of &lt;code>.html&lt;/code> files that specify how views of your content will be rendered into a static website. Templates include &lt;a href="https://gohugo.io/templates/list/">list pages&lt;/a>, your &lt;a href="https://gohugo.io/templates/homepage/">homepage&lt;/a>, &lt;a href="https://gohugo.io/templates/taxonomy-templates/">taxonomy templates&lt;/a>, &lt;a href="https://gohugo.io/templates/partials/">partials&lt;/a>, &lt;a href="https://gohugo.io/templates/single-page-templates/">single page templates&lt;/a>, and more.&lt;/p>
+&lt;p>&lt;strong>public&lt;/strong>&lt;/p>
+&lt;p>保存build生成的站点. 当运行&lt;code>hugo [flag]&lt;/code>时生成.&lt;/p>
+&lt;p>拷贝该目录下的内容, 可以部署到web 服务器上了.&lt;/p>
+&lt;p>&lt;strong>static&lt;/strong>&lt;/p>
+&lt;p>Stores all the static content: images, CSS, JavaScript, etc. 当Hugo构建您的站点时，静态目录中的所有资源都会按原样复制。&lt;/p>
+&lt;p>即当构建website时, &lt;code>static/&lt;/code>下的所有文件都会复制到 &lt;code>public/&lt;/code>下.&lt;/p>
+&lt;p>The static files are served on the site root path (eg. if you have the file &lt;code>static/image.png&lt;/code> you can access it using &lt;code>http://{server-url}/image.png&lt;/code>, to include it in a document you can use &lt;code>![Example image](/image.png) )&lt;/code>.&lt;/p>
+&lt;p>&lt;strong>resources&lt;/strong>&lt;/p>
+&lt;p>一些缓存文件&lt;/p>
+&lt;blockquote>
+&lt;p>Note: resources directory is not created by default.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="hugo-cli-命令">Hugo CLI 命令&lt;/h2>
+&lt;p>hugo 支持的所有命令可以通过 &lt;code>hugo help&lt;/code> 命令来查看. 每一条命令的具体用法, 可以执行 &lt;code>hugo [command] help&lt;/code> 来查看&lt;/p>
+&lt;pre tabindex="0">&lt;code>Usage:
+hugo [flags]
+hugo [command]
+&lt;/code>&lt;/pre>&lt;h3 id="hugo-completion">Hugo completion&lt;/h3>
+&lt;p>用来配置补全 hugo command 和 flag 的. 该命令会输出一段脚本, 将该脚本复制到你的 shell 的配置文件中就可以使用 hugo tab 补全了.&lt;/p>
+&lt;h3 id="hugo-config">hugo config&lt;/h3>
+&lt;p>打印hugo的配置文件, 即根目录下的 &lt;code>config.toml&lt;/code>.&lt;/p>
+&lt;h3 id="hugo-env">hugo env&lt;/h3>
+&lt;p>打印 hugo 的版本和环境信息&lt;/p>
+&lt;h3 id="hugo-list">hugo list&lt;/h3>
+&lt;p>打印所有post的info, 包含标题, 发布日志, 链接等.&lt;/p>
+&lt;h3 id="hugo-new">hugo new&lt;/h3>
+&lt;p>非常重要的命令, 可以用来新建一个 website, 主题, 或者一篇post(常用). 带有许多 flag可以使用.&lt;/p>
+&lt;h3 id="hugo-server">hugo server&lt;/h3>
+&lt;p>执行&lt;code>hugo server&lt;/code>之后, 首先构建了你的网站(但是默认并不在本地创建文件, 而是放在内存), 然后启动hugo 自带的 web服务器让我们能看见网站的效果.&lt;/p>
+&lt;p>同时, 默认情况下, server 会同步你的本地更改, 然后实时的reload你的页面. 这样你就能同时看到修改的效果.&lt;/p>
+&lt;p>hugo server 的常用flag:&lt;/p>
+&lt;pre tabindex="0">&lt;code>-D 包含标记为草稿的post. 默认不构建草稿.
+--theme strings 使用[strings]主题进行构建
+&lt;/code>&lt;/pre>&lt;h3 id="hugo-flags">hugo [flags]&lt;/h3>
+&lt;p>&lt;code>hugo&lt;/code> 自身就是一个命令, 用于build website, 放到 &lt;code>public/&lt;/code>目录下.&lt;/p>
+&lt;p>常用 Flag(&lt;a href="https://gohugo.io/getting-started/usage/#test-installation:~:text=The%20output%20you%20see%20in%20your%20console%20should%20be%20similar%20to%20the%20following%3A">All supported flags&lt;/a>):&lt;/p>
+&lt;pre tabindex="0">&lt;code>--gc 在build后会清除一些cache文件. 与 resource/有关
+--minify minify any supported output format (HTML, XML etc.)
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>&lt;code>hugo&lt;/code> 命令不会删除之前的文件. 而是仅新增改动. 所以每次build时需要你手动删除 &lt;code>public/&lt;/code> 目录.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="hugo-内容管理">Hugo 内容管理&lt;/h2>
+&lt;p>hugo build 后的website页面的布局和你源文件的布局相同, 所有源文件都放置在 &lt;code>content/&lt;/code> 目录下.&lt;/p>
+&lt;pre tabindex="0">&lt;code>└── content
+├── _index.md // &amp;lt;- https://example.com
+|
+├── about
+| └── index.md // &amp;lt;- https://example.com/about/
+├── posts
+| ├── _index.md // https://example.com/posts/
+| ├── firstpost.md // &amp;lt;- https://example.com/posts/firstpost/
+| ├── happy
+| | └── ness.md // &amp;lt;- https://example.com/posts/happy/ness/
+| └── secondpost.md // &amp;lt;- https://example.com/posts/secondpost/
+└── quote
+├── first.md // &amp;lt;- https://example.com/quote/first/
+└── second.md // &amp;lt;- https://example.com/quote/second/
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>hugo 将content/ 下的那级目录(例如 content/posts)特殊看待, 称为 &lt;em>section&lt;/em>.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="页面资源page-resources">页面资源(Page Resources)&lt;/h3>
+&lt;p>页面资源指每个页面&lt;strong>私有的&lt;/strong>图片, 文档等静态资源. 与&lt;code>static/&lt;/code> 中全局的资源不同.&lt;/p>
+&lt;p>页面资源放在&lt;code>content/&lt;/code>下的任意位置, 但不是所有页面都能访问. page bundles 中的&lt;code>index.md&lt;/code> or &lt;code>_index.md&lt;/code> 能够访问该 bundles 下的资源.&lt;/p>
+&lt;pre tabindex="0">&lt;code>content
+└── post
+├── first-post
+│ ├── images
+│ │ ├── a.jpg
+│ │ ├── b.jpg
+│ │ └── c.jpg
+│ ├── index.md (root of page bundle, 能够访问first-post/下的所有资源)
+│ ├── notice.md 不能访问任何资源, 但其自身作为一个资源可被index.md访问
+│ ├── office.mp3
+│ ├── pocket.mp4
+│ ├── rating.pdf
+│ └── safety.txt
+└── second-post
+└── index.md (root of page bundle, 但不能访问first-post/下的资源)
+&lt;/code>&lt;/pre>&lt;h3 id="内容分类taxonomy">内容分类(Taxonomy)&lt;/h3>
+&lt;p>Taxonomy: How to group the content together. Two default taxonomies are &lt;em>tags&lt;/em> and &lt;em>categories&lt;/em>.&lt;/p>
+&lt;h3 id="代码高亮syntax-highlighter">代码高亮(Syntax Highlighter)&lt;/h3>
+&lt;p>&lt;a href="https://gohugo.io/getting-started/configuration-markup/#configure-markup:~:text=anchorize%20template%20func.-,Highlight,-This%20is%20the">代码高亮的配置&lt;/a>(in &lt;code>config.toml&lt;/code>):&lt;/p>
+&lt;h3 id="页面分类">页面分类&lt;/h3>
+&lt;p>从布局上来看, 页面可以分为两类: List page 和 single page.&lt;/p>
+&lt;p>显而易见, list page比较特殊, 它负责列出当前目录下的所有post. 所以一个目录地址必然是一个list page.&lt;/p>
+&lt;p>在下面的例子中, &lt;code>https://example.com&lt;/code> , &lt;code>https://example.com/posts/happy/&lt;/code> 都可以叫做 list page.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>https://example.com/posts/happy/&lt;/code> 是list page, 目录下的&lt;code>_index.md&lt;/code> 不是必须的, hugo 会默认仅显示所有post的title. &lt;a href="https://gohugo.io/templates/lists/#list-pages-without-_indexmd">详见&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>https://example.com/about/&lt;/code> 不是list page, 因为其目录下有&lt;code>index.md&lt;/code>, 强制表明这是一个 single page. &lt;a href="https://gohugo.io/content-management/page-bundles/#:~:text=CONTENT%20MANAGEMENT-,Page%20Bundles,-Content%20organization%20using">详见&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>└── content
+├── _index.md // &amp;lt;- https://example.com
+|
+├── about
+| └── index.md // &amp;lt;- https://example.com/about/
+└── posts
+├── _index.md // https://example.com/posts/
+├── firstpost.md // &amp;lt;- https://example.com/posts/firstpost/
+├── happy
+| └── ness.md // &amp;lt;- https://example.com/posts/happy/ness/
+└── secondpost.md // &amp;lt;- https://example.com/posts/secondpost/
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>Homepage 和 section page 都属于特殊的 list page.&lt;/p>
+&lt;ul>
+&lt;li>homepage 特指 &lt;code>content/_index.md&lt;/code>&lt;/li>
+&lt;li>section page 特指 &lt;code>content/[section]/_index.md&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;h3 id="shortcodes">shortcodes&lt;/h3>
+&lt;p>shortcode 可以理解为 hugo 为了封装了一些代码块, 通过 shortcode 来调用.&lt;/p>
+&lt;h2 id="模板template">模板(Template)&lt;/h2>
+&lt;p>模板是hugo的一个高级用法, 用来定义你网站的style. 模板不等同与主题(themes), 可以理解为主题是一套模板的集合. 我们可以在使用模板的同时添加DIY的 style. 😎 Hugo 会有优先级的判断.&lt;/p>
+&lt;p>不同的页面类型需要定义不同的模板. List page 的模板称为 List template, single page 的模板称为 single template. 同理还有 homepage template, section template.&lt;/p>
+&lt;p>存储模板的目录为&lt;code>layout/&lt;/code>, 上面介绍hugo的目录结构时已经说过. 如果你使用了一个 theme, 那么&lt;code>themes/[your-theme]/layout/&lt;/code>就是该theme的模板.&lt;/p>
+&lt;h3 id="homepage-模板">homepage 模板&lt;/h3>
+&lt;h3 id="base-模板">Base 模板&lt;/h3>
+&lt;p>对应&lt;code>layouts/_default/baseof.html&lt;/code>&lt;/p>
+&lt;p>base 模板是整个website的核心. 所有的模板包括 list template, single template, homepage template&amp;hellip; 都是独立的, base template 将其他的模板联系到一起.&lt;/p>
+&lt;h3 id="partial-模板">partial 模板&lt;/h3>
+&lt;p>包含网站的许多元素, 增加模块化. 我可以为网站的 header 或者 footer 写一个模板(html), 这些HTML可以嵌入其他的模板.&lt;/p>
+&lt;h3 id="模板优先级">模板优先级&lt;/h3>
+&lt;p>既然同一种页面的模板可以定义在多个位置, 如果他们同时存在时, 优先级规则必然存在. 常见的情况比如我们使用了某个模板, 然而, 我们对模板中的一些布局不满意, 直接修改模板中的文件显然不是一个好方法, 那么该怎么做呢?&lt;/p>
+&lt;p>&lt;strong>一般来说&lt;/strong>, 如果你只想重写theme中的某个模板, 例如section template. 那么你只需要新建 &lt;code>layout/_default/section.html&lt;/code> 即可, hugo 构建你的网站时, 如果检测到本地和theme的&lt;code>layout/_default&lt;/code>下都有 &lt;code>section.html&lt;/code>, 它会使用我们自己定义的那个.&lt;/p>
+&lt;blockquote>
+&lt;p>完整的, 多级的优先级规则: &lt;a href="https://gohugo.io/templates/lookup-order/">Hugo&amp;rsquo;s Lookup Order | Hugo (gohugo.io)&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="变量variables">变量(Variables)&lt;/h2>
+&lt;p>❗ Hugo 变量仅设计给模板使用, 即在&lt;code>layouts/&lt;/code>下的html文件.&lt;/p>
+&lt;h3 id="page-variables">Page Variables&lt;/h3>
+&lt;p>与post相关的变量, 定义在post 的 front matter中.&lt;/p>
+&lt;pre tabindex="0">&lt;code>// Define Page variables in front matter of post
+----------------
+title: &amp;#34;使用 HuGo 搭建个人网站&amp;#34;
+description: 学习正确的 Hugo 食用方式, DIY 属于自己的 website~
+Myvar: &amp;#34;my value&amp;#34;
+----------------
+// Use Page Variables
+{{.Description}} // Get the description of the post
+{{.Params.Myvar}} // Get the value of Myvar, that is, &amp;#34;my value&amp;#34;
+&lt;/code>&lt;/pre>&lt;h3 id="site-variables">Site Variables&lt;/h3>
+&lt;p>站点层面的变量大部分是网站配置相关.&lt;/p>
+&lt;h2 id="函数functions">函数(Functions)&lt;/h2>
+&lt;p>函数是hugo为你封装的一些方法你可以直接调用.&lt;/p>
+&lt;p>❗ Hugo 函数仅设计给模板使用, 即在&lt;code>layouts/&lt;/code>下的html文件. Same as variables.&lt;/p>
+&lt;h2 id="hugo-pipes">Hugo pipes&lt;/h2>
+&lt;h1 id="diy-my-own-website">DIY My Own Website&lt;/h1>
+&lt;h2 id="支持-emoji">支持 Emoji&lt;/h2>
+&lt;p>&lt;a href="https://stackoverflow.com/questions/41047920/adding-emoji-to-a-hugo-page-variable">Adding emoji tutorial&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.webfx.com/tools/emoji-cheat-sheet/">Emoji chart&lt;/a>&lt;/p>
+&lt;h2 id="todo-list">TODO List&lt;/h2>
+&lt;ol>
+&lt;li>深色和浅色模式使用 不同的代码高亮 格式&lt;/li>
+&lt;li>Post section page 添加简介&lt;/li>
+&lt;li>Single template 调整 Header&amp;rsquo;s margin&lt;/li>
+&lt;/ol>
+- https://wangloo.github.io/posts/hugo/ - @2019 Notepadium.</description></item><item><title>2019 Stanford Commencement Timcook</title><link>https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/</link><pubDate>Wed, 18 May 2022 19:32:38 +0800</pubDate><guid>https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/ -&lt;h1 id="content">Content&lt;/h1>
+&lt;p>Fourteen years ago, Steve stood on this stage and told your predecessors &amp;ldquo;Your time is limited. So don&amp;rsquo;t waste is living someone else&amp;rsquo;s life.&amp;rdquo;&lt;/p>
+&lt;p>So what is true then is true now. Don&amp;rsquo;t waste your time living someone else&amp;rsquo;s life.
+Don&amp;rsquo;t try to emulate the people who came before you to the exclusion of
+everything else, contorting into a shape that doesn&amp;rsquo;t fit.&lt;/p>
+&lt;p>Graduates, the fact is, when your time comes, and it will, you will never be ready.
+But you&amp;rsquo;re not suppposed to be. Find the hope in the unexpected. Find the hope
+int the challenge. Find your vision on the solitary road. Don&amp;rsquo;t get distracted.
+There are too many people who want credit without responsibility. Too many who
+show up for the ribbon cutting without building anything worth a damn.&lt;/p>
+&lt;p>Be different. Leave something worthy. And always remember that you can&amp;rsquo;t take it
+with you. You&amp;rsquo;re going to have to pass it on.&lt;/p>
+&lt;p>Thank you very much. And Congratulations to the Class of 2019!&lt;/p>
+&lt;p>&lt;a href="https://www.youtube.com/watch?v=2C2VJwGBRRw&amp;amp;t=80s">YouTube vidio&lt;/a>&lt;/p>
+- https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/ - @2019 Notepadium.</description></item><item><title>Html Css Learning note (0)</title><link>https://wangloo.github.io/posts/html-css/0/</link><pubDate>Tue, 17 May 2022 11:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/html-css/0/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/html-css/0/ -&lt;h1 id="get-start">Get start&lt;/h1>
+&lt;h2 id="what-is-htmlcss">What is HTML&amp;amp;CSS?&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>HTML is resonsible for the content of the page. That&amp;rsquo;s the text, images, buttons, etc.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>CSS is resonsible for the presentation of the content. That&amp;rsquo;s the color, layout, etc.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Web &lt;strong>designers&lt;/strong> create the overall look and fell of a website.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Web &lt;strong>developers&lt;/strong> implement the design using &lt;strong>HTML, CSS and JavaScript code&lt;/strong>.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="configure-vim-as-html-code-editor">Configure VIM as HTML code-editor&lt;/h2>
+&lt;blockquote>
+&lt;p>Finally in the arms of &lt;code>vscode&lt;/code> 🙉&lt;/p>
+&lt;/blockquote>
+&lt;p>Add vim plugin:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://emmet.io/">emmet&lt;/a>: Coding HTML faster.&lt;/li>
+&lt;/ul>
+&lt;p>CSS autocomplete key: &lt;code>&amp;lt;C-x&amp;gt; &amp;lt;C-o&amp;gt;&lt;/code>&lt;/p>
+&lt;p>HTML and CSS live previes plugin: &lt;a href="https://github.com/turbio/bracey.vim">bracey&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/turbio/bracey.vim/issues/21">urlopen error solution&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h1 id="html-fundamentals">HTML Fundamentals&lt;/h1>
+&lt;h2 id="anatomy-of-an-html-element">Anatomy of an HTML element&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#ff79c6">p&lt;/span>&amp;gt; THML is a markup language&amp;lt;/&lt;span style="color:#ff79c6">p&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The HTML element is composed of &lt;code>opening tag&lt;/code>, &lt;code>content&lt;/code>, &lt;code>closing tag&lt;/code>.&lt;/p>
+&lt;h2 id="html-good-styles">HTML good styles&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>&amp;lt;img/&amp;gt;&lt;/code> element should add &lt;code>alt&lt;/code> attritube at all time, for the convenience of the blind.&lt;/li>
+&lt;li>An important principle in web design is &lt;code>making the HTML elements meaningful&lt;/code>. That is &lt;a href="https://www.thoughtco.com/why-use-semantic-html-3468271">semantic HTML&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h1 id="css-fundamentals">CSS Fundamentals&lt;/h1>
+&lt;p>CSS describes the visual style and presentation of the contend in HTML.&lt;/p>
+&lt;h2 id="anatomy-of-an-html-element-1">Anatomy of an HTML element&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">h1&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">color&lt;/span>: &lt;span style="color:#ff79c6">blue&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">text-align&lt;/span>: &lt;span style="color:#ff79c6">center&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">font-size&lt;/span>: &lt;span style="color:#bd93f9">20&lt;/span>&lt;span style="color:#8be9fd">px&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>h1 is &lt;code>Seletor&lt;/code>, every &lt;code>style&lt;/code> has &lt;code>proporty&lt;/code> and &lt;code>value&lt;/code>.&lt;/p>
+&lt;h2 id="css-good-styles">CSS good styles&lt;/h2>
+&lt;ul>
+&lt;li>Class selector is more commonly used than ID selector, as &lt;code>ID&lt;/code> is &lt;em>unique&lt;/em> in HTML. For scalability, &lt;strong>remember always using class selector&lt;/strong>.&lt;/li>
+&lt;li>We should always specify all the four state of &lt;code>&amp;lt;a&amp;gt;&lt;/code> element in order, which including &lt;code>link&lt;/code>, &lt;code>visited&lt;/code>, &lt;code>hover&lt;/code> and &lt;code>active&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="priority-conflicts-between-selectors">Priority conflicts between selectors&lt;/h2>
+&lt;p>CSS style priority from high to low:&lt;/p>
+&lt;ol>
+&lt;li>Inline style(style attribute in HTML)&lt;/li>
+&lt;li>ID selector&lt;/li>
+&lt;li>class or pseudo-class selector&lt;/li>
+&lt;li>element selector&lt;/li>
+&lt;li>universal element selector&lt;/li>
+&lt;/ol>
+&lt;p> &lt;/p>
+&lt;h1 id="the-css-box-model">The CSS box model&lt;/h1>
+&lt;p>The box model defines how elements are displayed on a webpage and how they are sized.&lt;br>
+In the box model, every element on a webpage can be seen as a rectangular box.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h1 id="universal-element--body-element">Universal element &amp;amp; &lt;code>&amp;lt;body&amp;gt;&lt;/code> element&lt;/h1>
+&lt;p>Styles in &lt;code>&amp;lt;body&amp;gt;&lt;/code> selector take effect because of inheritance. But the text-independent elements do not support inheritance.&lt;br>
+That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;s styles take effect on all element.&lt;/p>
+&lt;p>When we want to set padding and margin of all elements to &lt;code>0&lt;/code>. Must put the code in universal element selector.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h1 id="inline-elements--block-elements">Inline elements &amp;amp; Block elements&lt;/h1>
+&lt;p>Inline elements:&lt;/p>
+&lt;ul>
+&lt;li>Occupies only the space necessary for its content.&lt;/li>
+&lt;li>Box model applies in different way: &lt;strong>heights and widths do no apply&lt;/strong>.&lt;/li>
+&lt;li>Paddings and margins are applied &lt;strong>only horizontally&lt;/strong>(left and right).&lt;/li>
+&lt;/ul>
+&lt;p>Block elements:&lt;/p>
+&lt;ul>
+&lt;li>100% of parent&amp;rsquo;s width&lt;/li>
+&lt;li>vertivally, one after another&lt;/li>
+&lt;/ul>
+&lt;p>Inline-Block elements:&lt;/p>
+&lt;ul>
+&lt;li>Good example is &lt;code>&amp;lt;img&amp;gt;&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h1 id="the-3-ways-of-building-layouts-with-css">The 3 ways of building layouts with CSS&lt;/h1>
+&lt;p>&lt;code>Float Layouts&lt;/code>: The &lt;strong>old way of building layouts&lt;/strong>, using the float CSS property. Still used, but getting outdated fase.&lt;/p>
+&lt;ul>
+&lt;li>Element is removed from the normal flow: &lt;em>out of&lt;/em> flow. Like absolutely positioning.&lt;/li>
+&lt;li>Text and inline elements will wrap around the floated elements. Different from absolutely elements.&lt;/li>
+&lt;li>The container will &lt;em>NOT&lt;/em> adjust its height to the elements.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;code>FlexBox&lt;/code>: Modern way of laying out elements in a &lt;strong>1-dimensional row&lt;/strong> without using floats. Prefect for &lt;strong>component layouts&lt;/strong>.&lt;/p>
+&lt;ul>
+&lt;li>One of its most useful applications is &lt;strong>vertical centering&lt;/strong>.&lt;/li>
+&lt;li>Flex container property:
+&lt;ul>
+&lt;li>&lt;code>gap&lt;/code>: To create space between items.&lt;/li>
+&lt;li>&lt;code>justify-content&lt;/code>: To align items along main axis(&lt;strong>horizontally&lt;/strong>, by default)&lt;/li>
+&lt;li>&lt;code>align-items&lt;/code>: To align items along cross axis(&lt;strong>vertically&lt;/strong>, by dedauly)&lt;/li>
+&lt;li>&lt;code>flex-wrap&lt;/code>: To allow items to &lt;strong>wrap into a new line&lt;/strong> if they are too large&lt;/li>
+&lt;li>&lt;code>align-content&lt;/code>: Only applies when there are multiple lines(flex-wrap: wrap)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Flex Items property:
+&lt;ul>
+&lt;li>&lt;code>align-self&lt;/code>: To overwrite align-items for individual flex items.&lt;/li>
+&lt;li>&lt;code>flex-grow&lt;/code>: To allow an element to &lt;strong>grow&lt;/strong>.&lt;/li>
+&lt;li>&lt;code>flex-shrink&lt;/code>: To allow an element to &lt;strong>shrink&lt;/strong>.&lt;/li>
+&lt;li>&lt;code>flex-basis&lt;/code>: To define an item&amp;rsquo;s width, &lt;strong>instead of the width&lt;/strong> property.&lt;/li>
+&lt;li>&lt;code>flex&lt;/code>: &lt;strong>Recommended shorthand&lt;/strong> for flex-grow, -shrink, -basis.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;code>CSS Grid&lt;/code>: For laying out elements in a fully-fledged &lt;strong>2-dimensional grid&lt;/strong>. Perfect for page layouts and complex components.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>CSS grid is a set of &lt;strong>CSS properties&lt;/strong> for building &lt;strong>2-dimensional&lt;/strong> layouts&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>The main idea behind CSS Grid is that we &lt;strong>divide a container element into rows and columns&lt;/strong> that can be filled with its child elements&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>CSS grid is &lt;strong>not meant to replace flexbox!&lt;/strong>. Instead, they work perfectly together. Need a &lt;strong>1D&lt;/strong> layouts? Use flexbox. Need a &lt;strong>2D&lt;/strong> layout? Use CSS grid&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Grid container&lt;/p>
+&lt;ul>
+&lt;li>grid-template-rows/grid-template-columns: To establish the grid &lt;strong>row and column tracks&lt;/strong>. One length uniit for each track. Any unit can be used, new &lt;strong>fr&lt;/strong> fills unused space&lt;/li>
+&lt;li>row-gap/colum-gap: To &lt;strong>create empty space&lt;/strong> between tracks&lt;/li>
+&lt;li>justify-items/align-items: To align items inside rows/columns(&lt;strong>horizontally/vertically&lt;/strong>)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Grid items&lt;/p>
+&lt;ul>
+&lt;li>grid-column/grid-row: To &lt;strong>place a grid item&lt;/strong> into a specific cell, based on line numbers. span keyword can be used to span an item across more cells&lt;/li>
+&lt;li>justify-self/align-self: To &lt;strong>overwrite&lt;/strong> justify-items/align-items for single items&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+- https://wangloo.github.io/posts/html-css/0/ - @2019 Notepadium.</description></item><item><title>我的 vim 调教随笔</title><link>https://wangloo.github.io/posts/vim/basic/</link><pubDate>Mon, 09 May 2022 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/vim/basic/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/vim/basic/ -&lt;p>Search a word quickly: put cursor on the word, press &lt;code>/&lt;/code> and press &lt;code>&amp;lt;C-R&amp;gt;&lt;/code> &lt;code>&amp;lt;C-W&amp;gt;&lt;/code>.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="缩写的含义meaning-of-abbreviations">缩写的含义(Meaning of abbreviations)&lt;/h2>
+&lt;p>Operation&lt;/p>
+&lt;ul>
+&lt;li>d - delete&lt;/li>
+&lt;li>y - yank(copy, 因为c被占了)&lt;/li>
+&lt;li>c - change&lt;/li>
+&lt;li>r - replace&lt;/li>
+&lt;li>v - visual select&lt;/li>
+&lt;/ul>
+&lt;p>Scope or location&lt;/p>
+&lt;ul>
+&lt;li>i - inside&lt;/li>
+&lt;li>a - around&lt;/li>
+&lt;li>f - forward&lt;/li>
+&lt;li>t - to&lt;/li>
+&lt;/ul>
+&lt;p>Object&lt;/p>
+&lt;ul>
+&lt;li>w - word&lt;/li>
+&lt;li>s - sentence&lt;/li>
+&lt;li>p - paragraph&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="书签-bookmark">书签: Bookmark&lt;/h2>
+&lt;p>&lt;code>ma&lt;/code>: create bookmark &lt;code>a&lt;/code> inside file.&lt;br>
+&lt;code>mA&lt;/code>: create global bookmark &lt;code>A&lt;/code>.&lt;br>
+&lt;code>`a&lt;/code>: jump to bookmark &lt;code>a&lt;/code>.&lt;/p>
+&lt;p>&lt;code>:marks&lt;/code>: display all bookmarks&lt;/p>
+&lt;h2 id="缩进-indent">缩进: indent&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>&amp;gt;&lt;/code>: increase indent , &lt;code>&amp;lt;&lt;/code>: decrease indent ,&lt;code>=&lt;/code>: auto indent&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>&amp;gt;&amp;gt;&lt;/code>: 增加当前行的缩进&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>gg=G&lt;/code>: 缩进全文, 无论当前光标在哪&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>以上命令都可以配合visual mode使用&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="自动缩进的规则">自动缩进的规则&lt;/h3>
+&lt;p>主要有四种可用缩进的方式, 分别是:&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;#39;autoindent&amp;#39; 沿用上一行的缩进。
+&amp;#39;smartindent&amp;#39; 类似 &amp;#39;autoindent&amp;#39;，但是可以识别一些 C 语法以能在合适的地方
+增加 / 减少缩进。
+&amp;#39;cindent&amp;#39; 比上面两个更聪明；可以设置不同的缩进风格。
+&amp;#39;indentexpr&amp;#39; 最灵活的一个: 根据表达式来计算缩进。若此选项非空，则优先于其它
+选项覆盖。参见 indent-expression 。
+&lt;/code>&lt;/pre>&lt;p>自定义的快速命令:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-vimrc" data-lang="vimrc">&lt;span style="display:flex;">&lt;span>command IndentOff setl noai nocin nosi indentexpr=&lt;span style="color:#f1fa8c">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>command IndentOn setl ai cin si &lt;span style="color:#6272a4">&amp;#34;indentexpr can&amp;#39;t be re-enabled.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>command IndentStatus set ai? si? cin? indentexpr?
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>&lt;code>cindent&lt;/code> 不一定对所有的语言都有效果. 只是 C-like 风格, 其中一个要求是顶层函数必须在第一列中含有 &lt;code>{&lt;/code>.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>只有当&lt;code>indentexpr&lt;/code>计算不出当前需要缩进几格时(return -1), 才使用上面的三个规则. 它是优先级最高的.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="find-and-tail">&lt;code>F&lt;/code>ind and &lt;code>T&lt;/code>ail&lt;/h2>
+&lt;p>&lt;code>f(&lt;/code>: 从当前cursor处向右查找下一个&lt;code>(&lt;/code>, 并将光标移动到&lt;code>(&lt;/code>处.&lt;br>
+&lt;code>F(&lt;/code>: Like &lt;code>f(&lt;/code>, but 向左查找.&lt;br>
+&lt;code>t(&lt;/code>: Like &lt;code>f(&lt;/code>, but 将cursor移动到&lt;code>(&lt;/code>的前一个.&lt;br>
+&lt;code>T(&lt;/code>: You can guess.&lt;/p>
+&lt;h4 id="trick">Trick&lt;/h4>
+&lt;p>&lt;code>vt(c&lt;/code>: With visual, 删除当前光标到下一个&lt;code>(&lt;/code>前的所有内容.&lt;/p>
+&lt;p>&lt;code>;&lt;/code>/&lt;code>,&lt;/code>: 查找下一个/上一个 &lt;code>f/F/t/T&lt;/code> 的内容.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="substitute-and-global">&lt;code>S&lt;/code>ubstitute and &lt;code>G&lt;/code>lobal&lt;/h2>
+&lt;blockquote>
+&lt;p>See: &lt;code>:help :s&lt;/code> and &lt;code>:help :g&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;p>这两个都属于vim的命令. vim 的替换和sed 的&lt;code>s&lt;/code>命令使用方式基本一致. 就不多介绍了.&lt;/p>
+&lt;p>而 vim 的 global 命令和sed有些许差别. 使用Sed删除包含个字符串的行的指令为: &lt;code>sed '/STRING/d' input_file&lt;/code>, 而在vim中则多了一个&lt;strong>g&lt;/strong>前缀, &lt;code>:g/STRING/d&lt;/code>.&lt;/p>
+&lt;p>global 可以和 substitute 结合使用, 例如想要在包含某个字符串的行中替换&lt;code>good&lt;/code>为&lt;code>excellent&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>:g/STRING/s/good/excellent/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>TODO:&lt;/p>
+&lt;ol>
+&lt;li>More [cmd] in global. &lt;a href="https://vim.fandom.com/wiki/Power_of_g">Power of g | Vim Tips Wiki | Fandom&lt;/a>&lt;/li>
+&lt;li>vim subtitute使用的正则表达式集包含 &lt;code>\zs&lt;/code>和&lt;code>\ze&lt;/code>, 然而 sed 没有(Sed 为 POSIX Basic Regular Expression).&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="大小写转换">大小写转换&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>cmd&lt;/th>
+&lt;th>description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>g~&lt;/code>&lt;/td>
+&lt;td>翻转大小写&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>gu&lt;/code>&lt;/td>
+&lt;td>转换为小写&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>gU&lt;/code>&lt;/td>
+&lt;td>转换为大写&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>以上命令(严格来说叫操作符)需要配合&lt;strong>动作命令&lt;/strong>来使用.&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>gUaw&lt;/code>: 将光标所在位置的&lt;em>单词&lt;/em>转为大写&lt;/li>
+&lt;li>&lt;code>gUap&lt;/code>: 将光标所在位置的&lt;em>段落&lt;/em>转为大写&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="search-and-replace">Search and replace&lt;/h2>
+&lt;h3 id="case-1-search-and-convert-to-uppercaselowercase">case 1: search and convert to uppercase/lowercase&lt;/h3>
+&lt;p>我直觉想到的方式是&lt;code>%s/html/HTML/gc&lt;/code>&lt;/p>
+&lt;p>这种方式在简单情况下也行, 比较灵活且直观, 但是对于复杂文件不够通用且容易出错&lt;/p>
+&lt;p>还有一种方式是先搜索, 然后一步步替换&lt;/p>
+&lt;ul>
+&lt;li>搜索: &lt;code>/\vhtml\C&lt;/code>&lt;/li>
+&lt;li>替换: 执行命令&lt;code>gUgn&lt;/code>, 然后使用&lt;code>n&lt;/code>和&lt;code>.&lt;/code>来重复操作下一个选中项.&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>&lt;code>gn&lt;/code>命令进对于sreach的匹配项使用, 类似于&lt;code>n&lt;/code>, 但会将下一个匹配项(若光标停在match上, 那则选中当前匹配项)
+转为visual模式选中的状态.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>其实对于简单的文本, &lt;code>n&lt;/code>和&lt;code>.&lt;/code>也可以简化为&lt;code>.&lt;/code>. 唯一的坏处就是如果两个匹配的距离太大,
+你不能确认是否search了你想要的内容.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="case-2-search-the-text-seleted-in-visual-mode">case 2: search the text seleted in &lt;em>visual mode&lt;/em>&lt;/h3>
+&lt;blockquote>
+&lt;p>vim 本身并未提供这个功能, 需要借助一个脚本来完成&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;a href="#search-text-selected-in-visual-mode">search the text selected in visual mode&lt;/a>&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="visual-block-模式">Visual Block 模式&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>选中后, 编辑所有行: &lt;code>I&lt;/code>(captial i), 编辑完成后按两次&lt;code>ESC&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>重复visual 选中上次的 block: Normal模式下&lt;code>gv&lt;/code>即可.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="单词间跳转">单词间跳转&lt;/h2>
+&lt;p>&lt;code>w&lt;/code>: Move cursor to begin of next word.&lt;br>
+&lt;code>b&lt;/code>: Move cursor to begin of last word.&lt;br>
+&lt;code>e&lt;/code>: Move cursor to end of next word.&lt;/p>
+&lt;h3 id="trick-1">Trick&lt;/h3>
+&lt;p>&lt;code>w&lt;/code>/&lt;code>b&lt;/code>配合&lt;code>ce&lt;/code>使用可达到在某一行中快速移动到某个单词, 然后删除该单词开始edit.&lt;/p>
+&lt;p>&lt;code>daw&lt;/code>: 即 Delete A Word, 可以删除一个完整的单词, 无论当前光标的位置在哪.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="编辑二进制十六进制文件">编辑二进制/十六进制文件&lt;/h2>
+&lt;p>可以使用&lt;code>xxd&lt;/code>命令将一个文件中的文本转换为hex格式显示. 在vim中键入&lt;code>:%!xxd&lt;/code> 即可. 得到的效果如下:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-xxd" data-lang="xxd">0000000: 5468 6973 2069 7320 6120 7465 7374 0a41 This is a test.A
+0000010: 6e6f 7468 6572 206c 696e 650a 416e 6420 nother line.And
+0000020: 7965 7420 616e 6f74 6865 720a yet another.
+&lt;/code>&lt;/pre>&lt;p>后面的对应文本是自动生成的, 仅需要修改十六进制的部分即可. 修改完成后, 要返回原本的模式, 键入&lt;code>:%!xxd -r&lt;/code>.&lt;/p>
+&lt;blockquote>
+&lt;p>可通过设置文本格式对十六进制内存高亮显示 &lt;code>set ft=xxd&lt;/code>.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="删除光标前后的所有字符">删除光标前/后的所有字符&lt;/h2>
+&lt;ol>
+&lt;li>&lt;code>d^&lt;/code> &amp;ndash; delete to first non-whitespace character in the line&lt;/li>
+&lt;li>&lt;code>d0&lt;/code> &amp;ndash; delete to beginning of the line&lt;/li>
+&lt;li>&lt;code>c-u&lt;/code> in &lt;strong>insert mode&lt;/strong>. Same as bash command shortkeys, see &lt;a href="https://ss64.com/bash/syntax-keyboard.html">here&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h2 id="如何同步-vim-dotfiles">如何同步 VIM Dotfiles&lt;/h2>
+&lt;p>vim 的 dotfiles 主要包含&lt;code>.vimrc&lt;/code>和&lt;code>.vim/&lt;/code>中的插件.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>对于&lt;code>.vimrc&lt;/code>, 我选择使用mackup 软件和其他system dotfiles 一起备份. &lt;a href="https://github.com/wangloo/dotfiles">Git repo&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>对于 plugins, 传统的管理插件的方式(使用&lt;code>vim-plug&lt;/code>), 也就是放在&lt;code>~/.vim/plugged/&lt;/code>目录中的, 可以通过&lt;code>:PlugInstall&lt;/code>命令在新机器上重新从网上克隆. 能够保证使用的是新版本.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>VIM 8.0 之后, 引入 &lt;em>pack system&lt;/em> 新的插件管理方式. 对于这类的插件, 我们直接利用&lt;code>submodule&lt;/code>加入另一个备份的 &lt;a href="https://github.com/wangloo/vimpack">Git repo&lt;/a>. 使用方法见&lt;code>README&lt;/code>.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="good-plugins">Good plugins&lt;/h2>
+&lt;blockquote>
+&lt;p>Reference: &lt;a href="https://github.com/amix/vimrc">The Ultimate vimrc&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="todo">TODO&lt;/h3>
+&lt;h3 id="installed">Installed&lt;/h3>
+&lt;p>&lt;a href="https://github.com/preservim/nerdcommenter#settings">NERD Commneter - 快速注释&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/preservim/nerdtree">NERD Tree - 目录树&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/amix/open_file_under_cursor.vim">Open File Under Cursor - 打开光标处的文件目录&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>不支持&lt;code>vim-plug&lt;/code>安装. 直接clone源码到&lt;code>plugged&lt;/code>目录即可.&lt;/li>
+&lt;li>Usage: &lt;code>gf&lt;/code>: 在当前window打开文件. &lt;code>&amp;lt;C-w&amp;gt;&amp;lt;C-f&amp;gt;&lt;/code>: &lt;strong>new vertical windows&lt;/strong>中打开文件.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;a href="https://github.com/mileszs/ack.vim">Ack.vim - 快速定位内容&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/Yggdroot/LeaderF">LeaderF - Like Ctrlp but better?&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/rlue/vim-barbaric">barbaric - normal模式切换英文输入法&lt;/a>&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="helpful-script">Helpful script&lt;/h2>
+&lt;h3 id="search-text-selected-in-visual-mode">search text selected in visual mode&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-vimrc" data-lang="vimrc">&lt;span style="display:flex;">&lt;span>xnoremap * :&amp;lt;C-u&amp;gt;call &amp;lt;SID&amp;gt;VSetSearch(&lt;span style="color:#f1fa8c">&amp;#39;/&amp;#39;&lt;/span>)&amp;lt;CR&amp;gt;&lt;span style="color:#f1fa8c">/&amp;lt;C-R&amp;gt;=@/&lt;/span>&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xnoremap # :&amp;lt;C-u&amp;gt;call &amp;lt;SID&amp;gt;VSetSearch(&lt;span style="color:#f1fa8c">&amp;#39;?&amp;#39;&lt;/span>)&amp;lt;CR&amp;gt;?&amp;lt;C-R&amp;gt;=@/&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">function&lt;/span>! s:VSetSearch(cmdtype)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> temp = @s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>norm! gv&amp;#34;sy
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> @/ = &lt;span style="color:#f1fa8c">&amp;#39;\V&amp;#39;&lt;/span> . substitute(escape(@s, a:cmdtype.&lt;span style="color:#f1fa8c">&amp;#39;\&amp;#39;&lt;/span>), &lt;span style="color:#f1fa8c">&amp;#39;\n&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;\\n&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;g&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> @s = temp
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">endfunction&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/vim/basic/ - @2019 Notepadium.</description></item></channel></rss>
