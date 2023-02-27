@@ -4,6 +4,18 @@ date: 2022-06-30T11:20:29+08:00
 draft: true
 ---
 
+## When you need a lock
+
+1. Do two or more threads touch a memory location?
+2. Does at least one thread write to the memory location?
+
+**If so, you need a lock!**
+
+## Memory ordering
+
+* The compiler and CPU can reorder your code. Legal behaviors are referred to as "memory model"
+* If you use locks, you don't have to understand memory ordering
+* For exotic lock-free code, you'll need to know every detail
 
 ## How to build a lock
 

@@ -40,6 +40,31 @@ Files in `ELF` format includes:
 +---------------------------------+
 ```
 
+|字段| 含义 |
+|--|--|
+| e_machine | 目标架构 |
+| e_entry | 入口地址 |
+| e_machine | 目标架构 |
+| e_phnum | number of entries in the **program header table** |
+| e_shnum | number of entries in the **section header table** |
+| e_shoff | offset, in bytes, of the section header table |
+| e_phoff | offset, in bytes, of the program header table |
+| e_machine | 目标架构 |
+| e_machine | 目标架构 |
+
+
+### 段表
+ELF文件中的各个段的基本属性就是保存在**段表**中，是分析ELF文件最重要的字段。存放了每个段的信息，例如，段名，段的长度，在文件中的偏移，读写权限以及其他属性。
+
+编译器、链接器都是依靠段表来定位和访问各个段的属性的。
+
+如何找到段表？ **`e_shoff`字段**
+
+>使用`readelf -S <elfname>` 就能查看ELF文件的段表
+
+
+### 程序头表
+
 &nbsp;
 ## 分析ELF文件的工具
 ### 1. objdump

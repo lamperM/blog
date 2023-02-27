@@ -7,11 +7,7 @@ draft: true
 
 
 
-zh
-
-
-
-对于python, vim的版本均有要求
+YCM 插件对 python, vim的版本均有要求
 
 ## 下载
 
@@ -23,7 +19,12 @@ zh
 
 ```shell
 # 编译并添加对C的提示支持
-python3 install.py --clangd-completer
+python3 install.py --clangd-completer --verbose
+
+Searching Python 3.8 libraries...
+...
+Downloading Clangd from https://github.com/ycm-core/llvm/releases/download/13.0.0/clangd-13.0.0-x86_64-unknown-linux-gnu.tar.bz2...
+
 ```
 
 使用`--clangd-completer`参数时, 脚本会去下载clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2文件, 比较慢. 也可以**提前根据提示的网站自己手动下载**压缩包.
@@ -34,8 +35,6 @@ python3 install.py --clangd-completer
 :~/.vim/plugged/YouCompleteMe/third_party/ycmd/third_party/clangd/cache$ ls
 clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2
 ```
-
-
 
 还需对脚本`YouCompleteMe/third_party/ycmd/build.py`进行修改, 防止重新下载.
 
@@ -54,4 +53,3 @@ def DownloadClangd( printer ):
   if p.exists( file_name ):
     printer( f'Using cached Clangd: { file_name }' )
 ```
-
