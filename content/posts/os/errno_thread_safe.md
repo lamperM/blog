@@ -1,8 +1,7 @@
 ---
 title: "浅谈 errno 的线程安全问题"
 date: 2022-12-21T19:08:22+08:00
-draft: true
-tags: [errno, thread-safe]
+tags: [Operating System]
 ---
 
 

@@ -1,7 +1,6 @@
 ---
 title: "GICv3 - for ARMV8"
-tags: ["armv8", "gicv3"]
-categories: ["embedded"]
+tags: ["arm64", "gic"]
 date: 2022-09-10T21:51:49+08:00
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: "ARMv8-A MMU 介绍"
 date: 2022-09-29T08:01:33+08:00
+tags: [arm64, mmu]
 ---
 
 ## Introduction

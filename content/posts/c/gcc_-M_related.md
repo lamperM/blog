@@ -1,7 +1,7 @@
 ---
 title: "GCC '-M' and Related Parameters"
 date: 2022-04-26T19:08:22+08:00
-tags: ["gcc"]
+tags: [c, makefile]
 ---
 As we all know, there are huge number of parameters for GCC. With them, we can make many things possible. Now we talk about -M and related ones.
 After reading this article, you will know the meaning of there magic parameters. And I will put some little demos follows. Finally, we will see what can they do in really project. Let's go ahead.  

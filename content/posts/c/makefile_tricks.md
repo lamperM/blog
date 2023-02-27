@@ -1,7 +1,7 @@
 ---
 title: "Makefile 一些技巧"
 date: 2022-12-03T19:08:22+08:00
-tags: ["makefile", "make"]
+tags: ["makefile"]
 ---
 
 ..

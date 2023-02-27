@@ -2,7 +2,6 @@
 title: "vim插件YCM: 安装和配置"
 date: 2022-11-27T21:50:39+08:00
 tags: [vim]
-draft: true
 ---
 
 

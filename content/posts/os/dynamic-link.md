@@ -1,7 +1,6 @@
 ---
 title: "动态链接"
-tags: [Operating system, Dynamic link, PIC]
-categories: [Operating system]
+tags: [Operating System]
 date: 2022-06-26T19:50:45+08:00
 ---
 

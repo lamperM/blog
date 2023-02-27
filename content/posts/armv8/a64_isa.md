@@ -1,7 +1,6 @@
 ---
 title: "A64 Instruction Set"
-tags: ["armv8", "a64"]
-categories: ["embedded"]
+tags: ["arm64"]
 date: 2022-05-07T21:19:01+08:00
 ---
 

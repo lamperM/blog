@@ -1,7 +1,7 @@
 ---
 title: "Inline in C"
 date: 2022-11-24T01:35:24+08:00
-draft: true
+tags: [c]
 ---
 
 

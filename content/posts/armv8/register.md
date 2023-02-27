@@ -1,7 +1,6 @@
 ---
 title: "ARMv8-A Register"
-tags: ["armv8"]
-categories: ["embedded"]
+tags: ["arm64"]
 date: 2022-05-07T20:19:44+08:00 
 ---
 

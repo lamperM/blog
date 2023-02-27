@@ -1,7 +1,7 @@
 ---
 title: "二级指针操作链表"
 date: 2022-11-20T23:40:30+08:00
-draft: true
+tags: [c]
 ---
 
 问题源于我在知乎刷到的一个回答: [能分享你C指针用得最灵活（飘）的一次吗?](https://www.zhihu.com/question/477832027/answer/2044206446)

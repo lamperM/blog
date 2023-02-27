@@ -1,6 +1,7 @@
 ---
 title: "Useful Shell Script Examples"
 date: 2022-07-20T11:54:13+08:00
+tags: [shell, bash]
 ---
 
 ## 判断执行脚本时带的参数

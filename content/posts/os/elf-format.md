@@ -1,6 +1,7 @@
 ---
 title: "ELF 文件的链接与加载"
 date: 2022-06-20T16:21:27+08:00
+tags: [Operating System]
 ---
 
 ## `ELF` is a file format

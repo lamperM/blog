@@ -1,7 +1,8 @@
 ---
 title: "大小端问题"
 date: 2022-11-17T10:30:35+08:00
-draft: true
+tags: [Operating System]
+---
 
 
 ---
