@@ -5,7 +5,6 @@ tags: [vim]
 ---
 
 
-
 YCM 插件对 python, vim的版本均有要求
 
 ## 下载
@@ -52,3 +51,49 @@ def DownloadClangd( printer ):
   if p.exists( file_name ):
     printer( f'Using cached Clangd: { file_name }' )
 ```
+
+## 配置
+
+YCM 配合一个配置文件`.ycm_c_c++_conf.py`, YCM搜索的位置在vimrc中指定:
+
+```vimrc
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+let g:ycm_global_ycm_extra_conf = "~/.ycm_c_c++_conf.py"
+```
+
+其内容的example:
+
+```py
+import os
+import ycm_core
+
+flags = [ 
+  '-Wall', 
+  '-Wextra',
+#  '-Werror', 
+  '-Wno-long-long',
+#  '-Wno-variadic-macros',
+  '-fexceptions',
+  '-ferror-limit=10000',
+  '-DNDEBUG',
+  '-std=c99',
+  '-xc',
+  '-isystem/usr/include/',
+  ]
+
+SOURCE_EXTENSIONS = [ '.cpp', '.cxx', '.cc', '.c', ]
+
+def FlagsForFile( filename, **kwargs ):
+  return {
+  'flags': flags,
+  'do_cache': True
+  }
+```
+
+
+
+:small_red_triangle_down: 对于C/C++来说, YCM的使用最好配合*compilation database* 来使用, 例如[compiledb](https://github.com/nickdiego/compiledb). 否则, 可能头文件的path识别出问题([stackoverflow](https://stackoverflow.com/questions/64277317/youcompleteme-not-work-properly-for-c-headers.)).
+
+2022年2月13日我使用的compilation database生成工具从`compiledb`换成了`bear`, 因为`bear`更好的支持递归, 即有`make -C`的情况. 
+
+需要的compilation database生成工具介绍: [Compilation database — Sarcasm notebook](https://sarcasm.github.io/notes/dev/compilation-database.html)
