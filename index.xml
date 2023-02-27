@@ -153,7 +153,39 @@ dev dev
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> p&lt;span style="color:#ff79c6">.&lt;/span>exists( file_name ):
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printer( &lt;span style="color:#f1fa8c">f&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;Using cached Clangd: &lt;/span>&lt;span style="color:#f1fa8c">{&lt;/span> file_name &lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;&lt;/span> )
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/vim/ycm-install/ - @2019 Notepadium.</description></item><item><title>常用的 shell 命令</title><link>https://wangloo.github.io/posts/shell/shell-commands/</link><pubDate>Sun, 27 Nov 2022 14:45:58 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-commands/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/shell/shell-commands/ -&lt;blockquote>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="配置">配置&lt;/h2>
+&lt;p>YCM 配合一个配置文件&lt;code>.ycm_c_c++_conf.py&lt;/code>, YCM搜索的位置在vimrc中指定:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-vimrc" data-lang="vimrc">&lt;span style="display:flex;">&lt;span>Plug &lt;span style="color:#f1fa8c">&amp;#39;rdnetto/YCM-Generator&amp;#39;&lt;/span>, { &lt;span style="color:#f1fa8c">&amp;#39;branch&amp;#39;&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#39;stable&amp;#39;&lt;/span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> g:ycm_global_ycm_extra_conf = &lt;span style="color:#f1fa8c">&amp;#34;~/.ycm_c_c++_conf.py&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其内容的example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-py" data-lang="py">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> os
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> ycm_core
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>flags &lt;span style="color:#ff79c6">=&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-Wall&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-Wextra&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># &amp;#39;-Werror&amp;#39;, &lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-Wno-long-long&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># &amp;#39;-Wno-variadic-macros&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-fexceptions&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-ferror-limit=10000&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-DNDEBUG&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-std=c99&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-xc&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-isystem/usr/include/&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>SOURCE_EXTENSIONS &lt;span style="color:#ff79c6">=&lt;/span> [ &lt;span style="color:#f1fa8c">&amp;#39;.cpp&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;.cxx&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;.cc&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;.c&amp;#39;&lt;/span>, ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">FlagsForFile&lt;/span>( filename, &lt;span style="color:#ff79c6">**&lt;/span>kwargs ):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;flags&amp;#39;&lt;/span>: flags,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;do_cache&amp;#39;&lt;/span>: &lt;span style="color:#ff79c6">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>🔻 对于C/C++来说, YCM的使用最好配合&lt;em>compilation database&lt;/em> 来使用, 例如&lt;a href="https://github.com/nickdiego/compiledb">compiledb&lt;/a>. 否则, 可能头文件的path识别出问题(&lt;a href="https://stackoverflow.com/questions/64277317/youcompleteme-not-work-properly-for-c-headers.">stackoverflow&lt;/a>).&lt;/p>
+&lt;p>2022年2月13日我使用的compilation database生成工具从&lt;code>compiledb&lt;/code>换成了&lt;code>bear&lt;/code>, 因为&lt;code>bear&lt;/code>更好的支持递归, 即有&lt;code>make -C&lt;/code>的情况.&lt;/p>
+&lt;p>需要的compilation database生成工具介绍: &lt;a href="https://sarcasm.github.io/notes/dev/compilation-database.html">Compilation database — Sarcasm notebook&lt;/a>&lt;/p>
+- https://wangloo.github.io/posts/vim/ycm-install/ - @2019 Notepadium.</description></item><item><title>常用的 shell 命令</title><link>https://wangloo.github.io/posts/shell/shell-commands/</link><pubDate>Sun, 27 Nov 2022 14:45:58 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-commands/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/shell/shell-commands/ -&lt;blockquote>
 &lt;p>我使用的 shell 是 Bash&lt;/p>
 &lt;/blockquote>
 &lt;h3 id="mount-相关">mount 相关&lt;/h3>

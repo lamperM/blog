@@ -1175,6 +1175,28 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;li>&lt;code>d0&lt;/code> &amp;ndash; delete to beginning of the line&lt;/li>
 &lt;li>&lt;code>c-u&lt;/code> in &lt;strong>insert mode&lt;/strong>. Same as bash command shortkeys, see &lt;a href="https://ss64.com/bash/syntax-keyboard.html">here&lt;/a>&lt;/li>
 &lt;/ol>
+&lt;p> &lt;/p>
+&lt;h2 id="文件恢复swp文件">文件恢复/swp文件&lt;/h2>
+&lt;p>正确对待swp文件的姿势:&lt;/p>
+&lt;ol>
+&lt;li>vim 打开原文件, 此时会提示&lt;code>Found a swap file the name .xxx.swp&lt;/code>, 显然选择&lt;code>(R)ecover&lt;/code> 来恢复未保存的内容.&lt;/li>
+&lt;li>使用&lt;code>:w&lt;/code>将恢复的内容保存下来&lt;/li>
+&lt;li>但是此时原本的swp文件还是存在, 此时我们执行&lt;code>:e&lt;/code>刷新一下当前bufffer, 仍然会提示恢复的选项, 但此时文件内容已经恢复, 选择&lt;code>(D)elete&lt;/code> 就可将对应的swp文件删除了&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>删除当前目录中所有swp file的脚本?&lt;/p>
+&lt;p>需要确保:&lt;/p>
+&lt;ul>
+&lt;li>所有文件内容已恢复&lt;/li>
+&lt;li>当前窗口或者其他窗口没有vim正在打开文件(会生成swp file)&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>find . -type f -name &lt;span style="color:#f1fa8c">&amp;#34;.*.sw[klmnop]&amp;#34;&lt;/span> -delete
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/blockquote>
+&lt;p>&lt;a href="https://www.cs.longwood.edu/VimSwap.html">How to handle swapfiles in Vim (longwood.edu)&lt;/a>&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="debug-vim-key-mapping">Debug VIM key mapping&lt;/h2>
+&lt;p>&lt;a href="https://vi.stackexchange.com/a/7723/43494">https://vi.stackexchange.com/a/7723/43494&lt;/a>&lt;/p>
+&lt;p> &lt;/p>
 &lt;h2 id="如何同步-vim-dotfiles">如何同步 VIM Dotfiles&lt;/h2>
 &lt;p>vim 的 dotfiles 主要包含&lt;code>.vimrc&lt;/code>和&lt;code>.vim/&lt;/code>中的插件.&lt;/p>
 &lt;ul>
