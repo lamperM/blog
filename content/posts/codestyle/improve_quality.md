@@ -1,5 +1,5 @@
 ---
-title: "Improving the quality of C code"
+title: "写高质量的C语言工程的技巧"
 description: Some useful rules to improve programming quality of C.
 tags: [c]
 date: 2022-06-14T17:59:22+08:00
@@ -27,7 +27,7 @@ When using a barebones embedded OS, you absolutely need to tightly manage your m
 > 如果你是一个内核程序员, 则必须手动的释放. 不用怀疑.
 
 &nbsp;
-### 尽可能在创建变量时赋初值
+## 尽可能在创建变量时赋初值
 
 放置某些变量创建后是 `magic value`. 而使用这些变量可能不会立马导致错误, 但是这是一个隐患.
 
@@ -37,7 +37,8 @@ When using a barebones embedded OS, you absolutely need to tightly manage your m
 
 
 &nbsp;
-### 使用`#define`, `enum`
+
+## 使用`#define`, `enum`
 
 对于代码在不同地方使用的同一个值, 应使用`#define`来声明使得代码**maintainable**.
 
@@ -51,9 +52,9 @@ When using a barebones embedded OS, you absolutely need to tightly manage your m
 
 
 &nbsp;
-### 重定义一套自己的类型
+## 重定义一套自己的类型
 
-在开发大项目时, 需要考虑可移植性的情况下, 最好利用`typedef`对类型进行重定义.
+在开发*大项目*时, 需要考虑可移植性的情况下, 最好利用`typedef`对类型进行重定义.
 ```c
 #if SYSTEM1
     typedef  int  INT32;
@@ -99,6 +100,69 @@ int mask = ~0;
 > 注意, `goto`出现的场景其实很受限. Never use a backward `goto` or jump into control statements.
 
 &nbsp;
+
+## 定义合理, 正确的结构体
+
+结构体是C语言编程应用中常用的数据结构, 关于结构体也有许多要注意的点.
+
+### #1 Flexible Array Member
+
+C99开始支持*Flexible Array Member*. 且看我[lstring]()库的结构体定义:
+
+```c
+struct str {
+    int length;
+    int size;
+    char data[];   // Flexible array member - C99 only
+};
+```
+
+对于这种不定长的数组元素,  我之前都是定义一个指针, 占用一个`sizeof(char *)`的空间. 而Flexible Array Member本身不占用空间. 需要在malloc时为他单独声明空间. 
+
+```c
+int n = 100
+struct str *s = malloc(sizeof(struct str) + sizeof(char[n]));
+```
+
+> 这里也有一个小trick, 使用`sizeof(char[n])` 比 `sizeof(char) * n` 更简洁!
+
+### # 2 Padding and Packed
+
+有关结构体的大小, 和地址对齐的问题. 假设我有一个结构体如下:
+
+```c
+struct mystruct_A
+{
+   char a; int b; char c;
+} x;
+```
+
+Padding是编译器对结构体**默认**做的事情. 它会在成员之间插入一些 gap 来保证地址对齐:
+
+```c
+struct mystruct_A {
+    char a;
+    char gap_0[3]; /* inserted by compiler: for alignment of b */
+    int b;         /* int 在32位上其地址是4字节对齐的 */
+    char c;
+    char gap_1[3]; /* -"-: for alignment of the whole struct in an array */
+} x;
+```
+
+> 除了保证每个成员的地址是对齐的, **整个结构体**的地址也是按照其最大的成员类型来对齐, 即对齐到`int`(4字节).
+
+如果你**不想要这些 gap**, 那么可以对结构体声明使用 `__attribute__((__packed__))`关键字. 整个结构体大小仅为6个字节.
+
+```c
+struct __attribute__((__packed__)) mystruct_A {
+    char a;
+    int b;
+    char c;
+};
+```
+
+&nbsp;
+
 ## 永远为你的函数设置error return value
 
 一旦你的函数可能被其他人调用, 那么养成设置return value的习惯. 即便你现在的实现

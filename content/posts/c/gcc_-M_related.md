@@ -43,7 +43,10 @@ tmp.o: /home/wanglu/demo/tmp.c /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /home/wanglu/demo/tmp.h
 ```
+> Note: `-M` and `-MM` 都隐含 `-E`. 也就是如果后面有生成目标文件的规则, 不会执行. 
+
 ## -MM
+
 Like `-M` but do NOT output system header files.  
 
 **Little Demo**  
@@ -71,7 +74,10 @@ Run `gcc -MD tmp.c`. File `tmp.d` will be created and filled with all dependecie
 -rw-rw-r--  1 wanglu wanglu    38 4月  26 19:47 tmp.h
 ```
 
+> Note: `-MD` and `-MMD` 不隐含 `-E`.
+
 ## -MMD
+
 `-MMD` is same as `-MM -MF <file>`. Also named on object file but replacing `.o` with `.d`.  
 
 **Little Demo**  
