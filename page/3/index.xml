@@ -1,4 +1,4 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GNU C内联汇编学习笔记</title><link>https://wangloo.github.io/posts/inline-asm/</link><pubDate>Sat, 24 Sep 2022 16:48:58 +0800</pubDate><guid>https://wangloo.github.io/posts/inline-asm/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/inline-asm/ -&lt;h3 id="语句结构">语句结构&lt;/h3>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GNU C内联汇编学习笔记</title><link>https://wangloo.github.io/posts/c/inline-asm/</link><pubDate>Sat, 24 Sep 2022 16:48:58 +0800</pubDate><guid>https://wangloo.github.io/posts/c/inline-asm/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/c/inline-asm/ -&lt;h3 id="语句结构">语句结构&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">asm&lt;/span> &lt;span style="color:#ff79c6">asm&lt;/span>&lt;span style="color:#ff79c6">-&lt;/span>qualifiers ( &lt;span style="color:#8be9fd;font-style:italic">AssemblerTemplate&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : &lt;span style="color:#8be9fd;font-style:italic">OutputOperands&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : &lt;span style="color:#8be9fd;font-style:italic">InputOperands&lt;/span>
@@ -23,6 +23,9 @@
 &lt;p> &lt;/p>
 &lt;h3 id="param-1-assemblertemplate">Param #1: AssemblerTemplate&lt;/h3>
 &lt;p>多条语句可以放在一个asm字符串中, 但是更常见的是每条汇编语句使用一个字符串, 并在结束时使用换行符和制表符(&lt;code>\n&lt;/code>, &lt;code>\t&lt;/code>)来表示换行.&lt;/p>
+&lt;blockquote>
+&lt;p>貌似对于 arm 汇编, 只用 &lt;code>\n&lt;/code> 也OK?&lt;/p>
+&lt;/blockquote>
 &lt;p> &lt;/p>
 &lt;h3 id="param-2-outputoperands">Param #2: OutputOperands&lt;/h3>
 &lt;p>多个 OutputOperands 之间使用&lt;code>,&lt;/code>隔开, 每个 OutputOperands 的格式如下:&lt;/p>
@@ -48,11 +51,17 @@ m 内存
 &lt;h3 id="param-4-clobbers">Param #4: Clobbers&lt;/h3>
 &lt;p>每个 clobber 都是用双引号括起来, 并用逗号分隔的字符串常量.&lt;/p>
 &lt;p>常用的 clobber 参数:&lt;/p>
-&lt;pre tabindex="0">&lt;code>&amp;#34;memory&amp;#34;
-告诉编译器, 这段内联汇编代码对输入和输出操作数中列出的项以外的内存读取或写入操作(例如，访问输入参数之一指向的内存). 为确保内存包含正确的值，GCC可能需要在执行ASM之前将特定寄存器值刷新到内存。
-此外, 阻止编译器越过该 ASM 语句进行 reorder, 形成针对编译器的 memory barrier.
-注意, 此 clobber 不会阻止处理器在ASM语句之后执行推测性读取。为了防止出现这种情况，您需要特定于处理器的防护指令。
-&lt;/code>&lt;/pre>&lt;p> &lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&amp;ldquo;memory&amp;rdquo;&lt;br>
+告诉编译器, 这段内联汇编代码对输入和输出操作数中列出的项以外的内存读取或写入操作(例如，访问输入参数之一指向的内存). 为确保内存包含正确的值，GCC可能需要在执行ASM之前将特定寄存器值刷新到内存。此外, 阻止编译器越过该 ASM 语句进行 reorder, 形成针对编译器的 memory barrier. 注意, 此 clobber 不会阻止处理器在ASM语句之后执行推测性读取。为了防止出现这种情况，您需要特定于处理器的防护指令。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&amp;ldquo;cc&amp;rdquo;&lt;br>
+This stands for &amp;ldquo;condition codes&amp;rdquo;. Since the add instruction will affect the carry flag amongst other things, we need to tell gcc about it. Otherwise it might want to split a test-and-branch around our code. If it did so, the branch might go the wrong way due to the condition codes being corrupted. Basically, any inline asm that does arithmetic should explicitly clobber the flags like this.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
 &lt;h3 id="param-5-gotolabels">Param #5: GotoLabels&lt;/h3>
 &lt;p>尽量不使用, 可以在ASM的内部直接定义 label&lt;/p>
 &lt;p>TODO&lt;/p>
@@ -91,7 +100,7 @@ m 内存
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> );
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="reference">Reference&lt;/h2>
 &lt;p>&lt;a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Extended-Asm">Extended Asm (Using the GNU Compiler Collection (GCC))&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/inline-asm/ - @2019 Notepadium.</description></item><item><title>GICv3 介绍</title><link>https://wangloo.github.io/posts/armv8/gicv3/</link><pubDate>Sat, 10 Sep 2022 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/gicv3/ -&lt;h1 id="gicv3generic-interrupt-controller---version-3">GICV3(Generic Interrupt Controller - version 3)&lt;/h1>
+- https://wangloo.github.io/posts/c/inline-asm/ - @2019 Notepadium.</description></item><item><title>GICv3 介绍</title><link>https://wangloo.github.io/posts/armv8/gicv3/</link><pubDate>Sat, 10 Sep 2022 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/gicv3/ -&lt;h1 id="gicv3generic-interrupt-controller---version-3">GICV3(Generic Interrupt Controller - version 3)&lt;/h1>
 &lt;h2 id="关于gic">关于GIC&lt;/h2>
 &lt;p>GIC即中断控制器, 负责管理中断的接收, 屏蔽, 路由等相关任务, 并向系统程序员提供配置的接口.&lt;/p>
 &lt;p>GIC与异常模型协作完成中断的整个生命周期, GIC主要负责&lt;code>中断源-产生IRQ/FIQ信号&lt;/code>这段路, 关于处理IRQ/FIQ则是由CPU内部的&lt;em>异常模型&lt;/em>来完成.&lt;/p>
