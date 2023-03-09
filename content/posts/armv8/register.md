@@ -1,6 +1,6 @@
 ---
-title: "ARMv8-A Register"
-tags: ["arm64"]
+title: "ARMv8-A 寄存器"
+tags: ["armv8"]
 date: 2022-05-07T20:19:44+08:00 
 ---
 

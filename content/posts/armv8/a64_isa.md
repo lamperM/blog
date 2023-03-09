@@ -1,6 +1,6 @@
 ---
-title: "A64 Instruction Set"
-tags: ["arm64"]
+title: "A64 指令集"
+tags: ["armv8"]
 date: 2022-05-07T21:19:01+08:00
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "基于ARM64实现setjmp/longjmp"
 date: 2022-11-01T23:38:54+08:00
-tags: [arm64]
+tags: [armv8]
 ---
 
 

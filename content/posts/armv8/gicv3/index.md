@@ -1,6 +1,6 @@
 ---
-title: "GICv3 - for ARMV8"
-tags: ["arm64", "gic"]
+title: "GICv3 介绍"
+tags: ["armv8"]
 date: 2022-09-10T21:51:49+08:00
 ---
 

@@ -1,7 +1,6 @@
 ---
-title: "AArch32/64 Exception Return"
-tags: ["armv8", "exception"]
-categories: ["embedded"]
+title: "AArch64/32 异常返回过程"
+tags: ["armv8"]
 date: 2022-09-24T21:19:01+08:00
 ---
 
