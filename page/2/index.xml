@@ -1,4 +1,6 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Inline in C</title><link>https://wangloo.github.io/posts/c/inline/</link><pubDate>Thu, 24 Nov 2022 01:35:24 +0800</pubDate><guid>https://wangloo.github.io/posts/c/inline/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/c/inline/ -&lt;p>TODO: inline 的发展历程: &lt;a href="https://gustedt.wordpress.com/2010/11/29/myth-and-reality-about-inline-in-c99/">Myth and reality about inline in C99 – Jens Gustedt&amp;rsquo;s Blog (wordpress.com)&lt;/a>&lt;/p>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>C语言工具宏</title><link>https://wangloo.github.io/posts/c/c-macros/</link><pubDate>Thu, 24 Nov 2022 01:35:24 +0800</pubDate><guid>https://wangloo.github.io/posts/c/c-macros/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/c/c-macros/ -&lt;h3 id="计算数组元素的个数">计算数组元素的个数&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define nelem(array) sizeof(array)/sizeof(array[0])
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/c/c-macros/ - @2019 Notepadium.</description></item><item><title>Inline in C</title><link>https://wangloo.github.io/posts/c/inline/</link><pubDate>Thu, 24 Nov 2022 01:35:24 +0800</pubDate><guid>https://wangloo.github.io/posts/c/inline/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/c/inline/ -&lt;p>TODO: inline 的发展历程: &lt;a href="https://gustedt.wordpress.com/2010/11/29/myth-and-reality-about-inline-in-c99/">Myth and reality about inline in C99 – Jens Gustedt&amp;rsquo;s Blog (wordpress.com)&lt;/a>&lt;/p>
 &lt;h2 id="gnu89">GNU89:&lt;/h2>
 &lt;p>函数的&lt;strong>实现&lt;/strong>之前添加不同的关键字:&lt;/p>
 &lt;ul>
@@ -414,7 +416,7 @@ start addr of `a` start addr of `a`
 &lt;h2 id="其他拓展功能">其他拓展功能&lt;/h2>
 &lt;p>back trace&lt;/p>
 &lt;p>性能分析&lt;/p>
-- https://wangloo.github.io/posts/os/monitor/ - @2019 Notepadium.</description></item><item><title>ARMv8-A MMU 介绍</title><link>https://wangloo.github.io/posts/armv8/mmu/</link><pubDate>Thu, 29 Sep 2022 08:01:33 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/mmu/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/mmu/ -&lt;h2 id="introduction">Introduction&lt;/h2>
+- https://wangloo.github.io/posts/os/monitor/ - @2019 Notepadium.</description></item><item><title>ARMv8-A MMU介绍</title><link>https://wangloo.github.io/posts/armv8/mmu/</link><pubDate>Thu, 29 Sep 2022 08:01:33 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/mmu/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/mmu/ -&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>MMU: 专用于将虚拟地址转换为物理地址. 通常配合分页机制来工作.&lt;/p>
 &lt;p>页表: 页表中的表项包含提供虚拟地址和物理地址之间的映射.&lt;/p>
 &lt;p>MMU就是直接访问页表, 并且通过将频繁使用的映射缓存到TLB中.&lt;/p>
@@ -529,329 +531,60 @@ start addr of `a` start addr of `a`
 &lt;p>存储页表的基地址&lt;/p>
 &lt;h2 id="aarch32-虚拟内存系统">AArch32 虚拟内存系统&lt;/h2>
 &lt;p>ARMv8 AArch32 的虚拟内存系统向后兼容ARMv7, 与ARMv7的基本一致.&lt;/p>
-- https://wangloo.github.io/posts/armv8/mmu/ - @2019 Notepadium.</description></item><item><title>GICv3 - for ARMV8</title><link>https://wangloo.github.io/posts/armv8/gicv3/</link><pubDate>Sat, 10 Sep 2022 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/gicv3/ -&lt;h1 id="gicv3generic-interrupt-controller---version-3">GICV3(Generic Interrupt Controller - version 3)&lt;/h1>
-&lt;h2 id="关于gic">关于GIC&lt;/h2>
-&lt;p>GIC即中断控制器, 负责管理中断的接收, 屏蔽, 路由等相关任务, 并向系统程序员提供配置的接口.&lt;/p>
-&lt;p>GIC与异常模型协作完成中断的整个生命周期, GIC主要负责&lt;code>中断源-产生IRQ/FIQ信号&lt;/code>这段路, 关于处理IRQ/FIQ则是由CPU内部的&lt;em>异常模型&lt;/em>来完成.&lt;/p>
-&lt;h2 id="对比-gicv2">对比 GICv2&lt;/h2>
-&lt;ul>
-&lt;li>支持更多的处理器, 用&lt;code>affinity routing&lt;/code> 方案来做中断路由.&lt;/li>
-&lt;li>支持中断分组, 为了配合ARMv8的异常等级模型&lt;/li>
-&lt;li>新增中断类型: SGI, 软件生成中断&lt;/li>
-&lt;li>新增中断类型: SPI, Shared Peripheral Interrupts&lt;/li>
-&lt;li>对于CPU interface的寄存器, 可直接使用系统寄存器接口(system register interface)来访问, 比memory-mapped的方式快.&lt;/li>
-&lt;li>ITS, Interrupt Translation Service 暂不介绍&lt;/li>
-&lt;li>LPI, Locality-specific Peripheral Interrupts . 暂不介绍&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>GICv3支持ARMv8-A或ARMv8-R系列处理器, 但没有必然的绑定关系. ARMv8-A也可以使用GICv2.&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="中断类型">中断类型&lt;/h2>
-&lt;h3 id="locality-specific-peripheral-interrupt-lpi">Locality-specific Peripheral Interrupt (LPI)&lt;/h3>
-&lt;p>LPIs are always &lt;a href="https://en.wikipedia.org/wiki/Message_Signaled_Interrupts">message-based interrupts&lt;/a> interrupts. 这里不做介绍.&lt;a href="https://en.wikipedia.org/wiki/Message_Signaled_Interrupts">wiki&lt;/a>&lt;/p>
-&lt;h3 id="private-peripheral-interrupt-ppi">Private Peripheral Interrupt (PPI)&lt;/h3>
-&lt;p>PPI是路由到&lt;strong>单个CPU&lt;/strong>的外设中断, 不同的CPU可以使用相同的中断号. 例如, 所有CPU都可以使用中断号16表示私有的定时器中断.&lt;/p>
-&lt;h3 id="shared-peripheral-interrupt-spi">Shared Peripheral Interrupt (SPI)&lt;/h3>
-&lt;p>SPI是可路由到&lt;strong>一组CPU&lt;/strong>的外设中断, Distributor 负责SPI路由.&lt;/p>
-&lt;h3 id="software-generated-interrupt-sgi">Software Generated Interrupt (SGI)&lt;/h3>
-&lt;p>SGI是由某个CPU产生, 路由到系统中的一个或多个CPU, 通常用于处理器间通信.&lt;/p>
-&lt;h2 id="gicv3-的组件">GICv3 的组件&lt;/h2>
-&lt;p>GICv3架构由以下逻辑组件构成:&lt;/p>
-&lt;ul>
-&lt;li>A Distributor&lt;/li>
-&lt;li>A Redistributor for each CPU&lt;/li>
-&lt;li>A CPU interface for each CPU&lt;/li>
-&lt;li>Interrupt Translation Service components (ITS). 可选, 暂不介绍&lt;/li>
-&lt;/ul>
-&lt;p>The Distributor, Redistributor 一起组成了 &lt;em>IRI(Interrupt Routing Infrastructure)&lt;/em>.&lt;/p>
-&lt;p>&lt;img src="./IRI.png" alt="iri">{width=&amp;ldquo;10px&amp;rdquo;}&lt;/p>
-&lt;h3 id="distributor">Distributor&lt;/h3>
-&lt;p>控制SPI和SGI的路由. 对于 SPI, 提供了一下接口:&lt;/p>
-&lt;ul>
-&lt;li>启动/禁用 SPI&lt;/li>
-&lt;li>设置 SPI 的优先级&lt;/li>
-&lt;li>配置对于 SPI 的路由&lt;/li>
-&lt;li>设置 SPI 的触发方式&lt;/li>
-&lt;li>生成 message-based SPI&lt;/li>
-&lt;li>为每个 SPI 分组&lt;/li>
-&lt;li>控制 SPI 的 &lt;code>pending and active&lt;/code> 状态&lt;/li>
-&lt;/ul>
-&lt;p>对于&lt;code>Distributor&lt;/code>的大部分配置通过&lt;code>GICD_CTLR&lt;/code>实现. 包括:&lt;/p>
-&lt;ul>
-&lt;li>启用 Affinity routing&lt;/li>
-&lt;li>禁用安全性&lt;/li>
-&lt;li>中断分组的配置.&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>关于Distributor 寄存器都含有 &lt;code>GICD_&lt;/code> 前缀, 通过 &lt;code>memory-mapped&lt;/code> 方式访问.&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="redistributor">Redistributor&lt;/h3>
-&lt;ul>
-&lt;li>启动/禁用 SGI 和 PPI&lt;/li>
-&lt;li>设置 SGI 和 PPI 的优先级&lt;/li>
-&lt;li>设置 SGI 和 PPI 的触发方式&lt;/li>
-&lt;li>为 SGI 和 PPI 分配组&lt;/li>
-&lt;li>控制 SGI 和 PPI 的 &lt;code>pending&lt;/code> 状态和 &lt;code>active&lt;/code> 状态&lt;/li>
-&lt;li>与之链接的 CPU 的电源管理.&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>关于Redistributor 寄存器都含有 &lt;code>GICR_&lt;/code> 前缀, 通过 &lt;code>memory-mapped&lt;/code> 方式访问.&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="cpu-interface">CPU interface&lt;/h3>
-&lt;ul>
-&lt;li>Acknowledge 一个中断&lt;/li>
-&lt;li>执行 End Of Interrupt&lt;/li>
-&lt;li>Deactivate 一个中断&lt;/li>
-&lt;li>设置 CPU 的优先级Mask&lt;/li>
-&lt;li>配置中断抢占&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>关于 CPU interface 寄存器是以 &lt;code>ICC_&lt;/code> 为前缀, 还有 &lt;code>ICV&lt;/code> for vitual interrupt, &lt;code>ICH&lt;/code> for hypervisor configuration.&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="中断的状态转换">中断的状态转换&lt;/h2>
-&lt;p>&lt;img src="./int-lifestyle.png" alt="">&lt;/p>
+- https://wangloo.github.io/posts/armv8/mmu/ - @2019 Notepadium.</description></item><item><title>AArch64/32 异常返回过程</title><link>https://wangloo.github.io/posts/armv8/exception_return/</link><pubDate>Sat, 24 Sep 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/exception_return/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/exception_return/ -&lt;h2 id="armv8-异常返回指令">ARMv8 异常返回指令&lt;/h2>
+&lt;p>当异常处理程序结束后，需要执行&lt;em>异常返回指令&lt;/em>恢复进入异常之前的状态.&lt;/p>
+&lt;p>具体要做的事情包括:&lt;/p>
 &lt;ol>
-&lt;li>生成中断. 中断可能来自外部信号, 或者软件生成(SGI)&lt;/li>
-&lt;li>Distribute. IRI 负责中断的分组, 优先级屏蔽等. 将合适的中断发送到CPU Interface.&lt;/li>
-&lt;li>Deliver. CPU interface 将中断发送到连接的CPU.&lt;/li>
-&lt;li>Activate. CPU读取IAR寄存器, 即发送ACK. 该中断的状态转为active.&lt;/li>
-&lt;li>Priority drop. 处理程序结束之后, 写&lt;code>ICC_EOIR&lt;/code>寄存器, end of interrupt&lt;/li>
-&lt;li>Deactivation. 写&lt;code>ICC_DIR&lt;/code>寄存器清除中断的active标志位. 一般来说, end of interrupt 和 deactivation 可配置成同时发生.&lt;/li>
-&lt;/ol>
-&lt;blockquote>
-&lt;p>&lt;code>ICC_CTLR_ELx.EOImode&lt;/code> 位控制是否 end of interrupt 同时导致 deactivation.&lt;/p>
-&lt;p>❓ EOI 和 deactivated 分开进行暂时还不知道应用场景.&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="中断id-intid">中断ID: INTID&lt;/h2>
-&lt;p>INTID 是中断的标识符, 它的最大值是&lt;em>实现定义&lt;/em>的, 可以在&lt;code>GICD_TYPER.IDbits&lt;/code>中读取。&lt;/p>
-&lt;p>INTID按照中断类型分类的, 对照表如下:&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>INTID&lt;/th>
-&lt;th>中断类型&lt;/th>
-&lt;th>Note&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>0-15&lt;/td>
-&lt;td>SGI&lt;/td>
-&lt;td>本地的, 不同CPU可使用同一中断号代表不同中断&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>16-31&lt;/td>
-&lt;td>PPI&lt;/td>
-&lt;td>本地的&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>32-1019&lt;/td>
-&lt;td>SPI&lt;/td>
-&lt;td>全局的&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>1020-1023&lt;/td>
-&lt;td>特殊中断&lt;/td>
-&lt;td>&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>1056-1119&lt;/td>
-&lt;td>扩展的PPI&lt;/td>
-&lt;td>本地的&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>4096 – 5119&lt;/td>
-&lt;td>扩展的SPI&lt;/td>
-&lt;td>全局的&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h3 id="特殊中断号">特殊中断号&lt;/h3>
-&lt;blockquote>
-&lt;p>These INTIDs do not require an end of interrupt or deactivation.&lt;/p>
-&lt;/blockquote>
-&lt;p>1020:&lt;/p>
-&lt;p>1021:&lt;/p>
-&lt;p>1022:&lt;/p>
-&lt;p>1023: 读&lt;code>ICC_IAR1_EL1&lt;/code> 返回该值表明当前的CPU上没有待处理的中断.&lt;/p>
-&lt;h2 id="中断分组">中断分组&lt;/h2>
-&lt;p>为了配合 ARMv8 的异常模型和安全模型, GICv3 支持为每个中断配置不同的组. 不同组的中断只能路由到特定的异常等级和安全状态进行处理.&lt;/p>
-&lt;p>共包含三个分组: Gourp 0, Secure Group 1, Non-secure Group 1.&lt;/p>
-&lt;ul>
-&lt;li>Group 0的中断需要在EL3 处理.&lt;/li>
-&lt;li>Secure Group1 的中断需要在 Secure EL1 或者 Secure EL2(如果启用了虚拟化)处理.&lt;/li>
-&lt;li>Non-secure Group 1 的中断需要在 Non-secure EL2 or Non-secure EL1 if not using virtualization&lt;/li>
-&lt;/ul>
-&lt;p>同时, 中断位于哪个组也决定了其触发的是FIQ还是IRQ. 对于 AArch64 来说, 对应关系可见下表:&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>当前异常等级&lt;/th>
-&lt;th>Group 0 的中断&lt;/th>
-&lt;th>Secure Group 1 的中断&lt;/th>
-&lt;th>Non-secure Group 1&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>Secure EL1/0/2&lt;/td>
-&lt;td>FIQ&lt;/td>
-&lt;td>IRQ&lt;/td>
-&lt;td>FIQ&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Non-secure EL1/0/2&lt;/td>
-&lt;td>FIQ&lt;/td>
-&lt;td>FIQ&lt;/td>
-&lt;td>IRQ&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>EL3&lt;/td>
-&lt;td>FIQ&lt;/td>
-&lt;td>FIQ&lt;/td>
-&lt;td>FIQ&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;ul>
-&lt;li>Group 0 的中断, 需要在EL3处理, 其优先级较高, 所以均属于 FIQ&lt;/li>
-&lt;/ul>
-&lt;h2 id="中断路由">中断路由&lt;/h2>
-&lt;ul>
 &lt;li>
-&lt;p>PPIs are routed directly from the source to the local Redistributor .&lt;/p>
+&lt;p>恢复发生异常前的PC&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>SPIs are routed from the source through the Distributor to the target Redistributor and the associated CPU interface.&lt;/p>
+&lt;p>从SPSR中恢复PSTATE寄存器(现场)&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>异常返回的指令根据当前&lt;strong>执行状态&lt;/strong>为AArch32还是AArch64有所不同.&lt;/p>
+&lt;h3 id="aarch32">AArch32&lt;/h3>
+&lt;p>AArch32的异常返回指令在不同的&lt;strong>模式&lt;/strong>下也有所不同:&lt;/p>
+&lt;p>&lt;strong>若异常是在Hyp模式下处理:&lt;/strong> 仅可执行&lt;code>ERET&lt;/code>指令从异常返回.&lt;/p>
+&lt;p>&lt;strong>若异常是在其他模式下处理&lt;/strong>, AArch32提供了以下的异常返回指令:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>ERET&lt;/code> 指令&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>SGIs are generated by software through the CPU interface and Redistributor. They are then routed through the Distributor to one or more target Redistributors and the associated CPU interfaces&lt;/p>
+&lt;p>使用带S后缀的数据处理指令直接操作PC(例如, &lt;code>MOVS, PC, LR&lt;/code>), 恢复PSTATE&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>RFE 指令: &lt;code>RFE &amp;lt;Rn&amp;gt;&lt;/code>. 从基址寄存器&lt;!-- raw HTML omitted -->指向的地址依次加载PC和PSTATE&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>LDM 指令: &lt;code>LDM &amp;lt;Rn&amp;gt; {pc..}&lt;/code>. 若目标寄存器中包含PC, 则会同时恢复PSTATE&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h3 id="what-is-affinity-routing">What is Affinity Routing?&lt;/h3>
-&lt;p>Affinity routing 是一种基于地址的标识多个CPU的方法, 用于中断的路由. Affinity value 由4个8bit字段组成, 结构是&lt;code>aff3.aff2.aff1.aff0&lt;/code>.&lt;/p>
-&lt;p>由于 PPI 的中断源是直连 Redistributor 的, 所以仅 SPI 和 SGI 可以使用 Affinity routing.&lt;/p>
-&lt;ul>
-&lt;li>对于 SPI, 目标CPU的 affinity value 通过&lt;code>GICD_IROUTER&amp;lt;n&amp;gt;&lt;/code> 设置.&lt;/li>
-&lt;li>对于 SGI, 在生成时即可同时配置, 详见 &lt;code>ICC_SGI0R_EL1&lt;/code> 和 &lt;code>ICC_SGI1R_EL1&lt;/code>.&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>Aff3.Aff2.Aff1.Aff0 与 Aff3.Aff2.Aff2.TargetList&lt;/p>
-&lt;p>对于SPI, 目标的CPU只能是一个, 故&lt;code>Aff0&lt;/code>表示该CPU的ID. 而SGI可以配置同时发给多个CPU, 所以&lt;code>TargetList&lt;/code>是基于位操作的, 每个位表示一个CPU.&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="编程指导">编程指导&lt;/h2>
-&lt;h3 id="初始化">初始化&lt;/h3>
-&lt;p>由于 &lt;em>Distributor&lt;/em> 整个系统共享的, 所以必须在其他核启动之前, 由主核完成初始化. 然后当所有核都启动后, 各自完成各自 &lt;em>Redistributor&lt;/em> 和 &lt;em>CPU interface&lt;/em> 的初始化工作.&lt;/p>
-- https://wangloo.github.io/posts/armv8/gicv3/ - @2019 Notepadium.</description></item><item><title>Useful Shell Script Examples</title><link>https://wangloo.github.io/posts/shell/shell-script/</link><pubDate>Wed, 20 Jul 2022 11:54:13 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-script/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/shell/shell-script/ -&lt;h2 id="判断执行脚本时带的参数">判断执行脚本时带的参数&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$#&lt;/span> -ne &lt;span style="color:#bd93f9">1&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;ONE parameter is needed&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">exit&lt;/span> -1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">fi&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$1&lt;/span> &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#f1fa8c">&amp;#39;build&amp;#39;&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># do something&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">elif&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$1&lt;/span> &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#f1fa8c">&amp;#39;run&amp;#39;&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># do something&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">elif&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$1&lt;/span> &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#f1fa8c">&amp;#39;gdb&amp;#39;&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># do something&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">else&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Not supported command&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">fi&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
-&lt;h2 id="自动拷贝文件到sd-card">自动拷贝文件到SD Card&lt;/h2>
-&lt;blockquote>
-&lt;p>TODO&lt;/p>
+&lt;h3 id="aarch64">AArch64&lt;/h3>
+&lt;p>AArch64下&lt;strong>统一使用&lt;/strong> &lt;code>ERET&lt;/code> 指令进行异常返回.&lt;/p>
+&lt;h3 id="指令格式及用法参考">指令格式及用法参考&lt;/h3>
+&lt;h4 id="eret">ERET&lt;/h4>
+&lt;p>ERET指令完成了:&lt;/p>
 &lt;ol>
-&lt;li>添加进度条&lt;/li>
+&lt;li>
+&lt;p>从ELR_ELx中恢复PC指针&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>从SPSR_ELx中恢复PSTATE寄存器的状态.&lt;/p>
+&lt;/li>
 &lt;/ol>
-&lt;/blockquote>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#!/bin/bash
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">sd_path&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#ff79c6">$(&lt;/span>find /media/&lt;span style="color:#8be9fd;font-style:italic">$USER&lt;/span> -maxdepth &lt;span style="color:#bd93f9">1&lt;/span> -type d -name &lt;span style="color:#f1fa8c">&amp;#34;*-*&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">while&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> ! -d &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">sd_path&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">do&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sleep &lt;span style="color:#bd93f9">1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;waiting for inserting SD-Card&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">done&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;SD-Card is inserted&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cp ./output/kernel/kernel.bin &lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">sd_path&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Copy completely&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
-&lt;h2 id="获取所有文件信息可递归进入子目录">获取所有文件信息(可递归进入子目录)&lt;/h2>
-&lt;p>获取&lt;code>dir&lt;/code>路径下的所有文件的信息, 这里获取的是文件的&lt;strong>完整路径&lt;/strong>.&lt;/p>
-&lt;blockquote>
-&lt;p>TODO&lt;/p>
-&lt;ol>
-&lt;li>操作数组下标的方式可能有待改进? &lt;code>filenum&lt;/code>感觉没必要, 暂时还不会改&lt;/li>
-&lt;li>通过拼接获得文件信息(路径)的方式也有点怪异&lt;/li>
-&lt;/ol>
-&lt;/blockquote>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">dir&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>./
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">files&lt;/span>&lt;span style="color:#ff79c6">=()&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">filenum&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">function&lt;/span> getfiles&lt;span style="color:#ff79c6">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">for&lt;/span> file in &lt;span style="color:#f1fa8c">`&lt;/span>ls &lt;span style="color:#8be9fd;font-style:italic">$dir&lt;/span>&lt;span style="color:#f1fa8c">`&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">do&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> -d &lt;span style="color:#8be9fd;font-style:italic">$file&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">cd&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$file&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> getfiles
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">cd&lt;/span> ..
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">else&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> files&lt;span style="color:#ff79c6">[&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$filenum&lt;/span>&lt;span style="color:#ff79c6">]=&lt;/span>&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">pwd&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$file&lt;/span>&lt;span style="color:#ff79c6">)&lt;/span>/&lt;span style="color:#ff79c6">$(&lt;/span>basename &lt;span style="color:#8be9fd;font-style:italic">$file&lt;/span>&lt;span style="color:#ff79c6">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># echo file=$(pwd $file)/$(basename $file)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">let&lt;/span> filenum++
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">fi&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">done&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
-&lt;h2 id="带颜色的输出">带颜色的输出&lt;/h2>
-&lt;p>使用&lt;a href="https://en.wikipedia.org/wiki/ANSI_escape_code">ANSI escape code&lt;/a>&lt;/p>
-&lt;pre tabindex="0">&lt;code>Black 0;30 Dark Gray 1;30
-Red 0;31 Light Red 1;31
-Green 0;32 Light Green 1;32
-Brown/Orange 0;33 Yellow 1;33
-Blue 0;34 Light Blue 1;34
-Purple 0;35 Light Purple 1;35
-Cyan 0;36 Light Cyan 1;36
-Light Gray 0;37 White 1;37
-&lt;/code>&lt;/pre>&lt;p>Code example:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#!/bin/bash
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">RED&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;\033[0;31m&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">GREEN&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;\033[0;32m&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">YELLOW&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;\033[1;33m&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">BLUE&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;\033[0;34m&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">CYAN&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;\033[0;36m&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;\033[0m&amp;#39;&lt;/span> &lt;span style="color:#6272a4"># No Color&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">YELLOW&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">HELLO, YELLOW&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">GREEN&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">HELLO, GREEN&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">RED&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">HELLO, RED&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">BLUE&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">HELLO, BLUE&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">CYAN&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">HELLO, CYAN&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">#########################################################&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># generic functions #####################################&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">function&lt;/span> ERROR&lt;span style="color:#ff79c6">(){&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">RED&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">[error] &lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$*&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">exit&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">function&lt;/span> INFO &lt;span style="color:#ff79c6">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">BLUE&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">[info] &lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$*&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">function&lt;/span> WARN &lt;span style="color:#ff79c6">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">YELLOW&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">[warn] &lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$*&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">function&lt;/span> LOG &lt;span style="color:#ff79c6">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">GREEN&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">[log] &lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$*&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span> &amp;gt;&amp;gt; &lt;span style="color:#8be9fd;font-style:italic">$LOG&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>INFO &lt;span style="color:#f1fa8c">&amp;#34;This is an infomation&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>WARN &lt;span style="color:#f1fa8c">&amp;#34;This is a log&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/shell/shell-script/ - @2019 Notepadium.</description></item></channel></rss>
+&lt;h4 id="ldmload-multiple">LDM(Load Multiple)&lt;/h4>
+&lt;p>格式: &lt;code>LDM &amp;lt;Rn&amp;gt; {registers}&lt;/code>&lt;/p>
+&lt;p>含义: 从基址寄存器&lt;code>&amp;lt;Rn&amp;gt;&lt;/code>指向的地址开始依次加载多个寄存器值. 若目标寄存器中包含PC, 则同时恢复PSTATE.&lt;/p>
+&lt;p>例如: &lt;code>LDM &amp;lt;r0&amp;gt; {pc, r1}&lt;/code> 等价于:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-assembly" data-lang="assembly">pc = [r0]
+r1 = [r0+4]
+PSTATE = SPSR ;仅当目标寄存器包含PC时自动完成
+&lt;/code>&lt;/pre>&lt;h4 id="rfereturn-from-exception">RFE(Return From Exception)&lt;/h4>
+&lt;p>格式: &lt;code>LDM &amp;lt;Rn&amp;gt; &lt;/code>&lt;/p>
+&lt;p>含义: 从基址寄存器&lt;code>&amp;lt;Rn&amp;gt;&lt;/code>指向的地址依次加载PC和PSTATE.&lt;/p>
+&lt;p>例如: &lt;code>RFE &amp;lt;r0&amp;gt;&lt;/code> 等价于:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-ass" data-lang="ass">pc = [r0]
+PSTATE = [r0+4]
+&lt;/code>&lt;/pre>- https://wangloo.github.io/posts/armv8/exception_return/ - @2019 Notepadium.</description></item></channel></rss>

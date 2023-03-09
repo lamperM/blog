@@ -19,8 +19,8 @@
 <a href=/tags/weapons>weapons</a>
 &nbsp;
 <i class=material-icons>schedule</i>
-2 min
-52 s.</div></div></div><div class=post-body-wrapper><div class=post-body v-pre><h2 id=判断一个数是否为2的幂>判断一个数是否为2的幂</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#8be9fd>unsigned</span> <span style=color:#8be9fd>int</span> v;
+3 min
+23 s.</div></div></div><div class=post-body-wrapper><div class=post-body v-pre><h2 id=判断一个数是否为2的幂>判断一个数是否为2的幂</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#8be9fd>unsigned</span> <span style=color:#8be9fd>int</span> v;
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#ff79c6>if</span> ((v <span style=color:#ff79c6>&amp;</span> (v <span style=color:#ff79c6>-</span> <span style=color:#bd93f9>1</span>)) <span style=color:#ff79c6>==</span> <span style=color:#bd93f9>0</span>) 
 </span></span><span style=display:flex><span>    printf(<span style=color:#f1fa8c>&#34;v is a power of 2</span><span style=color:#f1fa8c>\n</span><span style=color:#f1fa8c>&#34;</span>);
@@ -35,13 +35,46 @@
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span> count;
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p> </p><h2 id=将一个数向上取整为2的幂>将一个数向上取整为2的幂</h2><p>用一个<code>1</code>一直左移, 直到比这个数大为止.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#8be9fd>uint32_t</span> <span style=color:#50fa7b>roundup_pow_op_two</span>(<span style=color:#ff79c6>const</span> <span style=color:#8be9fd>uint32_t</span> x) {
+</span></span></code></pre></div><p> </p><h2 id=将一个数向上取整为2的幂>将一个数向上取整为2的幂</h2><p>用一个<code>1</code>一直左移, 直到比这个数大为止.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#8be9fd>uint32_t</span> <span style=color:#50fa7b>roundup_pow_of_two</span>(<span style=color:#ff79c6>const</span> <span style=color:#8be9fd>uint32_t</span> x) {
 </span></span><span style=display:flex><span>    <span style=color:#8be9fd>uint32_t</span> ret <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>1</span>;
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    <span style=color:#ff79c6>while</span> (ret <span style=color:#ff79c6>&lt;</span> x) {
 </span></span><span style=display:flex><span>        ret <span style=color:#ff79c6>=</span> ret <span style=color:#ff79c6>&lt;&lt;</span> <span style=color:#bd93f9>1</span>;
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span> ret;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Linux内核中使用了一种更快的方案, amazing!!!</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#ff79c6>static</span> __inline__ <span style=color:#8be9fd>int</span> <span style=color:#50fa7b>generic_fls</span>(<span style=color:#8be9fd>int</span> x)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#8be9fd>int</span> r <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>32</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>x)
+</span></span><span style=display:flex><span>		<span style=color:#ff79c6>return</span> <span style=color:#bd93f9>0</span>;
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>(x <span style=color:#ff79c6>&amp;</span> <span style=color:#bd93f9>0xffff0000u</span>)) { 
+</span></span><span style=display:flex><span>		x <span style=color:#ff79c6>&lt;&lt;=</span> <span style=color:#bd93f9>16</span>;
+</span></span><span style=display:flex><span>		r <span style=color:#ff79c6>-=</span> <span style=color:#bd93f9>16</span>;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>(x <span style=color:#ff79c6>&amp;</span> <span style=color:#bd93f9>0xff000000u</span>)) {
+</span></span><span style=display:flex><span>		x <span style=color:#ff79c6>&lt;&lt;=</span> <span style=color:#bd93f9>8</span>;
+</span></span><span style=display:flex><span>		r <span style=color:#ff79c6>-=</span> <span style=color:#bd93f9>8</span>;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>(x <span style=color:#ff79c6>&amp;</span> <span style=color:#bd93f9>0xf0000000u</span>)) {
+</span></span><span style=display:flex><span>		x <span style=color:#ff79c6>&lt;&lt;=</span> <span style=color:#bd93f9>4</span>;
+</span></span><span style=display:flex><span>		r <span style=color:#ff79c6>-=</span> <span style=color:#bd93f9>4</span>;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>(x <span style=color:#ff79c6>&amp;</span> <span style=color:#bd93f9>0xc0000000u</span>)) {
+</span></span><span style=display:flex><span>		x <span style=color:#ff79c6>&lt;&lt;=</span> <span style=color:#bd93f9>2</span>;
+</span></span><span style=display:flex><span>		r <span style=color:#ff79c6>-=</span> <span style=color:#bd93f9>2</span>;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>(x <span style=color:#ff79c6>&amp;</span> <span style=color:#bd93f9>0x80000000u</span>)) {
+</span></span><span style=display:flex><span>		x <span style=color:#ff79c6>&lt;&lt;=</span> <span style=color:#bd93f9>1</span>;
+</span></span><span style=display:flex><span>		r <span style=color:#ff79c6>-=</span> <span style=color:#bd93f9>1</span>;<span style=color:#bd93f9>1</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>return</span> r;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>static</span> <span style=color:#ff79c6>inline</span> <span style=color:#8be9fd>unsigned</span> <span style=color:#8be9fd>long</span> __attribute_const__ <span style=color:#50fa7b>roundup_pow_of_two</span>(<span style=color:#8be9fd>unsigned</span> <span style=color:#8be9fd>long</span> x)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>return</span> (<span style=color:#bd93f9>1UL</span> <span style=color:#ff79c6>&lt;&lt;</span> generic_fls(x <span style=color:#ff79c6>-</span> <span style=color:#bd93f9>1</span>));
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p> </p><h2 id=向上向下对齐-检查是否对齐>向上/向下对齐, 检查是否对齐</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#6272a4>/* uintptr_t 代表指针的位数
 </span></span></span><span style=display:flex><span><span style=color:#6272a4> * 加uintptr_t转换的原因是: (void *)不能进行运算
@@ -101,6 +134,6 @@
 </span></span></span><span style=display:flex><span><span style=color:#ff79c6>        s[i] = TO_UPPER(s[i]); \
 </span></span></span><span style=display:flex><span><span style=color:#ff79c6>    } \
 </span></span></span><span style=display:flex><span><span style=color:#ff79c6>}
-</span></span></span></code></pre></div><hr width=100% id=EOF><p style=color:#777>Last modified on 2022-12-29</p></div></div><nav class=post-pagination><a class=newer-posts href=/posts/shell/shell-script/>Next<br>Useful Shell Script Examples</a>
+</span></span></span></code></pre></div><hr width=100% id=EOF><p style=color:#777>Last modified on 2023-03-09</p></div></div><nav class=post-pagination><a class=newer-posts href=/posts/shell/shell-script/>Next<br>武器库: shell scripts</a>
 <a class=older-posts href=/posts/os/stack-and-heap/>Previous<br>Stack and Heap</a></nav><div class=post-comment-wrapper><div id=gitalk-container></div></div></div></div></div></div><div id=single-column-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://risehere.net/>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
 @2019 Notepadium.</div></div><script src=/js/journal.js></script></body></html>

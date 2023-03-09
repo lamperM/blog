@@ -1,4 +1,434 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>C 语言位操作技巧</title><link>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ -&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GNU C内联汇编学习笔记</title><link>https://wangloo.github.io/posts/inline-asm/</link><pubDate>Sat, 24 Sep 2022 16:48:58 +0800</pubDate><guid>https://wangloo.github.io/posts/inline-asm/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/inline-asm/ -&lt;h3 id="语句结构">语句结构&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">asm&lt;/span> &lt;span style="color:#ff79c6">asm&lt;/span>&lt;span style="color:#ff79c6">-&lt;/span>qualifiers ( &lt;span style="color:#8be9fd;font-style:italic">AssemblerTemplate&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : &lt;span style="color:#8be9fd;font-style:italic">OutputOperands&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : &lt;span style="color:#8be9fd;font-style:italic">InputOperands&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : &lt;span style="color:#8be9fd;font-style:italic">Clobbers&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : GotoLabels)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>asm&lt;/code> keyword is a GNU extension. 当使用编译选项 &lt;code>-ansi&lt;/code> 或 &lt;code>-std&lt;/code> 时, 使用 &lt;code>__asm__&lt;/code>代替 &lt;code>asm&lt;/code>.&lt;/p>
+&lt;h4 id="qualifiers">Qualifiers&lt;/h4>
+&lt;ul>
+&lt;li>volatile: 避免编译器的过分优化&lt;/li>
+&lt;li>goto&lt;/li>
+&lt;li>inline&lt;/li>
+&lt;/ul>
+&lt;h4 id="parameters">Parameters&lt;/h4>
+&lt;p>&lt;em>AssemblerTemplate&lt;/em>: 字符串, 汇编代码的模板&lt;/p>
+&lt;p>&lt;em>OutputOperands&lt;/em>: 输出操作数; 指令将会修改的变量集合&lt;/p>
+&lt;p>&lt;em>InputOperands&lt;/em>: 输入操作数; 指令将读取的变量集合&lt;/p>
+&lt;p>&lt;em>Clobbers&lt;/em>: ???TODO&lt;/p>
+&lt;p>&lt;em>GotoLabels&lt;/em>: 仅当 qualifiers 使用&lt;code>goto&lt;/code>时, 声明label集合.&lt;/p>
+&lt;blockquote>
+&lt;p>The total number of input + output + goto operands is limited to 30.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h3 id="param-1-assemblertemplate">Param #1: AssemblerTemplate&lt;/h3>
+&lt;p>多条语句可以放在一个asm字符串中, 但是更常见的是每条汇编语句使用一个字符串, 并在结束时使用换行符和制表符(&lt;code>\n&lt;/code>, &lt;code>\t&lt;/code>)来表示换行.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h3 id="param-2-outputoperands">Param #2: OutputOperands&lt;/h3>
+&lt;p>多个 OutputOperands 之间使用&lt;code>,&lt;/code>隔开, 每个 OutputOperands 的格式如下:&lt;/p>
+&lt;pre tabindex="0">&lt;code>[ [asmSymbolicName] ] constraint (cvariablename)
+&lt;/code>&lt;/pre>&lt;p>&lt;em>asmSymbolicName&lt;/em>: 指定该操作数的名称&lt;/p>
+&lt;p>&lt;em>constraint&lt;/em>: 对该操作数的一些限制&lt;/p>
+&lt;pre tabindex="0">&lt;code>// 描述操作数的权限, 输出操作数的约束必须以此开头
+= 忽略现有值
++ 读写, 当原先值有意义时用它
+&amp;amp; 禁止编译器将该操作数与不相关的输入操作数分配同一个寄存器
+// 描述输出操作数所在位置, 如果你不知道, 可以同时设置, 编译器会帮你决定
+r 寄存器
+m 内存
+&lt;/code>&lt;/pre>&lt;p>&lt;em>cvariablename&lt;/em>: 输出到的 C 语言变量名&lt;/p>
+&lt;p> &lt;/p>
+&lt;h3 id="param-3-input-operands">Param #3: Input Operands&lt;/h3>
+&lt;p>输入操作数的格式与输出操作数基本一致:&lt;/p>
+&lt;pre tabindex="0">&lt;code>[ [asmSymbolicName] ] constraint (cexpression)
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>对于输入操作数, 一般没有别的限制, 仅使用&lt;code>&amp;quot;r&amp;quot;(val)&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h3 id="param-4-clobbers">Param #4: Clobbers&lt;/h3>
+&lt;p>每个 clobber 都是用双引号括起来, 并用逗号分隔的字符串常量.&lt;/p>
+&lt;p>常用的 clobber 参数:&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;#34;memory&amp;#34;
+告诉编译器, 这段内联汇编代码对输入和输出操作数中列出的项以外的内存读取或写入操作(例如，访问输入参数之一指向的内存). 为确保内存包含正确的值，GCC可能需要在执行ASM之前将特定寄存器值刷新到内存。
+此外, 阻止编译器越过该 ASM 语句进行 reorder, 形成针对编译器的 memory barrier.
+注意, 此 clobber 不会阻止处理器在ASM语句之后执行推测性读取。为了防止出现这种情况，您需要特定于处理器的防护指令。
+&lt;/code>&lt;/pre>&lt;p> &lt;/p>
+&lt;h3 id="param-5-gotolabels">Param #5: GotoLabels&lt;/h3>
+&lt;p>尽量不使用, 可以在ASM的内部直接定义 label&lt;/p>
+&lt;p>TODO&lt;/p>
+&lt;p> &lt;/p>
+&lt;h3 id="样例">样例&lt;/h3>
+&lt;h4 id="最简单的模板">最简单的模板&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> src &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> dst;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">asm&lt;/span> (&lt;span style="color:#f1fa8c">&amp;#34;mov %1, %0&lt;/span>&lt;span style="color:#f1fa8c">\n\t&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#34;add $1, %0&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">:&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;=r&amp;#34;&lt;/span> (dst)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">:&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;r&amp;#34;&lt;/span> (src));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>printf(&lt;span style="color:#f1fa8c">&amp;#34;%d&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, dst);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="操作数使用-asmsymbolicname">操作数使用 asmSymbolicName&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> c &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> d;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>e &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&lt;/span>c;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">asm&lt;/span> (&lt;span style="color:#f1fa8c">&amp;#34;mov %[e], %[d]&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">:&lt;/span> [d] &lt;span style="color:#f1fa8c">&amp;#34;=rm&amp;#34;&lt;/span> (d)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">:&lt;/span> [e] &lt;span style="color:#f1fa8c">&amp;#34;rm&amp;#34;&lt;/span> (&lt;span style="color:#ff79c6">*&lt;/span>e));
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="内部定义-label">内部定义 label&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">long&lt;/span> temp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">long&lt;/span> ret;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">asm&lt;/span> &lt;span style="color:#50fa7b">volatile&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#34;1: &lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#34;ldxr %0, [%2]&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#34;sub %0, %0, %3&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#34;stxr %w1, %0, [%2]&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#34;cbnz %w1, 1b&lt;/span>&lt;span style="color:#f1fa8c">\n\t&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">:&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;=&amp;amp;r&amp;#34;&lt;/span>(ret), &lt;span style="color:#f1fa8c">&amp;#34;=&amp;amp;r&amp;#34;&lt;/span>(temp)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">:&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;r&amp;#34;&lt;/span>(p), &lt;span style="color:#f1fa8c">&amp;#34;r&amp;#34;&lt;/span>(val)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">:&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;memory&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> );
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="reference">Reference&lt;/h2>
+&lt;p>&lt;a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Extended-Asm">Extended Asm (Using the GNU Compiler Collection (GCC))&lt;/a>&lt;/p>
+- https://wangloo.github.io/posts/inline-asm/ - @2019 Notepadium.</description></item><item><title>GICv3 介绍</title><link>https://wangloo.github.io/posts/armv8/gicv3/</link><pubDate>Sat, 10 Sep 2022 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/gicv3/ -&lt;h1 id="gicv3generic-interrupt-controller---version-3">GICV3(Generic Interrupt Controller - version 3)&lt;/h1>
+&lt;h2 id="关于gic">关于GIC&lt;/h2>
+&lt;p>GIC即中断控制器, 负责管理中断的接收, 屏蔽, 路由等相关任务, 并向系统程序员提供配置的接口.&lt;/p>
+&lt;p>GIC与异常模型协作完成中断的整个生命周期, GIC主要负责&lt;code>中断源-产生IRQ/FIQ信号&lt;/code>这段路, 关于处理IRQ/FIQ则是由CPU内部的&lt;em>异常模型&lt;/em>来完成.&lt;/p>
+&lt;h2 id="对比-gicv2">对比 GICv2&lt;/h2>
+&lt;ul>
+&lt;li>支持更多的处理器, 用&lt;code>affinity routing&lt;/code> 方案来做中断路由.&lt;/li>
+&lt;li>支持中断分组, 为了配合ARMv8的异常等级模型&lt;/li>
+&lt;li>新增中断类型: SGI, 软件生成中断&lt;/li>
+&lt;li>新增中断类型: SPI, Shared Peripheral Interrupts&lt;/li>
+&lt;li>对于CPU interface的寄存器, 可直接使用系统寄存器接口(system register interface)来访问, 比memory-mapped的方式快.&lt;/li>
+&lt;li>ITS, Interrupt Translation Service 暂不介绍&lt;/li>
+&lt;li>LPI, Locality-specific Peripheral Interrupts . 暂不介绍&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>GICv3支持ARMv8-A或ARMv8-R系列处理器, 但没有必然的绑定关系. ARMv8-A也可以使用GICv2.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="中断类型">中断类型&lt;/h2>
+&lt;h3 id="locality-specific-peripheral-interrupt-lpi">Locality-specific Peripheral Interrupt (LPI)&lt;/h3>
+&lt;p>LPIs are always &lt;a href="https://en.wikipedia.org/wiki/Message_Signaled_Interrupts">message-based interrupts&lt;/a> interrupts. 这里不做介绍.&lt;a href="https://en.wikipedia.org/wiki/Message_Signaled_Interrupts">wiki&lt;/a>&lt;/p>
+&lt;h3 id="private-peripheral-interrupt-ppi">Private Peripheral Interrupt (PPI)&lt;/h3>
+&lt;p>PPI是路由到&lt;strong>单个CPU&lt;/strong>的外设中断, 不同的CPU可以使用相同的中断号. 例如, 所有CPU都可以使用中断号16表示私有的定时器中断.&lt;/p>
+&lt;h3 id="shared-peripheral-interrupt-spi">Shared Peripheral Interrupt (SPI)&lt;/h3>
+&lt;p>SPI是可路由到&lt;strong>一组CPU&lt;/strong>的外设中断, Distributor 负责SPI路由.&lt;/p>
+&lt;h3 id="software-generated-interrupt-sgi">Software Generated Interrupt (SGI)&lt;/h3>
+&lt;p>SGI是由某个CPU产生, 路由到系统中的一个或多个CPU, 通常用于处理器间通信.&lt;/p>
+&lt;h2 id="gicv3-的组件">GICv3 的组件&lt;/h2>
+&lt;p>GICv3架构由以下逻辑组件构成:&lt;/p>
+&lt;ul>
+&lt;li>A Distributor&lt;/li>
+&lt;li>A Redistributor for each CPU&lt;/li>
+&lt;li>A CPU interface for each CPU&lt;/li>
+&lt;li>Interrupt Translation Service components (ITS). 可选, 暂不介绍&lt;/li>
+&lt;/ul>
+&lt;p>The Distributor, Redistributor 一起组成了 &lt;em>IRI(Interrupt Routing Infrastructure)&lt;/em>.&lt;/p>
+&lt;p>&lt;img src="./IRI.png" alt="iri">{width=&amp;ldquo;10px&amp;rdquo;}&lt;/p>
+&lt;h3 id="distributor">Distributor&lt;/h3>
+&lt;p>控制SPI和SGI的路由. 对于 SPI, 提供了一下接口:&lt;/p>
+&lt;ul>
+&lt;li>启动/禁用 SPI&lt;/li>
+&lt;li>设置 SPI 的优先级&lt;/li>
+&lt;li>配置对于 SPI 的路由&lt;/li>
+&lt;li>设置 SPI 的触发方式&lt;/li>
+&lt;li>生成 message-based SPI&lt;/li>
+&lt;li>为每个 SPI 分组&lt;/li>
+&lt;li>控制 SPI 的 &lt;code>pending and active&lt;/code> 状态&lt;/li>
+&lt;/ul>
+&lt;p>对于&lt;code>Distributor&lt;/code>的大部分配置通过&lt;code>GICD_CTLR&lt;/code>实现. 包括:&lt;/p>
+&lt;ul>
+&lt;li>启用 Affinity routing&lt;/li>
+&lt;li>禁用安全性&lt;/li>
+&lt;li>中断分组的配置.&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>关于Distributor 寄存器都含有 &lt;code>GICD_&lt;/code> 前缀, 通过 &lt;code>memory-mapped&lt;/code> 方式访问.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="redistributor">Redistributor&lt;/h3>
+&lt;ul>
+&lt;li>启动/禁用 SGI 和 PPI&lt;/li>
+&lt;li>设置 SGI 和 PPI 的优先级&lt;/li>
+&lt;li>设置 SGI 和 PPI 的触发方式&lt;/li>
+&lt;li>为 SGI 和 PPI 分配组&lt;/li>
+&lt;li>控制 SGI 和 PPI 的 &lt;code>pending&lt;/code> 状态和 &lt;code>active&lt;/code> 状态&lt;/li>
+&lt;li>与之链接的 CPU 的电源管理.&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>关于Redistributor 寄存器都含有 &lt;code>GICR_&lt;/code> 前缀, 通过 &lt;code>memory-mapped&lt;/code> 方式访问.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="cpu-interface">CPU interface&lt;/h3>
+&lt;ul>
+&lt;li>Acknowledge 一个中断&lt;/li>
+&lt;li>执行 End Of Interrupt&lt;/li>
+&lt;li>Deactivate 一个中断&lt;/li>
+&lt;li>设置 CPU 的优先级Mask&lt;/li>
+&lt;li>配置中断抢占&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>关于 CPU interface 寄存器是以 &lt;code>ICC_&lt;/code> 为前缀, 还有 &lt;code>ICV&lt;/code> for vitual interrupt, &lt;code>ICH&lt;/code> for hypervisor configuration.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="中断的状态转换">中断的状态转换&lt;/h2>
+&lt;p>&lt;img src="./int-lifestyle.png" alt="">&lt;/p>
+&lt;ol>
+&lt;li>生成中断. 中断可能来自外部信号, 或者软件生成(SGI)&lt;/li>
+&lt;li>Distribute. IRI 负责中断的分组, 优先级屏蔽等. 将合适的中断发送到CPU Interface.&lt;/li>
+&lt;li>Deliver. CPU interface 将中断发送到连接的CPU.&lt;/li>
+&lt;li>Activate. CPU读取IAR寄存器, 即发送ACK. 该中断的状态转为active.&lt;/li>
+&lt;li>Priority drop. 处理程序结束之后, 写&lt;code>ICC_EOIR&lt;/code>寄存器, end of interrupt&lt;/li>
+&lt;li>Deactivation. 写&lt;code>ICC_DIR&lt;/code>寄存器清除中断的active标志位. 一般来说, end of interrupt 和 deactivation 可配置成同时发生.&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>&lt;code>ICC_CTLR_ELx.EOImode&lt;/code> 位控制是否 end of interrupt 同时导致 deactivation.&lt;/p>
+&lt;p>❓ EOI 和 deactivated 分开进行暂时还不知道应用场景.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="中断id-intid">中断ID: INTID&lt;/h2>
+&lt;p>INTID 是中断的标识符, 它的最大值是&lt;em>实现定义&lt;/em>的, 可以在&lt;code>GICD_TYPER.IDbits&lt;/code>中读取。&lt;/p>
+&lt;p>INTID按照中断类型分类的, 对照表如下:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>INTID&lt;/th>
+&lt;th>中断类型&lt;/th>
+&lt;th>Note&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>0-15&lt;/td>
+&lt;td>SGI&lt;/td>
+&lt;td>本地的, 不同CPU可使用同一中断号代表不同中断&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>16-31&lt;/td>
+&lt;td>PPI&lt;/td>
+&lt;td>本地的&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>32-1019&lt;/td>
+&lt;td>SPI&lt;/td>
+&lt;td>全局的&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1020-1023&lt;/td>
+&lt;td>特殊中断&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1056-1119&lt;/td>
+&lt;td>扩展的PPI&lt;/td>
+&lt;td>本地的&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>4096 – 5119&lt;/td>
+&lt;td>扩展的SPI&lt;/td>
+&lt;td>全局的&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="特殊中断号">特殊中断号&lt;/h3>
+&lt;blockquote>
+&lt;p>These INTIDs do not require an end of interrupt or deactivation.&lt;/p>
+&lt;/blockquote>
+&lt;p>1020:&lt;/p>
+&lt;p>1021:&lt;/p>
+&lt;p>1022:&lt;/p>
+&lt;p>1023: 读&lt;code>ICC_IAR1_EL1&lt;/code> 返回该值表明当前的CPU上没有待处理的中断.&lt;/p>
+&lt;h2 id="中断分组">中断分组&lt;/h2>
+&lt;p>为了配合 ARMv8 的异常模型和安全模型, GICv3 支持为每个中断配置不同的组. 不同组的中断只能路由到特定的异常等级和安全状态进行处理.&lt;/p>
+&lt;p>共包含三个分组: Gourp 0, Secure Group 1, Non-secure Group 1.&lt;/p>
+&lt;ul>
+&lt;li>Group 0的中断需要在EL3 处理.&lt;/li>
+&lt;li>Secure Group1 的中断需要在 Secure EL1 或者 Secure EL2(如果启用了虚拟化)处理.&lt;/li>
+&lt;li>Non-secure Group 1 的中断需要在 Non-secure EL2 or Non-secure EL1 if not using virtualization&lt;/li>
+&lt;/ul>
+&lt;p>同时, 中断位于哪个组也决定了其触发的是FIQ还是IRQ. 对于 AArch64 来说, 对应关系可见下表:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>当前异常等级&lt;/th>
+&lt;th>Group 0 的中断&lt;/th>
+&lt;th>Secure Group 1 的中断&lt;/th>
+&lt;th>Non-secure Group 1&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Secure EL1/0/2&lt;/td>
+&lt;td>FIQ&lt;/td>
+&lt;td>IRQ&lt;/td>
+&lt;td>FIQ&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Non-secure EL1/0/2&lt;/td>
+&lt;td>FIQ&lt;/td>
+&lt;td>FIQ&lt;/td>
+&lt;td>IRQ&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>EL3&lt;/td>
+&lt;td>FIQ&lt;/td>
+&lt;td>FIQ&lt;/td>
+&lt;td>FIQ&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>Group 0 的中断, 需要在EL3处理, 其优先级较高, 所以均属于 FIQ&lt;/li>
+&lt;/ul>
+&lt;h2 id="中断路由">中断路由&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>PPIs are routed directly from the source to the local Redistributor .&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>SPIs are routed from the source through the Distributor to the target Redistributor and the associated CPU interface.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>SGIs are generated by software through the CPU interface and Redistributor. They are then routed through the Distributor to one or more target Redistributors and the associated CPU interfaces&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="what-is-affinity-routing">What is Affinity Routing?&lt;/h3>
+&lt;p>Affinity routing 是一种基于地址的标识多个CPU的方法, 用于中断的路由. Affinity value 由4个8bit字段组成, 结构是&lt;code>aff3.aff2.aff1.aff0&lt;/code>.&lt;/p>
+&lt;p>由于 PPI 的中断源是直连 Redistributor 的, 所以仅 SPI 和 SGI 可以使用 Affinity routing.&lt;/p>
+&lt;ul>
+&lt;li>对于 SPI, 目标CPU的 affinity value 通过&lt;code>GICD_IROUTER&amp;lt;n&amp;gt;&lt;/code> 设置.&lt;/li>
+&lt;li>对于 SGI, 在生成时即可同时配置, 详见 &lt;code>ICC_SGI0R_EL1&lt;/code> 和 &lt;code>ICC_SGI1R_EL1&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>Aff3.Aff2.Aff1.Aff0 与 Aff3.Aff2.Aff2.TargetList&lt;/p>
+&lt;p>对于SPI, 目标的CPU只能是一个, 故&lt;code>Aff0&lt;/code>表示该CPU的ID. 而SGI可以配置同时发给多个CPU, 所以&lt;code>TargetList&lt;/code>是基于位操作的, 每个位表示一个CPU.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="编程指导">编程指导&lt;/h2>
+&lt;h3 id="初始化">初始化&lt;/h3>
+&lt;p>由于 &lt;em>Distributor&lt;/em> 整个系统共享的, 所以必须在其他核启动之前, 由主核完成初始化. 然后当所有核都启动后, 各自完成各自 &lt;em>Redistributor&lt;/em> 和 &lt;em>CPU interface&lt;/em> 的初始化工作.&lt;/p>
+- https://wangloo.github.io/posts/armv8/gicv3/ - @2019 Notepadium.</description></item><item><title>武器库: shell scripts</title><link>https://wangloo.github.io/posts/shell/shell-script/</link><pubDate>Wed, 20 Jul 2022 11:54:13 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-script/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/shell/shell-script/ -&lt;p>ℹ️ 以下命令/脚本的执行环境均为 &lt;em>Bash&lt;/em>.&lt;/p>
+&lt;h2 id="统计代码量">统计代码量&lt;/h2>
+&lt;blockquote>
+&lt;p>使用到的命令包含: find, wc, xargs, sort等&lt;/p>
+&lt;/blockquote>
+&lt;p>列出&lt;em>所有的文件及其代码行数&lt;/em>, 只统计.c和.h, 过滤&lt;code>./scripts&lt;/code>目录.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>find -name &lt;span style="color:#f1fa8c">&amp;#39;*.[c|h]&amp;#39;&lt;/span> ! -path &lt;span style="color:#f1fa8c">&amp;#39;./scripts/*&amp;#39;&lt;/span> | xargs wc -l
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>+将内容按照代码行数降序排列&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>find -name &lt;span style="color:#f1fa8c">&amp;#39;*.[c|h]&amp;#39;&lt;/span> ! -path &lt;span style="color:#f1fa8c">&amp;#39;./scripts/*&amp;#39;&lt;/span> | xargs wc -l | sort -rn
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>若仅列出&lt;em>总的代码行数&lt;/em>, 去除&lt;strong>空行&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">(&lt;/span>find ./ -name &lt;span style="color:#f1fa8c">&amp;#39;*.[c|h]&amp;#39;&lt;/span> -print0 | xargs -0 cat&lt;span style="color:#ff79c6">)&lt;/span> | sed &lt;span style="color:#f1fa8c">&amp;#39;/^\s*$/d&amp;#39;&lt;/span> | wc -l
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="判断执行脚本时带的参数">判断执行脚本时带的参数&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$#&lt;/span> -ne &lt;span style="color:#bd93f9">1&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;ONE parameter is needed&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">exit&lt;/span> -1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$1&lt;/span> &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#f1fa8c">&amp;#39;build&amp;#39;&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># do something&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">elif&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$1&lt;/span> &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#f1fa8c">&amp;#39;run&amp;#39;&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># do something&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">elif&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$1&lt;/span> &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#f1fa8c">&amp;#39;gdb&amp;#39;&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># do something&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Not supported command&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="自动拷贝文件到sd-card">自动拷贝文件到SD Card&lt;/h2>
+&lt;blockquote>
+&lt;p>TODO&lt;/p>
+&lt;ol>
+&lt;li>添加进度条&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#!/bin/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">sd_path&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#ff79c6">$(&lt;/span>find /media/&lt;span style="color:#8be9fd;font-style:italic">$USER&lt;/span> -maxdepth &lt;span style="color:#bd93f9">1&lt;/span> -type d -name &lt;span style="color:#f1fa8c">&amp;#34;*-*&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">while&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> ! -d &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">sd_path&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sleep &lt;span style="color:#bd93f9">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;waiting for inserting SD-Card&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;SD-Card is inserted&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cp ./output/kernel/kernel.bin &lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">sd_path&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Copy completely&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="获取所有文件信息可递归进入子目录">获取所有文件信息(可递归进入子目录)&lt;/h2>
+&lt;p>获取&lt;code>dir&lt;/code>路径下的所有文件的信息, 这里获取的是文件的&lt;strong>完整路径&lt;/strong>.&lt;/p>
+&lt;blockquote>
+&lt;p>TODO&lt;/p>
+&lt;ol>
+&lt;li>操作数组下标的方式可能有待改进? &lt;code>filenum&lt;/code>感觉没必要, 暂时还不会改&lt;/li>
+&lt;li>通过拼接获得文件信息(路径)的方式也有点怪异&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">dir&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>./
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">files&lt;/span>&lt;span style="color:#ff79c6">=()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">filenum&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">function&lt;/span> getfiles&lt;span style="color:#ff79c6">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">for&lt;/span> file in &lt;span style="color:#f1fa8c">`&lt;/span>ls &lt;span style="color:#8be9fd;font-style:italic">$dir&lt;/span>&lt;span style="color:#f1fa8c">`&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> -d &lt;span style="color:#8be9fd;font-style:italic">$file&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">cd&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$file&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> getfiles
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">cd&lt;/span> ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> files&lt;span style="color:#ff79c6">[&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$filenum&lt;/span>&lt;span style="color:#ff79c6">]=&lt;/span>&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">pwd&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$file&lt;/span>&lt;span style="color:#ff79c6">)&lt;/span>/&lt;span style="color:#ff79c6">$(&lt;/span>basename &lt;span style="color:#8be9fd;font-style:italic">$file&lt;/span>&lt;span style="color:#ff79c6">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># echo file=$(pwd $file)/$(basename $file)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">let&lt;/span> filenum++
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="带颜色的输出">带颜色的输出&lt;/h2>
+&lt;p>使用&lt;a href="https://en.wikipedia.org/wiki/ANSI_escape_code">ANSI escape code&lt;/a>&lt;/p>
+&lt;pre tabindex="0">&lt;code>Black 0;30 Dark Gray 1;30
+Red 0;31 Light Red 1;31
+Green 0;32 Light Green 1;32
+Brown/Orange 0;33 Yellow 1;33
+Blue 0;34 Light Blue 1;34
+Purple 0;35 Light Purple 1;35
+Cyan 0;36 Light Cyan 1;36
+Light Gray 0;37 White 1;37
+&lt;/code>&lt;/pre>&lt;p>Code example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#!/bin/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">RED&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;\033[0;31m&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">GREEN&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;\033[0;32m&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">YELLOW&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;\033[1;33m&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">BLUE&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;\033[0;34m&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">CYAN&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;\033[0;36m&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;\033[0m&amp;#39;&lt;/span> &lt;span style="color:#6272a4"># No Color&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">YELLOW&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">HELLO, YELLOW&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">GREEN&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">HELLO, GREEN&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">RED&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">HELLO, RED&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">BLUE&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">HELLO, BLUE&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">CYAN&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">HELLO, CYAN&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">#########################################################&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># generic functions #####################################&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">function&lt;/span> ERROR&lt;span style="color:#ff79c6">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">RED&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">[error] &lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$*&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">exit&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">function&lt;/span> INFO &lt;span style="color:#ff79c6">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">BLUE&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">[info] &lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$*&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">function&lt;/span> WARN &lt;span style="color:#ff79c6">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">YELLOW&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">[warn] &lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$*&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">function&lt;/span> LOG &lt;span style="color:#ff79c6">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">GREEN&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">[log] &lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$*&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">NC&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span> &amp;gt;&amp;gt; &lt;span style="color:#8be9fd;font-style:italic">$LOG&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>INFO &lt;span style="color:#f1fa8c">&amp;#34;This is an infomation&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>WARN &lt;span style="color:#f1fa8c">&amp;#34;This is a log&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/shell/shell-script/ - @2019 Notepadium.</description></item><item><title>C 语言位操作技巧</title><link>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ -&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> v;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> ((v &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> (v &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>)) &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>)
@@ -21,13 +451,47 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
 &lt;h2 id="将一个数向上取整为2的幂">将一个数向上取整为2的幂&lt;/h2>
 &lt;p>用一个&lt;code>1&lt;/code>一直左移, 直到比这个数大为止.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#50fa7b">roundup_pow_op_two&lt;/span>(&lt;span style="color:#ff79c6">const&lt;/span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> x) {
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#50fa7b">roundup_pow_of_two&lt;/span>(&lt;span style="color:#ff79c6">const&lt;/span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> x) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> ret &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">while&lt;/span> (ret &lt;span style="color:#ff79c6">&amp;lt;&lt;/span> x) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ret &lt;span style="color:#ff79c6">=&lt;/span> ret &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> ret;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Linux内核中使用了一种更快的方案, amazing!!!&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">static&lt;/span> __inline__ &lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">generic_fls&lt;/span>(&lt;span style="color:#8be9fd">int&lt;/span> x)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> r &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">32&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>x)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>(x &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> &lt;span style="color:#bd93f9">0xffff0000u&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">16&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r &lt;span style="color:#ff79c6">-=&lt;/span> &lt;span style="color:#bd93f9">16&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>(x &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> &lt;span style="color:#bd93f9">0xff000000u&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r &lt;span style="color:#ff79c6">-=&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>(x &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> &lt;span style="color:#bd93f9">0xf0000000u&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">4&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r &lt;span style="color:#ff79c6">-=&lt;/span> &lt;span style="color:#bd93f9">4&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>(x &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> &lt;span style="color:#bd93f9">0xc0000000u&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">2&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r &lt;span style="color:#ff79c6">-=&lt;/span> &lt;span style="color:#bd93f9">2&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>(x &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> &lt;span style="color:#bd93f9">0x80000000u&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r &lt;span style="color:#ff79c6">-=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;&lt;span style="color:#bd93f9">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> r;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">static&lt;/span> &lt;span style="color:#ff79c6">inline&lt;/span> &lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">long&lt;/span> __attribute_const__ &lt;span style="color:#50fa7b">roundup_pow_of_two&lt;/span>(&lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">long&lt;/span> x)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> (&lt;span style="color:#bd93f9">1UL&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;&lt;/span> generic_fls(x &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>));
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
 &lt;h2 id="向上向下对齐-检查是否对齐">向上/向下对齐, 检查是否对齐&lt;/h2>
@@ -420,7 +884,7 @@
 虚拟页.&lt;/p>
 &lt;p>原因是: 在一个页面的不同段可能&lt;strong>权限不同&lt;/strong>, 所以不能使用同一映射.&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/posts/os/elf-format/ - @2019 Notepadium.</description></item><item><title>Improving the quality of C code</title><link>https://wangloo.github.io/posts/codestyle/improve_quality/</link><pubDate>Tue, 14 Jun 2022 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/improve_quality/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/improve_quality/ -&lt;h2 id="添加更多的编译选项comiler-options来防止bug">添加更多的编译选项(comiler options)来防止bug&lt;/h2>
+- https://wangloo.github.io/posts/os/elf-format/ - @2019 Notepadium.</description></item><item><title>写高质量的C语言工程的技巧</title><link>https://wangloo.github.io/posts/codestyle/improve_quality/</link><pubDate>Tue, 14 Jun 2022 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/improve_quality/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/improve_quality/ -&lt;h2 id="添加更多的编译选项comiler-options来防止bug">添加更多的编译选项(comiler options)来防止bug&lt;/h2>
 &lt;p>对于我常用的&lt;code>GCC&lt;/code>, 推荐开启一下的compiler options:&lt;/p>
 &lt;ul>
 &lt;li>
@@ -443,13 +907,13 @@ large enough for a corresponding “%s” in the format string.&lt;/p>
 &lt;p>如果你是一个内核程序员, 则必须手动的释放. 不用怀疑.&lt;/p>
 &lt;/blockquote>
 &lt;p> &lt;/p>
-&lt;h3 id="尽可能在创建变量时赋初值">尽可能在创建变量时赋初值&lt;/h3>
+&lt;h2 id="尽可能在创建变量时赋初值">尽可能在创建变量时赋初值&lt;/h2>
 &lt;p>放置某些变量创建后是 &lt;code>magic value&lt;/code>. 而使用这些变量可能不会立马导致错误, 但是这是一个隐患.&lt;/p>
 &lt;p>但这会产生一个问题, 有时我们定义变量之后的不久之后就会对其赋予正确的值, 这时候初值就是
 多余的. 而且维护者可能认为这个值是meaningful, 这就要求我们如果要赋初值, 就要说明这个值
 仅仅是&lt;strong>无意义的&lt;/strong>初值.&lt;/p>
 &lt;p> &lt;/p>
-&lt;h3 id="使用define-enum">使用&lt;code>#define&lt;/code>, &lt;code>enum&lt;/code>&lt;/h3>
+&lt;h2 id="使用define-enum">使用&lt;code>#define&lt;/code>, &lt;code>enum&lt;/code>&lt;/h2>
 &lt;p>对于代码在不同地方使用的同一个值, 应使用&lt;code>#define&lt;/code>来声明使得代码&lt;strong>maintainable&lt;/strong>.&lt;/p>
 &lt;p>如果这些值有多个且能规划为同一类别, 则还可将&lt;code>#define&lt;/code>的方式换为&lt;code>enum&lt;/code>. 这会使代码更加&lt;strong>meaningful&lt;/strong>&lt;/p>
 &lt;blockquote>
@@ -458,8 +922,8 @@ large enough for a corresponding “%s” in the format string.&lt;/p>
 &lt;p> &lt;/p>
 &lt;h3 id="使用typedef优化function-pointer">使用&lt;code>typedef&lt;/code>优化function pointer&lt;/h3>
 &lt;p> &lt;/p>
-&lt;h3 id="重定义一套自己的类型">重定义一套自己的类型&lt;/h3>
-&lt;p>在开发大项目时, 需要考虑可移植性的情况下, 最好利用&lt;code>typedef&lt;/code>对类型进行重定义.&lt;/p>
+&lt;h2 id="重定义一套自己的类型">重定义一套自己的类型&lt;/h2>
+&lt;p>在开发&lt;em>大项目&lt;/em>时, 需要考虑可移植性的情况下, 最好利用&lt;code>typedef&lt;/code>对类型进行重定义.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#if SYSTEM1
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> &lt;span style="color:#ff79c6">typedef&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> INT32;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
@@ -488,6 +952,45 @@ large enough for a corresponding “%s” in the format string.&lt;/p>
 &lt;p>注意, &lt;code>goto&lt;/code>出现的场景其实很受限. Never use a backward &lt;code>goto&lt;/code> or jump into control statements.&lt;/p>
 &lt;/blockquote>
 &lt;p> &lt;/p>
+&lt;h2 id="定义合理-正确的结构体">定义合理, 正确的结构体&lt;/h2>
+&lt;p>结构体是C语言编程应用中常用的数据结构, 关于结构体也有许多要注意的点.&lt;/p>
+&lt;h3 id="1-flexible-array-member">#1 Flexible Array Member&lt;/h3>
+&lt;p>C99开始支持&lt;em>Flexible Array Member&lt;/em>. 且看我&lt;a href="">lstring&lt;/a>库的结构体定义:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> str {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> length;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> size;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> data[]; &lt;span style="color:#6272a4">// Flexible array member - C99 only
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>对于这种不定长的数组元素, 我之前都是定义一个指针, 占用一个&lt;code>sizeof(char *)&lt;/code>的空间. 而Flexible Array Member本身不占用空间. 需要在malloc时为他单独声明空间.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> n &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">100&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> str &lt;span style="color:#ff79c6">*&lt;/span>s &lt;span style="color:#ff79c6">=&lt;/span> malloc(&lt;span style="color:#ff79c6">sizeof&lt;/span>(&lt;span style="color:#ff79c6">struct&lt;/span> str) &lt;span style="color:#ff79c6">+&lt;/span> &lt;span style="color:#ff79c6">sizeof&lt;/span>(&lt;span style="color:#8be9fd">char&lt;/span>[n]));
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>这里也有一个小trick, 使用&lt;code>sizeof(char[n])&lt;/code> 比 &lt;code>sizeof(char) * n&lt;/code> 更简洁!&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="-2-padding-and-packed"># 2 Padding and Packed&lt;/h3>
+&lt;p>有关结构体的大小, 和地址对齐的问题. 假设我有一个结构体如下:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> mystruct_A
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> a; &lt;span style="color:#8be9fd">int&lt;/span> b; &lt;span style="color:#8be9fd">char&lt;/span> c;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} x;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Padding是编译器对结构体&lt;strong>默认&lt;/strong>做的事情. 它会在成员之间插入一些 gap 来保证地址对齐:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> mystruct_A {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> a;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> gap_0[&lt;span style="color:#bd93f9">3&lt;/span>]; &lt;span style="color:#6272a4">/* inserted by compiler: for alignment of b */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> b; &lt;span style="color:#6272a4">/* int 在32位上其地址是4字节对齐的 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> c;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> gap_1[&lt;span style="color:#bd93f9">3&lt;/span>]; &lt;span style="color:#6272a4">/* -&amp;#34;-: for alignment of the whole struct in an array */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} x;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>除了保证每个成员的地址是对齐的, &lt;strong>整个结构体&lt;/strong>的地址也是按照其最大的成员类型来对齐, 即对齐到&lt;code>int&lt;/code>(4字节).&lt;/p>
+&lt;/blockquote>
+&lt;p>如果你&lt;strong>不想要这些 gap&lt;/strong>, 那么可以对结构体声明使用 &lt;code>__attribute__((__packed__))&lt;/code>关键字. 整个结构体大小仅为6个字节.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> &lt;span style="color:#50fa7b">__attribute__&lt;/span>((__packed__)) mystruct_A {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> a;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> b;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> c;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
 &lt;h2 id="永远为你的函数设置error-return-value">永远为你的函数设置error return value&lt;/h2>
 &lt;p>一旦你的函数可能被其他人调用, 那么养成设置return value的习惯. 即便你现在的实现
 并不会产生任何错误, 也请返回&lt;code>success&lt;/code>.&lt;/p>
@@ -841,401 +1344,4 @@ Myvar: &amp;#34;my value&amp;#34;
 &lt;li>Post section page 添加简介&lt;/li>
 &lt;li>Single template 调整 Header&amp;rsquo;s margin&lt;/li>
 &lt;/ol>
-- https://wangloo.github.io/posts/hugo/ - @2019 Notepadium.</description></item><item><title>2019 Stanford Commencement Timcook</title><link>https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/</link><pubDate>Wed, 18 May 2022 19:32:38 +0800</pubDate><guid>https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/ -&lt;h1 id="content">Content&lt;/h1>
-&lt;p>Fourteen years ago, Steve stood on this stage and told your predecessors &amp;ldquo;Your time is limited. So don&amp;rsquo;t waste is living someone else&amp;rsquo;s life.&amp;rdquo;&lt;/p>
-&lt;p>So what is true then is true now. Don&amp;rsquo;t waste your time living someone else&amp;rsquo;s life.
-Don&amp;rsquo;t try to emulate the people who came before you to the exclusion of
-everything else, contorting into a shape that doesn&amp;rsquo;t fit.&lt;/p>
-&lt;p>Graduates, the fact is, when your time comes, and it will, you will never be ready.
-But you&amp;rsquo;re not suppposed to be. Find the hope in the unexpected. Find the hope
-int the challenge. Find your vision on the solitary road. Don&amp;rsquo;t get distracted.
-There are too many people who want credit without responsibility. Too many who
-show up for the ribbon cutting without building anything worth a damn.&lt;/p>
-&lt;p>Be different. Leave something worthy. And always remember that you can&amp;rsquo;t take it
-with you. You&amp;rsquo;re going to have to pass it on.&lt;/p>
-&lt;p>Thank you very much. And Congratulations to the Class of 2019!&lt;/p>
-&lt;p>&lt;a href="https://www.youtube.com/watch?v=2C2VJwGBRRw&amp;amp;t=80s">YouTube vidio&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/ - @2019 Notepadium.</description></item><item><title>Html Css Learning note (0)</title><link>https://wangloo.github.io/posts/html-css/0/</link><pubDate>Tue, 17 May 2022 11:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/html-css/0/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/html-css/0/ -&lt;h1 id="get-start">Get start&lt;/h1>
-&lt;h2 id="what-is-htmlcss">What is HTML&amp;amp;CSS?&lt;/h2>
-&lt;ul>
-&lt;li>
-&lt;p>HTML is resonsible for the content of the page. That&amp;rsquo;s the text, images, buttons, etc.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>CSS is resonsible for the presentation of the content. That&amp;rsquo;s the color, layout, etc.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Web &lt;strong>designers&lt;/strong> create the overall look and fell of a website.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Web &lt;strong>developers&lt;/strong> implement the design using &lt;strong>HTML, CSS and JavaScript code&lt;/strong>.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="configure-vim-as-html-code-editor">Configure VIM as HTML code-editor&lt;/h2>
-&lt;blockquote>
-&lt;p>Finally in the arms of &lt;code>vscode&lt;/code> 🙉&lt;/p>
-&lt;/blockquote>
-&lt;p>Add vim plugin:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://emmet.io/">emmet&lt;/a>: Coding HTML faster.&lt;/li>
-&lt;/ul>
-&lt;p>CSS autocomplete key: &lt;code>&amp;lt;C-x&amp;gt; &amp;lt;C-o&amp;gt;&lt;/code>&lt;/p>
-&lt;p>HTML and CSS live previes plugin: &lt;a href="https://github.com/turbio/bracey.vim">bracey&lt;/a>&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://github.com/turbio/bracey.vim/issues/21">urlopen error solution&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h1 id="html-fundamentals">HTML Fundamentals&lt;/h1>
-&lt;h2 id="anatomy-of-an-html-element">Anatomy of an HTML element&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#ff79c6">p&lt;/span>&amp;gt; THML is a markup language&amp;lt;/&lt;span style="color:#ff79c6">p&lt;/span>&amp;gt;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The HTML element is composed of &lt;code>opening tag&lt;/code>, &lt;code>content&lt;/code>, &lt;code>closing tag&lt;/code>.&lt;/p>
-&lt;h2 id="html-good-styles">HTML good styles&lt;/h2>
-&lt;ul>
-&lt;li>&lt;code>&amp;lt;img/&amp;gt;&lt;/code> element should add &lt;code>alt&lt;/code> attritube at all time, for the convenience of the blind.&lt;/li>
-&lt;li>An important principle in web design is &lt;code>making the HTML elements meaningful&lt;/code>. That is &lt;a href="https://www.thoughtco.com/why-use-semantic-html-3468271">semantic HTML&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h1 id="css-fundamentals">CSS Fundamentals&lt;/h1>
-&lt;p>CSS describes the visual style and presentation of the contend in HTML.&lt;/p>
-&lt;h2 id="anatomy-of-an-html-element-1">Anatomy of an HTML element&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">h1&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">color&lt;/span>: &lt;span style="color:#ff79c6">blue&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">text-align&lt;/span>: &lt;span style="color:#ff79c6">center&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">font-size&lt;/span>: &lt;span style="color:#bd93f9">20&lt;/span>&lt;span style="color:#8be9fd">px&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>h1 is &lt;code>Seletor&lt;/code>, every &lt;code>style&lt;/code> has &lt;code>proporty&lt;/code> and &lt;code>value&lt;/code>.&lt;/p>
-&lt;h2 id="css-good-styles">CSS good styles&lt;/h2>
-&lt;ul>
-&lt;li>Class selector is more commonly used than ID selector, as &lt;code>ID&lt;/code> is &lt;em>unique&lt;/em> in HTML. For scalability, &lt;strong>remember always using class selector&lt;/strong>.&lt;/li>
-&lt;li>We should always specify all the four state of &lt;code>&amp;lt;a&amp;gt;&lt;/code> element in order, which including &lt;code>link&lt;/code>, &lt;code>visited&lt;/code>, &lt;code>hover&lt;/code> and &lt;code>active&lt;/code>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="priority-conflicts-between-selectors">Priority conflicts between selectors&lt;/h2>
-&lt;p>CSS style priority from high to low:&lt;/p>
-&lt;ol>
-&lt;li>Inline style(style attribute in HTML)&lt;/li>
-&lt;li>ID selector&lt;/li>
-&lt;li>class or pseudo-class selector&lt;/li>
-&lt;li>element selector&lt;/li>
-&lt;li>universal element selector&lt;/li>
-&lt;/ol>
-&lt;p> &lt;/p>
-&lt;h1 id="the-css-box-model">The CSS box model&lt;/h1>
-&lt;p>The box model defines how elements are displayed on a webpage and how they are sized.&lt;br>
-In the box model, every element on a webpage can be seen as a rectangular box.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h1 id="universal-element--body-element">Universal element &amp;amp; &lt;code>&amp;lt;body&amp;gt;&lt;/code> element&lt;/h1>
-&lt;p>Styles in &lt;code>&amp;lt;body&amp;gt;&lt;/code> selector take effect because of inheritance. But the text-independent elements do not support inheritance.&lt;br>
-That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;s styles take effect on all element.&lt;/p>
-&lt;p>When we want to set padding and margin of all elements to &lt;code>0&lt;/code>. Must put the code in universal element selector.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h1 id="inline-elements--block-elements">Inline elements &amp;amp; Block elements&lt;/h1>
-&lt;p>Inline elements:&lt;/p>
-&lt;ul>
-&lt;li>Occupies only the space necessary for its content.&lt;/li>
-&lt;li>Box model applies in different way: &lt;strong>heights and widths do no apply&lt;/strong>.&lt;/li>
-&lt;li>Paddings and margins are applied &lt;strong>only horizontally&lt;/strong>(left and right).&lt;/li>
-&lt;/ul>
-&lt;p>Block elements:&lt;/p>
-&lt;ul>
-&lt;li>100% of parent&amp;rsquo;s width&lt;/li>
-&lt;li>vertivally, one after another&lt;/li>
-&lt;/ul>
-&lt;p>Inline-Block elements:&lt;/p>
-&lt;ul>
-&lt;li>Good example is &lt;code>&amp;lt;img&amp;gt;&lt;/code>.&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h1 id="the-3-ways-of-building-layouts-with-css">The 3 ways of building layouts with CSS&lt;/h1>
-&lt;p>&lt;code>Float Layouts&lt;/code>: The &lt;strong>old way of building layouts&lt;/strong>, using the float CSS property. Still used, but getting outdated fase.&lt;/p>
-&lt;ul>
-&lt;li>Element is removed from the normal flow: &lt;em>out of&lt;/em> flow. Like absolutely positioning.&lt;/li>
-&lt;li>Text and inline elements will wrap around the floated elements. Different from absolutely elements.&lt;/li>
-&lt;li>The container will &lt;em>NOT&lt;/em> adjust its height to the elements.&lt;/li>
-&lt;/ul>
-&lt;p>&lt;code>FlexBox&lt;/code>: Modern way of laying out elements in a &lt;strong>1-dimensional row&lt;/strong> without using floats. Prefect for &lt;strong>component layouts&lt;/strong>.&lt;/p>
-&lt;ul>
-&lt;li>One of its most useful applications is &lt;strong>vertical centering&lt;/strong>.&lt;/li>
-&lt;li>Flex container property:
-&lt;ul>
-&lt;li>&lt;code>gap&lt;/code>: To create space between items.&lt;/li>
-&lt;li>&lt;code>justify-content&lt;/code>: To align items along main axis(&lt;strong>horizontally&lt;/strong>, by default)&lt;/li>
-&lt;li>&lt;code>align-items&lt;/code>: To align items along cross axis(&lt;strong>vertically&lt;/strong>, by dedauly)&lt;/li>
-&lt;li>&lt;code>flex-wrap&lt;/code>: To allow items to &lt;strong>wrap into a new line&lt;/strong> if they are too large&lt;/li>
-&lt;li>&lt;code>align-content&lt;/code>: Only applies when there are multiple lines(flex-wrap: wrap)&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Flex Items property:
-&lt;ul>
-&lt;li>&lt;code>align-self&lt;/code>: To overwrite align-items for individual flex items.&lt;/li>
-&lt;li>&lt;code>flex-grow&lt;/code>: To allow an element to &lt;strong>grow&lt;/strong>.&lt;/li>
-&lt;li>&lt;code>flex-shrink&lt;/code>: To allow an element to &lt;strong>shrink&lt;/strong>.&lt;/li>
-&lt;li>&lt;code>flex-basis&lt;/code>: To define an item&amp;rsquo;s width, &lt;strong>instead of the width&lt;/strong> property.&lt;/li>
-&lt;li>&lt;code>flex&lt;/code>: &lt;strong>Recommended shorthand&lt;/strong> for flex-grow, -shrink, -basis.&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>&lt;code>CSS Grid&lt;/code>: For laying out elements in a fully-fledged &lt;strong>2-dimensional grid&lt;/strong>. Perfect for page layouts and complex components.&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>CSS grid is a set of &lt;strong>CSS properties&lt;/strong> for building &lt;strong>2-dimensional&lt;/strong> layouts&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>The main idea behind CSS Grid is that we &lt;strong>divide a container element into rows and columns&lt;/strong> that can be filled with its child elements&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>CSS grid is &lt;strong>not meant to replace flexbox!&lt;/strong>. Instead, they work perfectly together. Need a &lt;strong>1D&lt;/strong> layouts? Use flexbox. Need a &lt;strong>2D&lt;/strong> layout? Use CSS grid&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Grid container&lt;/p>
-&lt;ul>
-&lt;li>grid-template-rows/grid-template-columns: To establish the grid &lt;strong>row and column tracks&lt;/strong>. One length uniit for each track. Any unit can be used, new &lt;strong>fr&lt;/strong> fills unused space&lt;/li>
-&lt;li>row-gap/colum-gap: To &lt;strong>create empty space&lt;/strong> between tracks&lt;/li>
-&lt;li>justify-items/align-items: To align items inside rows/columns(&lt;strong>horizontally/vertically&lt;/strong>)&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>Grid items&lt;/p>
-&lt;ul>
-&lt;li>grid-column/grid-row: To &lt;strong>place a grid item&lt;/strong> into a specific cell, based on line numbers. span keyword can be used to span an item across more cells&lt;/li>
-&lt;li>justify-self/align-self: To &lt;strong>overwrite&lt;/strong> justify-items/align-items for single items&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-- https://wangloo.github.io/posts/html-css/0/ - @2019 Notepadium.</description></item><item><title>我的 vim 调教随笔</title><link>https://wangloo.github.io/posts/vim/basic/</link><pubDate>Mon, 09 May 2022 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/vim/basic/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/vim/basic/ -&lt;p>Search a word quickly: put cursor on the word, press &lt;code>/&lt;/code> and press &lt;code>&amp;lt;C-R&amp;gt;&lt;/code> &lt;code>&amp;lt;C-W&amp;gt;&lt;/code>.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="缩写的含义meaning-of-abbreviations">缩写的含义(Meaning of abbreviations)&lt;/h2>
-&lt;p>Operation&lt;/p>
-&lt;ul>
-&lt;li>d - delete&lt;/li>
-&lt;li>y - yank(copy, 因为c被占了)&lt;/li>
-&lt;li>c - change&lt;/li>
-&lt;li>r - replace&lt;/li>
-&lt;li>v - visual select&lt;/li>
-&lt;/ul>
-&lt;p>Scope or location&lt;/p>
-&lt;ul>
-&lt;li>i - inside&lt;/li>
-&lt;li>a - around&lt;/li>
-&lt;li>f - forward&lt;/li>
-&lt;li>t - to&lt;/li>
-&lt;/ul>
-&lt;p>Object&lt;/p>
-&lt;ul>
-&lt;li>w - word&lt;/li>
-&lt;li>s - sentence&lt;/li>
-&lt;li>p - paragraph&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="书签-bookmark">书签: Bookmark&lt;/h2>
-&lt;p>&lt;code>ma&lt;/code>: create bookmark &lt;code>a&lt;/code> inside file.&lt;br>
-&lt;code>mA&lt;/code>: create global bookmark &lt;code>A&lt;/code>.&lt;br>
-&lt;code>`a&lt;/code>: jump to bookmark &lt;code>a&lt;/code>.&lt;/p>
-&lt;p>&lt;code>:marks&lt;/code>: display all bookmarks&lt;/p>
-&lt;h2 id="缩进-indent">缩进: indent&lt;/h2>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;code>&amp;gt;&lt;/code>: increase indent , &lt;code>&amp;lt;&lt;/code>: decrease indent ,&lt;code>=&lt;/code>: auto indent&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;code>&amp;gt;&amp;gt;&lt;/code>: 增加当前行的缩进&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;code>gg=G&lt;/code>: 缩进全文, 无论当前光标在哪&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>以上命令都可以配合visual mode使用&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="自动缩进的规则">自动缩进的规则&lt;/h3>
-&lt;p>主要有四种可用缩进的方式, 分别是:&lt;/p>
-&lt;pre tabindex="0">&lt;code>&amp;#39;autoindent&amp;#39; 沿用上一行的缩进。
-&amp;#39;smartindent&amp;#39; 类似 &amp;#39;autoindent&amp;#39;，但是可以识别一些 C 语法以能在合适的地方
-增加 / 减少缩进。
-&amp;#39;cindent&amp;#39; 比上面两个更聪明；可以设置不同的缩进风格。
-&amp;#39;indentexpr&amp;#39; 最灵活的一个: 根据表达式来计算缩进。若此选项非空，则优先于其它
-选项覆盖。参见 indent-expression 。
-&lt;/code>&lt;/pre>&lt;p>自定义的快速命令:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-vimrc" data-lang="vimrc">&lt;span style="display:flex;">&lt;span>command IndentOff setl noai nocin nosi indentexpr=&lt;span style="color:#f1fa8c">&amp;#34;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>command IndentOn setl ai cin si &lt;span style="color:#6272a4">&amp;#34;indentexpr can&amp;#39;t be re-enabled.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>command IndentStatus set ai? si? cin? indentexpr?
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
-&lt;p>&lt;code>cindent&lt;/code> 不一定对所有的语言都有效果. 只是 C-like 风格, 其中一个要求是顶层函数必须在第一列中含有 &lt;code>{&lt;/code>.&lt;/p>
-&lt;/blockquote>
-&lt;blockquote>
-&lt;p>只有当&lt;code>indentexpr&lt;/code>计算不出当前需要缩进几格时(return -1), 才使用上面的三个规则. 它是优先级最高的.&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="find-and-tail">&lt;code>F&lt;/code>ind and &lt;code>T&lt;/code>ail&lt;/h2>
-&lt;p>&lt;code>f(&lt;/code>: 从当前cursor处向右查找下一个&lt;code>(&lt;/code>, 并将光标移动到&lt;code>(&lt;/code>处.&lt;br>
-&lt;code>F(&lt;/code>: Like &lt;code>f(&lt;/code>, but 向左查找.&lt;br>
-&lt;code>t(&lt;/code>: Like &lt;code>f(&lt;/code>, but 将cursor移动到&lt;code>(&lt;/code>的前一个.&lt;br>
-&lt;code>T(&lt;/code>: You can guess.&lt;/p>
-&lt;h4 id="trick">Trick&lt;/h4>
-&lt;p>&lt;code>vt(c&lt;/code>: With visual, 删除当前光标到下一个&lt;code>(&lt;/code>前的所有内容.&lt;/p>
-&lt;p>&lt;code>;&lt;/code>/&lt;code>,&lt;/code>: 查找下一个/上一个 &lt;code>f/F/t/T&lt;/code> 的内容.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="substitute-and-global">&lt;code>S&lt;/code>ubstitute and &lt;code>G&lt;/code>lobal&lt;/h2>
-&lt;blockquote>
-&lt;p>See: &lt;code>:help :s&lt;/code> and &lt;code>:help :g&lt;/code>&lt;/p>
-&lt;/blockquote>
-&lt;p>这两个都属于vim的命令. vim 的替换和sed 的&lt;code>s&lt;/code>命令使用方式基本一致. 就不多介绍了.&lt;/p>
-&lt;p>而 vim 的 global 命令和sed有些许差别. 使用Sed删除包含个字符串的行的指令为: &lt;code>sed '/STRING/d' input_file&lt;/code>, 而在vim中则多了一个&lt;strong>g&lt;/strong>前缀, &lt;code>:g/STRING/d&lt;/code>.&lt;/p>
-&lt;p>global 可以和 substitute 结合使用, 例如想要在包含某个字符串的行中替换&lt;code>good&lt;/code>为&lt;code>excellent&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>:g/STRING/s/good/excellent/
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
-&lt;p>TODO:&lt;/p>
-&lt;ol>
-&lt;li>More [cmd] in global. &lt;a href="https://vim.fandom.com/wiki/Power_of_g">Power of g | Vim Tips Wiki | Fandom&lt;/a>&lt;/li>
-&lt;li>vim subtitute使用的正则表达式集包含 &lt;code>\zs&lt;/code>和&lt;code>\ze&lt;/code>, 然而 sed 没有(Sed 为 POSIX Basic Regular Expression).&lt;/li>
-&lt;/ol>
-&lt;/blockquote>
-&lt;p> &lt;/p>
-&lt;h2 id="大小写转换">大小写转换&lt;/h2>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>cmd&lt;/th>
-&lt;th>description&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>&lt;code>g~&lt;/code>&lt;/td>
-&lt;td>翻转大小写&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;code>gu&lt;/code>&lt;/td>
-&lt;td>转换为小写&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;code>gU&lt;/code>&lt;/td>
-&lt;td>转换为大写&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>以上命令(严格来说叫操作符)需要配合&lt;strong>动作命令&lt;/strong>来使用.&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>gUaw&lt;/code>: 将光标所在位置的&lt;em>单词&lt;/em>转为大写&lt;/li>
-&lt;li>&lt;code>gUap&lt;/code>: 将光标所在位置的&lt;em>段落&lt;/em>转为大写&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="search-and-replace">Search and replace&lt;/h2>
-&lt;h3 id="case-1-search-and-convert-to-uppercaselowercase">case 1: search and convert to uppercase/lowercase&lt;/h3>
-&lt;p>我直觉想到的方式是&lt;code>%s/html/HTML/gc&lt;/code>&lt;/p>
-&lt;p>这种方式在简单情况下也行, 比较灵活且直观, 但是对于复杂文件不够通用且容易出错&lt;/p>
-&lt;p>还有一种方式是先搜索, 然后一步步替换&lt;/p>
-&lt;ul>
-&lt;li>搜索: &lt;code>/\vhtml\C&lt;/code>&lt;/li>
-&lt;li>替换: 执行命令&lt;code>gUgn&lt;/code>, 然后使用&lt;code>n&lt;/code>和&lt;code>.&lt;/code>来重复操作下一个选中项.&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>&lt;code>gn&lt;/code>命令进对于sreach的匹配项使用, 类似于&lt;code>n&lt;/code>, 但会将下一个匹配项(若光标停在match上, 那则选中当前匹配项)
-转为visual模式选中的状态.&lt;/p>
-&lt;/blockquote>
-&lt;blockquote>
-&lt;p>其实对于简单的文本, &lt;code>n&lt;/code>和&lt;code>.&lt;/code>也可以简化为&lt;code>.&lt;/code>. 唯一的坏处就是如果两个匹配的距离太大,
-你不能确认是否search了你想要的内容.&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="case-2-search-the-text-seleted-in-visual-mode">case 2: search the text seleted in &lt;em>visual mode&lt;/em>&lt;/h3>
-&lt;blockquote>
-&lt;p>vim 本身并未提供这个功能, 需要借助一个脚本来完成&lt;/p>
-&lt;/blockquote>
-&lt;p>&lt;a href="#search-text-selected-in-visual-mode">search the text selected in visual mode&lt;/a>&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="visual-block-模式">Visual Block 模式&lt;/h2>
-&lt;ul>
-&lt;li>
-&lt;p>选中后, 编辑所有行: &lt;code>I&lt;/code>(captial i), 编辑完成后按两次&lt;code>ESC&lt;/code>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>重复visual 选中上次的 block: Normal模式下&lt;code>gv&lt;/code>即可.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="单词间跳转">单词间跳转&lt;/h2>
-&lt;p>&lt;code>w&lt;/code>: Move cursor to begin of next word.&lt;br>
-&lt;code>b&lt;/code>: Move cursor to begin of last word.&lt;br>
-&lt;code>e&lt;/code>: Move cursor to end of next word.&lt;/p>
-&lt;h3 id="trick-1">Trick&lt;/h3>
-&lt;p>&lt;code>w&lt;/code>/&lt;code>b&lt;/code>配合&lt;code>ce&lt;/code>使用可达到在某一行中快速移动到某个单词, 然后删除该单词开始edit.&lt;/p>
-&lt;p>&lt;code>daw&lt;/code>: 即 Delete A Word, 可以删除一个完整的单词, 无论当前光标的位置在哪.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="编辑二进制十六进制文件">编辑二进制/十六进制文件&lt;/h2>
-&lt;p>可以使用&lt;code>xxd&lt;/code>命令将一个文件中的文本转换为hex格式显示. 在vim中键入&lt;code>:%!xxd&lt;/code> 即可. 得到的效果如下:&lt;/p>
-&lt;pre tabindex="0">&lt;code class="language-xxd" data-lang="xxd">0000000: 5468 6973 2069 7320 6120 7465 7374 0a41 This is a test.A
-0000010: 6e6f 7468 6572 206c 696e 650a 416e 6420 nother line.And
-0000020: 7965 7420 616e 6f74 6865 720a yet another.
-&lt;/code>&lt;/pre>&lt;p>后面的对应文本是自动生成的, 仅需要修改十六进制的部分即可. 修改完成后, 要返回原本的模式, 键入&lt;code>:%!xxd -r&lt;/code>.&lt;/p>
-&lt;blockquote>
-&lt;p>可通过设置文本格式对十六进制内存高亮显示 &lt;code>set ft=xxd&lt;/code>.&lt;/p>
-&lt;/blockquote>
-&lt;p> &lt;/p>
-&lt;h2 id="删除光标前后的所有字符">删除光标前/后的所有字符&lt;/h2>
-&lt;ol>
-&lt;li>&lt;code>d^&lt;/code> &amp;ndash; delete to first non-whitespace character in the line&lt;/li>
-&lt;li>&lt;code>d0&lt;/code> &amp;ndash; delete to beginning of the line&lt;/li>
-&lt;li>&lt;code>c-u&lt;/code> in &lt;strong>insert mode&lt;/strong>. Same as bash command shortkeys, see &lt;a href="https://ss64.com/bash/syntax-keyboard.html">here&lt;/a>&lt;/li>
-&lt;/ol>
-&lt;p> &lt;/p>
-&lt;h2 id="文件恢复swp文件">文件恢复/swp文件&lt;/h2>
-&lt;p>正确对待swp文件的姿势:&lt;/p>
-&lt;ol>
-&lt;li>vim 打开原文件, 此时会提示&lt;code>Found a swap file the name .xxx.swp&lt;/code>, 显然选择&lt;code>(R)ecover&lt;/code> 来恢复未保存的内容.&lt;/li>
-&lt;li>使用&lt;code>:w&lt;/code>将恢复的内容保存下来&lt;/li>
-&lt;li>但是此时原本的swp文件还是存在, 此时我们执行&lt;code>:e&lt;/code>刷新一下当前bufffer, 仍然会提示恢复的选项, 但此时文件内容已经恢复, 选择&lt;code>(D)elete&lt;/code> 就可将对应的swp文件删除了&lt;/li>
-&lt;/ol>
-&lt;blockquote>
-&lt;p>删除当前目录中所有swp file的脚本?&lt;/p>
-&lt;p>需要确保:&lt;/p>
-&lt;ul>
-&lt;li>所有文件内容已恢复&lt;/li>
-&lt;li>当前窗口或者其他窗口没有vim正在打开文件(会生成swp file)&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>find . -type f -name &lt;span style="color:#f1fa8c">&amp;#34;.*.sw[klmnop]&amp;#34;&lt;/span> -delete
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/blockquote>
-&lt;p>&lt;a href="https://www.cs.longwood.edu/VimSwap.html">How to handle swapfiles in Vim (longwood.edu)&lt;/a>&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="debug-vim-key-mapping">Debug VIM key mapping&lt;/h2>
-&lt;p>&lt;a href="https://vi.stackexchange.com/a/7723/43494">https://vi.stackexchange.com/a/7723/43494&lt;/a>&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="如何同步-vim-dotfiles">如何同步 VIM Dotfiles&lt;/h2>
-&lt;p>vim 的 dotfiles 主要包含&lt;code>.vimrc&lt;/code>和&lt;code>.vim/&lt;/code>中的插件.&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>对于&lt;code>.vimrc&lt;/code>, 我选择使用mackup 软件和其他system dotfiles 一起备份. &lt;a href="https://github.com/wangloo/dotfiles">Git repo&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>对于 plugins, 传统的管理插件的方式(使用&lt;code>vim-plug&lt;/code>), 也就是放在&lt;code>~/.vim/plugged/&lt;/code>目录中的, 可以通过&lt;code>:PlugInstall&lt;/code>命令在新机器上重新从网上克隆. 能够保证使用的是新版本.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>VIM 8.0 之后, 引入 &lt;em>pack system&lt;/em> 新的插件管理方式. 对于这类的插件, 我们直接利用&lt;code>submodule&lt;/code>加入另一个备份的 &lt;a href="https://github.com/wangloo/vimpack">Git repo&lt;/a>. 使用方法见&lt;code>README&lt;/code>.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p> &lt;/p>
-&lt;h2 id="good-plugins">Good plugins&lt;/h2>
-&lt;blockquote>
-&lt;p>Reference: &lt;a href="https://github.com/amix/vimrc">The Ultimate vimrc&lt;/a>&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="todo">TODO&lt;/h3>
-&lt;h3 id="installed">Installed&lt;/h3>
-&lt;p>&lt;a href="https://github.com/preservim/nerdcommenter#settings">NERD Commneter - 快速注释&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://github.com/preservim/nerdtree">NERD Tree - 目录树&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://github.com/amix/open_file_under_cursor.vim">Open File Under Cursor - 打开光标处的文件目录&lt;/a>&lt;/p>
-&lt;ul>
-&lt;li>不支持&lt;code>vim-plug&lt;/code>安装. 直接clone源码到&lt;code>plugged&lt;/code>目录即可.&lt;/li>
-&lt;li>Usage: &lt;code>gf&lt;/code>: 在当前window打开文件. &lt;code>&amp;lt;C-w&amp;gt;&amp;lt;C-f&amp;gt;&lt;/code>: &lt;strong>new vertical windows&lt;/strong>中打开文件.&lt;/li>
-&lt;/ul>
-&lt;p>&lt;a href="https://github.com/mileszs/ack.vim">Ack.vim - 快速定位内容&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://github.com/Yggdroot/LeaderF">LeaderF - Like Ctrlp but better?&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://github.com/rlue/vim-barbaric">barbaric - normal模式切换英文输入法&lt;/a>&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="helpful-script">Helpful script&lt;/h2>
-&lt;h3 id="search-text-selected-in-visual-mode">search text selected in visual mode&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-vimrc" data-lang="vimrc">&lt;span style="display:flex;">&lt;span>xnoremap * :&amp;lt;C-u&amp;gt;call &amp;lt;SID&amp;gt;VSetSearch(&lt;span style="color:#f1fa8c">&amp;#39;/&amp;#39;&lt;/span>)&amp;lt;CR&amp;gt;&lt;span style="color:#f1fa8c">/&amp;lt;C-R&amp;gt;=@/&lt;/span>&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xnoremap # :&amp;lt;C-u&amp;gt;call &amp;lt;SID&amp;gt;VSetSearch(&lt;span style="color:#f1fa8c">&amp;#39;?&amp;#39;&lt;/span>)&amp;lt;CR&amp;gt;?&amp;lt;C-R&amp;gt;=@/&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">function&lt;/span>! s:VSetSearch(cmdtype)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> temp = @s
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>norm! gv&amp;#34;sy
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> @/ = &lt;span style="color:#f1fa8c">&amp;#39;\V&amp;#39;&lt;/span> . substitute(escape(@s, a:cmdtype.&lt;span style="color:#f1fa8c">&amp;#39;\&amp;#39;&lt;/span>), &lt;span style="color:#f1fa8c">&amp;#39;\n&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;\\n&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;g&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> @s = temp
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">endfunction&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/vim/basic/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/hugo/ - @2019 Notepadium.</description></item></channel></rss>
