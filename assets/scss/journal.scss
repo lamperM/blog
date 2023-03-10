@@ -51,8 +51,8 @@ $single-column-post-meta-size: 14px;
 $single-column-tag-category-title-size: 14px;
 $single-column-toc-size: 14px;
 
-$h1: 30px;
-$h-diff: 3px;
+$h1: 35px;
+$h-diff: 5px;
 
 ::selection {
   background: rgba($color-accent, 0.4);
@@ -84,11 +84,13 @@ h3 {
 
 h1 {
   font-size: $h1;
-  margin: 60px auto 30px auto;
+  font-weight: 600;
+  margin: 60px auto 20px auto;
 }
 
 h2 {
   font-size: $h1 - 2 * $h-diff;
+  font-weight: 500;
   margin: 40px auto 20px auto;
 }
 
@@ -110,6 +112,15 @@ h5 {
 h6 {
   font-size: $h1 - 3 * $h-diff - 2;
   padding: 10px auto;
+}
+
+h1:before {
+    content: "📘 ";
+    font-size: $h1 - 5px;
+}
+h2:before {
+    content: "> ";
+    font-size: $h1 - 2 * $h-diff;
 }
 
 textarea,
