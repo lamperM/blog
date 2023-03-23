@@ -4,11 +4,20 @@ date: 2022-12-03T19:08:22+08:00
 tags: ["makefile"]
 ---
 
-..
+
+## 规则的执行顺序
+如果不从命令行传入目标, Makefile中定义的规则其实是以**从上而下**的顺序执行的, 但是我习惯把 `all` 这种默认规则放在最下面, 所以一般我们可以看到很多Makefile会在开头写一句规则`all:`, 作用就是告诉make默认(不显式指定)的目标是`all`.
+
+>Busybox 根目录 Makefile 中的做法示例
+> 
+>```makefile
+># That's our default target when >none is given on the command line
+>.PHONY: _all
+>_all:
+>```
 
 
-
-### 使用shell 变量
+## 使用shell 变量
 
 Make 将 `$$var` 转义为`$var`, 供shell处理. 
 
