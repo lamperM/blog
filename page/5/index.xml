@@ -1,18 +1,24 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GCC '-M' and Related Parameters</title><link>https://wangloo.github.io/posts/c/gcc_-m_related/</link><pubDate>Tue, 26 Apr 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/gcc_-m_related/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/c/gcc_-m_related/ -&lt;p>As we all know, there are huge number of parameters for GCC. With them, we can make many things possible. Now we talk about -M and related ones.
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GCC '-M' and Related Parameters</title><link>https://wangloo.github.io/posts/c/gcc_-m_related/</link><pubDate>Tue, 26 Apr 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/gcc_-m_related/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/gcc_-m_related/ -&lt;p>As we all know, there are huge number of parameters for GCC. With them, we can make many things possible. Now we talk about -M and related ones.
 After reading this article, you will know the meaning of there magic parameters. And I will put some little demos follows. Finally, we will see what can they do in really project. Let&amp;rsquo;s go ahead.&lt;/p>
-&lt;h2 id="-m">-M&lt;/h2>
-&lt;p>Output the dependencies of the input source file. Incluing the names of itself and all included files.&lt;/p>
-&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
-Suppose we have source file &lt;code>tmp.c&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/* File: tmp.c */&lt;/span>
+&lt;h2 id="实例规则">实例规则&lt;/h2>
+&lt;p>以下的分析都是基于这样一个生成目标文件的规则, 应该来说具有一定的通用性。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">build/obj/main.o&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> src/main.c
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">$(&lt;/span>CC&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>CFLAGS&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>INCLUDES&lt;span style="color:#ff79c6">)&lt;/span> -c $&amp;lt; -o &lt;span style="color:#8be9fd;font-style:italic">$@&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>main.c&lt;/code>中的内容：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/* File: main.c */&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdio.h&amp;gt; // system header file&lt;/span>&lt;span style="color:#ff79c6">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;#34;tmp.h&amp;#34; // user defined header file&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;#34;header.h&amp;#34; // user defined header file&lt;/span>&lt;span style="color:#ff79c6">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>() {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If we run &lt;code>gcc -M tmp.c&lt;/code>, we will get messy output like following. Notice that the first two words is object filename and a colon.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>tmp.o: /home/wanglu/demo/tmp.c /usr/include/stdc-predef.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/stdio.h &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="-m">-M&lt;/h2>
+&lt;p>Output the dependencies of the input source file. Incluing the names of itself and all included files.&lt;/p>
+&lt;p>&lt;strong>&lt;code>-M&lt;/code>(and 下面的&lt;code>-MM&lt;/code>)和&lt;code>-o&lt;/code> 不能同时使用&lt;/strong>，因为都隐含&lt;code>-E&lt;/code>。
+假设我们只想输出依赖文件，我们可以将示例中的规则如此改造：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">build/obj/main.o&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> src/main.c
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">$(&lt;/span>CC&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>CFLAGS&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>INCLUDES&lt;span style="color:#ff79c6">)&lt;/span> -c $&amp;lt; -M
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We will get messy output like following. Notice that the first two words is object filename and a colon.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>main.o: src/main.c /usr/include/stdc-predef.h /usr/include/stdio.h &lt;span style="color:#f1fa8c">\
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/libc-header-start.h &lt;span style="color:#f1fa8c">\
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h &lt;span style="color:#f1fa8c">\
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/wordsize.h &lt;span style="color:#f1fa8c">\
@@ -32,37 +38,45 @@ Suppose we have source file &lt;code>tmp.c&lt;/code>:&lt;/p>
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/FILE.h &lt;span style="color:#f1fa8c">\
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h &lt;span style="color:#f1fa8c">\
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/stdio_lim.h &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /home/wanglu/demo/tmp.h
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
-&lt;p>Note: &lt;code>-M&lt;/code> and &lt;code>-MM&lt;/code> 都隐含 &lt;code>-E&lt;/code>. 也就是如果后面有生成目标文件的规则, 不会执行.&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="-mm">-MM&lt;/h2>
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> /usr/include/x86_64-linux-gnu/bits/sys_errlist.h
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> src/header.h
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="-mm">-MM&lt;/h2>
 &lt;p>Like &lt;code>-M&lt;/code> but do NOT output system header files.&lt;/p>
-&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
-Use same source file &lt;code>tmp.c&lt;/code> above.&lt;br>
-Run &lt;code>gcc -MM tmp.c&lt;/code>. Output dependencies except system header files.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>tmp.o: /home/wanglu/demo/tmp.c /home/wanglu/demo/tmp.h
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="-mf">-MF&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>main.o: src/main.c src/header.h
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="-mf-file">-MF &amp;lt;file&amp;gt;&lt;/h2>
 &lt;p>Use with &lt;code>-M&lt;/code> or &lt;code>-MM&lt;/code>. Specify output dependencies to file instead of STDOUT.&lt;/p>
-&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
-Use same source file &lt;code>tmp.c&lt;/code> above.&lt;br>
-Run &lt;code>gcc -MM -MF dp.txt tmp.c&lt;/code>. File &lt;code>dp.txt&lt;/code> will be created and filled with dependecies of &lt;code>tmp.c&lt;/code> except system header files.&lt;/p>
+&lt;p>注意，只要使用追加上&lt;code>-MF&lt;/code>，就可以和&lt;code>-o&lt;/code>选项并存了，可以写在一条语句中&lt;/p>
 &lt;h2 id="-md">-MD&lt;/h2>
 &lt;p>&lt;code>-MD&lt;/code> is same as &lt;code>-M -MF &amp;lt;file&amp;gt;&lt;/code>. But the filename is basd on the object file but replacing &lt;code>.o&lt;/code> with &lt;code>.d&lt;/code>.&lt;/p>
-&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
-Use same source file &lt;code>tmp.c&lt;/code> above.&lt;br>
-Run &lt;code>gcc -MD tmp.c&lt;/code>. File &lt;code>tmp.d&lt;/code> will be created and filled with all dependecies.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#bd93f9">1&lt;/span> wanglu wanglu &lt;span style="color:#bd93f9">67&lt;/span> 4月 &lt;span style="color:#bd93f9">26&lt;/span> 19:49 tmp.c
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#bd93f9">1&lt;/span> wanglu wanglu &lt;span style="color:#bd93f9">1175&lt;/span> 4月 &lt;span style="color:#bd93f9">26&lt;/span> 20:27 tmp.d
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#bd93f9">1&lt;/span> wanglu wanglu &lt;span style="color:#bd93f9">38&lt;/span> 4月 &lt;span style="color:#bd93f9">26&lt;/span> 19:47 tmp.h
+&lt;p>如果将示例中的代码换成：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">build/obj/main.o&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> src/main.c FORCE
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">$(&lt;/span>CC&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>CFLAGS&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>INCLUDES&lt;span style="color:#ff79c6">)&lt;/span> -c $&amp;lt; -o &lt;span style="color:#8be9fd;font-style:italic">$@&lt;/span> -MD
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ ll build/obj/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>total &lt;span style="color:#bd93f9">16&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>drwxrwxr-x &lt;span style="color:#bd93f9">2&lt;/span> soben soben &lt;span style="color:#bd93f9">4096&lt;/span> 3月 &lt;span style="color:#bd93f9">23&lt;/span> 20:45 ./
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>drwxrwxr-x &lt;span style="color:#bd93f9">3&lt;/span> soben soben &lt;span style="color:#bd93f9">4096&lt;/span> 3月 &lt;span style="color:#bd93f9">23&lt;/span> 20:35 ../
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#bd93f9">1&lt;/span> soben soben &lt;span style="color:#bd93f9">1144&lt;/span> 3月 &lt;span style="color:#bd93f9">23&lt;/span> 20:45 main.d
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#bd93f9">1&lt;/span> soben soben &lt;span style="color:#bd93f9">1368&lt;/span> 3月 &lt;span style="color:#bd93f9">23&lt;/span> 20:45 main.o
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
-&lt;p>Note: &lt;code>-MD&lt;/code> and &lt;code>-MMD&lt;/code> 不隐含 &lt;code>-E&lt;/code>.&lt;/p>
+&lt;p>Note: &lt;code>-MD&lt;/code> and &lt;code>-MMD&lt;/code> 因为有&lt;code>-MT&lt;/code>，也不隐含 &lt;code>-E&lt;/code>.&lt;/p>
 &lt;/blockquote>
 &lt;h2 id="-mmd">-MMD&lt;/h2>
 &lt;p>&lt;code>-MMD&lt;/code> is same as &lt;code>-MM -MF &amp;lt;file&amp;gt;&lt;/code>. Also named on object file but replacing &lt;code>.o&lt;/code> with &lt;code>.d&lt;/code>.&lt;/p>
-&lt;p>&lt;strong>Little Demo&lt;/strong>&lt;br>
-Use same source file &lt;code>tmp.c&lt;/code> above.&lt;br>
-Run &lt;code>gcc -MMD tmp.c&lt;/code>. File &lt;code>tmp.d&lt;/code> will be created and filled with dependecies except system header files.&lt;/p>
+&lt;h2 id="-mt-target">-MT &amp;lt;target&amp;gt;&lt;/h2>
+&lt;p>&lt;code>MT&lt;/code> 是一个单独的选项，不与上面的冲突。作用是&lt;strong>改变生成依赖规则的目标格式&lt;/strong>。在此之前，默认的格式是&lt;code>文件名.o&lt;/code>，去除任何前缀目录。&lt;/p>
+&lt;p>而使用&lt;code>-MT&lt;/code>之后可以自定义规则中目标的格式， 由&lt;code>&amp;lt;target&amp;gt;&lt;/code>指定。&lt;/p>
+&lt;p>例如，对于前面的选项，依赖规则目前总是&lt;code>main.o&lt;/code>，很多使用，我们需要的是其编译规则中目标的形式，包含路径，并不仅仅是文件名本身。这时我们就需要使用&lt;code>-MT&lt;/code>，可以将示例中的规则做如下修改:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">build/obj/main.o&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> src/main.c FORCE
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">$(&lt;/span>CC&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>CFLAGS&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>INCLUDES&lt;span style="color:#ff79c6">)&lt;/span> -c $&amp;lt; -o &lt;span style="color:#8be9fd;font-style:italic">$@&lt;/span> -MMD -MT &lt;span style="color:#8be9fd;font-style:italic">$@&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>依赖文件的内容就变为:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">build/obj/main.o&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> src/main.c src/header.h
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>实际上，从我的开发经验来看，大项目中编译规则的目标并不直接是目标文件，总有一个路径前缀，例如：&lt;code>$(objdir)/%.o: $(srcdir)/%c&lt;/code>, 这时如果 include 的依赖文件的目标只是一个文件名，其实没什么意义。 所以 &lt;code>-MT&lt;/code> 应该是在开发大型项目中很常见的。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="-mq-target">-MQ &amp;lt;target&amp;gt;&lt;/h2>
+&lt;p>与&lt;code>MT&lt;/code>类似，而且我没有验证成功&lt;a href="https://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html">官网&lt;/a>说出的和 MT 的区别.
+所以，这是一个 &lt;strong>TODO&lt;/strong>。&lt;/p>
 &lt;h2 id="application">Application&lt;/h2>
 &lt;p>Here is an important question you may ask me: &lt;em>Why do we struggle to get the dependencies formats? What can they do?&lt;/em>&lt;br>
 If you are familiar with &lt;code>make&lt;/code> and &lt;code>Makefile&lt;/code>, aha, that&amp;rsquo;s it!
@@ -83,7 +97,7 @@ Give you a little demo about my point.&lt;/p>
 &lt;li>&lt;a href="https://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html#Preprocessor-Options">GNU GCC options&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://programmer.group/gcc-m-mm-mmd-mf-mt.html">GCC -M, -MM, -MMD, -MF, -MT&lt;/a>&lt;/li>
 &lt;/ol>
-- https://wangloo.github.io/posts/c/gcc_-m_related/ - @2019 Notepadium.</description></item><item><title>Second Blog</title><link>https://wangloo.github.io/posts/second-blog/second-blog/</link><pubDate>Tue, 26 Apr 2022 15:32:11 +0800</pubDate><guid>https://wangloo.github.io/posts/second-blog/second-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/second-blog/second-blog/ -&lt;p>This is my second blog.&lt;/p>
+- https://wangloo.github.io/posts/c/gcc_-m_related/ - @2019 Notepadium.</description></item><item><title>Second Blog</title><link>https://wangloo.github.io/posts/second-blog/second-blog/</link><pubDate>Tue, 26 Apr 2022 15:32:11 +0800</pubDate><guid>https://wangloo.github.io/posts/second-blog/second-blog/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/second-blog/second-blog/ -&lt;p>This is my second blog.&lt;/p>
 &lt;blockquote>
 &lt;p>Wish you have a good life.&lt;/p>
 &lt;/blockquote>
@@ -101,7 +115,7 @@ Give you a little demo about my point.&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>&lt;img src="images/test.jpg" alt="sunset">&lt;/p>
-- https://wangloo.github.io/posts/second-blog/second-blog/ - @2019 Notepadium.</description></item><item><title>First Blog</title><link>https://wangloo.github.io/posts/first-blog/first-blog/</link><pubDate>Tue, 26 Apr 2022 15:13:07 +0800</pubDate><guid>https://wangloo.github.io/posts/first-blog/first-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/first-blog/first-blog/ -&lt;p>This is my first blog.
+- https://wangloo.github.io/posts/second-blog/second-blog/ - @2019 Notepadium.</description></item><item><title>First Blog</title><link>https://wangloo.github.io/posts/first-blog/first-blog/</link><pubDate>Tue, 26 Apr 2022 15:13:07 +0800</pubDate><guid>https://wangloo.github.io/posts/first-blog/first-blog/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/first-blog/first-blog/ -&lt;p>This is my first blog.
 This is my first blog.
 This is my first blog.
 This is my first blog.

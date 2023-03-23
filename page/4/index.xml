@@ -1,4 +1,4 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>2019 Stanford Commencement Timcook</title><link>https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/</link><pubDate>Wed, 18 May 2022 19:32:38 +0800</pubDate><guid>https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/ -&lt;h1 id="content">Content&lt;/h1>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>2019 Stanford Commencement Timcook</title><link>https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/</link><pubDate>Wed, 18 May 2022 19:32:38 +0800</pubDate><guid>https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/ -&lt;h1 id="content">Content&lt;/h1>
 &lt;p>Fourteen years ago, Steve stood on this stage and told your predecessors &amp;ldquo;Your time is limited. So don&amp;rsquo;t waste is living someone else&amp;rsquo;s life.&amp;rdquo;&lt;/p>
 &lt;p>So what is true then is true now. Don&amp;rsquo;t waste your time living someone else&amp;rsquo;s life.
 Don&amp;rsquo;t try to emulate the people who came before you to the exclusion of
@@ -12,7 +12,7 @@ show up for the ribbon cutting without building anything worth a damn.&lt;/p>
 with you. You&amp;rsquo;re going to have to pass it on.&lt;/p>
 &lt;p>Thank you very much. And Congratulations to the Class of 2019!&lt;/p>
 &lt;p>&lt;a href="https://www.youtube.com/watch?v=2C2VJwGBRRw&amp;amp;t=80s">YouTube vidio&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/ - @2019 Notepadium.</description></item><item><title>Html Css Learning note (0)</title><link>https://wangloo.github.io/posts/html-css/0/</link><pubDate>Tue, 17 May 2022 11:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/html-css/0/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/html-css/0/ -&lt;h1 id="get-start">Get start&lt;/h1>
+- https://wangloo.github.io/posts/motivation/2019-stanford-commencement-timcook/ - @2019 Notepadium.</description></item><item><title>Html Css Learning note (0)</title><link>https://wangloo.github.io/posts/html-css/0/</link><pubDate>Tue, 17 May 2022 11:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/html-css/0/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/html-css/0/ -&lt;h1 id="get-start">Get start&lt;/h1>
 &lt;h2 id="what-is-htmlcss">What is HTML&amp;amp;CSS?&lt;/h2>
 &lt;ul>
 &lt;li>
@@ -158,7 +158,7 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-- https://wangloo.github.io/posts/html-css/0/ - @2019 Notepadium.</description></item><item><title>我的 vim 调教随笔</title><link>https://wangloo.github.io/posts/vim/basic/</link><pubDate>Mon, 09 May 2022 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/vim/basic/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/vim/basic/ -&lt;p>Search a word quickly: put cursor on the word, press &lt;code>/&lt;/code> and press &lt;code>&amp;lt;C-R&amp;gt;&lt;/code> &lt;code>&amp;lt;C-W&amp;gt;&lt;/code>.&lt;/p>
+- https://wangloo.github.io/posts/html-css/0/ - @2019 Notepadium.</description></item><item><title>我的 vim 调教随笔</title><link>https://wangloo.github.io/posts/vim/basic/</link><pubDate>Mon, 09 May 2022 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/vim/basic/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/vim/basic/ -&lt;p>Search a word quickly: put cursor on the word, press &lt;code>/&lt;/code> and press &lt;code>&amp;lt;C-R&amp;gt;&lt;/code> &lt;code>&amp;lt;C-W&amp;gt;&lt;/code>.&lt;/p>
 &lt;p> &lt;/p>
 &lt;h2 id="缩写的含义meaning-of-abbreviations">缩写的含义(Meaning of abbreviations)&lt;/h2>
 &lt;p>Operation&lt;/p>
@@ -395,7 +395,7 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> @/ = &lt;span style="color:#f1fa8c">&amp;#39;\V&amp;#39;&lt;/span> . substitute(escape(@s, a:cmdtype.&lt;span style="color:#f1fa8c">&amp;#39;\&amp;#39;&lt;/span>), &lt;span style="color:#f1fa8c">&amp;#39;\n&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;\\n&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;g&amp;#39;&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> @s = temp
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">endfunction&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/vim/basic/ - @2019 Notepadium.</description></item><item><title>reveal.js Tutorial</title><link>https://wangloo.github.io/posts/revealjs/</link><pubDate>Sun, 08 May 2022 19:34:44 +0800</pubDate><guid>https://wangloo.github.io/posts/revealjs/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/revealjs/ -&lt;h1 id="change-code-theme">Change code theme&lt;/h1>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/vim/basic/ - @2019 Notepadium.</description></item><item><title>reveal.js Tutorial</title><link>https://wangloo.github.io/posts/revealjs/</link><pubDate>Sun, 08 May 2022 19:34:44 +0800</pubDate><guid>https://wangloo.github.io/posts/revealjs/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/revealjs/ -&lt;h1 id="change-code-theme">Change code theme&lt;/h1>
 &lt;p>Default use &lt;code>monokai.css&lt;/code>. see &lt;a href="https://revealjs.com/code/">官方文档&lt;/a>&lt;/p>
 &lt;p>修改需要下载新的&lt;code>css&lt;/code>放到&lt;code>plugin/highlight/&lt;/code>目录下.&lt;/p>
 &lt;p>其他可用的&lt;code>css&lt;/code>在&lt;a href="https://github.com/highlightjs/highlight.js/tree/main/src/styles">highlight.js仓库&lt;/a>中下载.&lt;/p>
@@ -408,7 +408,7 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ... })
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>所有slide左对齐: &lt;a href="https://github.com/hakimel/reveal.js/issues/1897">https://github.com/hakimel/reveal.js/issues/1897&lt;/a>&lt;/p>
 &lt;p>用markdown写的方式下使某一幻灯片左对齐: &lt;a href="https://github.com/hakimel/reveal.js/issues/890#issuecomment-129735291">https://github.com/hakimel/reveal.js/issues/890#issuecomment-129735291&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/revealjs/ - @2019 Notepadium.</description></item><item><title>A64 指令集</title><link>https://wangloo.github.io/posts/armv8/a64_isa/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64_isa/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/a64_isa/ -&lt;h2 id="loadstore-指令">Load/Store 指令&lt;/h2>
+- https://wangloo.github.io/posts/revealjs/ - @2019 Notepadium.</description></item><item><title>A64 指令集</title><link>https://wangloo.github.io/posts/armv8/a64_isa/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64_isa/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/a64_isa/ -&lt;h2 id="loadstore-指令">Load/Store 指令&lt;/h2>
 &lt;h3 id="1-basic-loadstore">#1 Basic Load/Store&lt;/h3>
 &lt;h4 id="addressing-mode">Addressing mode&lt;/h4>
 &lt;ol>
@@ -476,7 +476,7 @@ UBFX w1, w0, #18, #7 ;w1=w0[18, 24]
 &lt;p>Use &lt;code>.syntax unified&lt;/code> in v7 code, and never use &lt;code>#&lt;/code> on any literal on either v7 or v8.
 Unified syntax is newer and better, and those &lt;code>#&lt;/code> and &lt;code>$&lt;/code> signs are just more code noise.&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/posts/armv8/a64_isa/ - @2019 Notepadium.</description></item><item><title>ARMv8-A 寄存器</title><link>https://wangloo.github.io/posts/armv8/register/</link><pubDate>Sat, 07 May 2022 20:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/register/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/register/ -&lt;h1 id="寄存器分类">寄存器分类&lt;/h1>
+- https://wangloo.github.io/posts/armv8/a64_isa/ - @2019 Notepadium.</description></item><item><title>ARMv8-A 寄存器</title><link>https://wangloo.github.io/posts/armv8/register/</link><pubDate>Sat, 07 May 2022 20:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/register/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/register/ -&lt;h1 id="寄存器分类">寄存器分类&lt;/h1>
 &lt;h2 id="通用寄存器">通用寄存器&lt;/h2>
 &lt;ol>
 &lt;li>&lt;code>x0-x7&lt;/code> 参数寄存器: Restore function parameters and return vaule.&lt;/li>
@@ -510,7 +510,7 @@ Unified syntax is newer and better, and those &lt;code>#&lt;/code> and &lt;code>
 &lt;blockquote>
 &lt;p>&lt;code>sp&lt;/code> is an alias of &lt;code>sp_el0&lt;/code>. Do NOT treat &lt;code>sp&lt;/code> as general-purpose register.&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/posts/armv8/register/ - @2019 Notepadium.</description></item><item><title>Numberical Analysis Exam</title><link>https://wangloo.github.io/posts/numberical-analysis/</link><pubDate>Sat, 07 May 2022 18:04:58 +0800</pubDate><guid>https://wangloo.github.io/posts/numberical-analysis/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/numberical-analysis/ -&lt;p>&lt;img src="qingdao-tzjt.JPG" alt="qingdao">&lt;/p>
+- https://wangloo.github.io/posts/armv8/register/ - @2019 Notepadium.</description></item><item><title>Numberical Analysis Exam</title><link>https://wangloo.github.io/posts/numberical-analysis/</link><pubDate>Sat, 07 May 2022 18:04:58 +0800</pubDate><guid>https://wangloo.github.io/posts/numberical-analysis/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/numberical-analysis/ -&lt;p>&lt;img src="qingdao-tzjt.JPG" alt="qingdao">&lt;/p>
 &lt;h1 id="考试大纲">考试大纲&lt;/h1>
 &lt;p>🎯 To Reader:&lt;/p>
 &lt;p>This blog is JUST FOR EXAMINATION! If you are interested in numberical analysis, please quit this web.
@@ -740,7 +740,7 @@ $$&lt;/p>
 &lt;p>对&lt;code>y' = f(x,y)&lt;/code>的两端进行&lt;strong>局部的&lt;/strong>积分, 然后用梯形公式近似计算右边.&lt;/p>
 &lt;h4 id="13-改进euler公式">1.3 改进Euler公式&lt;/h4>
 &lt;p>先用欧拉公式求得一个&lt;code>近似的yn+1&lt;/code>, 带入梯形公式, 得到&lt;code>矫正的yn+1&lt;/code>.&lt;/p>
-- https://wangloo.github.io/posts/numberical-analysis/ - @2019 Notepadium.</description></item><item><title>LaTeX Vim Tutorial</title><link>https://wangloo.github.io/posts/latex-vim-tutorial/</link><pubDate>Wed, 04 May 2022 17:07:51 +0800</pubDate><guid>https://wangloo.github.io/posts/latex-vim-tutorial/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/latex-vim-tutorial/ -&lt;h2 id="use-plugin-vimtex">Use plugin &lt;code>vimtex&lt;/code>&lt;/h2>
+- https://wangloo.github.io/posts/numberical-analysis/ - @2019 Notepadium.</description></item><item><title>LaTeX Vim Tutorial</title><link>https://wangloo.github.io/posts/latex-vim-tutorial/</link><pubDate>Wed, 04 May 2022 17:07:51 +0800</pubDate><guid>https://wangloo.github.io/posts/latex-vim-tutorial/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/latex-vim-tutorial/ -&lt;h2 id="use-plugin-vimtex">Use plugin &lt;code>vimtex&lt;/code>&lt;/h2>
 &lt;p>Vim build-in support of LaTeX files is just OK. When we need more excellent exprience, good plugins is very recommended.&lt;/p>
 &lt;p>&lt;a href="https://github.com/lervag/vimtex#configuration">vimtex&lt;/a> is a nice and modern vim plugin for LaTeX files.&lt;/p>
 &lt;p>&lt;strong>Useful Futures of vimtex IMO&lt;/strong>&lt;/p>
@@ -801,7 +801,7 @@ $$&lt;/p>
 &lt;ul>
 &lt;li>CTex is only avilable in windows.&lt;/li>
 &lt;/ul>
-- https://wangloo.github.io/posts/latex-vim-tutorial/ - @2019 Notepadium.</description></item><item><title>Portability Issues</title><link>https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/</link><pubDate>Sun, 01 May 2022 16:41:35 +0800</pubDate><guid>https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/ -&lt;p>When reading C standard documents, we usually see phrases like &amp;ldquo;&lt;strong>Implementation-defined&lt;/strong>&amp;rdquo;, &amp;ldquo;&lt;strong>Unspecified&lt;/strong>&amp;rdquo;,.etc.&lt;/p>
+- https://wangloo.github.io/posts/latex-vim-tutorial/ - @2019 Notepadium.</description></item><item><title>Portability Issues</title><link>https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/</link><pubDate>Sun, 01 May 2022 16:41:35 +0800</pubDate><guid>https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/ -&lt;p>When reading C standard documents, we usually see phrases like &amp;ldquo;&lt;strong>Implementation-defined&lt;/strong>&amp;rdquo;, &amp;ldquo;&lt;strong>Unspecified&lt;/strong>&amp;rdquo;,.etc.&lt;/p>
 &lt;p>So, what do they really mean?&lt;/p>
 &lt;h2 id="术语">术语&lt;/h2>
 &lt;p>我们将这些难以直接理解的词汇称为&lt;strong>术语&lt;/strong>，在ANSI C中，术语可以分为描述不可移植代码(unportable), 坏代码(bad), 可移植的代码(portable)三类.&lt;/p>
@@ -830,6 +830,6 @@ $$&lt;/p>
 &lt;p>这样规定的目的是最大程序保证代码的可移植性. 但符合该术语的代码并不常见, 例如&lt;code>INT_MAX&lt;/code>的值在不同架构的机器上结果可能不同.&lt;/p>
 &lt;p>&lt;strong>comforming&lt;/strong>&lt;/p>
 &lt;p>遵循标准的; 一个遵循标准的程序可以依赖一些对于某种编译器特有的&lt;strong>不可移植&lt;/strong>的特性. 这样一个程序对于某个编译器可能是遵循标准的, 但对于另外一个编译器又是不遵循标准的.&lt;/p>
-- https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/ - @2019 Notepadium.</description></item><item><title>Third Blog</title><link>https://wangloo.github.io/posts/third-blog/</link><pubDate>Sun, 01 May 2022 16:41:35 +0800</pubDate><guid>https://wangloo.github.io/posts/third-blog/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/third-blog/ -&lt;p>&lt;img src="images/test.jpg" alt="sunset">
+- https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/ - @2019 Notepadium.</description></item><item><title>Third Blog</title><link>https://wangloo.github.io/posts/third-blog/</link><pubDate>Sun, 01 May 2022 16:41:35 +0800</pubDate><guid>https://wangloo.github.io/posts/third-blog/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/third-blog/ -&lt;p>&lt;img src="images/test.jpg" alt="sunset">
 &lt;img src="test.jpg" alt="sunset">&lt;/p>
 - https://wangloo.github.io/posts/third-blog/ - @2019 Notepadium.</description></item></channel></rss>

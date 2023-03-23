@@ -1,4 +1,4 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Soben's Secret Base</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Soben's Secret Base</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GNU C内联汇编学习笔记</title><link>https://wangloo.github.io/posts/c/inline-asm/</link><pubDate>Sat, 24 Sep 2022 16:48:58 +0800</pubDate><guid>https://wangloo.github.io/posts/c/inline-asm/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/c/inline-asm/ -&lt;h3 id="语句结构">语句结构&lt;/h3>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GNU C内联汇编学习笔记</title><link>https://wangloo.github.io/posts/c/inline-asm/</link><pubDate>Sat, 24 Sep 2022 16:48:58 +0800</pubDate><guid>https://wangloo.github.io/posts/c/inline-asm/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/inline-asm/ -&lt;h3 id="语句结构">语句结构&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">asm&lt;/span> &lt;span style="color:#ff79c6">asm&lt;/span>&lt;span style="color:#ff79c6">-&lt;/span>qualifiers ( &lt;span style="color:#8be9fd;font-style:italic">AssemblerTemplate&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : &lt;span style="color:#8be9fd;font-style:italic">OutputOperands&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : &lt;span style="color:#8be9fd;font-style:italic">InputOperands&lt;/span>
@@ -100,7 +100,7 @@ This stands for &amp;ldquo;condition codes&amp;rdquo;. Since the add instruction
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> );
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="reference">Reference&lt;/h2>
 &lt;p>&lt;a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Extended-Asm">Extended Asm (Using the GNU Compiler Collection (GCC))&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/c/inline-asm/ - @2019 Notepadium.</description></item><item><title>GICv3 介绍</title><link>https://wangloo.github.io/posts/armv8/gicv3/</link><pubDate>Sat, 10 Sep 2022 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/armv8/gicv3/ -&lt;h1 id="gicv3generic-interrupt-controller---version-3">GICV3(Generic Interrupt Controller - version 3)&lt;/h1>
+- https://wangloo.github.io/posts/c/inline-asm/ - @2019 Notepadium.</description></item><item><title>GICv3 介绍</title><link>https://wangloo.github.io/posts/armv8/gicv3/</link><pubDate>Sat, 10 Sep 2022 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/gicv3/ -&lt;h1 id="gicv3generic-interrupt-controller---version-3">GICV3(Generic Interrupt Controller - version 3)&lt;/h1>
 &lt;h2 id="关于gic">关于GIC&lt;/h2>
 &lt;p>GIC即中断控制器, 负责管理中断的接收, 屏蔽, 路由等相关任务, 并向系统程序员提供配置的接口.&lt;/p>
 &lt;p>GIC与异常模型协作完成中断的整个生命周期, GIC主要负责&lt;code>中断源-产生IRQ/FIQ信号&lt;/code>这段路, 关于处理IRQ/FIQ则是由CPU内部的&lt;em>异常模型&lt;/em>来完成.&lt;/p>
@@ -313,7 +313,7 @@ This stands for &amp;ldquo;condition codes&amp;rdquo;. Since the add instruction
 &lt;h2 id="编程指导">编程指导&lt;/h2>
 &lt;h3 id="初始化">初始化&lt;/h3>
 &lt;p>由于 &lt;em>Distributor&lt;/em> 整个系统共享的, 所以必须在其他核启动之前, 由主核完成初始化. 然后当所有核都启动后, 各自完成各自 &lt;em>Redistributor&lt;/em> 和 &lt;em>CPU interface&lt;/em> 的初始化工作.&lt;/p>
-- https://wangloo.github.io/posts/armv8/gicv3/ - @2019 Notepadium.</description></item><item><title>武器库: shell scripts</title><link>https://wangloo.github.io/posts/shell/shell-script/</link><pubDate>Wed, 20 Jul 2022 11:54:13 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-script/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/shell/shell-script/ -&lt;p>ℹ️ 以下命令/脚本的执行环境均为 &lt;em>Bash&lt;/em>.&lt;/p>
+- https://wangloo.github.io/posts/armv8/gicv3/ - @2019 Notepadium.</description></item><item><title>武器库: shell scripts</title><link>https://wangloo.github.io/posts/shell/shell-script/</link><pubDate>Wed, 20 Jul 2022 11:54:13 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-script/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/shell/shell-script/ -&lt;p>ℹ️ 以下命令/脚本的执行环境均为 &lt;em>Bash&lt;/em>.&lt;/p>
 &lt;h2 id="统计代码量">统计代码量&lt;/h2>
 &lt;blockquote>
 &lt;p>使用到的命令包含: find, wc, xargs, sort等&lt;/p>
@@ -437,7 +437,7 @@ Light Gray 0;37 White 1;37
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>INFO &lt;span style="color:#f1fa8c">&amp;#34;This is an infomation&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>WARN &lt;span style="color:#f1fa8c">&amp;#34;This is a log&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/shell/shell-script/ - @2019 Notepadium.</description></item><item><title>C 语言位操作技巧</title><link>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ -&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/shell/shell-script/ - @2019 Notepadium.</description></item><item><title>C 语言位操作技巧</title><link>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ -&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> v;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> ((v &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> (v &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>)) &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>)
@@ -578,7 +578,7 @@ Light Gray 0;37 White 1;37
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> s[i] = TO_UPPER(s[i]); \
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> } \
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ - @2019 Notepadium.</description></item><item><title>Stack and Heap</title><link>https://wangloo.github.io/posts/os/stack-and-heap/</link><pubDate>Tue, 28 Jun 2022 16:41:54 +0800</pubDate><guid>https://wangloo.github.io/posts/os/stack-and-heap/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os/stack-and-heap/ -&lt;p> &lt;/p>
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ - @2019 Notepadium.</description></item><item><title>Stack and Heap</title><link>https://wangloo.github.io/posts/os/stack-and-heap/</link><pubDate>Tue, 28 Jun 2022 16:41:54 +0800</pubDate><guid>https://wangloo.github.io/posts/os/stack-and-heap/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/stack-and-heap/ -&lt;p> &lt;/p>
 &lt;h2 id="堆的含义">堆的含义&lt;/h2>
 &lt;p>我们都知道&lt;code>malloc&lt;/code>动态申请的变量是存放在堆中. 所以相比栈来说, 堆是动态的.&lt;/p>
 &lt;p>堆占据进程虚拟地址空间的大部分, 我们可能通过堆来申请&lt;code>1GB&lt;/code>的数组, 但是栈通常不行
@@ -597,7 +597,7 @@ Light Gray 0;37 White 1;37
 &lt;p>Linux中虚拟地址块(VMA)的管理使用了红黑树, 可以用于运行库管理自己向操作系统
 &amp;ldquo;批发&amp;quot;的堆空间. 使得用户程序动态申请和释放内存性能提高.&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/posts/os/stack-and-heap/ - @2019 Notepadium.</description></item><item><title>动态链接</title><link>https://wangloo.github.io/posts/os/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os/dynamic-link/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os/dynamic-link/ -&lt;h2 id="静态链接带来的问题">静态链接带来的问题&lt;/h2>
+- https://wangloo.github.io/posts/os/stack-and-heap/ - @2019 Notepadium.</description></item><item><title>动态链接</title><link>https://wangloo.github.io/posts/os/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os/dynamic-link/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/dynamic-link/ -&lt;h2 id="静态链接带来的问题">静态链接带来的问题&lt;/h2>
 &lt;ol>
 &lt;li>
 &lt;p>像是&lt;code>libc&lt;/code>这种几乎每个程序都要用到的库, 如果是静态的, 那么不仅意外着每个程序的
@@ -658,7 +658,7 @@ Light Gray 0;37 White 1;37
 &lt;p>一般来说, 不将主程序编译为地址无关码. 因为主程序不需要共享, 而且地址无关码的调用
 需要两个指令: &lt;code>计算地址&lt;/code> + &lt;code>跳转&lt;/code>. 多了一步根据偏移得到绝对地址.&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/posts/os/dynamic-link/ - @2019 Notepadium.</description></item><item><title>ELF 文件的链接与加载</title><link>https://wangloo.github.io/posts/os/elf-format/</link><pubDate>Mon, 20 Jun 2022 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os/elf-format/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/os/elf-format/ -&lt;h2 id="elf-is-a-file-format">&lt;code>ELF&lt;/code> is a file format&lt;/h2>
+- https://wangloo.github.io/posts/os/dynamic-link/ - @2019 Notepadium.</description></item><item><title>ELF 文件的链接与加载</title><link>https://wangloo.github.io/posts/os/elf-format/</link><pubDate>Mon, 20 Jun 2022 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os/elf-format/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/elf-format/ -&lt;h2 id="elf-is-a-file-format">&lt;code>ELF&lt;/code> is a file format&lt;/h2>
 &lt;p>Files in &lt;code>ELF&lt;/code> format includes:&lt;/p>
 &lt;table>
 &lt;thead>
@@ -893,7 +893,7 @@ Light Gray 0;37 White 1;37
 虚拟页.&lt;/p>
 &lt;p>原因是: 在一个页面的不同段可能&lt;strong>权限不同&lt;/strong>, 所以不能使用同一映射.&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/posts/os/elf-format/ - @2019 Notepadium.</description></item><item><title>写高质量的C语言工程的技巧</title><link>https://wangloo.github.io/posts/codestyle/improve_quality/</link><pubDate>Tue, 14 Jun 2022 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/improve_quality/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/codestyle/improve_quality/ -&lt;h2 id="添加更多的编译选项comiler-options来防止bug">添加更多的编译选项(comiler options)来防止bug&lt;/h2>
+- https://wangloo.github.io/posts/os/elf-format/ - @2019 Notepadium.</description></item><item><title>写高质量的C语言工程的技巧</title><link>https://wangloo.github.io/posts/codestyle/improve_quality/</link><pubDate>Tue, 14 Jun 2022 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/improve_quality/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/codestyle/improve_quality/ -&lt;h2 id="添加更多的编译选项comiler-options来防止bug">添加更多的编译选项(comiler options)来防止bug&lt;/h2>
 &lt;p>对于我常用的&lt;code>GCC&lt;/code>, 推荐开启一下的compiler options:&lt;/p>
 &lt;ul>
 &lt;li>
@@ -1017,7 +1017,7 @@ large enough for a corresponding “%s” in the format string.&lt;/p>
 &lt;h2 id="reference">Reference&lt;/h2>
 &lt;p>&lt;a href="https://www.msweet.org/blog/2020-12-31-how-i-improve-my-c-code-quality.html">How I Improve My (C) Code Quality&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://www.codeproject.com/Articles/357065/Ten-Fallacies-of-Good-C-Code">Ten Fallacies of Good C Code&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/codestyle/improve_quality/ - @2019 Notepadium.</description></item><item><title>MicroKernel Learning: SeL4</title><link>https://wangloo.github.io/posts/microkernel/sel4/</link><pubDate>Sat, 04 Jun 2022 11:52:51 +0800</pubDate><guid>https://wangloo.github.io/posts/microkernel/sel4/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/microkernel/sel4/ -&lt;h2 id="sel4-capabilities">seL4 Capabilities&lt;/h2>
+- https://wangloo.github.io/posts/codestyle/improve_quality/ - @2019 Notepadium.</description></item><item><title>MicroKernel Learning: SeL4</title><link>https://wangloo.github.io/posts/microkernel/sel4/</link><pubDate>Sat, 04 Jun 2022 11:52:51 +0800</pubDate><guid>https://wangloo.github.io/posts/microkernel/sel4/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/microkernel/sel4/ -&lt;h2 id="sel4-capabilities">seL4 Capabilities&lt;/h2>
 &lt;p>In seL4, capabilities are stored in &lt;strong>C-space&lt;/strong>. C-space is a hierarchical data structure very similar to &lt;strong>page table&lt;/strong>.&lt;/p>
 &lt;ul>
 &lt;li>page table is a mapping from virtual address to physical address.&lt;/li>
@@ -1158,7 +1158,7 @@ That is what operating system do to set up protection domains for &lt;strong>use
 &lt;/blockquote>
 &lt;p>Stack location, allocation, size must be managed by &lt;strong>userland&lt;/strong>.&lt;/p>
 &lt;p>Kernel beware of stack overflow&lt;/p>
-- https://wangloo.github.io/posts/microkernel/sel4/ - @2019 Notepadium.</description></item><item><title>使用 HuGo 搭建个人网站</title><link>https://wangloo.github.io/posts/hugo/</link><pubDate>Sat, 21 May 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/</guid><description>Soben's Secret Base https://wangloo.github.io/posts/hugo/ -&lt;h1 id="hugo-基础学习">HuGo 基础学习&lt;/h1>
+- https://wangloo.github.io/posts/microkernel/sel4/ - @2019 Notepadium.</description></item><item><title>使用 HuGo 搭建个人网站</title><link>https://wangloo.github.io/posts/hugo/</link><pubDate>Sat, 21 May 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/hugo/ -&lt;h1 id="hugo-基础学习">HuGo 基础学习&lt;/h1>
 &lt;p>本章将解答Hugo是什么, 以及Hugo是如何工作的. 只有了解Hugo的工作机制之后, 才能发挥想象力进行DIY.&lt;/p>
 &lt;p>本章内容大多来自&lt;a href="https://gohugo.io/documentation/">官方手册&lt;/a>或者搜索引擎提供的结果.&lt;/p>
 &lt;h2 id="hugo-项目目录结构">Hugo 项目目录结构&lt;/h2>
