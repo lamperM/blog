@@ -1,13 +1,13 @@
 baseURL = "https://wangloo.github.io/"
 languageCode = "en-us"
-title = "Soben's Secret Base "
+title = "Wangloo's BLOG"
 theme = "diary"
 copyright = "@2019 Notepadium."
 enableGitInfo = true
 enableEmoji = true
 
 [params]
-  AuthorName = 'Soben Wang'
+  AuthorName = 'wangloo'
   GitHubuser = 'wangloo'
   Subtitle = '花有重开日, 人无再少年'
   enableGitalk = true
