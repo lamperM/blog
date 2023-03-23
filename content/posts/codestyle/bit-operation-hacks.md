@@ -42,7 +42,7 @@ int numberof1(int v) {
 用一个`1`一直左移, 直到比这个数大为止.
 
 ```c
-uint32_t roundup_pow_op_two(const uint32_t x) {
+uint32_t roundup_pow_of_two(const uint32_t x) {
     uint32_t ret = 1;
 
     while (ret < x) {
@@ -52,7 +52,48 @@ uint32_t roundup_pow_op_two(const uint32_t x) {
 }
 ```
 
+Linux内核中使用了一种更快的方案, amazing!!!
+
+```c
+static __inline__ int generic_fls(int x)
+{
+	int r = 32;
+
+	if (!x)
+		return 0;
+	if (!(x & 0xffff0000u)) { 
+		x <<= 16;
+		r -= 16;
+	}
+	if (!(x & 0xff000000u)) {
+		x <<= 8;
+		r -= 8;
+	}
+	if (!(x & 0xf0000000u)) {
+		x <<= 4;
+		r -= 4;
+	}
+	if (!(x & 0xc0000000u)) {
+		x <<= 2;
+		r -= 2;
+	}
+	if (!(x & 0x80000000u)) {
+		x <<= 1;
+		r -= 1;1
+	}
+	return r;
+}
+
+static inline unsigned long __attribute_const__ roundup_pow_of_two(unsigned long x)
+{
+	return (1UL << generic_fls(x - 1));
+}
+```
+
+
+
 &nbsp;
+
 ## 向上/向下对齐, 检查是否对齐
 ```c
 /* uintptr_t 代表指针的位数

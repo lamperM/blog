@@ -1,10 +1,41 @@
 ---
-title: "Useful Shell Script Examples"
+title: "武器库: shell scripts"
+tags: ["shell", "bash"]
+categories: ["weapons"]
 date: 2022-07-20T11:54:13+08:00
 tags: [shell, bash]
 ---
 
+:information_source: 以下命令/脚本的执行环境均为 *Bash*.
+
+## 统计代码量
+
+> 使用到的命令包含: find, wc, xargs, sort等
+
+列出*所有的文件及其代码行数*, 只统计.c和.h, 过滤`./scripts`目录. 
+
+```shell
+find -name '*.[c|h]' ! -path './scripts/*' | xargs  wc -l
+```
+
++将内容按照代码行数降序排列
+
+```shell
+find -name '*.[c|h]' ! -path './scripts/*' | xargs  wc -l | sort -rn
+```
+
+若仅列出*总的代码行数*, 去除**空行**
+
+```shell
+(find ./ -name '*.[c|h]' -print0 | xargs -0 cat) | sed '/^\s*$/d' | wc -l
+```
+
+
+
+&nbsp;
+
 ## 判断执行脚本时带的参数
+
 ```shell
 if [ $# -ne 1 ]; then
     echo "ONE parameter is needed"

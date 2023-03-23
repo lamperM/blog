@@ -1,5 +1,5 @@
 ---
-title: "Inline in C"
+title: "C语言 'inline' 关键字"
 date: 2022-11-24T01:35:24+08:00
 tags: [c]
 ---

@@ -193,7 +193,36 @@ global 可以和 substitute 结合使用, 例如想要在包含某个字符串�
 2. `d0` -- delete to beginning of the line
 3. `c-u` in **insert mode**. Same as bash command shortkeys, see [here](https://ss64.com/bash/syntax-keyboard.html)
 
+&nbsp;
 
+## 文件恢复/swp文件
+
+正确对待swp文件的姿势:
+
+1. vim 打开原文件, 此时会提示`Found a swap file the name .xxx.swp`, 显然选择`(R)ecover` 来恢复未保存的内容. 
+2. 使用`:w`将恢复的内容保存下来
+3. 但是此时原本的swp文件还是存在, 此时我们执行`:e`刷新一下当前bufffer, 仍然会提示恢复的选项, 但此时文件内容已经恢复, 选择`(D)elete` 就可将对应的swp文件删除了
+
+> 删除当前目录中所有swp file的脚本?
+>
+> 需要确保:
+>
+> * 所有文件内容已恢复
+> * 当前窗口或者其他窗口没有vim正在打开文件(会生成swp file)
+>
+> ```sh
+> find . -type f -name ".*.sw[klmnop]" -delete
+> ```
+
+[How to handle swapfiles in Vim (longwood.edu)](https://www.cs.longwood.edu/VimSwap.html)
+
+&nbsp;
+
+## Debug VIM key mapping
+
+https://vi.stackexchange.com/a/7723/43494
+
+&nbsp;
 
 ## 如何同步 VIM Dotfiles
 

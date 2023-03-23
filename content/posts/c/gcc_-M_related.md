@@ -31,7 +31,8 @@ int main() {
 
 Output the dependencies of the input source file. Incluing the names of itself and all included files.
 
-`-M`和`-o`不能同时使用，假设我们只想输出依赖文件，我们可以将示例中的规则如此改造：
+**`-M`(and 下面的`-MM`)和`-o` 不能同时使用**，因为都隐含`-E`。
+假设我们只想输出依赖文件，我们可以将示例中的规则如此改造：
 
 ```makefile
 build/obj/main.o: src/main.c
@@ -101,6 +102,8 @@ drwxrwxr-x 3 soben soben 4096 3月  23 20:35 ../
 -rw-rw-r-- 1 soben soben 1368 3月  23 20:45 main.o
 
 ```
+
+> Note: `-MD` and `-MMD` 因为有`-MT`，也不隐含 `-E`.
 
 ## -MMD
 

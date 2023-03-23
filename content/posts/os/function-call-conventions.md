@@ -1,7 +1,7 @@
 ---
 title: "x86/ARMv8 函数调用约定"
 date: 2022-11-21T10:30:35+08:00
-tags: [arm64, x86, Operating System]
+tags: [armv8, x86, Operating System]
 ---
 
 符合调用约定使得调用函数能够正常获取参数, callee结束之后能够回到原来位置继续执行.
