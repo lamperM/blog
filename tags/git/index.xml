@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>git on Wangloo's BLOG</title><link>https://wangloo.github.io/tags/git/</link><description>Recent content in git on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Tue, 13 Dec 2022 17:39:42 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/git/index.xml" rel="self" type="application/rss+xml"/><item><title>git 宝典</title><link>https://wangloo.github.io/posts/git/</link><pubDate>Tue, 13 Dec 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/git/</guid><description>合并操作: git merge merge 有两种方式:
-fast-forward three-way merger Fast-forward Merge 假设合并的双方为main为dev, 如果其中一个是另一个的祖先, 此时直接移动HEAD到前方即可, 称为fast-forward.
-例如, 当前在main, 执行git merge dev的过程如下:
-main main | | M1 --- M2 ===&amp;gt; M1 --- M2 -- F1 \ | \--- F1 dev | dev three-way Merge 合并的两者不构成直接的祖先-孩子关系, 产生了分叉. 此时进行合并就需要有个基准(参考), 对于两边相较于基准的每个diff来说:
-合并的两者都在基准上进行了改动, 且改动不一致, 标记为冲突 如果该diff仅在其中一方有改动, 那么就保留此次改动 合并时使用的参考就是两个合并commit的最近公共祖先, 这种借助三个commit(main, dev, 公共祖先)才能完成的合并操作就叫做 three-way merge.
-例如, 当前在main, 执行git merge dev的过程如下:
-main main | | M1 --- M2 --- M3 ===&amp;gt; M1 --- M2 --- M3 --- M4 \ \ / \--- F1 \--- F1 --- | | dev dev three-way 的合并方式如果发生了冲突, 会产生一次额外的 merge commit, 下面介绍它</description></item></channel></rss>
+fast-forward three-way merger Fast-forward Merge 假设合并的双方为main为dev, 如果其中一个是另一个的祖先, 此时直接移动 HEAD 到前方即可, 称为 fast-forward.
+例如, 当前在 main, 执行git merge dev的过程如下:
+main main | | M1 --- M2 ===&amp;gt; M1 --- M2 -- F1 \ | \--- F1 dev | dev three-way Merge 合并的两者不构成直接的祖先-孩子关系, 产生了分叉. 此时进行合并就需要有个基准(参考), 对于两边相较于基准的每个 diff 来说:
+合并的两者都在基准上进行了改动, 且改动不一致, 标记为冲突 如果该 diff仅在其中一方有改动, 那么就保留此次改动 合并时使用的参考就是两个合并 commit 的最近公共祖先, 这种借助三个 commit(main, dev, 公共祖先)才能完成的合并操作就叫做 three-way merge.</description></item></channel></rss>
