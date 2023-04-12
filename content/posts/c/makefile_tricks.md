@@ -4,6 +4,49 @@ date: 2022-12-03T19:08:22+08:00
 tags: ["makefile"]
 ---
 
+## 伪目标的依赖关系
+
+Makefile 中的依赖关系指的是目标和依赖之间建立的关系，目标对应规则中的语句是否执行取决于依赖的状态。
+
+最简单的依赖关系可以拿两个文件来举例:
+
+```makefile
+# gcc语句执行当前仅当 main.c 新于 main.elf
+main.elf: main.c
+    gcc main.c -o main.elf
+```
+
+make 在执行`main.elf`的规则时，会先判断依赖关系。拿上面的例子来说，
+gcc 语句是否执行取决于`main.c` 和 `main.elf`的修改时间，**只有当
+依赖新与目标时，规则语句才会执行**。
+
+然而许多情况下，目标或者依赖并不是一个文件，而是**虚拟目标**。虚拟目标
+并不是一个文件，即它没有修改时间这个属性，此时 make 就不能作比较，结果就是
+**如果目标是伪目标，那么不管依赖如何都执行规则语句；如果依赖是伪目标，
+那么目标的规则语句也永远被执行**。下面是两个例子：
+
+```make
+# 伪目标作为目标文件出现
+# build finish总是输出， 而gcc语句仅当main.c比main.elf新时才执行
+.PHONY : all
+all: main.elf
+	@echo 'build finish'
+main.elf: main.c
+	gcc $< -o $@
+```
+
+```make
+# 伪目标作为依赖文件中出现
+# 不管main.c是否比main.elf更新，因为pre-work是伪目标
+# 所以gcc语句总是执行
+.PHONY : pre-work
+main.elf: main.c pre-work
+	gcc $< -o $@
+
+```
+
+上面的代码的效果是：两条规则中的语句都会执行，即使你并没有对 main.c 做任何修改！
+
 ## 恐怖的空格
 
 Makefile 中的变量结合很常见，例如`$(FIXDEP)=$(FIXDEP_PATH)/build/fixdep`.
@@ -21,6 +64,27 @@ Makefile 中的变量结合很常见，例如`$(FIXDEP)=$(FIXDEP_PATH)/build/fix
 > .PHONY: _all
 > _all:
 > ```
+
+## 函数的魔法
+
+### patsubst
+
+```make
+$(patsubst <pattern>,<replacement>,<text>)
+```
+
+功能：查找`<text>`中的单词（以空格，tab，回车，换行分割），看其是否符合`<pattern>`,
+如果符合，将其使用`<replacement>`替换。可以使用通配符`%`。
+
+以下两对是等效的, 明显还是直接使用变量的替换语法操作简单:
+
+```make
+$(patsubst <pattern>,<replacement>,$(var))
+$(var:<pattern>=<replacement>;)
+
+$(patsubst %<suffix>,%<replacement>,$(var))
+$(var:<suffix>=<replacement>)
+```
 
 ## 使用 shell 变量
 
