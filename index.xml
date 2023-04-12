@@ -1,4 +1,58 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>C语言自身的难点</title><link>https://wangloo.github.io/posts/c/puzzle/</link><pubDate>Thu, 09 Mar 2023 17:18:57 +0800</pubDate><guid>https://wangloo.github.io/posts/c/puzzle/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/puzzle/ -&lt;h1 id="函数指针">函数指针&lt;/h1>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>AArch64 内存属性与内存类型</title><link>https://wangloo.github.io/posts/armv8/memory_attr/</link><pubDate>Wed, 12 Apr 2023 08:01:33 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/memory_attr/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/memory_attr/ -&lt;p>有了虚拟内存系统之后，MMU 可以抽象出一些可配置的内存属性。&lt;/p>
+&lt;p>例如，配置某个虚拟内存区域为不可执行、不被 cache 等，不可执行的属性
+有助于防范攻击，不进入 cache 经常划分给 外设 Memory-mapped 区域。&lt;/p>
+&lt;h2 id="设置内存属性">设置内存属性&lt;/h2>
+&lt;blockquote>
+&lt;p>相关内容可以在 ARMv8 arm 手册 D5.3.3 Attuibute fields in stage 1
+VMSAv8-64 Block and Page descriptors 中找到参考&lt;/p>
+&lt;/blockquote>
+&lt;p>对于每一个表示内存块(block)的页表项，都有两个属性字段: &lt;strong>lower attr 和 upper attr&lt;/strong>.&lt;/p>
+&lt;p>以下任何类型或者属性的设置都是通过这两个字段完成的。&lt;/p>
+&lt;h2 id="大类-内存类型">大类: 内存类型&lt;/h2>
+&lt;p>AArch64 提供两种内存类型: 普通内存和设备内存。&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>普通内存会启用架构提供的所有优化技术，例如合并访存、乱序执行等。所以
+普通内存有最高的性能，但同时不是那么的“安全”，需要底层人员手动使用
+&lt;strong>内存屏障&lt;/strong>等手段保证某些情况下的顺序性要求。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>设备内存，顾名思义，常映射到外设的 Memory-mapped 区域。对于设备来说，
+那些提高性能的技术会造成一些问题，例如某些寄存器的配置必须按照顺序，
+这时就不能使用乱序执行。设备内存就牺牲了性能，优先保证正确性。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>配置内存类型也是通过页表项中的其中一个属性字段: &lt;code>AttrIndx[2:0]&lt;/code>,
+它与系统寄存器&lt;code>MAIR_EL1&lt;/code>配合实现。&lt;/p>
+&lt;p>具体表现为: &lt;code>mair_el1&lt;/code>寄存器被划分为 8 个字段，我们为每个字段写入
+不同的值可代表不同的内存类型和一些配套属性，具体的真值表可以参见
+&lt;code>mair_el1&lt;/code>寄存器的描述。&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;code>mair_el1&lt;/code>中内存类型配套属性只是属性的一部分，是和设备类型绑定的
+那部分。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="更细分的描述1-cacheable">更细分的描述(1): cacheable&lt;/h2>
+&lt;p>内存支持配置为是否被 cache，这在&lt;code>mair_el1&lt;/code>的字段中配置。&lt;/p>
+&lt;p>要注意，&lt;strong>只有普通内存才支持配置是否进入 cache，所有的设备内存
+都是 non-cacheable 的&lt;/strong>。&lt;/p>
+&lt;h2 id="更细分的描述2-shareable">更细分的描述(2): shareable&lt;/h2>
+&lt;p>shareable 说的是一块内存的外部可见性，也可分为 inner/outer
+shareable.&lt;/p>
+&lt;p>shareable 的设置需要参考此内存的 cacheable 属性:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>如果一块内存是 cacheable 的，则需要硬件提供 cache 的一致性维护机制。
+如果不能保证 cache 的一致性，想要启用 shareable 就必须是 non-cacheable&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>对于 non-cacheable 的内存，一定是 shareable 的，
+不需要配置。因为此时对数据的修改直接操作内存，读取操作亦是如此，一定
+是外部可见的&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="更细分的描述x-">更细分的描述(x): &amp;hellip;&lt;/h2>
+&lt;p>TODO&lt;/p>
+- https://wangloo.github.io/posts/armv8/memory_attr/ - @2019 Notepadium.</description></item><item><title>C语言自身的难点</title><link>https://wangloo.github.io/posts/c/puzzle/</link><pubDate>Thu, 09 Mar 2023 17:18:57 +0800</pubDate><guid>https://wangloo.github.io/posts/c/puzzle/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/puzzle/ -&lt;h1 id="函数指针">函数指针&lt;/h1>
 &lt;h2 id="指针的数组-or-指向数组的指针">指针的数组 or 指向数组的指针?&lt;/h2>
 &lt;pre tabindex="0">&lt;code>&amp;gt;&amp;gt; int (*p)[10] p是指针, 指向长度为10的数组. 加括号是为了强调p是一个指针, 区别包含10个指针的array.
 &amp;gt;&amp;gt; int *(p[10]) p是数组, 它的元素类型是int *, 加括号是为了强调p是数组.
@@ -213,7 +267,34 @@ git 也会阻止你这么做，因为分支的历史已经被修改，除非 for
 - https://wangloo.github.io/posts/git/ - @2019 Notepadium.</description></item><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/os/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/gnu_tools/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/gnu_tools/ -&lt;p>..&lt;/p>
 &lt;h2 id="nm---列出符号">nm - 列出符号&lt;/h2>
 &lt;p>&lt;a href="https://sourceware.org/binutils/docs/binutils/nm.html">nm (GNU Binary Utilities) (sourceware.org)&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/os/gnu_tools/ - @2019 Notepadium.</description></item><item><title>Makefile 一些技巧</title><link>https://wangloo.github.io/posts/c/makefile_tricks/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/makefile_tricks/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/makefile_tricks/ -&lt;h2 id="恐怖的空格">恐怖的空格&lt;/h2>
+- https://wangloo.github.io/posts/os/gnu_tools/ - @2019 Notepadium.</description></item><item><title>Makefile 一些技巧</title><link>https://wangloo.github.io/posts/c/makefile_tricks/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/makefile_tricks/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/makefile_tricks/ -&lt;h2 id="伪目标的依赖关系">伪目标的依赖关系&lt;/h2>
+&lt;p>Makefile 中的依赖关系指的是目标和依赖之间建立的关系，目标对应规则中的语句是否执行取决于依赖的状态。&lt;/p>
+&lt;p>最简单的依赖关系可以拿两个文件来举例:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># gcc语句执行当前仅当 main.c 新于 main.elf
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#50fa7b">main.elf&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> main.c
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> gcc main.c -o main.elf
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>make 在执行&lt;code>main.elf&lt;/code>的规则时，会先判断依赖关系。拿上面的例子来说，
+gcc 语句是否执行取决于&lt;code>main.c&lt;/code> 和 &lt;code>main.elf&lt;/code>的修改时间，&lt;strong>只有当
+依赖新与目标时，规则语句才会执行&lt;/strong>。&lt;/p>
+&lt;p>然而许多情况下，目标或者依赖并不是一个文件，而是&lt;strong>虚拟目标&lt;/strong>。虚拟目标
+并不是一个文件，即它没有修改时间这个属性，此时 make 就不能作比较，结果就是
+&lt;strong>如果目标是伪目标，那么不管依赖如何都执行规则语句；如果依赖是伪目标，
+那么目标的规则语句也永远被执行&lt;/strong>。下面是两个例子：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-make" data-lang="make">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 伪目标作为目标文件出现
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># build finish总是输出， 而gcc语句仅当main.c比main.elf新时才执行
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#50fa7b">.PHONY &lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> all
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">all&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> main.elf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @echo &lt;span style="color:#f1fa8c">&amp;#39;build finish&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">main.elf&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> main.c
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> gcc $&amp;lt; -o &lt;span style="color:#8be9fd;font-style:italic">$@&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-make" data-lang="make">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 伪目标作为依赖文件中出现
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 不管main.c是否比main.elf更新，因为pre-work是伪目标
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 所以gcc语句总是执行
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#50fa7b">.PHONY &lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> pre-work
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">main.elf&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> main.c pre-work
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> gcc $&amp;lt; -o &lt;span style="color:#8be9fd;font-style:italic">$@&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的代码的效果是：两条规则中的语句都会执行，即使你并没有对 main.c 做任何修改！&lt;/p>
+&lt;h2 id="恐怖的空格">恐怖的空格&lt;/h2>
 &lt;p>Makefile 中的变量结合很常见，例如&lt;code>$(FIXDEP)=$(FIXDEP_PATH)/build/fixdep&lt;/code>.&lt;/p>
 &lt;p>特别是当我们这些语句是从某些地方粘贴过来，要特别注意变量中是否有空格，Makefile 非常重视这个。假如&lt;code>$(FIXDEP_PATH)&lt;/code>中有一个空格，那么&lt;code>$(FIXDEP)&lt;/code>就变成&lt;strong>两个宏&lt;/strong>了（不知道叫宏合不合适）。而且 Make 的执行过程很难检查出来。&lt;/p>
 &lt;h2 id="规则的执行顺序">规则的执行顺序&lt;/h2>
@@ -224,7 +305,18 @@ git 也会阻止你这么做，因为分支的历史已经被修改，除非 for
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#50fa7b">.PHONY&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> _all
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">_all&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/blockquote>
-&lt;h2 id="使用-shell-变量">使用 shell 变量&lt;/h2>
+&lt;h2 id="函数的魔法">函数的魔法&lt;/h2>
+&lt;h3 id="patsubst">patsubst&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-make" data-lang="make">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">patsubst&lt;/span> &amp;lt;&lt;span style="color:#8be9fd;font-style:italic">pattern&lt;/span>&amp;gt;,&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">replacement&lt;/span>&amp;gt;,&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">text&lt;/span>&amp;gt;&lt;span style="color:#ff79c6">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>功能：查找&lt;code>&amp;lt;text&amp;gt;&lt;/code>中的单词（以空格，tab，回车，换行分割），看其是否符合&lt;code>&amp;lt;pattern&amp;gt;&lt;/code>,
+如果符合，将其使用&lt;code>&amp;lt;replacement&amp;gt;&lt;/code>替换。可以使用通配符&lt;code>%&lt;/code>。&lt;/p>
+&lt;p>以下两对是等效的, 明显还是直接使用变量的替换语法操作简单:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-make" data-lang="make">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">patsubst&lt;/span> &amp;lt;&lt;span style="color:#8be9fd;font-style:italic">pattern&lt;/span>&amp;gt;,&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">replacement&lt;/span>&amp;gt;,&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">var&lt;/span>&lt;span style="color:#ff79c6">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">$(var&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>&amp;lt;pattern&amp;gt;=&amp;lt;replacement&amp;gt;;)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">patsubst&lt;/span> %&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">suffix&lt;/span>&amp;gt;,%&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">replacement&lt;/span>&amp;gt;,&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">var&lt;/span>&lt;span style="color:#ff79c6">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">$(var&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>&amp;lt;suffix&amp;gt;=&amp;lt;replacement&amp;gt;)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="使用-shell-变量">使用 shell 变量&lt;/h2>
 &lt;p>Make 将 &lt;code>$$var&lt;/code> 转义为&lt;code>$var&lt;/code>, 供 shell 处理.&lt;/p>
 &lt;p>demo(源自 6.828 根目录&lt;code>GNUmakefile&lt;/code>):&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">handin-check&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>
@@ -311,28 +403,4 @@ git 也会阻止你这么做，因为分支的历史已经被修改，除非 for
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>🔻 对于C/C++来说, YCM的使用最好配合&lt;em>compilation database&lt;/em> 来使用, 例如&lt;a href="https://github.com/nickdiego/compiledb">compiledb&lt;/a>. 否则, 可能头文件的path识别出问题(&lt;a href="https://stackoverflow.com/questions/64277317/youcompleteme-not-work-properly-for-c-headers.">stackoverflow&lt;/a>).&lt;/p>
 &lt;p>2022年2月13日我使用的compilation database生成工具从&lt;code>compiledb&lt;/code>换成了&lt;code>bear&lt;/code>, 因为&lt;code>bear&lt;/code>更好的支持递归, 即有&lt;code>make -C&lt;/code>的情况.&lt;/p>
 &lt;p>需要的compilation database生成工具介绍: &lt;a href="https://sarcasm.github.io/notes/dev/compilation-database.html">Compilation database — Sarcasm notebook&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/vim/ycm-install/ - @2019 Notepadium.</description></item><item><title>常用的 shell 命令</title><link>https://wangloo.github.io/posts/shell/shell-commands/</link><pubDate>Sun, 27 Nov 2022 14:45:58 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-commands/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/shell/shell-commands/ -&lt;blockquote>
-&lt;p>我使用的 shell 是 Bash&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="mount-相关">mount 相关&lt;/h3>
-&lt;p>&lt;code>mount&lt;/code> 输出当前已经挂在的分区&lt;/p>
-&lt;h3 id="where-and-which">where and which&lt;/h3>
-&lt;p>which 查看可执行文件的位置&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ which python3
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/bin/python3
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>whereis 除了可执行文件还能搜索其他类型的文件, 不常用, 详见 &lt;code>man whereis&lt;/code>&lt;/p>
-&lt;h3 id="--的妙用">&lt;code>-&lt;/code> 的妙用&lt;/h3>
-&lt;p>一些命令支持使用 &lt;code>-&lt;/code> 代替文件名, 输入输出都可以:&lt;/p>
-&lt;ul>
-&lt;li>代替标准输出; 一些命令会将&lt;code>-o/-O&lt;/code> 后面的&lt;code>-&lt;/code>判定为输出到&lt;em>STDOUT&lt;/em>, 详见下面示例.&lt;/li>
-&lt;li>代替标准输入;&lt;/li>
-&lt;/ul>
-&lt;p>下面给出两个同时代替输入输出的例子:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 将标准输入(STDIN)的内容作为gcc的输入, 编译后的结果输出到标准输出(STDOUT)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#39;void foo() {}&amp;#39;&lt;/span> | gcc -x c -o - -
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 将下载的文件输出到标准输出, 同时作为tar命令的输入文件, 进行解压&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wget -O - &lt;span style="color:#f1fa8c">&amp;#34;https://www.dropbox.com/download?plat=lnx.x86_64&amp;#34;&lt;/span> | tar xzf -
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
-&lt;p>&lt;code>-&lt;/code> 如何被解析是&lt;strong>取决于命令的实现&lt;/strong>, 非标准. 比如 &lt;code>cd -&lt;/code> 就有特殊的含义&lt;/p>
-&lt;/blockquote>
-- https://wangloo.github.io/posts/shell/shell-commands/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/vim/ycm-install/ - @2019 Notepadium.</description></item></channel></rss>

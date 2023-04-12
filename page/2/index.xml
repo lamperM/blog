@@ -1,4 +1,28 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>C语言 'inline' 关键字</title><link>https://wangloo.github.io/posts/c/inline/</link><pubDate>Thu, 24 Nov 2022 01:35:24 +0800</pubDate><guid>https://wangloo.github.io/posts/c/inline/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/inline/ -&lt;p>TODO: inline 的发展历程: &lt;a href="https://gustedt.wordpress.com/2010/11/29/myth-and-reality-about-inline-in-c99/">Myth and reality about inline in C99 – Jens Gustedt&amp;rsquo;s Blog (wordpress.com)&lt;/a>&lt;/p>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>常用的 shell 命令</title><link>https://wangloo.github.io/posts/shell/shell-commands/</link><pubDate>Sun, 27 Nov 2022 14:45:58 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-commands/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/shell/shell-commands/ -&lt;blockquote>
+&lt;p>我使用的 shell 是 Bash&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="mount-相关">mount 相关&lt;/h3>
+&lt;p>&lt;code>mount&lt;/code> 输出当前已经挂在的分区&lt;/p>
+&lt;h3 id="where-and-which">where and which&lt;/h3>
+&lt;p>which 查看可执行文件的位置&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ which python3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/bin/python3
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>whereis 除了可执行文件还能搜索其他类型的文件, 不常用, 详见 &lt;code>man whereis&lt;/code>&lt;/p>
+&lt;h3 id="--的妙用">&lt;code>-&lt;/code> 的妙用&lt;/h3>
+&lt;p>一些命令支持使用 &lt;code>-&lt;/code> 代替文件名, 输入输出都可以:&lt;/p>
+&lt;ul>
+&lt;li>代替标准输出; 一些命令会将&lt;code>-o/-O&lt;/code> 后面的&lt;code>-&lt;/code>判定为输出到&lt;em>STDOUT&lt;/em>, 详见下面示例.&lt;/li>
+&lt;li>代替标准输入;&lt;/li>
+&lt;/ul>
+&lt;p>下面给出两个同时代替输入输出的例子:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 将标准输入(STDIN)的内容作为gcc的输入, 编译后的结果输出到标准输出(STDOUT)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#39;void foo() {}&amp;#39;&lt;/span> | gcc -x c -o - -
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 将下载的文件输出到标准输出, 同时作为tar命令的输入文件, 进行解压&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wget -O - &lt;span style="color:#f1fa8c">&amp;#34;https://www.dropbox.com/download?plat=lnx.x86_64&amp;#34;&lt;/span> | tar xzf -
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>&lt;code>-&lt;/code> 如何被解析是&lt;strong>取决于命令的实现&lt;/strong>, 非标准. 比如 &lt;code>cd -&lt;/code> 就有特殊的含义&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/shell/shell-commands/ - @2019 Notepadium.</description></item><item><title>C语言 'inline' 关键字</title><link>https://wangloo.github.io/posts/c/inline/</link><pubDate>Thu, 24 Nov 2022 01:35:24 +0800</pubDate><guid>https://wangloo.github.io/posts/c/inline/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/inline/ -&lt;p>TODO: inline 的发展历程: &lt;a href="https://gustedt.wordpress.com/2010/11/29/myth-and-reality-about-inline-in-c99/">Myth and reality about inline in C99 – Jens Gustedt&amp;rsquo;s Blog (wordpress.com)&lt;/a>&lt;/p>
 &lt;h2 id="gnu89">GNU89:&lt;/h2>
 &lt;p>函数的&lt;strong>实现&lt;/strong>之前添加不同的关键字:&lt;/p>
 &lt;ul>
@@ -531,60 +555,4 @@ start addr of `a` start addr of `a`
 &lt;p>存储页表的基地址&lt;/p>
 &lt;h2 id="aarch32-虚拟内存系统">AArch32 虚拟内存系统&lt;/h2>
 &lt;p>ARMv8 AArch32 的虚拟内存系统向后兼容ARMv7, 与ARMv7的基本一致.&lt;/p>
-- https://wangloo.github.io/posts/armv8/mmu/ - @2019 Notepadium.</description></item><item><title>AArch64/32 异常返回过程</title><link>https://wangloo.github.io/posts/armv8/exception_return/</link><pubDate>Sat, 24 Sep 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/exception_return/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/exception_return/ -&lt;h2 id="armv8-异常返回指令">ARMv8 异常返回指令&lt;/h2>
-&lt;p>当异常处理程序结束后，需要执行&lt;em>异常返回指令&lt;/em>恢复进入异常之前的状态.&lt;/p>
-&lt;p>具体要做的事情包括:&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>恢复发生异常前的PC&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>从SPSR中恢复PSTATE寄存器(现场)&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;p>异常返回的指令根据当前&lt;strong>执行状态&lt;/strong>为AArch32还是AArch64有所不同.&lt;/p>
-&lt;h3 id="aarch32">AArch32&lt;/h3>
-&lt;p>AArch32的异常返回指令在不同的&lt;strong>模式&lt;/strong>下也有所不同:&lt;/p>
-&lt;p>&lt;strong>若异常是在Hyp模式下处理:&lt;/strong> 仅可执行&lt;code>ERET&lt;/code>指令从异常返回.&lt;/p>
-&lt;p>&lt;strong>若异常是在其他模式下处理&lt;/strong>, AArch32提供了以下的异常返回指令:&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;code>ERET&lt;/code> 指令&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>使用带S后缀的数据处理指令直接操作PC(例如, &lt;code>MOVS, PC, LR&lt;/code>), 恢复PSTATE&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>RFE 指令: &lt;code>RFE &amp;lt;Rn&amp;gt;&lt;/code>. 从基址寄存器&lt;!-- raw HTML omitted -->指向的地址依次加载PC和PSTATE&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>LDM 指令: &lt;code>LDM &amp;lt;Rn&amp;gt; {pc..}&lt;/code>. 若目标寄存器中包含PC, 则会同时恢复PSTATE&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h3 id="aarch64">AArch64&lt;/h3>
-&lt;p>AArch64下&lt;strong>统一使用&lt;/strong> &lt;code>ERET&lt;/code> 指令进行异常返回.&lt;/p>
-&lt;h3 id="指令格式及用法参考">指令格式及用法参考&lt;/h3>
-&lt;h4 id="eret">ERET&lt;/h4>
-&lt;p>ERET指令完成了:&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>从ELR_ELx中恢复PC指针&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>从SPSR_ELx中恢复PSTATE寄存器的状态.&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;h4 id="ldmload-multiple">LDM(Load Multiple)&lt;/h4>
-&lt;p>格式: &lt;code>LDM &amp;lt;Rn&amp;gt; {registers}&lt;/code>&lt;/p>
-&lt;p>含义: 从基址寄存器&lt;code>&amp;lt;Rn&amp;gt;&lt;/code>指向的地址开始依次加载多个寄存器值. 若目标寄存器中包含PC, 则同时恢复PSTATE.&lt;/p>
-&lt;p>例如: &lt;code>LDM &amp;lt;r0&amp;gt; {pc, r1}&lt;/code> 等价于:&lt;/p>
-&lt;pre tabindex="0">&lt;code class="language-assembly" data-lang="assembly">pc = [r0]
-r1 = [r0+4]
-PSTATE = SPSR ;仅当目标寄存器包含PC时自动完成
-&lt;/code>&lt;/pre>&lt;h4 id="rfereturn-from-exception">RFE(Return From Exception)&lt;/h4>
-&lt;p>格式: &lt;code>LDM &amp;lt;Rn&amp;gt; &lt;/code>&lt;/p>
-&lt;p>含义: 从基址寄存器&lt;code>&amp;lt;Rn&amp;gt;&lt;/code>指向的地址依次加载PC和PSTATE.&lt;/p>
-&lt;p>例如: &lt;code>RFE &amp;lt;r0&amp;gt;&lt;/code> 等价于:&lt;/p>
-&lt;pre tabindex="0">&lt;code class="language-ass" data-lang="ass">pc = [r0]
-PSTATE = [r0+4]
-&lt;/code>&lt;/pre>- https://wangloo.github.io/posts/armv8/exception_return/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/armv8/mmu/ - @2019 Notepadium.</description></item></channel></rss>

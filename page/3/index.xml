@@ -1,4 +1,60 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GNU C内联汇编学习笔记</title><link>https://wangloo.github.io/posts/c/inline-asm/</link><pubDate>Sat, 24 Sep 2022 16:48:58 +0800</pubDate><guid>https://wangloo.github.io/posts/c/inline-asm/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/inline-asm/ -&lt;h3 id="语句结构">语句结构&lt;/h3>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>AArch64/32 异常返回过程</title><link>https://wangloo.github.io/posts/armv8/exception_return/</link><pubDate>Sat, 24 Sep 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/exception_return/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/exception_return/ -&lt;h2 id="armv8-异常返回指令">ARMv8 异常返回指令&lt;/h2>
+&lt;p>当异常处理程序结束后，需要执行&lt;em>异常返回指令&lt;/em>恢复进入异常之前的状态.&lt;/p>
+&lt;p>具体要做的事情包括:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>恢复发生异常前的PC&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>从SPSR中恢复PSTATE寄存器(现场)&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>异常返回的指令根据当前&lt;strong>执行状态&lt;/strong>为AArch32还是AArch64有所不同.&lt;/p>
+&lt;h3 id="aarch32">AArch32&lt;/h3>
+&lt;p>AArch32的异常返回指令在不同的&lt;strong>模式&lt;/strong>下也有所不同:&lt;/p>
+&lt;p>&lt;strong>若异常是在Hyp模式下处理:&lt;/strong> 仅可执行&lt;code>ERET&lt;/code>指令从异常返回.&lt;/p>
+&lt;p>&lt;strong>若异常是在其他模式下处理&lt;/strong>, AArch32提供了以下的异常返回指令:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>ERET&lt;/code> 指令&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>使用带S后缀的数据处理指令直接操作PC(例如, &lt;code>MOVS, PC, LR&lt;/code>), 恢复PSTATE&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>RFE 指令: &lt;code>RFE &amp;lt;Rn&amp;gt;&lt;/code>. 从基址寄存器&lt;!-- raw HTML omitted -->指向的地址依次加载PC和PSTATE&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>LDM 指令: &lt;code>LDM &amp;lt;Rn&amp;gt; {pc..}&lt;/code>. 若目标寄存器中包含PC, 则会同时恢复PSTATE&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="aarch64">AArch64&lt;/h3>
+&lt;p>AArch64下&lt;strong>统一使用&lt;/strong> &lt;code>ERET&lt;/code> 指令进行异常返回.&lt;/p>
+&lt;h3 id="指令格式及用法参考">指令格式及用法参考&lt;/h3>
+&lt;h4 id="eret">ERET&lt;/h4>
+&lt;p>ERET指令完成了:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>从ELR_ELx中恢复PC指针&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>从SPSR_ELx中恢复PSTATE寄存器的状态.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h4 id="ldmload-multiple">LDM(Load Multiple)&lt;/h4>
+&lt;p>格式: &lt;code>LDM &amp;lt;Rn&amp;gt; {registers}&lt;/code>&lt;/p>
+&lt;p>含义: 从基址寄存器&lt;code>&amp;lt;Rn&amp;gt;&lt;/code>指向的地址开始依次加载多个寄存器值. 若目标寄存器中包含PC, 则同时恢复PSTATE.&lt;/p>
+&lt;p>例如: &lt;code>LDM &amp;lt;r0&amp;gt; {pc, r1}&lt;/code> 等价于:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-assembly" data-lang="assembly">pc = [r0]
+r1 = [r0+4]
+PSTATE = SPSR ;仅当目标寄存器包含PC时自动完成
+&lt;/code>&lt;/pre>&lt;h4 id="rfereturn-from-exception">RFE(Return From Exception)&lt;/h4>
+&lt;p>格式: &lt;code>LDM &amp;lt;Rn&amp;gt; &lt;/code>&lt;/p>
+&lt;p>含义: 从基址寄存器&lt;code>&amp;lt;Rn&amp;gt;&lt;/code>指向的地址依次加载PC和PSTATE.&lt;/p>
+&lt;p>例如: &lt;code>RFE &amp;lt;r0&amp;gt;&lt;/code> 等价于:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-ass" data-lang="ass">pc = [r0]
+PSTATE = [r0+4]
+&lt;/code>&lt;/pre>- https://wangloo.github.io/posts/armv8/exception_return/ - @2019 Notepadium.</description></item><item><title>GNU C内联汇编学习笔记</title><link>https://wangloo.github.io/posts/c/inline-asm/</link><pubDate>Sat, 24 Sep 2022 16:48:58 +0800</pubDate><guid>https://wangloo.github.io/posts/c/inline-asm/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/inline-asm/ -&lt;h3 id="语句结构">语句结构&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">asm&lt;/span> &lt;span style="color:#ff79c6">asm&lt;/span>&lt;span style="color:#ff79c6">-&lt;/span>qualifiers ( &lt;span style="color:#8be9fd;font-style:italic">AssemblerTemplate&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : &lt;span style="color:#8be9fd;font-style:italic">OutputOperands&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : &lt;span style="color:#8be9fd;font-style:italic">InputOperands&lt;/span>
@@ -1158,199 +1214,4 @@ That is what operating system do to set up protection domains for &lt;strong>use
 &lt;/blockquote>
 &lt;p>Stack location, allocation, size must be managed by &lt;strong>userland&lt;/strong>.&lt;/p>
 &lt;p>Kernel beware of stack overflow&lt;/p>
-- https://wangloo.github.io/posts/microkernel/sel4/ - @2019 Notepadium.</description></item><item><title>使用 HuGo 搭建个人网站</title><link>https://wangloo.github.io/posts/hugo/</link><pubDate>Sat, 21 May 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/hugo/ -&lt;h1 id="hugo-基础学习">HuGo 基础学习&lt;/h1>
-&lt;p>本章将解答Hugo是什么, 以及Hugo是如何工作的. 只有了解Hugo的工作机制之后, 才能发挥想象力进行DIY.&lt;/p>
-&lt;p>本章内容大多来自&lt;a href="https://gohugo.io/documentation/">官方手册&lt;/a>或者搜索引擎提供的结果.&lt;/p>
-&lt;h2 id="hugo-项目目录结构">Hugo 项目目录结构&lt;/h2>
-&lt;p>一个hugo 项目通常包含以下内容:&lt;/p>
-&lt;pre tabindex="0">&lt;code>.
-├── archetypes
-├── config.toml
-├── content
-├── data
-├── layouts
-├── public
-├── static
-└── themes
-&lt;/code>&lt;/pre>&lt;p>这里面有些是必须的, 有些是可选的.&lt;/p>
-&lt;p>&lt;strong>archetypes&lt;/strong>&lt;/p>
-&lt;p>定义新创建post时, header的格式.&lt;/p>
-&lt;p>&lt;strong>asserts&lt;/strong>&lt;/p>
-&lt;blockquote>
-&lt;p>Note: assets directory is not created by default.&lt;/p>
-&lt;/blockquote>
-&lt;p>&lt;strong>config&lt;/strong>&lt;/p>
-&lt;p>Hugo uses the &lt;code>config.toml&lt;/code>, &lt;code>config.yaml&lt;/code>, or &lt;code>config.json&lt;/code> (if found in the site root) as the default site config file.&lt;/p>
-&lt;p>The user can choose to override that default with one or more site config files using the command-line &lt;code>--config&lt;/code> switch.&lt;/p>
-&lt;pre tabindex="0">&lt;code>hugo --config debugconfig.toml
-hugo --config a.toml,b.toml,c.toml
-&lt;/code>&lt;/pre>&lt;blockquote>
-&lt;p>Note: config directory is not created by default.&lt;/p>
-&lt;/blockquote>
-&lt;p>&lt;strong>content&lt;/strong>&lt;/p>
-&lt;p>显然, 存储所有的post.&lt;/p>
-&lt;p>&lt;strong>data&lt;/strong>&lt;/p>
-&lt;p>This directory is used to store configuration files that can be used by Hugo when generating your website.&lt;/p>
-&lt;p>像是你 website 的一个mini 数据库, 你可以放置 toml, yaml, json格式的文件.&lt;/p>
-&lt;p>&lt;strong>layouts&lt;/strong>&lt;/p>
-&lt;p>Stores templates in the form of &lt;code>.html&lt;/code> files that specify how views of your content will be rendered into a static website. Templates include &lt;a href="https://gohugo.io/templates/list/">list pages&lt;/a>, your &lt;a href="https://gohugo.io/templates/homepage/">homepage&lt;/a>, &lt;a href="https://gohugo.io/templates/taxonomy-templates/">taxonomy templates&lt;/a>, &lt;a href="https://gohugo.io/templates/partials/">partials&lt;/a>, &lt;a href="https://gohugo.io/templates/single-page-templates/">single page templates&lt;/a>, and more.&lt;/p>
-&lt;p>&lt;strong>public&lt;/strong>&lt;/p>
-&lt;p>保存build生成的站点. 当运行&lt;code>hugo [flag]&lt;/code>时生成.&lt;/p>
-&lt;p>拷贝该目录下的内容, 可以部署到web 服务器上了.&lt;/p>
-&lt;p>&lt;strong>static&lt;/strong>&lt;/p>
-&lt;p>Stores all the static content: images, CSS, JavaScript, etc. 当Hugo构建您的站点时，静态目录中的所有资源都会按原样复制。&lt;/p>
-&lt;p>即当构建website时, &lt;code>static/&lt;/code>下的所有文件都会复制到 &lt;code>public/&lt;/code>下.&lt;/p>
-&lt;p>The static files are served on the site root path (eg. if you have the file &lt;code>static/image.png&lt;/code> you can access it using &lt;code>http://{server-url}/image.png&lt;/code>, to include it in a document you can use &lt;code>![Example image](/image.png) )&lt;/code>.&lt;/p>
-&lt;p>&lt;strong>resources&lt;/strong>&lt;/p>
-&lt;p>一些缓存文件&lt;/p>
-&lt;blockquote>
-&lt;p>Note: resources directory is not created by default.&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="hugo-cli-命令">Hugo CLI 命令&lt;/h2>
-&lt;p>hugo 支持的所有命令可以通过 &lt;code>hugo help&lt;/code> 命令来查看. 每一条命令的具体用法, 可以执行 &lt;code>hugo [command] help&lt;/code> 来查看&lt;/p>
-&lt;pre tabindex="0">&lt;code>Usage:
-hugo [flags]
-hugo [command]
-&lt;/code>&lt;/pre>&lt;h3 id="hugo-completion">Hugo completion&lt;/h3>
-&lt;p>用来配置补全 hugo command 和 flag 的. 该命令会输出一段脚本, 将该脚本复制到你的 shell 的配置文件中就可以使用 hugo tab 补全了.&lt;/p>
-&lt;h3 id="hugo-config">hugo config&lt;/h3>
-&lt;p>打印hugo的配置文件, 即根目录下的 &lt;code>config.toml&lt;/code>.&lt;/p>
-&lt;h3 id="hugo-env">hugo env&lt;/h3>
-&lt;p>打印 hugo 的版本和环境信息&lt;/p>
-&lt;h3 id="hugo-list">hugo list&lt;/h3>
-&lt;p>打印所有post的info, 包含标题, 发布日志, 链接等.&lt;/p>
-&lt;h3 id="hugo-new">hugo new&lt;/h3>
-&lt;p>非常重要的命令, 可以用来新建一个 website, 主题, 或者一篇post(常用). 带有许多 flag可以使用.&lt;/p>
-&lt;h3 id="hugo-server">hugo server&lt;/h3>
-&lt;p>执行&lt;code>hugo server&lt;/code>之后, 首先构建了你的网站(但是默认并不在本地创建文件, 而是放在内存), 然后启动hugo 自带的 web服务器让我们能看见网站的效果.&lt;/p>
-&lt;p>同时, 默认情况下, server 会同步你的本地更改, 然后实时的reload你的页面. 这样你就能同时看到修改的效果.&lt;/p>
-&lt;p>hugo server 的常用flag:&lt;/p>
-&lt;pre tabindex="0">&lt;code>-D 包含标记为草稿的post. 默认不构建草稿.
---theme strings 使用[strings]主题进行构建
-&lt;/code>&lt;/pre>&lt;h3 id="hugo-flags">hugo [flags]&lt;/h3>
-&lt;p>&lt;code>hugo&lt;/code> 自身就是一个命令, 用于build website, 放到 &lt;code>public/&lt;/code>目录下.&lt;/p>
-&lt;p>常用 Flag(&lt;a href="https://gohugo.io/getting-started/usage/#test-installation:~:text=The%20output%20you%20see%20in%20your%20console%20should%20be%20similar%20to%20the%20following%3A">All supported flags&lt;/a>):&lt;/p>
-&lt;pre tabindex="0">&lt;code>--gc 在build后会清除一些cache文件. 与 resource/有关
---minify minify any supported output format (HTML, XML etc.)
-&lt;/code>&lt;/pre>&lt;blockquote>
-&lt;p>&lt;code>hugo&lt;/code> 命令不会删除之前的文件. 而是仅新增改动. 所以每次build时需要你手动删除 &lt;code>public/&lt;/code> 目录.&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="hugo-内容管理">Hugo 内容管理&lt;/h2>
-&lt;p>hugo build 后的website页面的布局和你源文件的布局相同, 所有源文件都放置在 &lt;code>content/&lt;/code> 目录下.&lt;/p>
-&lt;pre tabindex="0">&lt;code>└── content
-├── _index.md // &amp;lt;- https://example.com
-|
-├── about
-| └── index.md // &amp;lt;- https://example.com/about/
-├── posts
-| ├── _index.md // https://example.com/posts/
-| ├── firstpost.md // &amp;lt;- https://example.com/posts/firstpost/
-| ├── happy
-| | └── ness.md // &amp;lt;- https://example.com/posts/happy/ness/
-| └── secondpost.md // &amp;lt;- https://example.com/posts/secondpost/
-└── quote
-├── first.md // &amp;lt;- https://example.com/quote/first/
-└── second.md // &amp;lt;- https://example.com/quote/second/
-&lt;/code>&lt;/pre>&lt;blockquote>
-&lt;p>hugo 将content/ 下的那级目录(例如 content/posts)特殊看待, 称为 &lt;em>section&lt;/em>.&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="页面资源page-resources">页面资源(Page Resources)&lt;/h3>
-&lt;p>页面资源指每个页面&lt;strong>私有的&lt;/strong>图片, 文档等静态资源. 与&lt;code>static/&lt;/code> 中全局的资源不同.&lt;/p>
-&lt;p>页面资源放在&lt;code>content/&lt;/code>下的任意位置, 但不是所有页面都能访问. page bundles 中的&lt;code>index.md&lt;/code> or &lt;code>_index.md&lt;/code> 能够访问该 bundles 下的资源.&lt;/p>
-&lt;pre tabindex="0">&lt;code>content
-└── post
-├── first-post
-│ ├── images
-│ │ ├── a.jpg
-│ │ ├── b.jpg
-│ │ └── c.jpg
-│ ├── index.md (root of page bundle, 能够访问first-post/下的所有资源)
-│ ├── notice.md 不能访问任何资源, 但其自身作为一个资源可被index.md访问
-│ ├── office.mp3
-│ ├── pocket.mp4
-│ ├── rating.pdf
-│ └── safety.txt
-└── second-post
-└── index.md (root of page bundle, 但不能访问first-post/下的资源)
-&lt;/code>&lt;/pre>&lt;h3 id="内容分类taxonomy">内容分类(Taxonomy)&lt;/h3>
-&lt;p>Taxonomy: How to group the content together. Two default taxonomies are &lt;em>tags&lt;/em> and &lt;em>categories&lt;/em>.&lt;/p>
-&lt;h3 id="代码高亮syntax-highlighter">代码高亮(Syntax Highlighter)&lt;/h3>
-&lt;p>&lt;a href="https://gohugo.io/getting-started/configuration-markup/#configure-markup:~:text=anchorize%20template%20func.-,Highlight,-This%20is%20the">代码高亮的配置&lt;/a>(in &lt;code>config.toml&lt;/code>):&lt;/p>
-&lt;h3 id="页面分类">页面分类&lt;/h3>
-&lt;p>从布局上来看, 页面可以分为两类: List page 和 single page.&lt;/p>
-&lt;p>显而易见, list page比较特殊, 它负责列出当前目录下的所有post. 所以一个目录地址必然是一个list page.&lt;/p>
-&lt;p>在下面的例子中, &lt;code>https://example.com&lt;/code> , &lt;code>https://example.com/posts/happy/&lt;/code> 都可以叫做 list page.&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;code>https://example.com/posts/happy/&lt;/code> 是list page, 目录下的&lt;code>_index.md&lt;/code> 不是必须的, hugo 会默认仅显示所有post的title. &lt;a href="https://gohugo.io/templates/lists/#list-pages-without-_indexmd">详见&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;code>https://example.com/about/&lt;/code> 不是list page, 因为其目录下有&lt;code>index.md&lt;/code>, 强制表明这是一个 single page. &lt;a href="https://gohugo.io/content-management/page-bundles/#:~:text=CONTENT%20MANAGEMENT-,Page%20Bundles,-Content%20organization%20using">详见&lt;/a>&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;pre tabindex="0">&lt;code>└── content
-├── _index.md // &amp;lt;- https://example.com
-|
-├── about
-| └── index.md // &amp;lt;- https://example.com/about/
-└── posts
-├── _index.md // https://example.com/posts/
-├── firstpost.md // &amp;lt;- https://example.com/posts/firstpost/
-├── happy
-| └── ness.md // &amp;lt;- https://example.com/posts/happy/ness/
-└── secondpost.md // &amp;lt;- https://example.com/posts/secondpost/
-&lt;/code>&lt;/pre>&lt;blockquote>
-&lt;p>Homepage 和 section page 都属于特殊的 list page.&lt;/p>
-&lt;ul>
-&lt;li>homepage 特指 &lt;code>content/_index.md&lt;/code>&lt;/li>
-&lt;li>section page 特指 &lt;code>content/[section]/_index.md&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;/blockquote>
-&lt;h3 id="shortcodes">shortcodes&lt;/h3>
-&lt;p>shortcode 可以理解为 hugo 为了封装了一些代码块, 通过 shortcode 来调用.&lt;/p>
-&lt;h2 id="模板template">模板(Template)&lt;/h2>
-&lt;p>模板是hugo的一个高级用法, 用来定义你网站的style. 模板不等同与主题(themes), 可以理解为主题是一套模板的集合. 我们可以在使用模板的同时添加DIY的 style. 😎 Hugo 会有优先级的判断.&lt;/p>
-&lt;p>不同的页面类型需要定义不同的模板. List page 的模板称为 List template, single page 的模板称为 single template. 同理还有 homepage template, section template.&lt;/p>
-&lt;p>存储模板的目录为&lt;code>layout/&lt;/code>, 上面介绍hugo的目录结构时已经说过. 如果你使用了一个 theme, 那么&lt;code>themes/[your-theme]/layout/&lt;/code>就是该theme的模板.&lt;/p>
-&lt;h3 id="homepage-模板">homepage 模板&lt;/h3>
-&lt;h3 id="base-模板">Base 模板&lt;/h3>
-&lt;p>对应&lt;code>layouts/_default/baseof.html&lt;/code>&lt;/p>
-&lt;p>base 模板是整个website的核心. 所有的模板包括 list template, single template, homepage template&amp;hellip; 都是独立的, base template 将其他的模板联系到一起.&lt;/p>
-&lt;h3 id="partial-模板">partial 模板&lt;/h3>
-&lt;p>包含网站的许多元素, 增加模块化. 我可以为网站的 header 或者 footer 写一个模板(html), 这些HTML可以嵌入其他的模板.&lt;/p>
-&lt;h3 id="模板优先级">模板优先级&lt;/h3>
-&lt;p>既然同一种页面的模板可以定义在多个位置, 如果他们同时存在时, 优先级规则必然存在. 常见的情况比如我们使用了某个模板, 然而, 我们对模板中的一些布局不满意, 直接修改模板中的文件显然不是一个好方法, 那么该怎么做呢?&lt;/p>
-&lt;p>&lt;strong>一般来说&lt;/strong>, 如果你只想重写theme中的某个模板, 例如section template. 那么你只需要新建 &lt;code>layout/_default/section.html&lt;/code> 即可, hugo 构建你的网站时, 如果检测到本地和theme的&lt;code>layout/_default&lt;/code>下都有 &lt;code>section.html&lt;/code>, 它会使用我们自己定义的那个.&lt;/p>
-&lt;blockquote>
-&lt;p>完整的, 多级的优先级规则: &lt;a href="https://gohugo.io/templates/lookup-order/">Hugo&amp;rsquo;s Lookup Order | Hugo (gohugo.io)&lt;/a>&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="变量variables">变量(Variables)&lt;/h2>
-&lt;p>❗ Hugo 变量仅设计给模板使用, 即在&lt;code>layouts/&lt;/code>下的html文件.&lt;/p>
-&lt;h3 id="page-variables">Page Variables&lt;/h3>
-&lt;p>与post相关的变量, 定义在post 的 front matter中.&lt;/p>
-&lt;pre tabindex="0">&lt;code>// Define Page variables in front matter of post
-----------------
-title: &amp;#34;使用 HuGo 搭建个人网站&amp;#34;
-description: 学习正确的 Hugo 食用方式, DIY 属于自己的 website~
-Myvar: &amp;#34;my value&amp;#34;
-----------------
-// Use Page Variables
-{{.Description}} // Get the description of the post
-{{.Params.Myvar}} // Get the value of Myvar, that is, &amp;#34;my value&amp;#34;
-&lt;/code>&lt;/pre>&lt;h3 id="site-variables">Site Variables&lt;/h3>
-&lt;p>站点层面的变量大部分是网站配置相关.&lt;/p>
-&lt;h2 id="函数functions">函数(Functions)&lt;/h2>
-&lt;p>函数是hugo为你封装的一些方法你可以直接调用.&lt;/p>
-&lt;p>❗ Hugo 函数仅设计给模板使用, 即在&lt;code>layouts/&lt;/code>下的html文件. Same as variables.&lt;/p>
-&lt;h2 id="hugo-pipes">Hugo pipes&lt;/h2>
-&lt;h1 id="diy-my-own-website">DIY My Own Website&lt;/h1>
-&lt;h2 id="支持-emoji">支持 Emoji&lt;/h2>
-&lt;p>&lt;a href="https://stackoverflow.com/questions/41047920/adding-emoji-to-a-hugo-page-variable">Adding emoji tutorial&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://www.webfx.com/tools/emoji-cheat-sheet/">Emoji chart&lt;/a>&lt;/p>
-&lt;h2 id="todo-list">TODO List&lt;/h2>
-&lt;ol>
-&lt;li>深色和浅色模式使用 不同的代码高亮 格式&lt;/li>
-&lt;li>Post section page 添加简介&lt;/li>
-&lt;li>Single template 调整 Header&amp;rsquo;s margin&lt;/li>
-&lt;/ol>
-- https://wangloo.github.io/posts/hugo/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/microkernel/sel4/ - @2019 Notepadium.</description></item></channel></rss>
