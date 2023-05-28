@@ -1,4 +1,151 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>AArch64 内存属性与内存类型</title><link>https://wangloo.github.io/posts/armv8/memory_attr/</link><pubDate>Wed, 12 Apr 2023 08:01:33 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/memory_attr/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/memory_attr/ -&lt;p>有了虚拟内存系统之后，MMU 可以抽象出一些可配置的内存属性。&lt;/p>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux 内核数据结构 hlist</title><link>https://wangloo.github.io/posts/os/linux/data_struct/hlist/</link><pubDate>Thu, 11 May 2023 20:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/data_struct/hlist/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/linux/data_struct/hlist/ -&lt;p>linux 内核为创建【用单链表解决冲突的哈希表】设计了专门的数据结构 hlist。&lt;/p>
+&lt;p>hlist 整体来说是带头结点的双向链表，头结点的类型为&lt;code>hlist_head&lt;/code>, 普通节点
+的类型为&lt;code>hlist_node&lt;/code>. &lt;strong>为什么要区别两种类型？节约空间&lt;/strong>， 因为哈希表的
+表项类型可以是&lt;code>hlist_head&lt;/code>, 它其实不需要&lt;code>prev&lt;/code>指针, 比起一般的结点，一个
+哈希表能节约一半的空间。&lt;/p>
+&lt;p>所以一个哈希表和头结点的结构可表示为:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> hlist_head {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">struct&lt;/span> hlist_node &lt;span style="color:#ff79c6">*&lt;/span>first;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> hlist_head table[TALBE_SZ];
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="二象性">二象性&lt;/h2>
+&lt;p>任何事物都具有二象性，区分两种类型节约空间的空间，也带了一个问题：
+&lt;strong>首个&lt;code>hlist_node&lt;/code>结点的&lt;code>prev&lt;/code>指向哪呢？&lt;/strong>&lt;/p>
+&lt;p>正常情况下肯定毫不犹豫的指向头结点，即&lt;code>hlist_head&lt;/code>，但注意此时类型是
+不同的，&lt;code>prev&lt;/code>不能同时是&lt;code>struct hlist_head*&lt;/code>和&lt;code>struct hlist_node *&lt;/code>。&lt;/p>
+&lt;p>解决方案有两个，首先可以使首个结点的&lt;code>prev=NULL&lt;/code>, 这样虽然避免了类型引发的
+问题，也能保证功能正确，但是却破坏了一致性，使得操作的复杂度上升，增加了许多
+判断分支。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// delelt a node
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">del_node&lt;/span>(&lt;span style="color:#ff79c6">struct&lt;/span> hlist_head &lt;span style="color:#ff79c6">*&lt;/span>head, &lt;span style="color:#ff79c6">struct&lt;/span> hlist_node &lt;span style="color:#ff79c6">*&lt;/span>node)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// 这个if 本来是不需要的，甚至参数的head 也不需要传，
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#6272a4">// 更好的处理方式见解决方案2
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span> (node &lt;span style="color:#ff79c6">==&lt;/span> head&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>first) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> head&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>first &lt;span style="color:#ff79c6">=&lt;/span> node&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">else&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> node&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>prev&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next &lt;span style="color:#ff79c6">=&lt;/span> node&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (node&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> node&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>prev &lt;span style="color:#ff79c6">=&lt;/span> node&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>prev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// insert a node
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">add_node_before&lt;/span>(&lt;span style="color:#ff79c6">struct&lt;/span> hlist_head &lt;span style="color:#ff79c6">*&lt;/span>head, &lt;span style="color:#ff79c6">struct&lt;/span> hlist_node &lt;span style="color:#ff79c6">*&lt;/span>new
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">struct&lt;/span> hlist_node &lt;span style="color:#ff79c6">*&lt;/span>next)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// 这个if 本来是不需要的，参数head也是不需要传递的
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span> (next &lt;span style="color:#ff79c6">==&lt;/span> head&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>first) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> new&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>prev &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">NULL&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> head&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>first &lt;span style="color:#ff79c6">=&lt;/span> new;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">else&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> new&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>prev &lt;span style="color:#ff79c6">=&lt;/span> next&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>prev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> new&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>prev&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next &lt;span style="color:#ff79c6">=&lt;/span> new;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> new&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next &lt;span style="color:#ff79c6">=&lt;/span> next;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> next&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>prev &lt;span style="color:#ff79c6">=&lt;/span> new;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更好的解决方案-prev">更好的解决方案: &lt;code>**prev&lt;/code>&lt;/h2>
+&lt;p>改变&lt;code>struct hlist_node&lt;/code>的构成，使用二级指针:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> hlist_node {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">struct&lt;/span> hlist_node &lt;span style="color:#ff79c6">*&lt;/span>next;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">struct&lt;/span> hlist_node &lt;span style="color:#ff79c6">**&lt;/span>pprev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>使得每个结点的&lt;code>pprev = &amp;amp;(prev_node-&amp;gt;next)&lt;/code>, 首先类型是统一的，其次删除和添加
+都无需额外的分支了。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">del_node&lt;/span>(&lt;span style="color:#ff79c6">struct&lt;/span> hlist_node &lt;span style="color:#ff79c6">*&lt;/span>node)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">*&lt;/span>(node&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>pprev) &lt;span style="color:#ff79c6">=&lt;/span> node&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (node&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> node&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>pprev &lt;span style="color:#ff79c6">=&lt;/span> node&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>pprev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">add_node&lt;/span>(&lt;span style="color:#ff79c6">struct&lt;/span> hlist_node &lt;span style="color:#ff79c6">*&lt;/span>new, &lt;span style="color:#ff79c6">struct&lt;/span> hlist_node &lt;span style="color:#ff79c6">*&lt;/span>next)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> new&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>pprev &lt;span style="color:#ff79c6">=&lt;/span> next&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>pprev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">*&lt;/span>(new&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>pprev) &lt;span style="color:#ff79c6">=&lt;/span> new;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> new&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next &lt;span style="color:#ff79c6">=&lt;/span> next;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> next&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>pprev &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&lt;/span>(new&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Ref:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://zhuanlan.zhihu.com/p/360217911">&lt;code>**prev&lt;/code> 可以提高删除的效率&lt;/a>&lt;/li>
+&lt;li>stackoverflow&lt;/li>
+&lt;/ul>
+- https://wangloo.github.io/posts/os/linux/data_struct/hlist/ - @2019 Notepadium.</description></item><item><title>C语言的内存对齐</title><link>https://wangloo.github.io/posts/c/alignment/</link><pubDate>Mon, 08 May 2023 17:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/c/alignment/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/alignment/ -&lt;h2 id="内存对齐为何被需要">内存对齐为何被需要&lt;/h2>
+&lt;p>架构规定了数据类型大小的同时，也规定了对这些类型的变量合法访问的对齐要求。
+也就是说，变量不能随便的放在内存的任意位置，起始地址必须满足特定的对齐要求，
+对不满足要求的变量强行访问就叫做&lt;strong>非对齐访问&lt;/strong>， 非对齐访问通常会触发异常。&lt;/p>
+&lt;h3 id="一般数据类型的对齐要求">一般数据类型的对齐要求&lt;/h3>
+&lt;p>对于一般的数据类型，比如 int, long, char 这些，要求其变量地址对齐到自身大小，
+比如 ARM64 中，int 变量的地址必须对齐到 4 字节，long 变量地址必须对齐到 8 字节等等。&lt;/p>
+&lt;p>那么对于&lt;code>*(int *)0x1001 = 1234;&lt;/code>, 这类的内存访问就叫非对齐的内存访问。&lt;/p>
+&lt;blockquote>
+&lt;p>即 （变量 addr % 变量 size) ！= 0, 就称为非对齐内存访问。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="结构体的对齐要求">结构体的对齐要求&lt;/h3>
+&lt;p>上面说的还都是一般的数据类型，对于结构体这种复杂的类型，对齐的要求也复杂些。&lt;/p>
+&lt;ul>
+&lt;li>首先是结构体成员，每个成员都必须满足其自身的对齐要求&lt;/li>
+&lt;li>然后是结构体变量自身的起始地址的对齐要求是&lt;strong>其所有成员的最大对齐要求&lt;/strong>。&lt;/li>
+&lt;/ul>
+&lt;p>然而两个要求均满足有时候根本不可能，比如一个结构体声明为:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> foo {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> mem1;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> mem2;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">short&lt;/span> mem3;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>不可能同时做到 foo 变量和其成员 mem2 同时满足对齐到 4 字节，所以&lt;strong>编译器会依据
+上面的两条要求在成员之间添加 padding&lt;/strong>。&lt;/p>
+&lt;p>除了变量中间添加 padding 外，在末尾也会添加，&lt;strong>使得结构体数组容易满足对齐需求&lt;/strong>。&lt;/p>
+&lt;p>最后 foo 变量在内存中的样子可能是:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> foo {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> mem1;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> _pad1[&lt;span style="color:#bd93f9">3&lt;/span>]; &lt;span style="color:#6272a4">// 保证结构体和成员均对齐正确
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> mem2;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">short&lt;/span> mem3;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> _pad2[&lt;span style="color:#bd93f9">2&lt;/span>]; &lt;span style="color:#6272a4">// 保证【结构体数组】对齐正确
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>若结构体的成员还是一个结构体，嵌套操作就可以了，编译器可以 handle。&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>对于结构体的定义来说，若不想添加 padding，可以使用&lt;code>__attribute((packed))&lt;/code>
+来声明。 常用于一些数据包的声明，除非你清楚自己为什么要这么做，要不别用。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="如何做到内存对齐">如何做到内存对齐&lt;/h2>
+&lt;p>上面一节说明了各个类型的变量对于内存对齐的需求，只要是各个类型变量的地址满足要求了，
+对所有变量的访问也就 OK 了。那么&lt;em>如何保证每个变量地址都满足需求呢？&lt;/em>&lt;/p>
+&lt;p>对于静态分配的变量，即在编译链接时期就能确定地址，由编译器完成这项工作。编译器保证
+分配给这些变量的地址是满足对齐要求的，这个完全不用担心。&lt;/p>
+&lt;p>对于运行时动态分配的变量，例如&lt;code>malloc()&lt;/code>接口返回的，其实 malloc 本身不知道要申请
+空间的对齐规则，因为它只接受一个 size 作为参数。 所以一般来说，为了保证满足所有的
+对齐要求，&lt;code>malloc()&lt;/code> 返回的地址&lt;strong>总是满足最大的对齐请求，即指针的大小 8 字节。&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;code>malloc()&lt;/code> 的实际效果与运行库的实现有关，并不是规定死的。不过我还没有见过不是
+按照最大对齐要求分配的实现方法:)&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="aarch64-对非对齐访问的支持">AArch64 对非对齐访问的支持&lt;/h2>
+&lt;p>非对齐访问的结果是&lt;strong>架构定义的&lt;/strong>， 不同的架构可能造成的结果不同：&lt;/p>
+&lt;ul>
+&lt;li>架构可能支持非对齐访问，成功读取数据&lt;/li>
+&lt;li>架构不支持非对齐访问，产生异常&lt;/li>
+&lt;/ul>
+&lt;p>AArch64 架构支持 16、32、64 和 128 位的非对齐访问，但是有几个前提条件:&lt;/p>
+&lt;ul>
+&lt;li>关闭系统的对齐检查: &lt;code>SCTLR_ELx.A&lt;/code> bit 来控制&lt;/li>
+&lt;li>exclusive load/store 和 load-acuqire/store-release 两类指令必须是对齐访问的
+。这就表示构建信号量和其他锁机制时必须是对齐访问的&lt;/li>
+&lt;li>非对齐访问仅“普通内存”可用，&amp;quot;&lt;strong>Device memory&lt;/strong>&amp;ldquo;必须是对齐访问的&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>AArch64 非对齐访问的原理是&lt;strong>分解为多次的访存&lt;/strong>，所以&lt;strong>不能保证原子性&lt;/strong>，且性能是较差的。&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>虽然 AArch64 支持非对齐访问， 但编译器默认还是会生成满足对齐要求的代码。&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/c/alignment/ - @2019 Notepadium.</description></item><item><title>AArch64 内存属性与内存类型</title><link>https://wangloo.github.io/posts/armv8/memory_attr/</link><pubDate>Wed, 12 Apr 2023 08:01:33 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/memory_attr/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/memory_attr/ -&lt;p>有了虚拟内存系统之后，MMU 可以抽象出一些可配置的内存属性。&lt;/p>
 &lt;p>例如，配置某个虚拟内存区域为不可执行、不被 cache 等，不可执行的属性
 有助于防范攻击，不进入 cache 经常划分给 外设 Memory-mapped 区域。&lt;/p>
 &lt;h2 id="设置内存属性">设置内存属性&lt;/h2>
@@ -328,79 +475,4 @@ gcc 语句是否执行取决于&lt;code>main.c&lt;/code> 和 &lt;code>main.elf&l
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
 &lt;p>以上 demo 还使用了 test 命令来终止 make 的执行, 如果用户没有输入&lt;code>y&lt;/code>, make 将会终止执行&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/posts/c/makefile_tricks/ - @2019 Notepadium.</description></item><item><title>Uboot: 常用命令</title><link>https://wangloo.github.io/posts/os/uboot/commands/</link><pubDate>Sun, 27 Nov 2022 22:03:48 +0800</pubDate><guid>https://wangloo.github.io/posts/os/uboot/commands/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/uboot/commands/ -&lt;hr>
-&lt;p>..&lt;/p>
-&lt;h2 id="环境变量相关">环境变量相关&lt;/h2>
-&lt;h2 id="内存操作">内存操作&lt;/h2>
-&lt;h2 id="网络操作">网络操作&lt;/h2>
-&lt;h2 id="emmc和sd卡">EMMC和SD卡&lt;/h2>
-&lt;h2 id="boot操作指令">BOOT操作指令&lt;/h2>
-&lt;h3 id="bootm">bootm&lt;/h3>
-&lt;h3 id="go">go&lt;/h3>
-&lt;h2 id="其他命令">其他命令&lt;/h2>
-&lt;p>启动相关&lt;/p>
-&lt;p>md&lt;/p>
-&lt;p>mmcinfo&lt;/p>
-&lt;p>cp&lt;/p>
-- https://wangloo.github.io/posts/os/uboot/commands/ - @2019 Notepadium.</description></item><item><title>vim插件YCM: 安装和配置</title><link>https://wangloo.github.io/posts/vim/ycm-install/</link><pubDate>Sun, 27 Nov 2022 21:50:39 +0800</pubDate><guid>https://wangloo.github.io/posts/vim/ycm-install/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/vim/ycm-install/ -&lt;p>YCM 插件对 python, vim的版本均有要求&lt;/p>
-&lt;h2 id="下载">下载&lt;/h2>
-&lt;p>可以使用vim-plug等工具下载, 也可以下载源码然后拷贝到&lt;code>.vim&lt;/code>目录下&lt;/p>
-&lt;h2 id="编译">编译&lt;/h2>
-&lt;p>编译用到python3, 这里是问题最多的一步&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 编译并添加对C的提示支持&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>python3 install.py --clangd-completer --verbose
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Searching Python 3.8 libraries...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Downloading Clangd from https://github.com/ycm-core/llvm/releases/download/13.0.0/clangd-13.0.0-x86_64-unknown-linux-gnu.tar.bz2...
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用&lt;code>--clangd-completer&lt;/code>参数时, 脚本会去下载clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2文件, 比较慢. 也可以&lt;strong>提前根据提示的网站自己手动下载&lt;/strong>压缩包.&lt;/p>
-&lt;p>下载完成后, 放到本地目录下:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>:~/.vim/plugged/YouCompleteMe/third_party/ycmd/third_party/clangd/cache$ ls
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>还需对脚本&lt;code>YouCompleteMe/third_party/ycmd/build.py&lt;/code>进行修改, 防止重新下载.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">DownloadClangd&lt;/span>( printer ):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MakeCleanDirectory( CLANGD_OUTPUT_DIR )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">not&lt;/span> p&lt;span style="color:#ff79c6">.&lt;/span>exists( CLANGD_CACHE_DIR ):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> os&lt;span style="color:#ff79c6">.&lt;/span>makedirs( CLANGD_CACHE_DIR )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># 注释下面的语句&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># elif p.exists( file_name ) and not CheckFileIntegrity( file_name, check_sum ):&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># printer( &amp;#39;Cached Clangd archive does not match checksum. Removing...&amp;#39; )&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># os.remove( file_name )&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> p&lt;span style="color:#ff79c6">.&lt;/span>exists( file_name ):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printer( &lt;span style="color:#f1fa8c">f&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;Using cached Clangd: &lt;/span>&lt;span style="color:#f1fa8c">{&lt;/span> file_name &lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;&lt;/span> )
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="配置">配置&lt;/h2>
-&lt;p>YCM 配合一个配置文件&lt;code>.ycm_c_c++_conf.py&lt;/code>, YCM搜索的位置在vimrc中指定:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-vimrc" data-lang="vimrc">&lt;span style="display:flex;">&lt;span>Plug &lt;span style="color:#f1fa8c">&amp;#39;rdnetto/YCM-Generator&amp;#39;&lt;/span>, { &lt;span style="color:#f1fa8c">&amp;#39;branch&amp;#39;&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#39;stable&amp;#39;&lt;/span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> g:ycm_global_ycm_extra_conf = &lt;span style="color:#f1fa8c">&amp;#34;~/.ycm_c_c++_conf.py&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其内容的example:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-py" data-lang="py">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> os
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> ycm_core
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>flags &lt;span style="color:#ff79c6">=&lt;/span> [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-Wall&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-Wextra&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># &amp;#39;-Werror&amp;#39;, &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-Wno-long-long&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># &amp;#39;-Wno-variadic-macros&amp;#39;,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-fexceptions&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-ferror-limit=10000&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-DNDEBUG&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-std=c99&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-xc&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-isystem/usr/include/&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>SOURCE_EXTENSIONS &lt;span style="color:#ff79c6">=&lt;/span> [ &lt;span style="color:#f1fa8c">&amp;#39;.cpp&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;.cxx&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;.cc&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;.c&amp;#39;&lt;/span>, ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">FlagsForFile&lt;/span>( filename, &lt;span style="color:#ff79c6">**&lt;/span>kwargs ):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;flags&amp;#39;&lt;/span>: flags,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;do_cache&amp;#39;&lt;/span>: &lt;span style="color:#ff79c6">True&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>🔻 对于C/C++来说, YCM的使用最好配合&lt;em>compilation database&lt;/em> 来使用, 例如&lt;a href="https://github.com/nickdiego/compiledb">compiledb&lt;/a>. 否则, 可能头文件的path识别出问题(&lt;a href="https://stackoverflow.com/questions/64277317/youcompleteme-not-work-properly-for-c-headers.">stackoverflow&lt;/a>).&lt;/p>
-&lt;p>2022年2月13日我使用的compilation database生成工具从&lt;code>compiledb&lt;/code>换成了&lt;code>bear&lt;/code>, 因为&lt;code>bear&lt;/code>更好的支持递归, 即有&lt;code>make -C&lt;/code>的情况.&lt;/p>
-&lt;p>需要的compilation database生成工具介绍: &lt;a href="https://sarcasm.github.io/notes/dev/compilation-database.html">Compilation database — Sarcasm notebook&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/vim/ycm-install/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/c/makefile_tricks/ - @2019 Notepadium.</description></item></channel></rss>

@@ -1,4 +1,94 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Third Blog</title><link>https://wangloo.github.io/posts/third-blog/</link><pubDate>Sun, 01 May 2022 16:41:35 +0800</pubDate><guid>https://wangloo.github.io/posts/third-blog/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/third-blog/ -&lt;p>&lt;img src="images/test.jpg" alt="sunset">
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>LaTeX Vim Tutorial</title><link>https://wangloo.github.io/posts/latex-vim-tutorial/</link><pubDate>Wed, 04 May 2022 17:07:51 +0800</pubDate><guid>https://wangloo.github.io/posts/latex-vim-tutorial/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/latex-vim-tutorial/ -&lt;h2 id="use-plugin-vimtex">Use plugin &lt;code>vimtex&lt;/code>&lt;/h2>
+&lt;p>Vim build-in support of LaTeX files is just OK. When we need more excellent exprience, good plugins is very recommended.&lt;/p>
+&lt;p>&lt;a href="https://github.com/lervag/vimtex#configuration">vimtex&lt;/a> is a nice and modern vim plugin for LaTeX files.&lt;/p>
+&lt;p>&lt;strong>Useful Futures of vimtex IMO&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>&amp;lt;leader&amp;gt;ll&lt;/code> Complier. By default, it will auto-complier when you type &lt;code>:w&lt;/code>.&lt;/li>
+&lt;li>&lt;code>&amp;lt;leader&amp;gt;lt&lt;/code> Open content tree as a sidebar.&lt;/li>
+&lt;li>&lt;code>&amp;lt;leader&amp;gt;lv&lt;/code> View PDF with configured PDF viewer.&lt;/li>
+&lt;li>&lt;code>&amp;lt;leader&amp;gt;li&lt;/code> File information.&lt;/li>
+&lt;li>&lt;code>cse&lt;/code> Change surrounding &lt;code>\begin \end&lt;/code> environment.&lt;/li>
+&lt;li>&lt;code>tse&lt;/code> Exchange between &lt;code>\begin{env}&lt;/code> and &lt;code>\begin{env*}&lt;/code>.&lt;/li>
+&lt;li>&lt;code>tsc&lt;/code> Exchange between &lt;code>\command{}&lt;/code> and &lt;code>\command*{}&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;p> 
+ &lt;/p>
+&lt;h2 id="add-support-of-simplified-chinese">Add Support of Simplified Chinese&lt;/h2>
+&lt;h3 id="install-xetex">Install &lt;code>xetex&lt;/code>&lt;/h3>
+&lt;p>I use &lt;code>xetex&lt;/code> to add supports for Chinese fonts in LaTex files. Actually the magician is amacro package of &lt;code>xetex&lt;/code> named &lt;code>xeCJK&lt;/code>.&lt;/p>
+&lt;p>And &lt;code>xetex&lt;/code> is included in&lt;code>texlive&lt;/code>. so we install it from source:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install texlive-xetex
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="install-chinese-font">Install Chinese Font&lt;/h3>
+&lt;p>If there is no Chinese font in your system, you must install one. I choose WinQingYuan microhei as a instance.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install ttf-wqy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Excute &lt;code>fc-list&lt;/code> to check if install successfully, here is excepted output:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>fc-list | grep wqy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/usr/share/fonts/truetype/wqy/wqy-microhei.ttc: WenQuanYi Micro Hei,文泉驛微米黑,文泉驿微米黑:style&lt;span style="color:#ff79c6">=&lt;/span>Regular
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/share/fonts/truetype/wqy/wqy-microhei.ttc: WenQuanYi Micro Hei Mono,文泉驛等寬微米黑,文泉驿等宽微米黑:style&lt;span style="color:#ff79c6">=&lt;/span>Regular
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="configure-your-tex-file">Configure your tex file&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-latex" data-lang="latex">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\documentclass&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>article&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\usepackage&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>xeCJK&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\setCJKmainfont&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>WenQuanYi Micro Hei&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\begin&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>document&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Hello, LaTeX!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>你好, LaTex!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\end&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>document&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Complier it and see, the Chinese font is displayed!&lt;/p>
+&lt;p> 
+ &lt;/p>
+&lt;h2 id="confusing-tools">Confusing Tools&lt;/h2>
+&lt;h3 id="difference-between-pdfluaxetex-and-pdfluaxelatex">Difference between {pdf,lua,xe}Tex and {pdf,lua,xe}LaTeX&lt;/h3>
+&lt;p>If a &lt;code>.tex&lt;/code>file starts with &lt;code>\documentclass&lt;/code>, it&amp;rsquo;s a &lt;em>LaTex&lt;/em> format file rather than the &lt;em>Plain Tex&lt;/em> format file.&lt;/p>
+&lt;p>The LaTeX format file has some specific macro like &lt;code>\documentclass&lt;/code> that cannot be compliered by &lt;code>[pdf]Tex&lt;/code>, so that&amp;rsquo;s the job of &lt;code>[pdf]LaTeX&lt;/code>. Same goes for other engines.&lt;/p>
+&lt;h3 id="what-is-xetexxelatex">What is &lt;code>xetex/xelatex&lt;/code>?&lt;/h3>
+&lt;p>&lt;code>xetex/xelatex&lt;/code> is one of the TeX/LaTeX engines. Others are &lt;code>pdfTex&lt;/code>, &lt;code>LuaTex&lt;/code>, etc. &lt;a href="https://fr.wikipedia.org/wiki/XeTeX">Wiki&lt;/a>&lt;/p>
+&lt;p>&lt;code>xetex/xelatex&lt;/code> add fonts and character sets support for TeX/LaTeX file.&lt;/p>
+&lt;ul>
+&lt;li>Treat input as Unicode&lt;/li>
+&lt;li>Allow us to use many system fonts in LaTeX file easily&lt;/li>
+&lt;/ul>
+&lt;h3 id="what-is-latexmk">What is &lt;code>latexmk&lt;/code>?&lt;/h3>
+&lt;p>LaTeXmk 是一个集成化的命令行工具, it must work with one LaTeX engine.&lt;/p>
+&lt;p>The fundamental issue that &lt;code>latexmk&lt;/code> solves is that the number of runs of &lt;code>[pdf]latex&lt;/code> is highly dynamically dependent on the document and the class file used. &lt;code>latex&lt;/code> just need to be run once a time.&lt;/p>
+&lt;h3 id="different-between-ctexmiktextexlive-">Different between &lt;code>CTeX&lt;/code>/&lt;code>MiKTeX&lt;/code>/&lt;code>TeXlive&lt;/code> ?&lt;/h3>
+&lt;p>They are all 包含与.tex文件关联的各种编辑、查看工具、常用宏包及文档.&lt;/p>
+&lt;p>&lt;a href="http://www.ctex.org/HomePage">CTex&lt;/a> packages add complete Chinese support based on &lt;a href="https://miktex.org/">MiKTeX&lt;/a>.&lt;/p>
+&lt;ul>
+&lt;li>CTex is only avilable in windows.&lt;/li>
+&lt;/ul>
+- https://wangloo.github.io/posts/latex-vim-tutorial/ - @2019 Notepadium.</description></item><item><title>Portability Issues</title><link>https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/</link><pubDate>Sun, 01 May 2022 16:41:35 +0800</pubDate><guid>https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/ -&lt;p>When reading C standard documents, we usually see phrases like &amp;ldquo;&lt;strong>Implementation-defined&lt;/strong>&amp;rdquo;, &amp;ldquo;&lt;strong>Unspecified&lt;/strong>&amp;rdquo;,.etc.&lt;/p>
+&lt;p>So, what do they really mean?&lt;/p>
+&lt;h2 id="术语">术语&lt;/h2>
+&lt;p>我们将这些难以直接理解的词汇称为&lt;strong>术语&lt;/strong>，在ANSI C中，术语可以分为描述不可移植代码(unportable), 坏代码(bad), 可移植的代码(portable)三类.&lt;/p>
+&lt;h3 id="unportable-code">unportable code&lt;/h3>
+&lt;p>&lt;strong>Implementation-defined&lt;/strong>&lt;/p>
+&lt;p>需要由编译器设计者决定采取何种行为，他们可能不同，但都不能说是错误的.&lt;br>
+例如：当整型数右移时，是否需要扩展符号位. &lt;a href="https://www.cnblogs.com/bluettt/p/16186598.html">右移代替除法可能导致的灾难&lt;/a>.&lt;/p>
+&lt;p>&lt;strong>unspecified&lt;/strong>&lt;/p>
+&lt;p>在某些正确情况下的做法，标准并未明确规定应该怎样做.&lt;br>
+例如：参数求值的顺序.&lt;/p>
+&lt;h3 id="bad-code">bad code&lt;/h3>
+&lt;p>&lt;strong>undefined&lt;/strong>&lt;/p>
+&lt;p>在某些不正确情况下的做法，但标准并未规定应该怎样做。意味着你可以采取任何行动，可以什么都不做，也可以发出一条警告信息, 或者终止CPU重启等等. 你甚至可以发射核导弹(只要你安装了能发射核导弹的硬件系统).&lt;br>
+例如：当一个有符号整数溢出时该采取什么行动.&lt;/p>
+&lt;p>&lt;strong>constraint&lt;/strong>&lt;/p>
+&lt;p>这是一个必须遵守的限制或要求. 如果你不遵守, 那么你的程序的行为就会变成如上所说的&lt;code>undefined&lt;/code>. 这出现了一种很有意思的情况: 分辨某种东西是否是一个&lt;code>constaint&lt;/code>是很容易的, 因为每个标准的主题都附有一个&lt;code>constraint&lt;/code>小节, 列出了所有的约束条件。&lt;br>
+例如: &lt;code>%&lt;/code>操作符的操作数必须为整型. 所以,在非整型数据上使用&lt;code>%&lt;/code>操作符肯定会导致&lt;code>undefined&lt;/code>.&lt;/p>
+&lt;h3 id="portable-code">portable code&lt;/h3>
+&lt;p>&lt;strong>strictly conforming&lt;/strong>&lt;/p>
+&lt;p>严格遵守标准的. 符合该条件的程序应当是:&lt;/p>
+&lt;ul>
+&lt;li>只使用已确定的特性&lt;/li>
+&lt;li>不突破任何由编译器实现(Implementation-defined)的限制.&lt;/li>
+&lt;li>不使用&lt;code>unspecified&lt;/code>和&lt;code>undefined&lt;/code>特性&lt;/li>
+&lt;/ul>
+&lt;p>这样规定的目的是最大程序保证代码的可移植性. 但符合该术语的代码并不常见, 例如&lt;code>INT_MAX&lt;/code>的值在不同架构的机器上结果可能不同.&lt;/p>
+&lt;p>&lt;strong>comforming&lt;/strong>&lt;/p>
+&lt;p>遵循标准的; 一个遵循标准的程序可以依赖一些对于某种编译器特有的&lt;strong>不可移植&lt;/strong>的特性. 这样一个程序对于某个编译器可能是遵循标准的, 但对于另外一个编译器又是不遵循标准的.&lt;/p>
+- https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/ - @2019 Notepadium.</description></item><item><title>Third Blog</title><link>https://wangloo.github.io/posts/third-blog/</link><pubDate>Sun, 01 May 2022 16:41:35 +0800</pubDate><guid>https://wangloo.github.io/posts/third-blog/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/third-blog/ -&lt;p>&lt;img src="images/test.jpg" alt="sunset">
 &lt;img src="test.jpg" alt="sunset">&lt;/p>
 - https://wangloo.github.io/posts/third-blog/ - @2019 Notepadium.</description></item><item><title>GCC '-M' and Related Parameters</title><link>https://wangloo.github.io/posts/c/gcc_-m_related/</link><pubDate>Tue, 26 Apr 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/gcc_-m_related/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/gcc_-m_related/ -&lt;p>As we all know, there are huge number of parameters for GCC. With them, we can make many things possible. Now we talk about -M and related ones.
 After reading this article, you will know the meaning of there magic parameters. And I will put some little demos follows. Finally, we will see what can they do in really project. Let&amp;rsquo;s go ahead.&lt;/p>

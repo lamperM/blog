@@ -1,4 +1,269 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 HuGo 搭建个人网站</title><link>https://wangloo.github.io/posts/hugo/</link><pubDate>Sat, 21 May 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/hugo/ -&lt;h1 id="hugo-基础学习">HuGo 基础学习&lt;/h1>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>写高质量的C语言工程的技巧</title><link>https://wangloo.github.io/posts/codestyle/improve_quality/</link><pubDate>Tue, 14 Jun 2022 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/improve_quality/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/codestyle/improve_quality/ -&lt;h2 id="添加更多的编译选项comiler-options来防止bug">添加更多的编译选项(comiler options)来防止bug&lt;/h2>
+&lt;p>对于我常用的&lt;code>GCC&lt;/code>, 推荐开启一下的compiler options:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>-Wall&lt;/code>: enable a lot of common warnings&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>-Wno-format-truncation&lt;/code>: warns about the snprintf output buffer not being
+large enough for a corresponding “%s” in the format string.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>-Werror&lt;/code>: turn warnings into errors.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="动态申请的空间到底要不要释放">动态申请的空间到底要不要释放&lt;/h2>
+&lt;p>When using a barebones embedded OS, you absolutely need to tightly manage your memory.&lt;/p>
+&lt;p>但是, 如果你是写应用业务的代码, 特别是在内存足够的场景下. 最好不要手动释放内存,
+因为当线程/进程退出时, 操作系统会自动帮我们释放. &lt;strong>某些情况下, 释放内存的操作会很大程度上增加逻辑的复杂度&lt;/strong>.&lt;/p>
+&lt;blockquote>
+&lt;p>如果你是一个内核程序员, 则必须手动的释放. 不用怀疑.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="尽可能在创建变量时赋初值">尽可能在创建变量时赋初值&lt;/h2>
+&lt;p>放置某些变量创建后是 &lt;code>magic value&lt;/code>. 而使用这些变量可能不会立马导致错误, 但是这是一个隐患.&lt;/p>
+&lt;p>但这会产生一个问题, 有时我们定义变量之后的不久之后就会对其赋予正确的值, 这时候初值就是
+多余的. 而且维护者可能认为这个值是meaningful, 这就要求我们如果要赋初值, 就要说明这个值
+仅仅是&lt;strong>无意义的&lt;/strong>初值.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="使用define-enum">使用&lt;code>#define&lt;/code>, &lt;code>enum&lt;/code>&lt;/h2>
+&lt;p>对于代码在不同地方使用的同一个值, 应使用&lt;code>#define&lt;/code>来声明使得代码&lt;strong>maintainable&lt;/strong>.&lt;/p>
+&lt;p>如果这些值有多个且能规划为同一类别, 则还可将&lt;code>#define&lt;/code>的方式换为&lt;code>enum&lt;/code>. 这会使代码更加&lt;strong>meaningful&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>使用&lt;code>enum&lt;/code>使还要注意其所占内存空间在不同架构中可能不同的问题, see &lt;a href="https://www.cnblogs.com/bluettt/p/16041867.html">enum的优势和漏洞&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h3 id="使用typedef优化function-pointer">使用&lt;code>typedef&lt;/code>优化function pointer&lt;/h3>
+&lt;p> &lt;/p>
+&lt;h2 id="重定义一套自己的类型">重定义一套自己的类型&lt;/h2>
+&lt;p>在开发&lt;em>大项目&lt;/em>时, 需要考虑可移植性的情况下, 最好利用&lt;code>typedef&lt;/code>对类型进行重定义.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#if SYSTEM1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> &lt;span style="color:#ff79c6">typedef&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> INT32;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#else
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> &lt;span style="color:#ff79c6">typedef&lt;/span> &lt;span style="color:#8be9fd">long&lt;/span> INT32;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#endif
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如上, 对于某些架构&lt;code>int&lt;/code>类型可能不是32bit, 此时就要使用&lt;code>long&lt;/code>. 这种定义的方式会保证我们的系统
+在任何架构中都不会出现类型的bug. 而且也增加了代码的&lt;strong>readability&lt;/strong>.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="善用0">善用&lt;code>~0&lt;/code>&lt;/h2>
+&lt;p>在做嵌入式编程时, 有时在设置掩码(mask)或者其他情况会要用到&lt;strong>全1&lt;/strong>的变量值, 你是否经常这样声明?&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> mask &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0xffff&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>暂且不谈&lt;code>int&lt;/code>类型到底占多少字节的问题. 就像上面一样, 我们程序员经常忘记某个类型的大小,
+而少添加了&lt;code>f&lt;/code>. 会导致变量&lt;code>mask&lt;/code>的值不是全1(32位情况下).&lt;/p>
+&lt;p>这是要变换一下思维, 使用&lt;code>~0&lt;/code>的定义方法就可轻松化解, 无需管变量的类型是什么.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> mask &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">~&lt;/span>&lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="合理的使用goto语句">合理的使用&lt;code>goto&lt;/code>语句&lt;/h2>
+&lt;p>在大学课堂中, 我们老师说过禁止使用&lt;code>goto&lt;/code>语句, 但却没有给出明确的原因.&lt;/p>
+&lt;p>实际上, &lt;strong>合理的&lt;/strong>使用&lt;code>goto&lt;/code>能够极大的减少程序的冗余度.&lt;/p>
+&lt;p>&lt;code>goto&lt;/code>语句常用于程序出现错误要退出时, 可能有多个情况会使用重复的代码处理,
+例如释放一些allocated memory. 相较于使用&lt;code>flag&lt;/code>, 使用&lt;code>goto&lt;/code>显然更加clearly and readability.&lt;/p>
+&lt;p>所以, 在面对重复的错误处理代码时, 想想能不能用&lt;code>goto&lt;/code>进行优化. 当然, &lt;strong>避免过早优化&lt;/strong>.&lt;/p>
+&lt;blockquote>
+&lt;p>注意, &lt;code>goto&lt;/code>出现的场景其实很受限. Never use a backward &lt;code>goto&lt;/code> or jump into control statements.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="定义合理-正确的结构体">定义合理, 正确的结构体&lt;/h2>
+&lt;p>结构体是C语言编程应用中常用的数据结构, 关于结构体也有许多要注意的点.&lt;/p>
+&lt;h3 id="1-flexible-array-member">#1 Flexible Array Member&lt;/h3>
+&lt;p>C99开始支持&lt;em>Flexible Array Member&lt;/em>. 且看我&lt;a href="">lstring&lt;/a>库的结构体定义:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> str {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> length;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> size;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> data[]; &lt;span style="color:#6272a4">// Flexible array member - C99 only
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>对于这种不定长的数组元素, 我之前都是定义一个指针, 占用一个&lt;code>sizeof(char *)&lt;/code>的空间. 而Flexible Array Member本身不占用空间. 需要在malloc时为他单独声明空间.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> n &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">100&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> str &lt;span style="color:#ff79c6">*&lt;/span>s &lt;span style="color:#ff79c6">=&lt;/span> malloc(&lt;span style="color:#ff79c6">sizeof&lt;/span>(&lt;span style="color:#ff79c6">struct&lt;/span> str) &lt;span style="color:#ff79c6">+&lt;/span> &lt;span style="color:#ff79c6">sizeof&lt;/span>(&lt;span style="color:#8be9fd">char&lt;/span>[n]));
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>这里也有一个小trick, 使用&lt;code>sizeof(char[n])&lt;/code> 比 &lt;code>sizeof(char) * n&lt;/code> 更简洁!&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="-2-padding-and-packed"># 2 Padding and Packed&lt;/h3>
+&lt;p>有关结构体的大小, 和地址对齐的问题. 假设我有一个结构体如下:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> mystruct_A
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> a; &lt;span style="color:#8be9fd">int&lt;/span> b; &lt;span style="color:#8be9fd">char&lt;/span> c;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} x;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Padding是编译器对结构体&lt;strong>默认&lt;/strong>做的事情. 它会在成员之间插入一些 gap 来保证地址对齐:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> mystruct_A {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> a;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> gap_0[&lt;span style="color:#bd93f9">3&lt;/span>]; &lt;span style="color:#6272a4">/* inserted by compiler: for alignment of b */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> b; &lt;span style="color:#6272a4">/* int 在32位上其地址是4字节对齐的 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> c;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> gap_1[&lt;span style="color:#bd93f9">3&lt;/span>]; &lt;span style="color:#6272a4">/* -&amp;#34;-: for alignment of the whole struct in an array */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} x;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>除了保证每个成员的地址是对齐的, &lt;strong>整个结构体&lt;/strong>的地址也是按照其最大的成员类型来对齐, 即对齐到&lt;code>int&lt;/code>(4字节).&lt;/p>
+&lt;/blockquote>
+&lt;p>如果你&lt;strong>不想要这些 gap&lt;/strong>, 那么可以对结构体声明使用 &lt;code>__attribute__((__packed__))&lt;/code>关键字. 整个结构体大小仅为6个字节.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">struct&lt;/span> &lt;span style="color:#50fa7b">__attribute__&lt;/span>((__packed__)) mystruct_A {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> a;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> b;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">char&lt;/span> c;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="永远为你的函数设置error-return-value">永远为你的函数设置error return value&lt;/h2>
+&lt;p>一旦你的函数可能被其他人调用, 那么养成设置return value的习惯. 即便你现在的实现
+并不会产生任何错误, 也请返回&lt;code>success&lt;/code>.&lt;/p>
+&lt;p>这样做的原因是, caller可以根据你的定义做错误判断, 即便以后你的实现加上了出错情况,
+上层的代码也不需要修改.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="变量类型的选择">变量类型的选择&lt;/h2>
+&lt;ul>
+&lt;li>名字, 特定不变的字符串使用&lt;code>const char *&lt;/code>, 甚至&lt;code>const char const*&lt;/code>&lt;/li>
+&lt;li>长度使用&lt;code>size_t&lt;/code>&lt;/li>
+&lt;li>表示类型的参数尽可能使用&lt;code>enum&lt;/code>&lt;/li>
+&lt;li>循环变量i使用&lt;code>signed&lt;/code>, 避免溢出后出错&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="reference">Reference&lt;/h2>
+&lt;p>&lt;a href="https://www.msweet.org/blog/2020-12-31-how-i-improve-my-c-code-quality.html">How I Improve My (C) Code Quality&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.codeproject.com/Articles/357065/Ten-Fallacies-of-Good-C-Code">Ten Fallacies of Good C Code&lt;/a>&lt;/p>
+- https://wangloo.github.io/posts/codestyle/improve_quality/ - @2019 Notepadium.</description></item><item><title>MicroKernel Learning: SeL4</title><link>https://wangloo.github.io/posts/microkernel/sel4/</link><pubDate>Sat, 04 Jun 2022 11:52:51 +0800</pubDate><guid>https://wangloo.github.io/posts/microkernel/sel4/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/microkernel/sel4/ -&lt;h2 id="sel4-capabilities">seL4 Capabilities&lt;/h2>
+&lt;p>In seL4, capabilities are stored in &lt;strong>C-space&lt;/strong>. C-space is a hierarchical data structure very similar to &lt;strong>page table&lt;/strong>.&lt;/p>
+&lt;ul>
+&lt;li>page table is a mapping from virtual address to physical address.&lt;/li>
+&lt;li>C-space is a mapping from &lt;strong>object ID&lt;/strong> to &lt;strong>capability&lt;/strong>.&lt;/li>
+&lt;li>Kernel object is made up of several &lt;strong>C-nodes&lt;/strong>, just like a page table made up of individual page tables.&lt;/li>
+&lt;li>Each C-nodes is an array of cap &lt;em>slots&lt;/em>, which contain capability.&lt;/li>
+&lt;/ul>
+&lt;p>Inaccessible to userland, you can never hold an &lt;strong>actual capability&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>You can only hold a reference to capability, which pointers into C-space(slot addresses)&lt;/li>
+&lt;li>These C-space addresses are called &lt;strong>CPTRs&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>You don&amp;rsquo;t need to do the transform, because this is typically extracted in some libs.&lt;/p>
+&lt;/blockquote>
+&lt;p>Capabilities convey specific privilege (acces rights)&lt;/p>
+&lt;ul>
+&lt;li>Read, Write, Execute, GrantReply(&lt;code>call&lt;/code>), Grant(&lt;code>cap transfer&lt;/code>)&lt;/li>
+&lt;/ul>
+&lt;p>Main operations on capabilities:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>Invoke&lt;/code>perform operation on object referred to by cap.
+&lt;ul>
+&lt;li>For example, map some frame into memory. You need to have capabilities to both the frame and address space.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>Copy&lt;/code>|&lt;code>Mint&lt;/code>|&lt;code>Grant&lt;/code>: create copy of cap with &lt;strong>same/lesser&lt;/strong> privilege.&lt;/li>
+&lt;li>&lt;code>Move&lt;/code>|&lt;code>Mutate&lt;/code>: transfer to different address with &lt;strong>same/lesser&lt;/strong> privilege.
+&lt;ul>
+&lt;li>Between C-space or within C-space.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>Delete&lt;/code>: invalidate slot(cleans up object if this is the only cap to it)&lt;/li>
+&lt;li>&lt;code>Revoke&lt;/code>: delete any derived(eg. copied or minted) caps&lt;/li>
+&lt;/ul>
+&lt;h3 id="capability-derivation">Capability Derivation&lt;/h3>
+&lt;h4 id="mint-operation">MINT OPERATION&lt;/h4>
+&lt;p>The &lt;strong>Mint&lt;/strong> operation creates a new, less powerful cap&lt;/p>
+&lt;ul>
+&lt;li>Can add badge&lt;/li>
+&lt;li>Can strip access rights, eg &lt;code>RW-&amp;gt;RO&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>mint(dest, src, rights, badge)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>The first two arguement are &lt;strong>capability pointers(CPTR)&lt;/strong> to a C-space(represented by C-node), which are references inside C-node.&lt;/li>
+&lt;li>The &lt;strong>destination C-node cap&lt;/strong> must allow modification&lt;/li>
+&lt;li>Then you have the rights and the &lt;em>batch&lt;/em> of the new cap.&lt;/li>
+&lt;/ul>
+&lt;p>📌 This is an alternative of sending addressed capabilities by &lt;strong>IPC operation&lt;/strong>.
+That is what operating system do to set up protection domains for &lt;strong>user level process&lt;/strong>.&lt;/p>
+&lt;h4 id="copy-operation">COPY OPERATION&lt;/h4>
+&lt;blockquote>
+&lt;p>Copy as a version of &lt;em>Mint&lt;/em>.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="sel4-kernel-objects">seL4 Kernel Objects&lt;/h2>
+&lt;p>In file &lt;code>libsel4\include\sel4\objecttype.h&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">typedef&lt;/span> &lt;span style="color:#ff79c6">enum&lt;/span> api_object {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_UntypedObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_TCBObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_EndpointObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_NotificationObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_CapTableObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#ifdef CONFIG_KERNEL_MCS
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> seL4_SchedContextObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> seL4_ReplyObject,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#endif
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span> seL4_NonArchObjectTypeCount,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} seL4_ObjectType;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="sel4-system-calls">seL4 System Calls&lt;/h2>
+&lt;p>seL4 has &lt;code>11&lt;/code> syscalls:&lt;/p>
+&lt;p>&lt;code>Yield()&lt;/code>: invokes scheduler&lt;/p>
+&lt;ul>
+&lt;li>does NOT require a capability!&lt;/li>
+&lt;/ul>
+&lt;p>&lt;code>Send()&lt;/code>,&lt;code>Recv()&lt;/code> and variants/combinations thereof: IPC operations&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>Call()&lt;/code>,&lt;code>ReplyRecv()&lt;/code>: usually invokes by client/server&lt;/li>
+&lt;li>&lt;code>Send()&lt;/code>, &lt;code>NBSend()&lt;/code>: send-only and non-blocking version of it.&lt;/li>
+&lt;li>&lt;code>Recv()&lt;/code>, &lt;code>NBRecv()&lt;/code>, &lt;code>NBSendRecv()&lt;/code>&lt;/li>
+&lt;li>&lt;code>Wait()&lt;/code>, &lt;code>NBWait()&lt;/code>, &lt;code>NBSendWait()&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>We just use &lt;code>Call()&lt;/code> normally, the others are only for bootstrapping protocols and exception handling.&lt;/p>
+&lt;/blockquote>
+&lt;p>Call() is atomic Send() + reply-object setup + Wait()&lt;/p>
+&lt;ul>
+&lt;li>cannot be simulated with one-way operations!&lt;/li>
+&lt;/ul>
+&lt;p>ReplyRecv() is NBSend() + Recv()&lt;/p>
+&lt;h3 id="different-object-support-different-operations">Different object support different operations&lt;/h3>
+&lt;h4 id="endpoints">ENDPOINTS&lt;/h4>
+&lt;p>Endpoints support all 10 IPC variants.&lt;/p>
+&lt;h4 id="notifications">NOTIFICATIONS&lt;/h4>
+&lt;p>Notifications support:&lt;/p>
+&lt;ul>
+&lt;li>NBSend() - aliased as Signal()&lt;/li>
+&lt;li>Wait()&lt;/li>
+&lt;li>NBWait() - aliased as Poll()&lt;/li>
+&lt;/ul>
+&lt;h4 id="other-objects">OTHER OBJECTS&lt;/h4>
+&lt;p>Other objects only supports &lt;code>Call()&lt;/code> operation.&lt;/p>
+&lt;ul>
+&lt;li>Appear as (kernel-implemented) servers. If you invoking a method on an object, this is done by treating the object as a kernel-implemented server. And you invoke it with a &lt;code>call()&lt;/code> operation just as you do a normal server invocation.&lt;/li>
+&lt;li>Each of these kernel objects has a different kernel-defined protocol
+&lt;ul>
+&lt;li>operations encoded in message tag&lt;/li>
+&lt;li>parameters passed in message words&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Mostly hidden behind &lt;strong>syscall&lt;/strong> wrappers, user do not need to know this details.&lt;/li>
+&lt;/ul>
+&lt;p> &lt;/p>
+&lt;h2 id="sel4-ipc">seL4 IPC&lt;/h2>
+&lt;blockquote>
+&lt;p>IPC in seL4 is a way to realize &lt;strong>cross-domain&lt;/strong> invocation.&lt;/p>
+&lt;/blockquote>
+&lt;p>seL4 IPC is not a mechanism for shipping data. Transfering data is axillary but not the primary purpose.&lt;/p>
+&lt;p>seL4 IPC is a protected procedure call, a user-controlled context switch(from clients context into server context).&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="sel4-threads">seL4 Threads&lt;/h2>
+&lt;h3 id="creating-a-thread">Creating a thread&lt;/h3>
+&lt;ol>
+&lt;li>Obtain a TCB object&lt;/li>
+&lt;li>Set attributes: V-space, C-space, fault endpoint, IPC buffer&lt;/li>
+&lt;li>Set Scheduling parameters:
+&lt;ul>
+&lt;li>priority, scheduling context, timeout endpoint(maybe MCP)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Set architecture-related registers&lt;/li>
+&lt;/ol>
+&lt;h3 id="threads-and-stacks">Threads and Stacks&lt;/h3>
+&lt;p>Stacks are completely user-managed, kernel doesn&amp;rsquo;t care!&lt;/p>
+&lt;blockquote>
+&lt;p>Kernel only preserves SP.. on context switch&lt;/p>
+&lt;/blockquote>
+&lt;p>Stack location, allocation, size must be managed by &lt;strong>userland&lt;/strong>.&lt;/p>
+&lt;p>Kernel beware of stack overflow&lt;/p>
+- https://wangloo.github.io/posts/microkernel/sel4/ - @2019 Notepadium.</description></item><item><title>使用 HuGo 搭建个人网站</title><link>https://wangloo.github.io/posts/hugo/</link><pubDate>Sat, 21 May 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/hugo/ -&lt;h1 id="hugo-基础学习">HuGo 基础学习&lt;/h1>
 &lt;p>本章将解答Hugo是什么, 以及Hugo是如何工作的. 只有了解Hugo的工作机制之后, 才能发挥想象力进行DIY.&lt;/p>
 &lt;p>本章内容大多来自&lt;a href="https://gohugo.io/documentation/">官方手册&lt;/a>或者搜索引擎提供的结果.&lt;/p>
 &lt;h2 id="hugo-项目目录结构">Hugo 项目目录结构&lt;/h2>
@@ -935,94 +1200,4 @@ $$&lt;/p>
 &lt;p>对&lt;code>y' = f(x,y)&lt;/code>的两端进行&lt;strong>局部的&lt;/strong>积分, 然后用梯形公式近似计算右边.&lt;/p>
 &lt;h4 id="13-改进euler公式">1.3 改进Euler公式&lt;/h4>
 &lt;p>先用欧拉公式求得一个&lt;code>近似的yn+1&lt;/code>, 带入梯形公式, 得到&lt;code>矫正的yn+1&lt;/code>.&lt;/p>
-- https://wangloo.github.io/posts/numberical-analysis/ - @2019 Notepadium.</description></item><item><title>LaTeX Vim Tutorial</title><link>https://wangloo.github.io/posts/latex-vim-tutorial/</link><pubDate>Wed, 04 May 2022 17:07:51 +0800</pubDate><guid>https://wangloo.github.io/posts/latex-vim-tutorial/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/latex-vim-tutorial/ -&lt;h2 id="use-plugin-vimtex">Use plugin &lt;code>vimtex&lt;/code>&lt;/h2>
-&lt;p>Vim build-in support of LaTeX files is just OK. When we need more excellent exprience, good plugins is very recommended.&lt;/p>
-&lt;p>&lt;a href="https://github.com/lervag/vimtex#configuration">vimtex&lt;/a> is a nice and modern vim plugin for LaTeX files.&lt;/p>
-&lt;p>&lt;strong>Useful Futures of vimtex IMO&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>&amp;lt;leader&amp;gt;ll&lt;/code> Complier. By default, it will auto-complier when you type &lt;code>:w&lt;/code>.&lt;/li>
-&lt;li>&lt;code>&amp;lt;leader&amp;gt;lt&lt;/code> Open content tree as a sidebar.&lt;/li>
-&lt;li>&lt;code>&amp;lt;leader&amp;gt;lv&lt;/code> View PDF with configured PDF viewer.&lt;/li>
-&lt;li>&lt;code>&amp;lt;leader&amp;gt;li&lt;/code> File information.&lt;/li>
-&lt;li>&lt;code>cse&lt;/code> Change surrounding &lt;code>\begin \end&lt;/code> environment.&lt;/li>
-&lt;li>&lt;code>tse&lt;/code> Exchange between &lt;code>\begin{env}&lt;/code> and &lt;code>\begin{env*}&lt;/code>.&lt;/li>
-&lt;li>&lt;code>tsc&lt;/code> Exchange between &lt;code>\command{}&lt;/code> and &lt;code>\command*{}&lt;/code>.&lt;/li>
-&lt;/ul>
-&lt;p> 
- &lt;/p>
-&lt;h2 id="add-support-of-simplified-chinese">Add Support of Simplified Chinese&lt;/h2>
-&lt;h3 id="install-xetex">Install &lt;code>xetex&lt;/code>&lt;/h3>
-&lt;p>I use &lt;code>xetex&lt;/code> to add supports for Chinese fonts in LaTex files. Actually the magician is amacro package of &lt;code>xetex&lt;/code> named &lt;code>xeCJK&lt;/code>.&lt;/p>
-&lt;p>And &lt;code>xetex&lt;/code> is included in&lt;code>texlive&lt;/code>. so we install it from source:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install texlive-xetex
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="install-chinese-font">Install Chinese Font&lt;/h3>
-&lt;p>If there is no Chinese font in your system, you must install one. I choose WinQingYuan microhei as a instance.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install ttf-wqy
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Excute &lt;code>fc-list&lt;/code> to check if install successfully, here is excepted output:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>fc-list | grep wqy
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/usr/share/fonts/truetype/wqy/wqy-microhei.ttc: WenQuanYi Micro Hei,文泉驛微米黑,文泉驿微米黑:style&lt;span style="color:#ff79c6">=&lt;/span>Regular
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/share/fonts/truetype/wqy/wqy-microhei.ttc: WenQuanYi Micro Hei Mono,文泉驛等寬微米黑,文泉驿等宽微米黑:style&lt;span style="color:#ff79c6">=&lt;/span>Regular
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="configure-your-tex-file">Configure your tex file&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-latex" data-lang="latex">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\documentclass&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>article&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\usepackage&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>xeCJK&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\setCJKmainfont&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>WenQuanYi Micro Hei&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\begin&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>document&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Hello, LaTeX!
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>你好, LaTex!
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">\end&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">{&lt;/span>document&lt;span style="color:#8be9fd;font-style:italic">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Complier it and see, the Chinese font is displayed!&lt;/p>
-&lt;p> 
- &lt;/p>
-&lt;h2 id="confusing-tools">Confusing Tools&lt;/h2>
-&lt;h3 id="difference-between-pdfluaxetex-and-pdfluaxelatex">Difference between {pdf,lua,xe}Tex and {pdf,lua,xe}LaTeX&lt;/h3>
-&lt;p>If a &lt;code>.tex&lt;/code>file starts with &lt;code>\documentclass&lt;/code>, it&amp;rsquo;s a &lt;em>LaTex&lt;/em> format file rather than the &lt;em>Plain Tex&lt;/em> format file.&lt;/p>
-&lt;p>The LaTeX format file has some specific macro like &lt;code>\documentclass&lt;/code> that cannot be compliered by &lt;code>[pdf]Tex&lt;/code>, so that&amp;rsquo;s the job of &lt;code>[pdf]LaTeX&lt;/code>. Same goes for other engines.&lt;/p>
-&lt;h3 id="what-is-xetexxelatex">What is &lt;code>xetex/xelatex&lt;/code>?&lt;/h3>
-&lt;p>&lt;code>xetex/xelatex&lt;/code> is one of the TeX/LaTeX engines. Others are &lt;code>pdfTex&lt;/code>, &lt;code>LuaTex&lt;/code>, etc. &lt;a href="https://fr.wikipedia.org/wiki/XeTeX">Wiki&lt;/a>&lt;/p>
-&lt;p>&lt;code>xetex/xelatex&lt;/code> add fonts and character sets support for TeX/LaTeX file.&lt;/p>
-&lt;ul>
-&lt;li>Treat input as Unicode&lt;/li>
-&lt;li>Allow us to use many system fonts in LaTeX file easily&lt;/li>
-&lt;/ul>
-&lt;h3 id="what-is-latexmk">What is &lt;code>latexmk&lt;/code>?&lt;/h3>
-&lt;p>LaTeXmk 是一个集成化的命令行工具, it must work with one LaTeX engine.&lt;/p>
-&lt;p>The fundamental issue that &lt;code>latexmk&lt;/code> solves is that the number of runs of &lt;code>[pdf]latex&lt;/code> is highly dynamically dependent on the document and the class file used. &lt;code>latex&lt;/code> just need to be run once a time.&lt;/p>
-&lt;h3 id="different-between-ctexmiktextexlive-">Different between &lt;code>CTeX&lt;/code>/&lt;code>MiKTeX&lt;/code>/&lt;code>TeXlive&lt;/code> ?&lt;/h3>
-&lt;p>They are all 包含与.tex文件关联的各种编辑、查看工具、常用宏包及文档.&lt;/p>
-&lt;p>&lt;a href="http://www.ctex.org/HomePage">CTex&lt;/a> packages add complete Chinese support based on &lt;a href="https://miktex.org/">MiKTeX&lt;/a>.&lt;/p>
-&lt;ul>
-&lt;li>CTex is only avilable in windows.&lt;/li>
-&lt;/ul>
-- https://wangloo.github.io/posts/latex-vim-tutorial/ - @2019 Notepadium.</description></item><item><title>Portability Issues</title><link>https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/</link><pubDate>Sun, 01 May 2022 16:41:35 +0800</pubDate><guid>https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/ -&lt;p>When reading C standard documents, we usually see phrases like &amp;ldquo;&lt;strong>Implementation-defined&lt;/strong>&amp;rdquo;, &amp;ldquo;&lt;strong>Unspecified&lt;/strong>&amp;rdquo;,.etc.&lt;/p>
-&lt;p>So, what do they really mean?&lt;/p>
-&lt;h2 id="术语">术语&lt;/h2>
-&lt;p>我们将这些难以直接理解的词汇称为&lt;strong>术语&lt;/strong>，在ANSI C中，术语可以分为描述不可移植代码(unportable), 坏代码(bad), 可移植的代码(portable)三类.&lt;/p>
-&lt;h3 id="unportable-code">unportable code&lt;/h3>
-&lt;p>&lt;strong>Implementation-defined&lt;/strong>&lt;/p>
-&lt;p>需要由编译器设计者决定采取何种行为，他们可能不同，但都不能说是错误的.&lt;br>
-例如：当整型数右移时，是否需要扩展符号位. &lt;a href="https://www.cnblogs.com/bluettt/p/16186598.html">右移代替除法可能导致的灾难&lt;/a>.&lt;/p>
-&lt;p>&lt;strong>unspecified&lt;/strong>&lt;/p>
-&lt;p>在某些正确情况下的做法，标准并未明确规定应该怎样做.&lt;br>
-例如：参数求值的顺序.&lt;/p>
-&lt;h3 id="bad-code">bad code&lt;/h3>
-&lt;p>&lt;strong>undefined&lt;/strong>&lt;/p>
-&lt;p>在某些不正确情况下的做法，但标准并未规定应该怎样做。意味着你可以采取任何行动，可以什么都不做，也可以发出一条警告信息, 或者终止CPU重启等等. 你甚至可以发射核导弹(只要你安装了能发射核导弹的硬件系统).&lt;br>
-例如：当一个有符号整数溢出时该采取什么行动.&lt;/p>
-&lt;p>&lt;strong>constraint&lt;/strong>&lt;/p>
-&lt;p>这是一个必须遵守的限制或要求. 如果你不遵守, 那么你的程序的行为就会变成如上所说的&lt;code>undefined&lt;/code>. 这出现了一种很有意思的情况: 分辨某种东西是否是一个&lt;code>constaint&lt;/code>是很容易的, 因为每个标准的主题都附有一个&lt;code>constraint&lt;/code>小节, 列出了所有的约束条件。&lt;br>
-例如: &lt;code>%&lt;/code>操作符的操作数必须为整型. 所以,在非整型数据上使用&lt;code>%&lt;/code>操作符肯定会导致&lt;code>undefined&lt;/code>.&lt;/p>
-&lt;h3 id="portable-code">portable code&lt;/h3>
-&lt;p>&lt;strong>strictly conforming&lt;/strong>&lt;/p>
-&lt;p>严格遵守标准的. 符合该条件的程序应当是:&lt;/p>
-&lt;ul>
-&lt;li>只使用已确定的特性&lt;/li>
-&lt;li>不突破任何由编译器实现(Implementation-defined)的限制.&lt;/li>
-&lt;li>不使用&lt;code>unspecified&lt;/code>和&lt;code>undefined&lt;/code>特性&lt;/li>
-&lt;/ul>
-&lt;p>这样规定的目的是最大程序保证代码的可移植性. 但符合该术语的代码并不常见, 例如&lt;code>INT_MAX&lt;/code>的值在不同架构的机器上结果可能不同.&lt;/p>
-&lt;p>&lt;strong>comforming&lt;/strong>&lt;/p>
-&lt;p>遵循标准的; 一个遵循标准的程序可以依赖一些对于某种编译器特有的&lt;strong>不可移植&lt;/strong>的特性. 这样一个程序对于某个编译器可能是遵循标准的, 但对于另外一个编译器又是不遵循标准的.&lt;/p>
-- https://wangloo.github.io/posts/reading-notes/expert_c_programming/portability_issues/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/numberical-analysis/ - @2019 Notepadium.</description></item></channel></rss>
