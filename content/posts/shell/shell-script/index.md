@@ -6,13 +6,13 @@ date: 2022-07-20T11:54:13+08:00
 tags: [shell, bash]
 ---
 
-:information_source: 以下命令/脚本的执行环境均为 *Bash*.
+:information_source: 以下命令/脚本的执行环境均为 `bash`.
 
 ## 统计代码量
 
-> 使用到的命令包含: find, wc, xargs, sort等
+> 使用到的命令包含: find, wc, xargs, sort 等
 
-列出*所有的文件及其代码行数*, 只统计.c和.h, 过滤`./scripts`目录. 
+列出*所有的文件及其代码行数*, 只统计.c 和.h, 过滤`./scripts`目录.
 
 ```shell
 find -name '*.[c|h]' ! -path './scripts/*' | xargs  wc -l
@@ -30,9 +30,11 @@ find -name '*.[c|h]' ! -path './scripts/*' | xargs  wc -l | sort -rn
 (find ./ -name '*.[c|h]' -print0 | xargs -0 cat) | sed '/^\s*$/d' | wc -l
 ```
 
+## 删除目录下所有的可执行文件
 
-
-&nbsp;
+```shell
+find . -maxdepth 1 -executable -type f | xargs rm
+```
 
 ## 判断执行脚本时带的参数
 
@@ -53,11 +55,12 @@ else
 fi
 ```
 
-&nbsp;
-## 自动拷贝文件到SD Card
+## 自动拷贝文件到 SD Card
 
 > TODO
->  1. 添加进度条
+>
+> 1.  添加进度条
+
 ```shell
 #!/bin/bash
 sd_path=$(find /media/$USER -maxdepth 1 -type d -name "*-*")
@@ -73,13 +76,15 @@ cp ./output/kernel/kernel.bin  ${sd_path}
 echo "Copy completely"
 ```
 
-&nbsp;
 ## 获取所有文件信息(可递归进入子目录)
+
 获取`dir`路径下的所有文件的信息, 这里获取的是文件的**完整路径**.
 
 > TODO
+>
 > 1. 操作数组下标的方式可能有待改进? `filenum`感觉没必要, 暂时还不会改
 > 2. 通过拼接获得文件信息(路径)的方式也有点怪异
+
 ```shell
 dir=./
 files=()
@@ -101,9 +106,10 @@ function getfiles()
 }
 ```
 
-&nbsp;
 ## 带颜色的输出
+
 使用[ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code)
+
 ```
 Black        0;30     Dark Gray     1;30
 Red          0;31     Light Red     1;31
@@ -114,7 +120,9 @@ Purple       0;35     Light Purple  1;35
 Cyan         0;36     Light Cyan    1;36
 Light Gray   0;37     White         1;37
 ```
+
 Code example:
+
 ```shell
 #!/bin/bash
 
