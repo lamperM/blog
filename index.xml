@@ -199,7 +199,56 @@ shareable.&lt;/p>
 &lt;/ul>
 &lt;h2 id="更细分的描述x-">更细分的描述(x): &amp;hellip;&lt;/h2>
 &lt;p>TODO&lt;/p>
-- https://wangloo.github.io/posts/armv8/memory_attr/ - @2019 Notepadium.</description></item><item><title>C语言自身的难点</title><link>https://wangloo.github.io/posts/c/puzzle/</link><pubDate>Thu, 09 Mar 2023 17:18:57 +0800</pubDate><guid>https://wangloo.github.io/posts/c/puzzle/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/puzzle/ -&lt;h1 id="函数指针">函数指针&lt;/h1>
+- https://wangloo.github.io/posts/armv8/memory_attr/ - @2019 Notepadium.</description></item><item><title>C语言enum的使用</title><link>https://wangloo.github.io/posts/c/enum/</link><pubDate>Thu, 09 Mar 2023 17:18:57 +0800</pubDate><guid>https://wangloo.github.io/posts/c/enum/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/enum/ -&lt;h2 id="枚举类型的优势">枚举类型的优势&lt;/h2>
+&lt;p>枚举类型完全可被宏定义替代，类如&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">enum&lt;/span> Furniture {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> DOOR &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> DESK,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> LOCK,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>与下面的代码等效&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define DOOR 1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define DESK 2
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define LOCK 3
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>那么我们如何在两种设计方法中选择呢？在我看来某些情况下使用 enum 会有以下优势：&lt;/p>
+&lt;ol>
+&lt;li>提高代码键入效率；仅适用于所需变量的值是连续的整数，就像上面的情况，可以只给第一个 DOOR 赋值，其余的值累加。如果首个变量的值要求是 0，甚至每一个都无需显式赋值&lt;/li>
+&lt;li>提高代码的可维护性；可以划定范围，编译器也会检查类型是否正确，偶尔会有用&lt;/li>
+&lt;li>提高代码的可读性；例如 DOOR, DESK, LOCK&amp;hellip; 都属于家具，均定义在 Furniture 中&lt;/li>
+&lt;/ol>
+&lt;h2 id="枚举类型所占的大小">枚举类型所占的大小&lt;/h2>
+&lt;p>枚举类型所占内存的大小，即枚举变量的大小。&lt;/p>
+&lt;p>由于枚举变量的赋值，一次只能存放枚举结构中的某个常数。所以 枚举变量的大小，实质是常数所占内存空间的大小（常数为 int 类型，当前主流的编译器中一般是 32 位机器和 64 位机器中 int 型都是 4 个字节），枚举类型所占内存大小也是这样。&lt;/p>
+&lt;p>所以默认情况下，无论枚举变量的值是多少，都是占用 4 个字节。即执行：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>printf(&lt;span style="color:#f1fa8c">&amp;#34;sizeof(enum Furniture) = %d&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, &lt;span style="color:#ff79c6">sizeof&lt;/span>(&lt;span style="color:#ff79c6">enum&lt;/span> Furniture));
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>输入的结果是 4。&lt;/p>
+&lt;h3 id="编译选项-fshort-enums">编译选项：-fshort-enums&lt;/h3>
+&lt;p>GCC 下关于这个编译选项的介绍：&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;strong>-fshort-enums&lt;/strong>
+Allocate to an enum type only as many bytes as it needs for the declared range of possible values. Specifically, the enum type is equivalent to the smallest integer type that has enough room.
+Warning: the -fshort-enums switch causes GCC to generate code that is not binary compatible with code generated without that switch. Use it to conform to a non-default application binary interface.&lt;/p>
+&lt;/blockquote>
+&lt;p>意思是说使用&lt;code>-fshort-enum&lt;/code>s 后，对改枚举类型所占空间的分配就会按照实际变量的占用空间，而非总是 4 字节。&lt;/p>
+&lt;p>启用该选项之后，再打印它的 size 就会是 1，因为用 1 个字节就能表示所有枚举变量的值（DOOR=1，DESK=2，LOCK=3）.&lt;/p>
+&lt;p>这个“1”不再是固定的，根据其中枚举变量值的不同，动态调整&lt;code>enum Furniture&lt;/code>的大小。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">enum&lt;/span> Furniture {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> DOOR &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">256&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> DESK,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> LOCK,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>再打印它的 size，结果为 2。因为值 256 无法用 1 个字节存下。&lt;/p>
+&lt;h2 id="enum-潜在的可移植性问题">enum 潜在的可移植性问题&lt;/h2>
+&lt;p>看似好像启用该选项会节约一定的内存空间，是的。但它也有一定的缺点，其一就是可移植性问题。&lt;/p>
+&lt;p>例如你编写的应用在编译时没有启用了该“优化”选项，默认采用 4 字节存储枚举变量。而链接的库文件在编译时却使用了“优化”选项，则库内部此枚举类型的大小可能为 1 字节。若此时恰好你有调用某个库 API，将 enum 变量作为参数进行传递，那么就会发生错误。&lt;/p>
+&lt;p>为避免不同库和应用程序使用“优化”选项的差异造成潜在的危险，常用的解决方案是强制使 enum 变量占用 4 个字节，无论其是否开启“优化”。实现方式是在 enum 变量末尾添加一个成员 &lt;code>XXXX_END = 0xFFFFF&lt;/code>，例如：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">enum&lt;/span> Furniture {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> DOOR &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> DESK,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> LOCK,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> END &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0xFFFFF&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/c/enum/ - @2019 Notepadium.</description></item><item><title>C语言的特点与难点</title><link>https://wangloo.github.io/posts/c/feature/</link><pubDate>Thu, 09 Mar 2023 17:18:57 +0800</pubDate><guid>https://wangloo.github.io/posts/c/feature/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/feature/ -&lt;h1 id="函数指针">函数指针&lt;/h1>
 &lt;h2 id="指针的数组-or-指向数组的指针">指针的数组 or 指向数组的指针?&lt;/h2>
 &lt;pre tabindex="0">&lt;code>&amp;gt;&amp;gt; int (*p)[10] p是指针, 指向长度为10的数组. 加括号是为了强调p是一个指针, 区别包含10个指针的array.
 &amp;gt;&amp;gt; int *(p[10]) p是数组, 它的元素类型是int *, 加括号是为了强调p是数组.
@@ -224,7 +273,203 @@ shareable.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">typedef&lt;/span> &lt;span style="color:#50fa7b">void&lt;/span> (&lt;span style="color:#ff79c6">*&lt;/span>sighandler_t)(&lt;span style="color:#8be9fd">int&lt;/span>);
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>而后&lt;code>signal&lt;/code>的声明就是人能看懂的了:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>sighandler_t &lt;span style="color:#50fa7b">signal&lt;/span>(&lt;span style="color:#8be9fd">int&lt;/span> signum, sighandler_t handler);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/c/puzzle/ - @2019 Notepadium.</description></item><item><title>C语言程序设计的一些经验</title><link>https://wangloo.github.io/posts/c/experience/</link><pubDate>Mon, 27 Feb 2023 19:20:20 +0800</pubDate><guid>https://wangloo.github.io/posts/c/experience/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/experience/ -&lt;h2 id="头文件的引用形式">头文件的引用形式&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="c语言标准">C语言标准&lt;/h1>
+&lt;p>我们在使用C语言编程时很少有人告诉我们C语言各个标准的情况，于是我们在看见一些函数标定支持的C标准（例如仅支持C99及以后），内心不会有什么波澜。&lt;/p>
+&lt;p>我们常见这些C标准：K&amp;amp;R C、ANSI C、ISO C、C89、C99、C11、C18。让我们补充点可能很少使用的知识吧。&lt;/p>
+&lt;h2 id="什么是kr-c">什么是K&amp;amp;R C？&lt;/h2>
+&lt;p>1978年，丹尼斯•里奇（Dennis Ritchie）和布莱恩•柯林汉（Brian ernighan）合作出版了《C程序设计语言》的第一版。书中介绍的C语言标准也被称作“K&amp;amp;R C”。&lt;/p>
+&lt;p>最初的C标准与我们现在用的有较大差别，例如它竟然还不支持void类型！&lt;/p>
+&lt;h2 id="什么是ansi-ciso-cc89c90标准">什么是ANSI C、ISO C、C89、C90标准？&lt;/h2>
+&lt;p>随着C语言使用得越来越广泛，出现了许多新问题，人们日益强烈地要求对C语言进行标准化。1983年，美国国家标准协会（ANSI）组成了一个委员会，X3J11，为了创立 C 的一套标准。经过漫长而艰苦的过程，该标准于1989年完成，这个版本的语言经常被称作ANSI C，或有时称为C89（为了区别C99）。在1990年，ANSI C标准（带有一些小改动）被美国国家标准协会（ANSI）采纳为ISO/IEC 9899:1990。这个版本有时候称为C90或者ISO C。综上，ANSI C、ISO C、C89、C90其实是同一种标准。&lt;/p>
+&lt;p>这一版本的C就更接近我们平常使用的C了，大部分特性都引入了。&lt;/p>
+&lt;h2 id="什么是c99标准">什么是C99标准？&lt;/h2>
+&lt;p>2000年3月，ANSI 采纳了 ISO/IEC 9899:1999 标准。这个标准通常指C99。&lt;/p>
+&lt;p>C99我们最常使用的新特性是：在源代码的中间位置声明变量。&lt;/p>
+&lt;h2 id="什么是c11标准">什么是C11标准？&lt;/h2>
+&lt;p>C11标准是C语言标准的第三版（2011年由ISO/IEC发布），前一个标准版本是C99标准。与C99相比，C11有哪些变化呢？&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">1&lt;/span>、 对齐处理：alignof(T)返回T的对齐方式，aligned_alloc()以指定字节和对齐方式分配内存，头文件&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>stdalign.h&lt;span style="color:#ff79c6">&amp;gt;&lt;/span>定义了这些内容。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">2&lt;/span>、 _Noreturn：_Noreturn 是个函数修饰符，位置在函数返回类型的前面，声明函数无返回值，有点类似于gcc的__attribute__((noreturn))，后者在声明语句尾部。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">3&lt;/span>、 _Generic：_Generic支持轻量级范型编程，可以把一组具有不同类型而却有相同功能的函数抽象为一个接口。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">4&lt;/span>、 _Static_assert()：_Static_assert()，静态断言，在编译时刻进行，断言表达式必须是在编译时期可以计算的表达式，而普通的assert()在运行时刻断言。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">5&lt;/span>、安全版本的几个函数：gets_s()取代了gets()，原因是后者这个I&lt;span style="color:#ff79c6">/&lt;/span>O函数的实际缓冲区大小不确定，以至于发生常见的缓冲区溢出攻击，类似的函数还有其它的。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">6&lt;/span>、 fopen()新模式：fopen()增加了新的创建、打开模式“x”，在文件锁中比较常用。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">7&lt;/span>、 匿名结构体、联合体。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">8&lt;/span>、 多线程：头文件&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>threads.h&lt;span style="color:#ff79c6">&amp;gt;&lt;/span>定义了创建和管理线程的函数，新的存储类修饰符_Thread_local限定了变量不能在多线程之间共享。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">9&lt;/span>、 _Atomic类型修饰符和头文件&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>stdatomic.h&lt;span style="color:#ff79c6">&amp;gt;&lt;/span>。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">10&lt;/span>、改进的Unicode支持和头文件&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>uchar.h&lt;span style="color:#ff79c6">&amp;gt;&lt;/span>。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">11&lt;/span>、quick_exit()：又一种终止程序的方式，当exit()失败时用以终止程序。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">12&lt;/span>、复数宏，浮点数宏。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bd93f9">13&lt;/span>、time.h新增timespec结构体，时间单位为纳秒，原来的timeval结构体时间单位为毫秒。
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="什么是c18标准">什么是C18标准？&lt;/h2>
+&lt;p>C18也称C17是于2018年6月发布的 ISO/IEC 9899:2018 的非正式名称，也是目前（截止到2020年6月）为止最新的 C语言编程标准，被用来替代 C11 标准。&lt;/p>
+&lt;p>C17 没有引入新的语言特性，只对 C11 进行了补充和修正。&lt;/p>
+&lt;p>​&lt;/p>
+&lt;h2 id="如何查看自己程序的c标准版本">如何查看自己程序的C标准版本？&lt;/h2>
+&lt;p>使用宏__STDC_VERSION__可以输出当前使用的C标准版本，是一个长整型：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>printf(&lt;span style="color:#f1fa8c">&amp;#34;C std version:%ld&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, __STDC_VERSION__);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>值与标准的对应关系：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>标准&lt;/th>
+&lt;th>宏&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>C94&lt;/td>
+&lt;td>_&lt;em>STDC_VERSION&lt;/em>_= 199409L&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>C99&lt;/td>
+&lt;td>_&lt;em>STDC_VERSION&lt;/em>_= 199901L&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>C11&lt;/td>
+&lt;td>_&lt;em>STDC_VERSION&lt;/em>_= 201112L&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>C18&lt;/td>
+&lt;td>_&lt;em>STDC_VERSION&lt;/em>_= 201710L&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>​&lt;/p>
+&lt;h2 id="如何指定按照某个标准执行编译">如何指定按照某个标准执行编译？&lt;/h2>
+&lt;p>以下的介绍只针对GCC，我没有用过别的编译器。&lt;/p>
+&lt;p>GCC中可以添加&lt;code>--std=xxx&lt;/code>来指定C标准版本，常用的情况如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">-&lt;/span>std&lt;span style="color:#ff79c6">=&lt;/span>c11 Conform to the ISO &lt;span style="color:#bd93f9">2011&lt;/span> C standard
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">-&lt;/span>std&lt;span style="color:#ff79c6">=&lt;/span>c89 Conform to the ISO &lt;span style="color:#bd93f9">1990&lt;/span> C standard
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">-&lt;/span>std&lt;span style="color:#ff79c6">=&lt;/span>c90 Conform to the ISO &lt;span style="color:#bd93f9">1990&lt;/span> C standard
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">-&lt;/span>std&lt;span style="color:#ff79c6">=&lt;/span>c99 Conform to the ISO &lt;span style="color:#bd93f9">1999&lt;/span> C stand
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">-&lt;/span>std&lt;span style="color:#ff79c6">=&lt;/span>gnu11 Conform to the ISO &lt;span style="color:#bd93f9">2011&lt;/span> C standard with GNU extensions
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">-&lt;/span>std&lt;span style="color:#ff79c6">=&lt;/span>gnu89 Conform to the ISO &lt;span style="color:#bd93f9">1990&lt;/span> C standard with GNU extensions
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">-&lt;/span>std&lt;span style="color:#ff79c6">=&lt;/span>gnu90 Conform to the ISO &lt;span style="color:#bd93f9">1990&lt;/span> C standard with GNU extensions
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">-&lt;/span>std&lt;span style="color:#ff79c6">=&lt;/span>gnu99 Conform to the ISO &lt;span style="color:#bd93f9">1999&lt;/span> C standard with GNU extensions
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>默认情况下，我电脑上的&lt;code>gcc 5.4.0&lt;/code>使用&lt;code>-std-gnu11&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="参考目录">参考目录&lt;/h2>
+&lt;p>&lt;a href="https://blog.csdn.net/zhengnianli/article/details/87387268">https://blog.csdn.net/zhengnianli/article/details/87387268&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://gcc.gnu.org/onlinedocs/gcc/C-Dialect-Options.html#C-Dialect-Options">C Dialect Options (Using the GNU Compiler Collection (GCC))&lt;/a>&lt;/p>
+&lt;h1 id="含糊不清的符号扩展">含糊不清的符号扩展&lt;/h1>
+&lt;h2 id="问题出在哪">问题出在哪？&lt;/h2>
+&lt;p>下面一段代码会输出什么呢？&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">char&lt;/span> c &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0xff&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> (c &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0xff&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;successful&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">printf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;failed&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>答案是取决于不同的编译器设定：&lt;/p>
+&lt;ul>
+&lt;li>当编译器将char识别为signed char时，该判断会失败。因为常数0xff被识别为int类型，所以编译器首先要对c进行符号扩展，判断语句&lt;code>c == 0xff&lt;/code>此时等价于&lt;code>(int)c == 0xff&lt;/code>。而对于signed char类型是扩展其最高位，即&lt;code>(int)c=0xffffffff&lt;/code>，if判断失败。&lt;/li>
+&lt;li>当编译器将char识别为unsigned char时，判断成功。对于unsigned char类型总是扩展0。&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>注：gcc可通过添加编译参数 -fsigned-char/ -funsigned-char来指定编译器如何识别char&lt;/p>
+&lt;/blockquote>
+&lt;p>同样的问题也存在与位域(bitfiled)中，详见-fsigned-bitfields/-funsigned-bitfields参数。&lt;/p>
+&lt;h2 id="如何避免">如何避免？&lt;/h2>
+&lt;p>在使用char类型时，根据情况写清楚unsigned/signed char就ok&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">char&lt;/span> c &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0xff&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> (c &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0xff&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;successful&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">printf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;failed&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="右移和除法">右移和除法&lt;/h1>
+&lt;p>你是否有听说过有符号数不能使用右移操作(&lt;code>&amp;gt;&amp;gt;&lt;/code>)来代替除法？ 这篇短文会向你证明它，并尝试向你解释为什么。&lt;/p>
+&lt;h2 id="logical-shift-vs-arithmetic-shift">Logical Shift .vs. Arithmetic Shift&lt;/h2>
+&lt;p>若你现在有二进制数&lt;code>x=1110B&lt;/code>，对其施加右移操作，请问高位填0还是填1？&lt;/p>
+&lt;p>&lt;strong>逻辑移位&lt;/strong>不管造成的影响，总是用0来填充移位操作产生的空缺。但是这样简单的想法在一些情况总会出错。例如若上述x是有符号数，那么简单的填0就会造成错误，起码正负号出错了。&lt;/p>
+&lt;p>&lt;strong>算数移位&lt;/strong>支持有符号数的移位操作，在移位后使用&lt;!-- raw HTML omitted -->符号位&lt;!-- raw HTML omitted -->进行填充，结合补码的表示方法，就能实现正确的负数移位操作。&lt;/p>
+&lt;p>总结来说：在有符号的场景下，使用算数位移；如果你能保证移位操作是无符号的，那么用逻辑位移也无妨.&lt;/p>
+&lt;p>x86汇编代码中，&lt;code>shr&lt;/code>代表逻辑右移指令，&lt;code>sar&lt;/code>代表算数右移指令，我们可以通过以下C代码及其反汇编的结果来更好的理解逻辑移位和算数移位：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdlib.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">signed&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> x &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">3&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> y &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">3&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">&amp;gt;&amp;gt;=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> y &lt;span style="color:#ff79c6">&amp;gt;&amp;gt;=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre tabindex="0">&lt;code class="language-assembly" data-lang="assembly">x:
+.long -3
+y:
+.long 3
+main:
+push rbp
+mov rbp, rsp
+mov eax, DWORD PTR x[rip]
+sar eax
+mov DWORD PTR x[rip], eax
+mov eax, DWORD PTR y[rip]
+shr eax
+mov DWORD PTR y[rip], eax
+mov eax, 0
+pop rbp
+ret
+&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://godbolt.org/z/K4M4Ko4c7">https://godbolt.org/z/K4M4Ko4c7&lt;/a>&lt;/p>
+&lt;h2 id="实践出真知">实践出真知&lt;/h2>
+&lt;p>在我作为一个初级程序员的认知中，&lt;code>/2&lt;/code>和&lt;code>&amp;gt;&amp;gt;1&lt;/code>是等价的，甚至一起还听说过后者能够优化代码的效率。但是今天我要告诉你， Definitely wrong!&lt;/p>
+&lt;p>或许在遥远的古代，我们使用位移操作真的能够对代码进行加速，但是当下编译器已经足够聪明，如果你真的动手反汇编&amp;quot;&lt;code>/2&lt;/code>&amp;ldquo;的代码，那么你就会知道编译器已经替你优化为了位移操作。&lt;/p>
+&lt;p>更糟糕的是，我们要避免使用移位操作来实现除法或者乘法，不仅仅是因为这两者等价，实际上，他们并不是等价的！并且会造成错误！&lt;/p>
+&lt;p>考虑如下的C语言代码：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdlib.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">signed&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> x &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">3&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">signed&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> y &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">3&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">&amp;gt;&amp;gt;=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> y &lt;span style="color:#ff79c6">/=&lt;/span> &lt;span style="color:#bd93f9">2&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>他们的汇编代码是相同的吗？这里还是拿X86汇编举例：&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-assembly" data-lang="assembly">; Following is ‘x &amp;gt;&amp;gt;= 1’
+mov eax, #-3 ;x
+sar eax
+mov x, eax
+; Following is ‘y/= 2’
+mov eax, #-3 ;y
+mov edx, eax
+shr edx, 31
+add eax, edx
+sar eax
+mov y, eax
+&lt;/code>&lt;/pre>&lt;p>注意：以上的汇编代码省去了一些我认为无关紧要的操作，并不是完全正确的，但是足够表达他们的差别了。&lt;/p>
+&lt;p>可以看出，除法比移位多了一步&lt;code>shr edx, 31&lt;/code>过程，下面会探讨这个。&lt;/p>
+&lt;p>还有一件使你震惊的事件，&lt;code>x&lt;/code>, &lt;code>y&lt;/code>的值最终是&lt;strong>不同&lt;/strong>的！是的，正是因为那条看似“多余”的&lt;code>shr&lt;/code>指令。&lt;/p>
+&lt;h2 id="为什么结果不同">为什么结果不同&lt;/h2>
+&lt;p>首先，我们可以确定的一件事是：编译器真的帮我们将除法操作优化为移位。所以，再也不要说你的代码中使用&lt;code>&amp;gt;&amp;gt;&lt;/code>来替代除法是为了增加执行效率了。&lt;/p>
+&lt;p>让我们来解释下为什么两者的结果是不同的。&lt;/p>
+&lt;p>首先，&lt;code>sar&lt;/code>指令在x86指令集中表示算数右移，这个是我们熟悉的，那么&lt;code>-3&lt;/code>进行算数右移后的结果就是&lt;code>-2&lt;/code>. 意味着&lt;code>&amp;gt;&amp;gt;&lt;/code>是向负无穷舍入的.&lt;/p>
+&lt;p>那么除法操作又是在干什么呢? 它是将原值加上其符号位.Demo中使用的数据类型是32位&lt;code>int&lt;/code>.&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-assembly" data-lang="assembly">shr edx, 31
+add eax, edx
+&lt;/code>&lt;/pre>&lt;p>这样做必然改变了原值啊，动手算一下就会知道，&lt;code>-3/2&lt;/code>的结果为&lt;code>-1&lt;/code>. 并且只有负奇数会受影响，对于正数，其符号为0；对于负偶数，其补码的最低位必为0，刚加上的1会被下一步的算数右移丢弃，不对高位产生影响。&lt;/p>
+&lt;p>Aha, 差别就是向负无穷舍弃还是向0舍弃，一时间竟然不知道哪个是正确的了。&lt;/p>
+&lt;h2 id="我们应该如何做">我们应该如何做&lt;/h2>
+&lt;p>根据最新的[C语言标准草案](&lt;a href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1336.pdf">ISO/IEC 9899:201x (open-std.org)&lt;/a>) 6.5.7章节，负数的右移操作是implementation-defined，即取决于具体的实现：&lt;/p>
+&lt;blockquote>
+&lt;p>The result of E1 &amp;raquo; E2 is E1 right-shifted E2 bit positions. If E1 has an unsigned type or if E1 has a signed type and a nonnegative value, the value of the result is the integral part of the quotient of E1 / 2E2. If E1 has a signed type and a negative value, the resulting value is implementation-defined.&lt;/p>
+&lt;/blockquote>
+&lt;p>因此，理论上它依赖于实现。所以我们在实际应用中为了程序的可移植性，应当避免对有符号数使用移位操作。除非你能确定它的值一定是非负数，在此情况下，请将它用无符号类型来声明。&lt;/p>
+&lt;p>对于除法操作，标准中的6.5.5章节规定了，除法操作总是向0舍入. 非常好！&lt;/p>
+&lt;blockquote>
+&lt;p>When integers are divided, the result of the / operator is the algebraic quotient with any fractional part discarded.&lt;/p>
+&lt;/blockquote>
+&lt;p>检查你的代码，恢复所有的“优化”乘除法的行为吧！&lt;/p>
+- https://wangloo.github.io/posts/c/feature/ - @2019 Notepadium.</description></item><item><title>C语言程序设计的一些经验</title><link>https://wangloo.github.io/posts/c/experience/</link><pubDate>Mon, 27 Feb 2023 19:20:20 +0800</pubDate><guid>https://wangloo.github.io/posts/c/experience/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/experience/ -&lt;h2 id="头文件的引用形式">头文件的引用形式&lt;/h2>
 &lt;p>C 中引用一个头文件有两种形式 &lt;code>#include &amp;lt;&amp;gt;&lt;/code>和&lt;code>#include &amp;quot;&amp;quot;&lt;/code>，在应用开发中，需要引用一些系统库文件，我们通常使用&lt;code>&amp;lt;&amp;gt;&lt;/code>，对于自己定义的头文件，我们会使用&lt;code>&amp;quot;&amp;quot;&lt;/code>。&lt;/p>
 &lt;p>然而对于底层软件的开发，比如说操作系统，用到的库都是自己工程中的文件，那么此时用&lt;code>&amp;quot;&amp;quot;&lt;/code>和&lt;code>&amp;lt;&amp;gt;&lt;/code>有时都能 work，那么它们的区别是什么呢？&lt;/p>
 &lt;p>搜索相关关键词得到的结论是: 两种方式的区别是&lt;strong>搜索文件的优先级， &lt;code>&amp;quot;&amp;quot;&lt;/code>优先搜索的当前目录，而&lt;code>&amp;lt;&amp;gt;&lt;/code>优先搜索系统库文件目录&lt;/strong>。对于这个系统库，即那些使用&lt;code>gcc -I&amp;lt;dir&amp;gt;&lt;/code>参数指定的路径。
@@ -414,65 +659,4 @@ git 也会阻止你这么做，因为分支的历史已经被修改，除非 for
 - https://wangloo.github.io/posts/git/ - @2019 Notepadium.</description></item><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/os/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/gnu_tools/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/gnu_tools/ -&lt;p>..&lt;/p>
 &lt;h2 id="nm---列出符号">nm - 列出符号&lt;/h2>
 &lt;p>&lt;a href="https://sourceware.org/binutils/docs/binutils/nm.html">nm (GNU Binary Utilities) (sourceware.org)&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/os/gnu_tools/ - @2019 Notepadium.</description></item><item><title>Makefile 一些技巧</title><link>https://wangloo.github.io/posts/c/makefile_tricks/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/makefile_tricks/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/makefile_tricks/ -&lt;h2 id="伪目标的依赖关系">伪目标的依赖关系&lt;/h2>
-&lt;p>Makefile 中的依赖关系指的是目标和依赖之间建立的关系，目标对应规则中的语句是否执行取决于依赖的状态。&lt;/p>
-&lt;p>最简单的依赖关系可以拿两个文件来举例:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># gcc语句执行当前仅当 main.c 新于 main.elf
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#50fa7b">main.elf&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> main.c
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> gcc main.c -o main.elf
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>make 在执行&lt;code>main.elf&lt;/code>的规则时，会先判断依赖关系。拿上面的例子来说，
-gcc 语句是否执行取决于&lt;code>main.c&lt;/code> 和 &lt;code>main.elf&lt;/code>的修改时间，&lt;strong>只有当
-依赖新与目标时，规则语句才会执行&lt;/strong>。&lt;/p>
-&lt;p>然而许多情况下，目标或者依赖并不是一个文件，而是&lt;strong>虚拟目标&lt;/strong>。虚拟目标
-并不是一个文件，即它没有修改时间这个属性，此时 make 就不能作比较，结果就是
-&lt;strong>如果目标是伪目标，那么不管依赖如何都执行规则语句；如果依赖是伪目标，
-那么目标的规则语句也永远被执行&lt;/strong>。下面是两个例子：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-make" data-lang="make">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 伪目标作为目标文件出现
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># build finish总是输出， 而gcc语句仅当main.c比main.elf新时才执行
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#50fa7b">.PHONY &lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> all
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">all&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> main.elf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @echo &lt;span style="color:#f1fa8c">&amp;#39;build finish&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">main.elf&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> main.c
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> gcc $&amp;lt; -o &lt;span style="color:#8be9fd;font-style:italic">$@&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-make" data-lang="make">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 伪目标作为依赖文件中出现
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 不管main.c是否比main.elf更新，因为pre-work是伪目标
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 所以gcc语句总是执行
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#50fa7b">.PHONY &lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> pre-work
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">main.elf&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> main.c pre-work
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> gcc $&amp;lt; -o &lt;span style="color:#8be9fd;font-style:italic">$@&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的代码的效果是：两条规则中的语句都会执行，即使你并没有对 main.c 做任何修改！&lt;/p>
-&lt;h2 id="恐怖的空格">恐怖的空格&lt;/h2>
-&lt;p>Makefile 中的变量结合很常见，例如&lt;code>$(FIXDEP)=$(FIXDEP_PATH)/build/fixdep&lt;/code>.&lt;/p>
-&lt;p>特别是当我们这些语句是从某些地方粘贴过来，要特别注意变量中是否有空格，Makefile 非常重视这个。假如&lt;code>$(FIXDEP_PATH)&lt;/code>中有一个空格，那么&lt;code>$(FIXDEP)&lt;/code>就变成&lt;strong>两个宏&lt;/strong>了（不知道叫宏合不合适）。而且 Make 的执行过程很难检查出来。&lt;/p>
-&lt;h2 id="规则的执行顺序">规则的执行顺序&lt;/h2>
-&lt;p>如果不从命令行传入目标, Makefile 中定义的规则其实是以&lt;strong>从上而下&lt;/strong>的顺序执行的, 但是我习惯把 &lt;code>all&lt;/code> 这种默认规则放在最下面, 所以一般我们可以看到很多 Makefile 会在开头写一句规则&lt;code>all:&lt;/code>, 作用就是告诉 make 默认(不显式指定)的目标是&lt;code>all&lt;/code>.&lt;/p>
-&lt;blockquote>
-&lt;p>Busybox 根目录 Makefile 中的做法示例&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># That&amp;#39;s our default target when &amp;gt;none is given on the command line
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#50fa7b">.PHONY&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> _all
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">_all&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/blockquote>
-&lt;h2 id="函数的魔法">函数的魔法&lt;/h2>
-&lt;h3 id="patsubst">patsubst&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-make" data-lang="make">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">patsubst&lt;/span> &amp;lt;&lt;span style="color:#8be9fd;font-style:italic">pattern&lt;/span>&amp;gt;,&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">replacement&lt;/span>&amp;gt;,&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">text&lt;/span>&amp;gt;&lt;span style="color:#ff79c6">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>功能：查找&lt;code>&amp;lt;text&amp;gt;&lt;/code>中的单词（以空格，tab，回车，换行分割），看其是否符合&lt;code>&amp;lt;pattern&amp;gt;&lt;/code>,
-如果符合，将其使用&lt;code>&amp;lt;replacement&amp;gt;&lt;/code>替换。可以使用通配符&lt;code>%&lt;/code>。&lt;/p>
-&lt;p>以下两对是等效的, 明显还是直接使用变量的替换语法操作简单:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-make" data-lang="make">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">patsubst&lt;/span> &amp;lt;&lt;span style="color:#8be9fd;font-style:italic">pattern&lt;/span>&amp;gt;,&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">replacement&lt;/span>&amp;gt;,&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">var&lt;/span>&lt;span style="color:#ff79c6">))&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">$(var&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>&amp;lt;pattern&amp;gt;=&amp;lt;replacement&amp;gt;;)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">patsubst&lt;/span> %&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">suffix&lt;/span>&amp;gt;,%&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">replacement&lt;/span>&amp;gt;,&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">var&lt;/span>&lt;span style="color:#ff79c6">))&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">$(var&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>&amp;lt;suffix&amp;gt;=&amp;lt;replacement&amp;gt;)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="使用-shell-变量">使用 shell 变量&lt;/h2>
-&lt;p>Make 将 &lt;code>$$var&lt;/code> 转义为&lt;code>$var&lt;/code>, 供 shell 处理.&lt;/p>
-&lt;p>demo(源自 6.828 根目录&lt;code>GNUmakefile&lt;/code>):&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">handin-check&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @if &lt;span style="color:#8be9fd;font-style:italic">test&lt;/span> -n &lt;span style="color:#f1fa8c">&amp;#34;`git status -s`&amp;#34;&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span> &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> git status -s; &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">read&lt;/span> -p &lt;span style="color:#f1fa8c">&amp;#34;Untracked files will not be handed in. Continue? [y/N] &amp;#34;&lt;/span> r; &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">test&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$$&lt;/span>&lt;span style="color:#f1fa8c">r&amp;#34;&lt;/span> &lt;span style="color:#ff79c6">=&lt;/span> y; &lt;span style="color:#f1fa8c">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> &lt;span style="color:#ff79c6">fi&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
-&lt;p>以上 demo 还使用了 test 命令来终止 make 的执行, 如果用户没有输入&lt;code>y&lt;/code>, make 将会终止执行&lt;/p>
-&lt;/blockquote>
-- https://wangloo.github.io/posts/c/makefile_tricks/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/os/gnu_tools/ - @2019 Notepadium.</description></item></channel></rss>

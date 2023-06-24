@@ -1,4 +1,65 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Uboot: 常用命令</title><link>https://wangloo.github.io/posts/os/uboot/commands/</link><pubDate>Sun, 27 Nov 2022 22:03:48 +0800</pubDate><guid>https://wangloo.github.io/posts/os/uboot/commands/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/uboot/commands/ -&lt;hr>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Makefile 一些技巧</title><link>https://wangloo.github.io/posts/c/makefile_tricks/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/makefile_tricks/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/makefile_tricks/ -&lt;h2 id="伪目标的依赖关系">伪目标的依赖关系&lt;/h2>
+&lt;p>Makefile 中的依赖关系指的是目标和依赖之间建立的关系，目标对应规则中的语句是否执行取决于依赖的状态。&lt;/p>
+&lt;p>最简单的依赖关系可以拿两个文件来举例:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># gcc语句执行当前仅当 main.c 新于 main.elf
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#50fa7b">main.elf&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> main.c
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> gcc main.c -o main.elf
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>make 在执行&lt;code>main.elf&lt;/code>的规则时，会先判断依赖关系。拿上面的例子来说，
+gcc 语句是否执行取决于&lt;code>main.c&lt;/code> 和 &lt;code>main.elf&lt;/code>的修改时间，&lt;strong>只有当
+依赖新与目标时，规则语句才会执行&lt;/strong>。&lt;/p>
+&lt;p>然而许多情况下，目标或者依赖并不是一个文件，而是&lt;strong>虚拟目标&lt;/strong>。虚拟目标
+并不是一个文件，即它没有修改时间这个属性，此时 make 就不能作比较，结果就是
+&lt;strong>如果目标是伪目标，那么不管依赖如何都执行规则语句；如果依赖是伪目标，
+那么目标的规则语句也永远被执行&lt;/strong>。下面是两个例子：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-make" data-lang="make">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 伪目标作为目标文件出现
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># build finish总是输出， 而gcc语句仅当main.c比main.elf新时才执行
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#50fa7b">.PHONY &lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> all
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">all&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> main.elf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @echo &lt;span style="color:#f1fa8c">&amp;#39;build finish&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">main.elf&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> main.c
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> gcc $&amp;lt; -o &lt;span style="color:#8be9fd;font-style:italic">$@&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-make" data-lang="make">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 伪目标作为依赖文件中出现
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 不管main.c是否比main.elf更新，因为pre-work是伪目标
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 所以gcc语句总是执行
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#50fa7b">.PHONY &lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> pre-work
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">main.elf&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> main.c pre-work
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> gcc $&amp;lt; -o &lt;span style="color:#8be9fd;font-style:italic">$@&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的代码的效果是：两条规则中的语句都会执行，即使你并没有对 main.c 做任何修改！&lt;/p>
+&lt;h2 id="恐怖的空格">恐怖的空格&lt;/h2>
+&lt;p>Makefile 中的变量结合很常见，例如&lt;code>$(FIXDEP)=$(FIXDEP_PATH)/build/fixdep&lt;/code>.&lt;/p>
+&lt;p>特别是当我们这些语句是从某些地方粘贴过来，要特别注意变量中是否有空格，Makefile 非常重视这个。假如&lt;code>$(FIXDEP_PATH)&lt;/code>中有一个空格，那么&lt;code>$(FIXDEP)&lt;/code>就变成&lt;strong>两个宏&lt;/strong>了（不知道叫宏合不合适）。而且 Make 的执行过程很难检查出来。&lt;/p>
+&lt;h2 id="规则的执行顺序">规则的执行顺序&lt;/h2>
+&lt;p>如果不从命令行传入目标, Makefile 中定义的规则其实是以&lt;strong>从上而下&lt;/strong>的顺序执行的, 但是我习惯把 &lt;code>all&lt;/code> 这种默认规则放在最下面, 所以一般我们可以看到很多 Makefile 会在开头写一句规则&lt;code>all:&lt;/code>, 作用就是告诉 make 默认(不显式指定)的目标是&lt;code>all&lt;/code>.&lt;/p>
+&lt;blockquote>
+&lt;p>Busybox 根目录 Makefile 中的做法示例&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># That&amp;#39;s our default target when &amp;gt;none is given on the command line
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#50fa7b">.PHONY&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span> _all
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">_all&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/blockquote>
+&lt;h2 id="函数的魔法">函数的魔法&lt;/h2>
+&lt;h3 id="patsubst">patsubst&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-make" data-lang="make">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">patsubst&lt;/span> &amp;lt;&lt;span style="color:#8be9fd;font-style:italic">pattern&lt;/span>&amp;gt;,&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">replacement&lt;/span>&amp;gt;,&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">text&lt;/span>&amp;gt;&lt;span style="color:#ff79c6">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>功能：查找&lt;code>&amp;lt;text&amp;gt;&lt;/code>中的单词（以空格，tab，回车，换行分割），看其是否符合&lt;code>&amp;lt;pattern&amp;gt;&lt;/code>,
+如果符合，将其使用&lt;code>&amp;lt;replacement&amp;gt;&lt;/code>替换。可以使用通配符&lt;code>%&lt;/code>。&lt;/p>
+&lt;p>以下两对是等效的, 明显还是直接使用变量的替换语法操作简单:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-make" data-lang="make">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">patsubst&lt;/span> &amp;lt;&lt;span style="color:#8be9fd;font-style:italic">pattern&lt;/span>&amp;gt;,&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">replacement&lt;/span>&amp;gt;,&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">var&lt;/span>&lt;span style="color:#ff79c6">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">$(var&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>&amp;lt;pattern&amp;gt;=&amp;lt;replacement&amp;gt;;)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">patsubst&lt;/span> %&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">suffix&lt;/span>&amp;gt;,%&amp;lt;&lt;span style="color:#8be9fd;font-style:italic">replacement&lt;/span>&amp;gt;,&lt;span style="color:#ff79c6">$(&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">var&lt;/span>&lt;span style="color:#ff79c6">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">$(var&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>&amp;lt;suffix&amp;gt;=&amp;lt;replacement&amp;gt;)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="使用-shell-变量">使用 shell 变量&lt;/h2>
+&lt;p>Make 将 &lt;code>$$var&lt;/code> 转义为&lt;code>$var&lt;/code>, 供 shell 处理.&lt;/p>
+&lt;p>demo(源自 6.828 根目录&lt;code>GNUmakefile&lt;/code>):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">handin-check&lt;/span>&lt;span style="color:#ff79c6">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @if &lt;span style="color:#8be9fd;font-style:italic">test&lt;/span> -n &lt;span style="color:#f1fa8c">&amp;#34;`git status -s`&amp;#34;&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span> &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> git status -s; &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">read&lt;/span> -p &lt;span style="color:#f1fa8c">&amp;#34;Untracked files will not be handed in. Continue? [y/N] &amp;#34;&lt;/span> r; &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">test&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$$&lt;/span>&lt;span style="color:#f1fa8c">r&amp;#34;&lt;/span> &lt;span style="color:#ff79c6">=&lt;/span> y; &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> &lt;span style="color:#ff79c6">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>以上 demo 还使用了 test 命令来终止 make 的执行, 如果用户没有输入&lt;code>y&lt;/code>, make 将会终止执行&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/c/makefile_tricks/ - @2019 Notepadium.</description></item><item><title>Uboot: 常用命令</title><link>https://wangloo.github.io/posts/os/uboot/commands/</link><pubDate>Sun, 27 Nov 2022 22:03:48 +0800</pubDate><guid>https://wangloo.github.io/posts/os/uboot/commands/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/uboot/commands/ -&lt;hr>
 &lt;p>..&lt;/p>
 &lt;h2 id="环境变量相关">环境变量相关&lt;/h2>
 &lt;h2 id="内存操作">内存操作&lt;/h2>
@@ -323,106 +384,4 @@ start addr of `a` start addr of `a`
 &lt;p>我们在这里讨论一下协程切换时需要保存的上下文是否与线程有所不同.&lt;/p>
 &lt;p>首先, PC一定属于, 这个毋庸置疑. 其次是栈顶指针sp, &lt;strong>每个协程都有单独的栈&lt;/strong>, 如果不保存栈的位置, 那么协程内部定义局部变量就没法访问了(局部变量的访问指令都是以sp为base的偏移来做的).&lt;/p>
 &lt;p>另外, 关于通用寄存器, 由于协程的切换需要主动调用某个函数(通常叫做&lt;code>yield()&lt;/code>), 在函数的最后将PC设置为新协程的上下文PC. 保存当前协程上下文的操作也在这个函数中, 而其参数我们并不关心, 即&lt;code>x0&lt;/code>-&lt;code>x7&lt;/code>没必要保存. 同样的, &lt;strong>caller-saved寄存器也是没必要保存的&lt;/strong>, 因为这些寄存器作为函数调用使用的临时变量, 当再次返回该协程时, PC=yield()返回地址, caller如果关心这些寄存器应当自己执行保存和恢复. 但是&lt;strong>callee-saved寄存器必须要保存到上下文中&lt;/strong>, 因为在yield()中, 我们如果修改了callee-saved寄存器, 就需要在返回时(也就是再次调度到该协程时) 恢复, 这是callee该做的, 也就是上下文中应该有的唯一通用寄存器组.&lt;/p>
-- https://wangloo.github.io/posts/os/context/ - @2019 Notepadium.</description></item><item><title>基于ARM64实现setjmp/longjmp</title><link>https://wangloo.github.io/posts/c/setjmp_and_longjmp/</link><pubDate>Tue, 01 Nov 2022 23:38:54 +0800</pubDate><guid>https://wangloo.github.io/posts/c/setjmp_and_longjmp/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/setjmp_and_longjmp/ -&lt;h2 id="介绍">介绍&lt;/h2>
-&lt;p>setjmp() and longjmp() 是一对组合使用的函数, 可以实现&lt;strong>全局的goto&lt;/strong>.&lt;/p>
-&lt;p>setjmp() 构造一个运行环境, 调用longjmp() 则将执行流切换到该环境.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/* setjmp() 保存当前的运行环境(上下文)到 env 参数中 */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">setjmp&lt;/span>(jmp_buf env);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/* longjmp() 将控制流切换到 env 指定的运行环境 */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">longjmp&lt;/span>(jmp_buf env, &lt;span style="color:#8be9fd">int&lt;/span> val);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="使用方法">使用方法&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;setjmp.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>jmp_buf e;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">foo&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> longjmp(e, &lt;span style="color:#bd93f9">1&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>(&lt;span style="color:#8be9fd">void&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> ret;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">/* After calling longjmp(), the execution flow back to setjmp(),
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> and setjmp() will return not 0. */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ret &lt;span style="color:#ff79c6">=&lt;/span> setjmp(e);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (ret &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;Return from setjmp&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> foo();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#ff79c6">else&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;Return from longjmp&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="基于-aarch64-的实现">基于 AArch64 的实现&lt;/h2>
-&lt;p>需要保存的上下文包括&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>callee-saved 通用寄存器&lt;/strong>, 因为可能第一次调用 &lt;code>setjmp()&lt;/code> 之后的执行流修改了这些寄存器, 从第二次回到 &lt;code>setjmp()&lt;/code> 的角度来看, 就是执行setjmp() 中破坏的. caller-saved 寄存器则不必, 因为本来即便看作是 &lt;code>setjmp()&lt;/code> 破坏的, 也是正常的.&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-asm" data-lang="asm">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.macro&lt;/span> func _name
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.global&lt;/span> \_name
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.type&lt;/span> \_name, %function
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>\&lt;span style="color:#8be9fd;font-style:italic">_name:&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.endm&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.macro&lt;/span> endfunc _name
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.size&lt;/span> \_name, .-\_name
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.endm&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/**
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">setjmp&lt;/span> (jmp_buf env)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> *
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">See&lt;/span> also:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">longjmp&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> *
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * @&lt;span style="color:#50fa7b">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span> - if returns from direct call,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">nonzero&lt;/span> - if returns after longjmp.
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> */
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">func&lt;/span> setjmp
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">stp&lt;/span> x19, x20, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> stp x21, x22, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> stp x23, x24, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> stp x25, x26, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> stp x27, x28, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> stp x29, x18, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> mov x9, sp
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">stp&lt;/span> lr, x9, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> mov x0, &lt;span style="color:#6272a4">#0
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ret
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">endfunc&lt;/span> setjmp
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/**
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">longjmp&lt;/span> (jmp_buf env, int val)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> *
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#8be9fd;font-style:italic">Note:&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">if&lt;/span> val is not &lt;span style="color:#bd93f9">0&lt;/span>, then it would be returned from setjmp,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">otherwise&lt;/span> - &lt;span style="color:#bd93f9">1&lt;/span> would be returned.
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> *
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">See&lt;/span> also:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">setjmp&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> */
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">func&lt;/span> longjmp
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">ldp&lt;/span> x19, x20, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> ldp x21, x22, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> ldp x23, x24, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> ldp x25, x26, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> ldp x27, x28, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> ldp x29, x18, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> ldp lr, x9, [x0], &lt;span style="color:#6272a4">#16
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> mov sp, x9
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">mov&lt;/span> x0, x1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">cbnz&lt;/span> x0, &lt;span style="color:#bd93f9">1&lt;/span>f
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">add&lt;/span> x0, x0, &lt;span style="color:#6272a4">#1
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">ret&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">endfunc&lt;/span> longjmp
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="setjmp-实现-try-catch">setjmp() 实现 try-catch&lt;/h2>
-- https://wangloo.github.io/posts/c/setjmp_and_longjmp/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/os/context/ - @2019 Notepadium.</description></item></channel></rss>

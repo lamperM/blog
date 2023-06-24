@@ -1,4 +1,106 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Armv8 Kernel Monitor</title><link>https://wangloo.github.io/posts/os/monitor/</link><pubDate>Fri, 28 Oct 2022 22:56:19 +0800</pubDate><guid>https://wangloo.github.io/posts/os/monitor/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/monitor/ -&lt;p> &lt;/p>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>基于ARM64实现setjmp/longjmp</title><link>https://wangloo.github.io/posts/c/setjmp_and_longjmp/</link><pubDate>Tue, 01 Nov 2022 23:38:54 +0800</pubDate><guid>https://wangloo.github.io/posts/c/setjmp_and_longjmp/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/setjmp_and_longjmp/ -&lt;h2 id="介绍">介绍&lt;/h2>
+&lt;p>setjmp() and longjmp() 是一对组合使用的函数, 可以实现&lt;strong>全局的goto&lt;/strong>.&lt;/p>
+&lt;p>setjmp() 构造一个运行环境, 调用longjmp() 则将执行流切换到该环境.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/* setjmp() 保存当前的运行环境(上下文)到 env 参数中 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">setjmp&lt;/span>(jmp_buf env);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/* longjmp() 将控制流切换到 env 指定的运行环境 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">longjmp&lt;/span>(jmp_buf env, &lt;span style="color:#8be9fd">int&lt;/span> val);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="使用方法">使用方法&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;setjmp.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>jmp_buf e;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">foo&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> longjmp(e, &lt;span style="color:#bd93f9">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>(&lt;span style="color:#8be9fd">void&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> ret;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">/* After calling longjmp(), the execution flow back to setjmp(),
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> and setjmp() will return not 0. */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ret &lt;span style="color:#ff79c6">=&lt;/span> setjmp(e);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (ret &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;Return from setjmp&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> foo();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#ff79c6">else&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;Return from longjmp&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="基于-aarch64-的实现">基于 AArch64 的实现&lt;/h2>
+&lt;p>需要保存的上下文包括&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>callee-saved 通用寄存器&lt;/strong>, 因为可能第一次调用 &lt;code>setjmp()&lt;/code> 之后的执行流修改了这些寄存器, 从第二次回到 &lt;code>setjmp()&lt;/code> 的角度来看, 就是执行setjmp() 中破坏的. caller-saved 寄存器则不必, 因为本来即便看作是 &lt;code>setjmp()&lt;/code> 破坏的, 也是正常的.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-asm" data-lang="asm">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.macro&lt;/span> func _name
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.global&lt;/span> \_name
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.type&lt;/span> \_name, %function
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>\&lt;span style="color:#8be9fd;font-style:italic">_name:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.endm&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.macro&lt;/span> endfunc _name
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.size&lt;/span> \_name, .-\_name
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">.endm&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/**
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">setjmp&lt;/span> (jmp_buf env)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> *
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">See&lt;/span> also:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">longjmp&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> *
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * @&lt;span style="color:#50fa7b">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span> - if returns from direct call,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">nonzero&lt;/span> - if returns after longjmp.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> */
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">func&lt;/span> setjmp
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">stp&lt;/span> x19, x20, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> stp x21, x22, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> stp x23, x24, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> stp x25, x26, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> stp x27, x28, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> stp x29, x18, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> mov x9, sp
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">stp&lt;/span> lr, x9, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> mov x0, &lt;span style="color:#6272a4">#0
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ret
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">endfunc&lt;/span> setjmp
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/**
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">longjmp&lt;/span> (jmp_buf env, int val)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> *
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#8be9fd;font-style:italic">Note:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">if&lt;/span> val is not &lt;span style="color:#bd93f9">0&lt;/span>, then it would be returned from setjmp,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">otherwise&lt;/span> - &lt;span style="color:#bd93f9">1&lt;/span> would be returned.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> *
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">See&lt;/span> also:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> * &lt;span style="color:#50fa7b">setjmp&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> */
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">func&lt;/span> longjmp
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">ldp&lt;/span> x19, x20, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> ldp x21, x22, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> ldp x23, x24, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> ldp x25, x26, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> ldp x27, x28, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> ldp x29, x18, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> ldp lr, x9, [x0], &lt;span style="color:#6272a4">#16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> mov sp, x9
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">mov&lt;/span> x0, x1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">cbnz&lt;/span> x0, &lt;span style="color:#bd93f9">1&lt;/span>f
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">add&lt;/span> x0, x0, &lt;span style="color:#6272a4">#1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">ret&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">endfunc&lt;/span> longjmp
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="setjmp-实现-try-catch">setjmp() 实现 try-catch&lt;/h2>
+- https://wangloo.github.io/posts/c/setjmp_and_longjmp/ - @2019 Notepadium.</description></item><item><title>Armv8 Kernel Monitor</title><link>https://wangloo.github.io/posts/os/monitor/</link><pubDate>Fri, 28 Oct 2022 22:56:19 +0800</pubDate><guid>https://wangloo.github.io/posts/os/monitor/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/monitor/ -&lt;p> &lt;/p>
 &lt;h2 id="kernel-monitor-是什么">Kernel Monitor 是什么&lt;/h2>
 &lt;p>Kernel Monitor 是一个适配我们微内核操作系统的 Kernel 调试和监控系统. 它能实现内核的动态调试和监控. 同时, 它还接管内核的同步异常和系统错误, 使开发者能够了解发生异常时系统的状态.&lt;/p>
 &lt;p>Kernel Monitor 具有一定的可扩展性, 例如通过统计内核中存储的 TCB 来实时监控系统中所有线程的状态. 可根据开发者的需求添加统计的对象, 如 Endpoint, Capability等.&lt;/p>
@@ -924,239 +1026,4 @@ Light Gray 0;37 White 1;37
 &lt;p>一般来说, 不将主程序编译为地址无关码. 因为主程序不需要共享, 而且地址无关码的调用
 需要两个指令: &lt;code>计算地址&lt;/code> + &lt;code>跳转&lt;/code>. 多了一步根据偏移得到绝对地址.&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/posts/os/dynamic-link/ - @2019 Notepadium.</description></item><item><title>ELF 文件的链接与加载</title><link>https://wangloo.github.io/posts/os/elf-format/</link><pubDate>Mon, 20 Jun 2022 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os/elf-format/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/elf-format/ -&lt;h2 id="elf-is-a-file-format">&lt;code>ELF&lt;/code> is a file format&lt;/h2>
-&lt;p>Files in &lt;code>ELF&lt;/code> format includes:&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>Type&lt;/th>
-&lt;th>description&lt;/th>
-&lt;th>实例&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>Relocatable File&lt;/td>
-&lt;td>这些文件包含了代码和data, 可以被用来链接成可执行文件或共享目标文件.&lt;/td>
-&lt;td>&lt;code>.o&lt;/code>, &lt;code>.a&lt;/code>&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Executable File&lt;/td>
-&lt;td>直接可执行的文件&lt;/td>
-&lt;td>&lt;code>/bin/ls&lt;/code>&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Shared Object File&lt;/td>
-&lt;td>Including code and data. 链接器可将其与其他Relocatable File或Shared Object File结合, 生成新的目标文件. 动态链接器可将其与Executable File结合, 作为进程映像的一部分来运行.&lt;/td>
-&lt;td>&lt;code>.so&lt;/code>&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Core Dump File&lt;/td>
-&lt;td>Restore critical infomation when process is terminated unexpectedly&lt;/td>
-&lt;td>&lt;code>core dump&lt;/code>&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;blockquote>
-&lt;p>📌 &lt;code>file&lt;/code> command in Linux can output the format of a file.&lt;/p>
-&lt;/blockquote>
-&lt;p> &lt;/p>
-&lt;h2 id="elf-文件组成的结构">ELF 文件组成的结构&lt;/h2>
-&lt;pre tabindex="0">&lt;code>+---------------------------------+
-| ELF Header | 包含描述整个ELF的基本信息, 如版本, 入口地址...
-+---------------------------------+
-| .text |
-+---------------------------------+
-| .data |
-+---------------------------------+ 紧接着是各个段
-| .bss |
-+---------------------------------+
-| ... |
-| other sections |
-+---------------------------------+
-| | 段表: 与段相关最重要的结构
-| Section Header table | 描述了每个段的name, length, authority...
-| |
-+---------------------------------+
-| String tables |
-| Symbol tables |
-+---------------------------------+
-&lt;/code>&lt;/pre>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>字段&lt;/th>
-&lt;th>含义&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>e_machine&lt;/td>
-&lt;td>目标架构&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>e_entry&lt;/td>
-&lt;td>入口地址&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>e_machine&lt;/td>
-&lt;td>目标架构&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>e_phnum&lt;/td>
-&lt;td>number of entries in the &lt;strong>program header table&lt;/strong>&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>e_shnum&lt;/td>
-&lt;td>number of entries in the &lt;strong>section header table&lt;/strong>&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>e_shoff&lt;/td>
-&lt;td>offset, in bytes, of the section header table&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>e_phoff&lt;/td>
-&lt;td>offset, in bytes, of the program header table&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>e_machine&lt;/td>
-&lt;td>目标架构&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>e_machine&lt;/td>
-&lt;td>目标架构&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h3 id="段表">段表&lt;/h3>
-&lt;p>ELF文件中的各个段的基本属性就是保存在&lt;strong>段表&lt;/strong>中，是分析ELF文件最重要的字段。存放了每个段的信息，例如，段名，段的长度，在文件中的偏移，读写权限以及其他属性。&lt;/p>
-&lt;p>编译器、链接器都是依靠段表来定位和访问各个段的属性的。&lt;/p>
-&lt;p>如何找到段表？ &lt;strong>&lt;code>e_shoff&lt;/code>字段&lt;/strong>&lt;/p>
-&lt;blockquote>
-&lt;p>使用&lt;code>readelf -S &amp;lt;elfname&amp;gt;&lt;/code> 就能查看ELF文件的段表&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="程序头表">程序头表&lt;/h3>
-&lt;p> &lt;/p>
-&lt;h2 id="分析elf文件的工具">分析ELF文件的工具&lt;/h2>
-&lt;h3 id="1-objdump">1. objdump&lt;/h3>
-&lt;h3 id="2-readelf">2. readelf&lt;/h3>
-&lt;p> &lt;/p>
-&lt;h2 id="为什么目标文件中代码和数据要分开放">为什么目标文件中代码和数据要分开放?&lt;/h2>
-&lt;p>一方面, 程序被加载进内存后, 代码段和数据段分别被映射到&lt;strong>两个virtual memory region&lt;/strong>.
-通过MMU的支持, 可以将代码段的区域设置为只读, 防止恶意篡改.&lt;/p>
-&lt;p>另一方面, 当下CPU Cache多划分为&lt;em>Instruction Cache&lt;/em>和&lt;em>Data Cache&lt;/em>, 再配合互相独立的
-地址区域能够提高&lt;strong>局部性原理&lt;/strong>的效果.&lt;/p>
-&lt;p>最后, 代码段可以被多个进程共享(例如都调用同一外部函数), 节省内存空间.&lt;/p>
-&lt;blockquote>
-&lt;p>针对嵌入式设备, 如果内存空间不够大, 只读的代码段可存放在ROM中&lt;/p>
-&lt;/blockquote>
-&lt;p> &lt;/p>
-&lt;h2 id="关于静态库">关于静态库&lt;/h2>
-&lt;p>一个静态库可以简单的看作是 a set of object file.&lt;br>
-这些 object file 可能包括: 输入输出相关的&lt;code>printf.o&lt;/code>, &lt;code>scanf.o&lt;/code>, 日期时间相关的&lt;code>time.o&lt;/code>, &lt;code>date.o&lt;/code>等.&lt;/p>
-&lt;p>❓ 为什么不直接提供这些&lt;em>目标文件&lt;/em>呢?&lt;/p>
-&lt;p>这些&lt;strong>零散的&lt;/strong>文件若直接提供给使用者, 很大程度上造成文件传输, 管理等方面的不便.&lt;br>
-于是人们通常使用&lt;code>ar&lt;/code>压缩程序将这些目标文件压缩到一起.&lt;/p>
-&lt;p>❓ 如何查看一个静态库是由哪些object file压缩到一起的?&lt;/p>
-&lt;p>Shell command&lt;code>ar -t libc.a&lt;/code> 可以查看&lt;code>libc.a&lt;/code>中包含的所有object files.&lt;/p>
-&lt;p> &lt;/p>
-&lt;h2 id="elf文件加载-运行流程">ELF文件加载-运行流程&lt;/h2>
-&lt;blockquote>
-&lt;p>废了半天劲编译生成的ELF文件, 想要最终跑起来则包含的instruction and data必须要在内存中.&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="静态加载与动态加载">静态加载与动态加载&lt;/h3>
-&lt;p>我们能想到的最简单的办法是: 把整个ELF的&lt;strong>所有指令和数据&lt;/strong>在运行之前就全部load到内存中. 这就是&lt;em>静态加载&lt;/em>.&lt;/p>
-&lt;p>更加高效的做法是: 充分利用&lt;em>局部性原理&lt;/em>, 将指令和数据划分为&lt;strong>模块&lt;/strong>, 只有当该模块被使用时, 才load进内存,
-否则就在外存中老老实实呆着. 这就是&lt;em>动态加载&lt;/em>.&lt;/p>
-&lt;h3 id="动态加载的步骤">动态加载的步骤&lt;/h3>
-&lt;p>借助&lt;em>虚拟内存&lt;/em>技术, 上面提到的&lt;strong>模块&lt;/strong>的概念可以自然的被&lt;strong>页&lt;/strong>(page)代替.
-我们将所有的指令和数据按照page为单位划分.&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>运行该ELF的线程被创建时, 其virtual space范围被划定, 但其页表是空的, 没有任何映射.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>OS读取ELF Header, 建立virtual space与&lt;strong>ELF文件&lt;/strong>的映射关系. 这个映射关系的表达方式是一个特殊的&lt;strong>数据结构&lt;/strong>.
-建立该映射关系的原因是: 当程序运行到某个地址发现该页表项是空的(例如 &lt;code>call 0x1234&lt;/code>), 那么必然触发&lt;code>page fault&lt;/code>.
-由OS负责到&lt;em>特定的外存地址&lt;/em>将页面加载到physical memory中.&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;pre tabindex="0">&lt;code>OS要想知道缺失的内容在ELF文件的哪个位置, 就是利用该映射, 即某个数据结构
-&lt;/code>&lt;/pre>&lt;ol start="3">
-&lt;li>physical memory中有了所需的指令或数据后, 还需建立visual memory到physical memory的映射, 即在&lt;em>页表项&lt;/em>中写入.
-随着程序的运行, 会继续触发&lt;code>page fault&lt;/code>, 从ELF中不断load page到physical memory, 建立缺页visual addr处的页表映射,
-最终填补成一个完整的pagetable.&lt;/li>
-&lt;/ol>
-&lt;p> &lt;/p>
-&lt;h2 id="段地址对齐技术">段地址对齐技术&lt;/h2>
-&lt;blockquote>
-&lt;p>由前面动态加载的步骤可知, ELF文件中的代码和数据被按page划分. 并只有在用到时才被加载到内存,
-并建立&lt;code>虚拟内存-物理内存&lt;/code>的映射.&lt;/p>
-&lt;/blockquote>
-&lt;p>假设一个ELF有三个段需要被&lt;code>LOAD&lt;/code>, ELF段表如下:&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>Segment&lt;/th>
-&lt;th>Length&lt;/th>
-&lt;th>offset&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>SEG 0&lt;/td>
-&lt;td>127 B&lt;/td>
-&lt;td>34 B&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>SEG 1&lt;/td>
-&lt;td>9899 B&lt;/td>
-&lt;td>164 B&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>SEG 2&lt;/td>
-&lt;td>1988 B&lt;/td>
-&lt;td>0 B&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h3 id="-这三个段在elf文件中的布局如何">❓ 这三个段在ELF文件中的布局如何?&lt;/h3>
-&lt;p>根据前面ELF文件格式的介绍, 这三个段必然是挨着的(简单考虑, ELF中仅有这三个段).&lt;/p>
-&lt;h3 id="-这三个段在物理内存中的布局">❓ 这三个段在物理内存中的布局?&lt;/h3>
-&lt;p>发生&lt;code>page fault&lt;/code>之后, OS会为页面分配合适的物理页面, 如利用&lt;code>buddy system&lt;/code>等.&lt;/p>
-&lt;p>可以保证&lt;em>段内&lt;/em>的连续, 不能保证&lt;em>段与段&lt;/em>是连续的.&lt;/p>
-&lt;blockquote>
-&lt;p>未使用段对齐技术之前, &lt;code>SEG0&lt;/code>的长度不足一页, 但是也给它分配一页的空间. 同理为&lt;code>SEG1&lt;/code>分配两页, &lt;code>SEG2&lt;/code>分配一页.
-总共占用 &lt;code>1+2+1=5&lt;/code>个物理页.&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="-这三个段在用户virtual-addrspace下的布局如何">❓ 这三个段在用户virtual addrspace下的布局如何?&lt;/h3>
-&lt;p>todo&lt;/p>
-&lt;h3 id="-何为段地址对齐技术">❓ 何为段地址对齐技术?&lt;/h3>
-&lt;p>上面说了, 在为这三个段分配物理内存时, 虽然他们的真实大小远小于5个页面, 但由于简单采用: &lt;code>每个段的开头必须是page align&lt;/code>,
-导致实际上产生了巨大的&lt;strong>内部碎片&lt;/strong>.&lt;/p>
-&lt;p>段地址对齐实际上就是在为ELF文件中的段分配物理内存时, 不考虑其段的独立性, 强制按照&lt;code>page&lt;/code>来划分. 划分的行为如下图所示.
-结果就是仅需占用&lt;code>3&lt;/code>个物理页面.&lt;/p>
-&lt;pre tabindex="0">&lt;code>+---+---------------+
-| P | SEG0 |
-| A +---------------+
-| G | |
-| E | |
-+---+ |
-| P | SEG1 |
-| A | |
-| G | |
-| E | |
-+---+ |
-| P +---------------+
-| A | |
-| G | SEG2 |
-| E | |
-+---+---------------+
-&lt;/code>&lt;/pre>&lt;blockquote>
-&lt;p>目前, gcc(更准确是说是GUN ld)默认启用段对齐技术. 各个段的虚拟地址并不是&lt;code>page align&lt;/code>.&lt;/p>
-&lt;/blockquote>
-&lt;blockquote>
-&lt;p>🍀 物理页面到虚拟页面的映射阶段, 那些&lt;em>同时包含&lt;/em>两个段的页面会被映射两次, 即一个物理页面对应两个
-虚拟页.&lt;/p>
-&lt;p>原因是: 在一个页面的不同段可能&lt;strong>权限不同&lt;/strong>, 所以不能使用同一映射.&lt;/p>
-&lt;/blockquote>
-- https://wangloo.github.io/posts/os/elf-format/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/os/dynamic-link/ - @2019 Notepadium.</description></item></channel></rss>
