@@ -259,20 +259,20 @@ PSTATE = SPSR ;仅当目标寄存器包含PC时自动完成
 &lt;p>例如: &lt;code>RFE &amp;lt;r0&amp;gt;&lt;/code> 等价于:&lt;/p>
 &lt;pre tabindex="0">&lt;code class="language-ass" data-lang="ass">pc = [r0]
 PSTATE = [r0+4]
-&lt;/code>&lt;/pre>- https://wangloo.github.io/posts/armv8/exception_return/ - @2019 Notepadium.</description></item><item><title>GNU C内联汇编学习笔记</title><link>https://wangloo.github.io/posts/c/inline-asm/</link><pubDate>Sat, 24 Sep 2022 16:48:58 +0800</pubDate><guid>https://wangloo.github.io/posts/c/inline-asm/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/inline-asm/ -&lt;h3 id="语句结构">语句结构&lt;/h3>
+&lt;/code>&lt;/pre>- https://wangloo.github.io/posts/armv8/exception_return/ - @2019 Notepadium.</description></item><item><title>GNU C内联汇编学习笔记</title><link>https://wangloo.github.io/posts/c/inline-asm/</link><pubDate>Sat, 24 Sep 2022 16:48:58 +0800</pubDate><guid>https://wangloo.github.io/posts/c/inline-asm/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/inline-asm/ -&lt;h2 id="语句结构">语句结构&lt;/h2>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">asm&lt;/span> &lt;span style="color:#ff79c6">asm&lt;/span>&lt;span style="color:#ff79c6">-&lt;/span>qualifiers ( &lt;span style="color:#8be9fd;font-style:italic">AssemblerTemplate&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : &lt;span style="color:#8be9fd;font-style:italic">OutputOperands&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : &lt;span style="color:#8be9fd;font-style:italic">InputOperands&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : &lt;span style="color:#8be9fd;font-style:italic">Clobbers&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> : GotoLabels)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>asm&lt;/code> keyword is a GNU extension. 当使用编译选项 &lt;code>-ansi&lt;/code> 或 &lt;code>-std&lt;/code> 时, 使用 &lt;code>__asm__&lt;/code>代替 &lt;code>asm&lt;/code>.&lt;/p>
-&lt;h4 id="qualifiers">Qualifiers&lt;/h4>
+&lt;h2 id="qualifiers">Qualifiers&lt;/h2>
 &lt;ul>
 &lt;li>volatile: 避免编译器的过分优化&lt;/li>
 &lt;li>goto&lt;/li>
 &lt;li>inline&lt;/li>
 &lt;/ul>
-&lt;h4 id="parameters">Parameters&lt;/h4>
+&lt;h2 id="parameters">Parameters&lt;/h2>
 &lt;p>&lt;em>AssemblerTemplate&lt;/em>: 字符串, 汇编代码的模板&lt;/p>
 &lt;p>&lt;em>OutputOperands&lt;/em>: 输出操作数; 指令将会修改的变量集合&lt;/p>
 &lt;p>&lt;em>InputOperands&lt;/em>: 输入操作数; 指令将读取的变量集合&lt;/p>
@@ -300,6 +300,10 @@ PSTATE = [r0+4]
 // 描述输出操作数所在位置, 如果你不知道, 可以同时设置, 编译器会帮你决定
 r 寄存器
 m 内存
+// 架构相关的
+z AArch64中存在. 表达可以使用零寄存器(XZR or WZR). Useful when combined
+with `r` to represent an operand that can be either a general-purpose register
+or the zero register.
 &lt;/code>&lt;/pre>&lt;p>&lt;em>cvariablename&lt;/em>: 输出到的 C 语言变量名&lt;/p>
 &lt;p> &lt;/p>
 &lt;h3 id="param-3-input-operands">Param #3: Input Operands&lt;/h3>
@@ -327,8 +331,8 @@ This stands for &amp;ldquo;condition codes&amp;rdquo;. Since the add instruction
 &lt;p>尽量不使用, 可以在ASM的内部直接定义 label&lt;/p>
 &lt;p>TODO&lt;/p>
 &lt;p> &lt;/p>
-&lt;h3 id="样例">样例&lt;/h3>
-&lt;h4 id="最简单的模板">最简单的模板&lt;/h4>
+&lt;h2 id="样例">样例&lt;/h2>
+&lt;h3 id="最简单的模板">最简单的模板&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> src &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> dst;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -338,7 +342,7 @@ This stands for &amp;ldquo;condition codes&amp;rdquo;. Since the add instruction
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">:&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;r&amp;#34;&lt;/span> (src));
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>printf(&lt;span style="color:#f1fa8c">&amp;#34;%d&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, dst);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="操作数使用-asmsymbolicname">操作数使用 asmSymbolicName&lt;/h4>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="操作数使用-asmsymbolicname">操作数使用 asmSymbolicName&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> c &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> d;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>e &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&lt;/span>c;
@@ -346,7 +350,7 @@ This stands for &amp;ldquo;condition codes&amp;rdquo;. Since the add instruction
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">asm&lt;/span> (&lt;span style="color:#f1fa8c">&amp;#34;mov %[e], %[d]&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">:&lt;/span> [d] &lt;span style="color:#f1fa8c">&amp;#34;=rm&amp;#34;&lt;/span> (d)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">:&lt;/span> [e] &lt;span style="color:#f1fa8c">&amp;#34;rm&amp;#34;&lt;/span> (&lt;span style="color:#ff79c6">*&lt;/span>e));
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="内部定义-label">内部定义 label&lt;/h4>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="内部定义-label">内部定义 label&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">long&lt;/span> temp;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">long&lt;/span> ret;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">asm&lt;/span> &lt;span style="color:#50fa7b">volatile&lt;/span>(
@@ -361,6 +365,7 @@ This stands for &amp;ldquo;condition codes&amp;rdquo;. Since the add instruction
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> );
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="reference">Reference&lt;/h2>
 &lt;p>&lt;a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Extended-Asm">Extended Asm (Using the GNU Compiler Collection (GCC))&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://developer.arm.com/documentation/100067/0612/armclang-Inline-Assembler/Inline-assembly-constraint-strings/Constraint-codes-for-AArch64-state">AArch64 Constraint codes&lt;/a>&lt;/p>
 - https://wangloo.github.io/posts/c/inline-asm/ - @2019 Notepadium.</description></item><item><title>GICv3 介绍</title><link>https://wangloo.github.io/posts/armv8/gicv3/</link><pubDate>Sat, 10 Sep 2022 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/gicv3/ -&lt;h1 id="gicv3generic-interrupt-controller---version-3">GICV3(Generic Interrupt Controller - version 3)&lt;/h1>
 &lt;h2 id="关于gic">关于GIC&lt;/h2>
 &lt;p>GIC即中断控制器, 负责管理中断的接收, 屏蔽, 路由等相关任务, 并向系统程序员提供配置的接口.&lt;/p>
