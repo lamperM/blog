@@ -681,19 +681,20 @@ This stands for &amp;ldquo;condition codes&amp;rdquo;. Since the add instruction
 &lt;h2 id="编程指导">编程指导&lt;/h2>
 &lt;h3 id="初始化">初始化&lt;/h3>
 &lt;p>由于 &lt;em>Distributor&lt;/em> 整个系统共享的, 所以必须在其他核启动之前, 由主核完成初始化. 然后当所有核都启动后, 各自完成各自 &lt;em>Redistributor&lt;/em> 和 &lt;em>CPU interface&lt;/em> 的初始化工作.&lt;/p>
-- https://wangloo.github.io/posts/armv8/gicv3/ - @2019 Notepadium.</description></item><item><title>武器库: shell scripts</title><link>https://wangloo.github.io/posts/shell/shell-script/</link><pubDate>Wed, 20 Jul 2022 11:54:13 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-script/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/shell/shell-script/ -&lt;p>ℹ️ 以下命令/脚本的执行环境均为 &lt;em>Bash&lt;/em>.&lt;/p>
+- https://wangloo.github.io/posts/armv8/gicv3/ - @2019 Notepadium.</description></item><item><title>武器库: shell scripts</title><link>https://wangloo.github.io/posts/shell/shell-script/</link><pubDate>Wed, 20 Jul 2022 11:54:13 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-script/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/shell/shell-script/ -&lt;p>ℹ️ 以下命令/脚本的执行环境均为 &lt;code>bash&lt;/code>.&lt;/p>
 &lt;h2 id="统计代码量">统计代码量&lt;/h2>
 &lt;blockquote>
-&lt;p>使用到的命令包含: find, wc, xargs, sort等&lt;/p>
+&lt;p>使用到的命令包含: find, wc, xargs, sort 等&lt;/p>
 &lt;/blockquote>
-&lt;p>列出&lt;em>所有的文件及其代码行数&lt;/em>, 只统计.c和.h, 过滤&lt;code>./scripts&lt;/code>目录.&lt;/p>
+&lt;p>列出&lt;em>所有的文件及其代码行数&lt;/em>, 只统计.c 和.h, 过滤&lt;code>./scripts&lt;/code>目录.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>find -name &lt;span style="color:#f1fa8c">&amp;#39;*.[c|h]&amp;#39;&lt;/span> ! -path &lt;span style="color:#f1fa8c">&amp;#39;./scripts/*&amp;#39;&lt;/span> | xargs wc -l
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>+将内容按照代码行数降序排列&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>find -name &lt;span style="color:#f1fa8c">&amp;#39;*.[c|h]&amp;#39;&lt;/span> ! -path &lt;span style="color:#f1fa8c">&amp;#39;./scripts/*&amp;#39;&lt;/span> | xargs wc -l | sort -rn
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>若仅列出&lt;em>总的代码行数&lt;/em>, 去除&lt;strong>空行&lt;/strong>&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">(&lt;/span>find ./ -name &lt;span style="color:#f1fa8c">&amp;#39;*.[c|h]&amp;#39;&lt;/span> -print0 | xargs -0 cat&lt;span style="color:#ff79c6">)&lt;/span> | sed &lt;span style="color:#f1fa8c">&amp;#39;/^\s*$/d&amp;#39;&lt;/span> | wc -l
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
-&lt;h2 id="判断执行脚本时带的参数">判断执行脚本时带的参数&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="删除目录下所有的可执行文件">删除目录下所有的可执行文件&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>find . -maxdepth &lt;span style="color:#bd93f9">1&lt;/span> -executable -type f | xargs rm
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="判断执行脚本时带的参数">判断执行脚本时带的参数&lt;/h2>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$#&lt;/span> -ne &lt;span style="color:#bd93f9">1&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;ONE parameter is needed&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">exit&lt;/span> -1
@@ -708,8 +709,7 @@ This stands for &amp;ldquo;condition codes&amp;rdquo;. Since the add instruction
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">else&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Not supported command&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">fi&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
-&lt;h2 id="自动拷贝文件到sd-card">自动拷贝文件到SD Card&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="自动拷贝文件到-sd-card">自动拷贝文件到 SD Card&lt;/h2>
 &lt;blockquote>
 &lt;p>TODO&lt;/p>
 &lt;ol>
@@ -728,8 +728,7 @@ This stands for &amp;ldquo;condition codes&amp;rdquo;. Since the add instruction
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;SD-Card is inserted&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cp ./output/kernel/kernel.bin &lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">sd_path&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Copy completely&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
-&lt;h2 id="获取所有文件信息可递归进入子目录">获取所有文件信息(可递归进入子目录)&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="获取所有文件信息可递归进入子目录">获取所有文件信息(可递归进入子目录)&lt;/h2>
 &lt;p>获取&lt;code>dir&lt;/code>路径下的所有文件的信息, 这里获取的是文件的&lt;strong>完整路径&lt;/strong>.&lt;/p>
 &lt;blockquote>
 &lt;p>TODO&lt;/p>
@@ -756,8 +755,7 @@ This stands for &amp;ldquo;condition codes&amp;rdquo;. Since the add instruction
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">fi&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">done&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
-&lt;h2 id="带颜色的输出">带颜色的输出&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="带颜色的输出">带颜色的输出&lt;/h2>
 &lt;p>使用&lt;a href="https://en.wikipedia.org/wiki/ANSI_escape_code">ANSI escape code&lt;/a>&lt;/p>
 &lt;pre tabindex="0">&lt;code>Black 0;30 Dark Gray 1;30
 Red 0;31 Light Red 1;31
