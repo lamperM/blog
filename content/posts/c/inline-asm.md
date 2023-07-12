@@ -8,7 +8,7 @@ tags: [c]
 
 
 
-### 语句结构
+## 语句结构
 
 ```c
 asm asm-qualifiers ( AssemblerTemplate 
@@ -20,13 +20,13 @@ asm asm-qualifiers ( AssemblerTemplate
 
 The `asm` keyword is a GNU extension.  当使用编译选项 `-ansi` 或 `-std` 时, 使用 `__asm__`代替 `asm`.
 
-#### Qualifiers
+## Qualifiers
 
 - volatile: 避免编译器的过分优化
 - goto
 - inline
 
-#### Parameters
+## Parameters
 
 *AssemblerTemplate*: 字符串, 汇编代码的模板
 
@@ -71,6 +71,11 @@ The `asm` keyword is a GNU extension.  当使用编译选项 `-ansi` 或 `-std` 
 // 描述输出操作数所在位置, 如果你不知道, 可以同时设置, 编译器会帮你决定
 r   寄存器
 m   内存
+
+// 架构相关的
+z   AArch64中存在. 表达可以使用零寄存器(XZR or WZR). Useful when combined 
+    with `r` to represent an operand that can be either a general-purpose register 
+    or the zero register.
 ```
 
 *cvariablename*: 输出到的 C 语言变量名
@@ -114,9 +119,9 @@ TODO
 
 &nbsp;
 
-### 样例
+## 样例
 
-#### 最简单的模板
+### 最简单的模板
 
 ```c
 int src = 1;
@@ -130,7 +135,7 @@ asm ("mov %1, %0\n\t"
 printf("%d\n", dst);
 ```
 
-#### 操作数使用 asmSymbolicName
+### 操作数使用 asmSymbolicName
 
 ```c
 uint32_t c = 1;
@@ -142,7 +147,7 @@ asm ("mov %[e], %[d]"
    : [e] "rm" (*e));
 ```
 
-#### 内部定义 label
+### 内部定义 label
 
 ```c
     long temp;
@@ -164,3 +169,5 @@ asm ("mov %[e], %[d]"
 ## Reference
 
 [Extended Asm (Using the GNU Compiler Collection (GCC))](https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Extended-Asm)
+
+[AArch64 Constraint codes](https://developer.arm.com/documentation/100067/0612/armclang-Inline-Assembler/Inline-assembly-constraint-strings/Constraint-codes-for-AArch64-state)
