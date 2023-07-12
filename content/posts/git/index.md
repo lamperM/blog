@@ -155,3 +155,36 @@ git merger-base dev main
 ### 合并 dev 到主分支: merge
 
 很简单的逻辑，主分支或者其他合作开发的分支并不是你一个人在用，并且需要最后同步到远程仓库，不符合使用 rebase 的准则
+
+# git log
+
+## 参数:
+
+| Parameter                | Description                                                       |
+|--------------------------|-------------------------------------------------------------------|
+| non-param                | 列出所有历史提交的SHA、作者、提交日期和commit                     |
+| -p                       | 按补丁显示每次更新，比--stat更全                                  |
+| --stat                   | 显示每次更新修改文件的名称及添加（删除）的行数。比--name-only更全 |
+| --name-only              | 显示文件清单                                                      |
+| --name-status            | 显示文件清单及改动方式(新增、删除、修改)                          |
+| --oneline                | 只显示前6位SHA值和commit                                          |
+| -n                       | 显示前n条log                                                      |
+| \<branch\>               | 查看某个分支的历史提交。**该参数只能log命令之后**                 |
+| \<branch1\>..\<branch2\> |                                                                   |
+|                          |                                                                   |  
+|                          |                                  |
+	
+参考网站：https://www.cnblogs.com/bellkosmos/p/5923439.html
+
+## Example 1: 彩色显示重要信息
+```sh
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+```
+
+![](gitlog_1.png)
+
+
+## Example 2: 查看本地分支和对应远程分支的commit差异
+```sh
+git log --oneline main..origin/main
+```
