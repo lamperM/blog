@@ -1,4 +1,96 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux 内核数据结构 hlist</title><link>https://wangloo.github.io/posts/os/linux/data_struct/hlist/</link><pubDate>Thu, 11 May 2023 20:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/data_struct/hlist/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/linux/data_struct/hlist/ -&lt;p>linux 内核为创建【用单链表解决冲突的哈希表】设计了专门的数据结构 hlist。&lt;/p>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>我的开发环境构建指南</title><link>https://wangloo.github.io/posts/tools/dev_env/</link><pubDate>Mon, 17 Jul 2023 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/dev_env/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/tools/dev_env/ -&lt;h1 id="前言">前言&lt;/h1>
+&lt;p>写这篇博客的背景是&lt;strong>我实在忍受不了每次换新的开发机器都得费好大的劲来完全恢复以前的环境&lt;/strong>， 而且，我平常喜欢搜集各种有用的工具、好看的主题，字体这些，如果零零散散的记录，大概率会忘记或者记不得某些细节。&lt;/p>
+&lt;p>所以，最后期望达到的是&lt;strong>能够使我每次在新机器上搭建环境只需要看这一篇文章就可以了&lt;/strong>。因此这里会记录：&lt;/p>
+&lt;ul>
+&lt;li>帮助提升开发效率的小工具&lt;/li>
+&lt;li>好看的字体、主题&lt;/li>
+&lt;li>配置某些环境的要点及注意事项&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>🥀 到目前为止，我还未发现一种方式能够完全达到“一键式布置”，这也不是本文的目的。
+付出至少半天的时间的一定的，希望未来能发现一种好的方法。&lt;/p>
+&lt;/blockquote>
+&lt;h1 id="字体">字体&lt;/h1>
+&lt;h2 id="fira-code">Fira Code&lt;/h2>
+&lt;p>这款字体适合做编程字体，蛮好看的。我在 vscode 和 terminal 下都使用了这款字体。&lt;/p>
+&lt;p>详情及安装参考&lt;a href="https://github.com/tonsky/FiraCode">github&lt;/a>&lt;/p>
+&lt;h2 id="霞鹜文楷">霞鹜文楷&lt;/h2>
+&lt;p>开源的中文字体，做博客、PPT 不错。&lt;/p>
+&lt;p>详情及安装参考&lt;a href="https://github.com/lxgw/LxgwWenKai">github&lt;/a>&lt;/p>
+&lt;h1 id="vscode">vscode&lt;/h1>
+&lt;h2 id="主题">主题&lt;/h2>
+&lt;h1 id="vim">vim&lt;/h1>
+&lt;h2 id="vimrc">vimrc&lt;/h2>
+&lt;h2 id="ycm-特别注意">ycm 特别注意&lt;/h2>
+&lt;p>YCM 插件对 python, vim 的版本均有要求。&lt;/p>
+&lt;h3 id="下载">下载&lt;/h3>
+&lt;p>可以使用 vim-plug 等工具下载, 也可以下载源码然后拷贝到&lt;code>.vim&lt;/code>目录下&lt;/p>
+&lt;h3 id="编译">编译&lt;/h3>
+&lt;p>编译用到 python3, 这里是问题最多的一步&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 编译并添加对C的提示支持&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>python3 install.py --clangd-completer --verbose
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Searching Python 3.8 libraries...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Downloading Clangd from https://github.com/ycm-core/llvm/releases/download/13.0.0/clangd-13.0.0-x86_64-unknown-linux-gnu.tar.bz2...
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用&lt;code>--clangd-completer&lt;/code>参数时, 脚本会去下载 clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2 文件, 比较慢. 也可以&lt;strong>提前根据提示的网站自己手动下载&lt;/strong>压缩包.&lt;/p>
+&lt;p>下载完成后, 放到本地目录下:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>:~/.vim/plugged/YouCompleteMe/third_party/ycmd/third_party/clangd/cache$ ls
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>还需对脚本&lt;code>YouCompleteMe/third_party/ycmd/build.py&lt;/code>进行修改, 防止重新下载.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">DownloadClangd&lt;/span>( printer ):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MakeCleanDirectory( CLANGD_OUTPUT_DIR )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">not&lt;/span> p&lt;span style="color:#ff79c6">.&lt;/span>exists( CLANGD_CACHE_DIR ):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> os&lt;span style="color:#ff79c6">.&lt;/span>makedirs( CLANGD_CACHE_DIR )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># 注释下面的语句&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># elif p.exists( file_name ) and not CheckFileIntegrity( file_name, check_sum ):&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># printer( &amp;#39;Cached Clangd archive does not match checksum. Removing...&amp;#39; )&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># os.remove( file_name )&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> p&lt;span style="color:#ff79c6">.&lt;/span>exists( file_name ):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printer( &lt;span style="color:#f1fa8c">f&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;Using cached Clangd: &lt;/span>&lt;span style="color:#f1fa8c">{&lt;/span> file_name &lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;&lt;/span> )
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="配置">配置&lt;/h3>
+&lt;p>YCM 配合一个配置文件&lt;code>.ycm_c_c++_conf.py&lt;/code>, YCM 搜索的位置在 vimrc 中指定:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-vimrc" data-lang="vimrc">&lt;span style="display:flex;">&lt;span>Plug &lt;span style="color:#f1fa8c">&amp;#39;rdnetto/YCM-Generator&amp;#39;&lt;/span>, { &lt;span style="color:#f1fa8c">&amp;#39;branch&amp;#39;&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#39;stable&amp;#39;&lt;/span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> g:ycm_global_ycm_extra_conf = &lt;span style="color:#f1fa8c">&amp;#34;~/.ycm_c_c++_conf.py&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其内容的 example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-py" data-lang="py">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> os
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> ycm_core
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>flags &lt;span style="color:#ff79c6">=&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-Wall&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-Wextra&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># &amp;#39;-Werror&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-Wno-long-long&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># &amp;#39;-Wno-variadic-macros&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-fexceptions&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-ferror-limit=10000&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-DNDEBUG&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-std=c99&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-xc&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-isystem/usr/include/&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>SOURCE_EXTENSIONS &lt;span style="color:#ff79c6">=&lt;/span> [ &lt;span style="color:#f1fa8c">&amp;#39;.cpp&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;.cxx&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;.cc&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;.c&amp;#39;&lt;/span>, ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">FlagsForFile&lt;/span>( filename, &lt;span style="color:#ff79c6">**&lt;/span>kwargs ):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;flags&amp;#39;&lt;/span>: flags,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;do_cache&amp;#39;&lt;/span>: &lt;span style="color:#ff79c6">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="优化">优化&lt;/h3>
+&lt;p>🔻 对于C/C++来说, YCM的使用最好配合&lt;em>compilation database&lt;/em> 来使用, 例如&lt;a href="https://github.com/nickdiego/compiledb">compiledb&lt;/a>. 否则, 可能头文件的path识别出问题(&lt;a href="https://stackoverflow.com/questions/64277317/youcompleteme-not-work-properly-for-c-headers.">stackoverflow&lt;/a>).&lt;/p>
+&lt;p>2022年2月13日我使用的compilation database生成工具从&lt;code>compiledb&lt;/code>换成了&lt;code>bear&lt;/code>, 因为&lt;code>bear&lt;/code>更好的支持递归, 即有&lt;code>make -C&lt;/code>的情况.&lt;/p>
+&lt;p>需要的compilation database生成工具介绍: &lt;a href="https://sarcasm.github.io/notes/dev/compilation-database.html">Compilation database — Sarcasm notebook&lt;/a>&lt;/p>
+&lt;h1 id="shell">shell&lt;/h1>
+&lt;h2 id="zsh">zsh&lt;/h2>
+&lt;h2 id="配置文件">配置文件&lt;/h2>
+&lt;h1 id="terminal">terminal&lt;/h1>
+&lt;p>ubuntu自带的终端我觉得还不错，有些人说Terminitor不错，分屏功能还是挺常用的！&lt;/p>
+&lt;h1 id="tmux">tmux&lt;/h1>
+- https://wangloo.github.io/posts/tools/dev_env/ - @2019 Notepadium.</description></item><item><title>Linux 内核数据结构 hlist</title><link>https://wangloo.github.io/posts/os/linux/data_struct/hlist/</link><pubDate>Thu, 11 May 2023 20:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/data_struct/hlist/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/linux/data_struct/hlist/ -&lt;p>linux 内核为创建【用单链表解决冲突的哈希表】设计了专门的数据结构 hlist。&lt;/p>
 &lt;p>hlist 整体来说是带头结点的双向链表，头结点的类型为&lt;code>hlist_head&lt;/code>, 普通节点
 的类型为&lt;code>hlist_node&lt;/code>. &lt;strong>为什么要区别两种类型？节约空间&lt;/strong>， 因为哈希表的
 表项类型可以是&lt;code>hlist_head&lt;/code>, 它其实不需要&lt;code>prev&lt;/code>指针, 比起一般的结点，一个
@@ -718,7 +810,4 @@ git 也会阻止你这么做，因为分支的历史已经被修改，除非 for
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="gitlog_1.png" alt="">&lt;/p>
 &lt;h2 id="example-2-查看本地分支和对应远程分支的commit差异">Example 2: 查看本地分支和对应远程分支的commit差异&lt;/h2>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>git log --oneline main..origin/main
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/git/ - @2019 Notepadium.</description></item><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/os/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/gnu_tools/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/gnu_tools/ -&lt;p>..&lt;/p>
-&lt;h2 id="nm---列出符号">nm - 列出符号&lt;/h2>
-&lt;p>&lt;a href="https://sourceware.org/binutils/docs/binutils/nm.html">nm (GNU Binary Utilities) (sourceware.org)&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/os/gnu_tools/ - @2019 Notepadium.</description></item></channel></rss>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/git/ - @2019 Notepadium.</description></item></channel></rss>

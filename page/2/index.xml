@@ -1,4 +1,7 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Makefile 一些技巧</title><link>https://wangloo.github.io/posts/c/makefile_tricks/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/makefile_tricks/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/makefile_tricks/ -&lt;h2 id="伪目标的依赖关系">伪目标的依赖关系&lt;/h2>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/os/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/gnu_tools/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/gnu_tools/ -&lt;p>..&lt;/p>
+&lt;h2 id="nm---列出符号">nm - 列出符号&lt;/h2>
+&lt;p>&lt;a href="https://sourceware.org/binutils/docs/binutils/nm.html">nm (GNU Binary Utilities) (sourceware.org)&lt;/a>&lt;/p>
+- https://wangloo.github.io/posts/os/gnu_tools/ - @2019 Notepadium.</description></item><item><title>Makefile 一些技巧</title><link>https://wangloo.github.io/posts/c/makefile_tricks/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/makefile_tricks/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/makefile_tricks/ -&lt;h2 id="伪目标的依赖关系">伪目标的依赖关系&lt;/h2>
 &lt;p>Makefile 中的依赖关系指的是目标和依赖之间建立的关系，目标对应规则中的语句是否执行取决于依赖的状态。&lt;/p>
 &lt;p>最简单的依赖关系可以拿两个文件来举例:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-makefile" data-lang="makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># gcc语句执行当前仅当 main.c 新于 main.elf
@@ -73,68 +76,7 @@ gcc 语句是否执行取决于&lt;code>main.c&lt;/code> 和 &lt;code>main.elf&l
 &lt;p>md&lt;/p>
 &lt;p>mmcinfo&lt;/p>
 &lt;p>cp&lt;/p>
-- https://wangloo.github.io/posts/os/uboot/commands/ - @2019 Notepadium.</description></item><item><title>vim插件YCM: 安装和配置</title><link>https://wangloo.github.io/posts/vim/ycm-install/</link><pubDate>Sun, 27 Nov 2022 21:50:39 +0800</pubDate><guid>https://wangloo.github.io/posts/vim/ycm-install/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/vim/ycm-install/ -&lt;p>YCM 插件对 python, vim的版本均有要求&lt;/p>
-&lt;h2 id="下载">下载&lt;/h2>
-&lt;p>可以使用vim-plug等工具下载, 也可以下载源码然后拷贝到&lt;code>.vim&lt;/code>目录下&lt;/p>
-&lt;h2 id="编译">编译&lt;/h2>
-&lt;p>编译用到python3, 这里是问题最多的一步&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 编译并添加对C的提示支持&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>python3 install.py --clangd-completer --verbose
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Searching Python 3.8 libraries...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Downloading Clangd from https://github.com/ycm-core/llvm/releases/download/13.0.0/clangd-13.0.0-x86_64-unknown-linux-gnu.tar.bz2...
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用&lt;code>--clangd-completer&lt;/code>参数时, 脚本会去下载clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2文件, 比较慢. 也可以&lt;strong>提前根据提示的网站自己手动下载&lt;/strong>压缩包.&lt;/p>
-&lt;p>下载完成后, 放到本地目录下:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>:~/.vim/plugged/YouCompleteMe/third_party/ycmd/third_party/clangd/cache$ ls
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>还需对脚本&lt;code>YouCompleteMe/third_party/ycmd/build.py&lt;/code>进行修改, 防止重新下载.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">DownloadClangd&lt;/span>( printer ):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MakeCleanDirectory( CLANGD_OUTPUT_DIR )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">not&lt;/span> p&lt;span style="color:#ff79c6">.&lt;/span>exists( CLANGD_CACHE_DIR ):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> os&lt;span style="color:#ff79c6">.&lt;/span>makedirs( CLANGD_CACHE_DIR )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># 注释下面的语句&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># elif p.exists( file_name ) and not CheckFileIntegrity( file_name, check_sum ):&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># printer( &amp;#39;Cached Clangd archive does not match checksum. Removing...&amp;#39; )&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4"># os.remove( file_name )&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> p&lt;span style="color:#ff79c6">.&lt;/span>exists( file_name ):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printer( &lt;span style="color:#f1fa8c">f&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;Using cached Clangd: &lt;/span>&lt;span style="color:#f1fa8c">{&lt;/span> file_name &lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;&lt;/span> )
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="配置">配置&lt;/h2>
-&lt;p>YCM 配合一个配置文件&lt;code>.ycm_c_c++_conf.py&lt;/code>, YCM搜索的位置在vimrc中指定:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-vimrc" data-lang="vimrc">&lt;span style="display:flex;">&lt;span>Plug &lt;span style="color:#f1fa8c">&amp;#39;rdnetto/YCM-Generator&amp;#39;&lt;/span>, { &lt;span style="color:#f1fa8c">&amp;#39;branch&amp;#39;&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#39;stable&amp;#39;&lt;/span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> g:ycm_global_ycm_extra_conf = &lt;span style="color:#f1fa8c">&amp;#34;~/.ycm_c_c++_conf.py&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其内容的example:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-py" data-lang="py">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> os
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> ycm_core
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>flags &lt;span style="color:#ff79c6">=&lt;/span> [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-Wall&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-Wextra&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># &amp;#39;-Werror&amp;#39;, &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-Wno-long-long&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># &amp;#39;-Wno-variadic-macros&amp;#39;,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-fexceptions&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-ferror-limit=10000&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-DNDEBUG&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-std=c99&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-xc&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;-isystem/usr/include/&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>SOURCE_EXTENSIONS &lt;span style="color:#ff79c6">=&lt;/span> [ &lt;span style="color:#f1fa8c">&amp;#39;.cpp&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;.cxx&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;.cc&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;.c&amp;#39;&lt;/span>, ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">FlagsForFile&lt;/span>( filename, &lt;span style="color:#ff79c6">**&lt;/span>kwargs ):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;flags&amp;#39;&lt;/span>: flags,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f1fa8c">&amp;#39;do_cache&amp;#39;&lt;/span>: &lt;span style="color:#ff79c6">True&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>🔻 对于C/C++来说, YCM的使用最好配合&lt;em>compilation database&lt;/em> 来使用, 例如&lt;a href="https://github.com/nickdiego/compiledb">compiledb&lt;/a>. 否则, 可能头文件的path识别出问题(&lt;a href="https://stackoverflow.com/questions/64277317/youcompleteme-not-work-properly-for-c-headers.">stackoverflow&lt;/a>).&lt;/p>
-&lt;p>2022年2月13日我使用的compilation database生成工具从&lt;code>compiledb&lt;/code>换成了&lt;code>bear&lt;/code>, 因为&lt;code>bear&lt;/code>更好的支持递归, 即有&lt;code>make -C&lt;/code>的情况.&lt;/p>
-&lt;p>需要的compilation database生成工具介绍: &lt;a href="https://sarcasm.github.io/notes/dev/compilation-database.html">Compilation database — Sarcasm notebook&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/vim/ycm-install/ - @2019 Notepadium.</description></item><item><title>常用的 shell 命令</title><link>https://wangloo.github.io/posts/shell/shell-commands/</link><pubDate>Sun, 27 Nov 2022 14:45:58 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-commands/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/shell/shell-commands/ -&lt;blockquote>
+- https://wangloo.github.io/posts/os/uboot/commands/ - @2019 Notepadium.</description></item><item><title>常用的 shell 命令</title><link>https://wangloo.github.io/posts/shell/shell-commands/</link><pubDate>Sun, 27 Nov 2022 14:45:58 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-commands/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/shell/shell-commands/ -&lt;blockquote>
 &lt;p>我使用的 shell 是 Bash&lt;/p>
 &lt;/blockquote>
 &lt;h3 id="mount-相关">mount 相关&lt;/h3>
