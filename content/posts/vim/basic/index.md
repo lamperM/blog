@@ -36,6 +36,17 @@ Object
 
 `:marks`: display all bookmarks
 
+## tag
+
+目前用的生成tags文件工具是 `ctag`, 感觉还可以。
+
+```bashrc
+ta <tag>  " 跳转到一个tag，如果有多个应该是随机一个
+CTRL-]    " 快捷键跳转到当前光标下的tag
+ts <tag>  " 多个tag时，可以选择跳转到哪一个
+
+help tag  " 查看更多帮助
+```
 
 
 ## 缩进: indent
