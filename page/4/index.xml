@@ -1,4 +1,65 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>ELF 文件的链接与加载</title><link>https://wangloo.github.io/posts/os/elf-format/</link><pubDate>Mon, 20 Jun 2022 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os/elf-format/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/elf-format/ -&lt;h2 id="elf-is-a-file-format">&lt;code>ELF&lt;/code> is a file format&lt;/h2>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>动态链接</title><link>https://wangloo.github.io/posts/os/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os/dynamic-link/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/dynamic-link/ -&lt;h2 id="静态链接带来的问题">静态链接带来的问题&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>像是&lt;code>libc&lt;/code>这种几乎每个程序都要用到的库, 如果是静态的, 那么不仅意外着每个程序的
+可执行文件很大, 浪费磁盘空间. 并且当程序加载到内存时, 可能许多程序都会用到&lt;code>printf&lt;/code>
+, 使得内存中会存在好多份的&lt;code>printf&lt;/code>源码.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>维护和更新难. 一旦静态链接的其中一个目标文件更新, 所有的可执行程序都要重新链接.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>不满足局部性原理. 上面提到, 内存中同时存在多份的&lt;code>printf&lt;/code>源码会破坏&lt;em>局部性原理&lt;/em>的.
+显然如果所有的程序共享一份&lt;code>printf&lt;/code>源码的想法更好. 即动态加载.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>可移植性差. 静态链接, 只要有一个依赖目标文件的实现不同, 软件厂商就得专门发布一个
+版本. 而动态链接则信赖客户电脑上的&lt;em>动态库&lt;/em>, 相当于一个中间层.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p> &lt;/p>
+&lt;h2 id="动态链接的过程">动态链接的过程&lt;/h2>
+&lt;p>对比静态链接使用&lt;code>ld&lt;/code>链接器在编译后即执行链接, 动态链接则是将链接过程推迟到&lt;strong>运行时&lt;/strong>,
+即装载到内存时.&lt;/p>
+&lt;p>这样, 链接器在链接产生可执行文件时就有两种做法:&lt;/p>
+&lt;ul>
+&lt;li>对于静态符号, 按照静态链接的规则进行&lt;em>地址引用重定位&lt;/em>&lt;/li>
+&lt;li>对于动态符号, 链接器则仅标记其为动态链接中的符号, 不进行处理. 而是等到装载时由
+专门的&lt;em>动态链接器&lt;/em>来完成动态符号的链接工作.&lt;/li>
+&lt;/ul>
+&lt;p>⁉️ 链接器如何确定一个符号是静态的or动态的?&lt;/p>
+&lt;p>在动态共享对象(&lt;em>.so)中保存了完整的&lt;/em>动态符号表*, 表中存在的符号即为动态的, 否则为静态.&lt;/p>
+&lt;blockquote>
+&lt;p>Linux的C语言运行库&lt;code>glib&lt;/code>的动态链接版本叫&lt;code>libc.so&lt;/code>. 它在外存上只保存一份, 所有的程序
+都可以在运行时使用它. 所以千万不要删掉它.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>动态链接有一定的性能损失, 因为每次运行程序时都要重新链接, 并不像静态链接是一劳永逸的.
+也有例如&lt;code>延迟绑定&lt;/code>对性能进行优化的方法, 大概仅有5%的损耗, 与带来的便利相比可以忽略不计.&lt;/p>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="地址无关代码-pic">地址无关代码 PIC&lt;/h2>
+&lt;p>GCC生成动态库时需要添加参数&lt;code>-fPIC&lt;/code>, 含义就是生成地址无关码&lt;/p>
+&lt;p>地址无关码的含义是代码中&lt;strong>不包含任何的绝对地址引用&lt;/strong>, 全都是&lt;strong>相对地址&lt;/strong>.&lt;/p>
+&lt;ul>
+&lt;li>对于&lt;strong>模块内&lt;/strong>的跳转/数据引用, 使用相对的跳转/加载指令. 例如ARM指令集中的&lt;code>B&lt;/code>, &lt;code>ADR&lt;/code>, 经过汇编器之后, 目标的地址都会转为相对于该指令(PC)的偏移.&lt;/li>
+&lt;li>对于&lt;strong>模块间&lt;/strong>的跳转/数据引用, 借用&lt;em>GOT表&lt;/em>来间接实现地址无关.&lt;/li>
+&lt;/ul>
+&lt;p>而如果该动态库中全部使用相对地址, 那么加载时也就不需要进行重定位, 即所有的程序都可以
+共享这些地址无关代码.&lt;/p>
+&lt;blockquote>
+&lt;p>上面说PIC的动态库不需要重定位其实是错误的, 只不过它的重定位过程不需要修改代码段,
+而是设置了一个放置在数据段的&lt;em>GOT&lt;/em>表来实现代码段部分的地址无关特性.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>现在貌似GCC ARM版本在编译动态库时强制使用-fPIC选项, 否则会报错. 对此我不是
+非常确定!&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>一般来说, 不将主程序编译为地址无关码. 因为主程序不需要共享, 而且地址无关码的调用
+需要两个指令: &lt;code>计算地址&lt;/code> + &lt;code>跳转&lt;/code>. 多了一步根据偏移得到绝对地址.&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/os/dynamic-link/ - @2019 Notepadium.</description></item><item><title>ELF 文件的链接与加载</title><link>https://wangloo.github.io/posts/os/elf-format/</link><pubDate>Mon, 20 Jun 2022 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os/elf-format/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/elf-format/ -&lt;h2 id="elf-is-a-file-format">&lt;code>ELF&lt;/code> is a file format&lt;/h2>
 &lt;p>Files in &lt;code>ELF&lt;/code> format includes:&lt;/p>
 &lt;table>
 &lt;thead>
@@ -883,7 +944,14 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;code>mA&lt;/code>: create global bookmark &lt;code>A&lt;/code>.&lt;br>
 &lt;code>`a&lt;/code>: jump to bookmark &lt;code>a&lt;/code>.&lt;/p>
 &lt;p>&lt;code>:marks&lt;/code>: display all bookmarks&lt;/p>
-&lt;h2 id="缩进-indent">缩进: indent&lt;/h2>
+&lt;h2 id="tag">tag&lt;/h2>
+&lt;p>目前用的生成tags文件工具是 &lt;code>ctag&lt;/code>, 感觉还可以。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bashrc" data-lang="bashrc">&lt;span style="display:flex;">&lt;span>ta &amp;lt;tag&amp;gt; &lt;span style="color:#f1fa8c">&amp;#34; 跳转到一个tag，如果有多个应该是随机一个
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">CTRL-] &amp;#34;&lt;/span> 快捷键跳转到当前光标下的tag
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ts &amp;lt;tag&amp;gt; &lt;span style="color:#f1fa8c">&amp;#34; 多个tag时，可以选择跳转到哪一个
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">help tag &amp;#34;&lt;/span> 查看更多帮助
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="缩进-indent">缩进: indent&lt;/h2>
 &lt;ul>
 &lt;li>
 &lt;p>&lt;code>&amp;gt;&lt;/code>: increase indent , &lt;code>&amp;lt;&lt;/code>: decrease indent ,&lt;code>=&lt;/code>: auto indent&lt;/p>
@@ -1103,26 +1171,17 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ... })
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>所有slide左对齐: &lt;a href="https://github.com/hakimel/reveal.js/issues/1897">https://github.com/hakimel/reveal.js/issues/1897&lt;/a>&lt;/p>
 &lt;p>用markdown写的方式下使某一幻灯片左对齐: &lt;a href="https://github.com/hakimel/reveal.js/issues/890#issuecomment-129735291">https://github.com/hakimel/reveal.js/issues/890#issuecomment-129735291&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/revealjs/ - @2019 Notepadium.</description></item><item><title>A64 指令集</title><link>https://wangloo.github.io/posts/armv8/a64_isa/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64_isa/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/a64_isa/ -&lt;h2 id="loadstore-指令">Load/Store 指令&lt;/h2>
-&lt;h3 id="1-basic-loadstore">#1 Basic Load/Store&lt;/h3>
-&lt;h4 id="addressing-mode">Addressing mode&lt;/h4>
-&lt;ol>
-&lt;li>Base register - &lt;code>w0=[x1]&lt;/code>&lt;/li>
-&lt;/ol>
+- https://wangloo.github.io/posts/revealjs/ - @2019 Notepadium.</description></item><item><title>ARM64: A64指令集</title><link>https://wangloo.github.io/posts/armv8/a64/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/a64/ -&lt;h1 id="loadstore-指令">Load/Store 指令&lt;/h1>
+&lt;h2 id="寻址模式">寻址模式&lt;/h2>
+&lt;p>Base register - &lt;code>w0=[x1]&lt;/code>&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>ldr w0, [x1]
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
-&lt;li>Offset addressing mode - &lt;code>w0=[x1+12]&lt;/code>&lt;/li>
-&lt;/ol>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Offset addressing mode - &lt;code>w0=[x1+12]&lt;/code>&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>ldr w0, [x1, &lt;span style="color:#bd93f9">12&lt;/span>]
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
-&lt;li>Pre-index addressing mode - &lt;code>x1+=12; w0=[x1]&lt;/code>&lt;/li>
-&lt;/ol>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Pre-index addressing mode - &lt;code>x1+=12; w0=[x1]&lt;/code>&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>ldr w0, [x1, &lt;span style="color:#bd93f9">12&lt;/span>]&lt;span style="color:#ff79c6">!&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
-&lt;li>Post-index addressing mode - &lt;code>w0=[x1]; x1+=12&lt;/code>&lt;/li>
-&lt;/ol>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Post-index addressing mode - &lt;code>w0=[x1]; x1+=12&lt;/code>&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>ldr w0, [x1], &lt;span style="color:#bd93f9">12&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="loadstore-instruction-example">Load/store instruction example&lt;/h4>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更多示例">更多示例&lt;/h2>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// load a byte from x1
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ldrb w0, [x1]
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -1140,9 +1199,9 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// LDR伪指令. load 32-bit immediate from literal pool(addr: 0x12345678)
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ldr w0, &lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">0x12345678&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="数据处理指令">数据处理指令&lt;/h2>
-&lt;h3 id="bitfield-操作指令">Bitfield 操作指令&lt;/h3>
-&lt;p>Bitfield指令常用于设置/提取寄存器的某个字段.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="数据处理指令">数据处理指令&lt;/h1>
+&lt;h2 id="bitfield-操作指令">Bitfield 操作指令&lt;/h2>
+&lt;p>Bitfield 指令常用于设置/提取寄存器的某个字段.&lt;/p>
 &lt;pre tabindex="0">&lt;code class="language-assembly" data-lang="assembly">;BFI(Bit Field Insert)
 BFI w0, w0, #9, #6 ;w0[0, 5] = w0[9, 14]
 ;BFC(Bit Field Clear)
@@ -1150,18 +1209,40 @@ BFC w0, #4, #2 ;w0[4, 5] = 0
 ;UBFX(Unsigned Bit Field Extract)
 UBFX w1, w0, #18, #7 ;w1=w0[18, 24]
 &lt;/code>&lt;/pre>&lt;blockquote>
-&lt;p>与UBFX相对的是SBFX, 若提取后的字段高位为1, 会进行符号扩展&lt;/p>
+&lt;p>与 UBFX 相对的是 SBFX, 若提取后的字段高位为 1, 会进行符号扩展&lt;/p>
 &lt;/blockquote>
-&lt;p> &lt;/p>
-&lt;h2 id="分支控制指令">分支/控制指令&lt;/h2>
-&lt;h2 id="其他指令">其他指令&lt;/h2>
-&lt;h3 id="1-adradrp-指令">#1 ADR/ADRP 指令:&lt;/h3>
+&lt;h1 id="分支控制指令">分支/控制指令&lt;/h1>
+&lt;h1 id="获得地址的相关指令">获得地址的相关指令&lt;/h1>
+&lt;p>写汇编中，常常会获取一个变量或者函数(label)的地址，A64 中一共有几种获取地址的指令，
+包括&lt;code>adr&lt;/code>, &lt;code>adrp&lt;/code>, &lt;code>adrl&lt;/code>, &lt;code>ldr&lt;/code>等，下面我就对这些指令进行介绍。&lt;/p>
+&lt;h2 id="adr">ADR&lt;/h2>
+&lt;p>首先是 adr，它的作用是&lt;strong>加载 PC 相对地址&lt;/strong>，adr 指令的格式是:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-asm" data-lang="asm">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">adr&lt;/span> reg, offset
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>输入一个 offset，输出 PC+offset 的值，但我们常用的是 offset 填某一个 label，例如函数
+或者变量，此时 reg 中存的就是此函数的地址了。例如，&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-asm" data-lang="asm">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">adr&lt;/span> x0, a_func &lt;span style="color:#6272a4"># x0 = addr(a_func)
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>adr 指令中留给 offset 的位数是 21，所以最大的寻址范围为+-1MB。&lt;/p>
+&lt;h2 id="adrp">ADRP&lt;/h2>
+&lt;p>adrp 的指令格式与 adr 相同，不同点是会将计算的结果&lt;strong>向下对齐到 4k&lt;/strong>，但这样直接计算的
+地址结果往往是不正确的，因为少了页内的偏移。需要一个额外的 add 指令进行纠正，一般来说
+是组合起来用的：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-asm" data-lang="asm">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">adrp&lt;/span> x0, a_func
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">add&lt;/span> x0, x0, :lo12:a_func
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>显然 adrp 这样做是为了更大的寻址空间，能到+-4GB。&lt;/p>
+&lt;h2 id="ldr-伪指令">LDR 伪指令&lt;/h2>
+&lt;p>如果 ldr 指令的参数是&lt;code>=&amp;lt;label&amp;gt;&lt;/code>，那就代表伪指令，作用是加载 label 的绝对地址，即
+VMA。好处是可以获取到一个位于任意 label 的地址，不受寻址空间的约束。&lt;/p>
 &lt;blockquote>
-&lt;p>既然有了LDR伪指令, 为什么需要ADR指令呢?&lt;/p>
+&lt;p>注意&lt;code>label&lt;/code>是一个 offset, &lt;code>=label&lt;/code>是一个绝对地址。&lt;/p>
 &lt;/blockquote>
-&lt;p> &lt;/p>
-&lt;h2 id="有趣特性常见误区">有趣特性/常见误区&lt;/h2>
-&lt;h3 id="-before-the-immediate-value">&amp;lsquo;#&amp;rsquo; before the immediate value&lt;/h3>
+&lt;blockquote>
+&lt;p>当目前指令执行地址不等于它们的虚拟地址时，比如当 MMU 未开始时通过 uboot 加载到内存
+中直接运行的那段程序，此时用&lt;code>adr/adrp&lt;/code>这些加载 pc 相对地址的指令就会正确的返回
+label 的实际运行地址；而&lt;code>ldr&lt;/code>则是永远返回其编译链接后绑定的虚拟地址。这种情况下
+如果寻址范围允许，用&lt;code>adr*&lt;/code>指令更方便。&lt;/p>
+&lt;/blockquote>
+&lt;h1 id="有趣特性常见误区">有趣特性/常见误区&lt;/h1>
+&lt;h2 id="-before-the-immediate-value">&amp;lsquo;#&amp;rsquo; before the immediate value&lt;/h2>
 &lt;ul>
 &lt;li>A64 assembly language does not require the &lt;code>#&lt;/code> to introduce constant immediate value. But the assembler can also indentify the &lt;code>#&lt;/code>.&lt;/li>
 &lt;li>In armv7, there must be a &lt;code>#&lt;/code> or &lt;code>$&lt;/code> before other than using &lt;code>.syntax unified&lt;/code>. &lt;a href="https://sourceware.org/binutils/docs/as/ARM_002dInstruction_002dSet.html#ARM_002dInstruction_002dSet">About syntax unified&lt;/a>.&lt;/li>
@@ -1171,38 +1252,4 @@ UBFX w1, w0, #18, #7 ;w1=w0[18, 24]
 &lt;p>Use &lt;code>.syntax unified&lt;/code> in v7 code, and never use &lt;code>#&lt;/code> on any literal on either v7 or v8.
 Unified syntax is newer and better, and those &lt;code>#&lt;/code> and &lt;code>$&lt;/code> signs are just more code noise.&lt;/p>
 &lt;/blockquote>
-- https://wangloo.github.io/posts/armv8/a64_isa/ - @2019 Notepadium.</description></item><item><title>ARMv8-A 寄存器</title><link>https://wangloo.github.io/posts/armv8/register/</link><pubDate>Sat, 07 May 2022 20:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/register/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/register/ -&lt;h1 id="寄存器分类">寄存器分类&lt;/h1>
-&lt;h2 id="通用寄存器">通用寄存器&lt;/h2>
-&lt;ol>
-&lt;li>&lt;code>x0-x7&lt;/code> 参数寄存器: Restore function parameters and return vaule.&lt;/li>
-&lt;li>&lt;code>x9-x15&lt;/code> caller-saved 临时寄存器: callee 默认可以直接使用来保存临时变量, 不需要保存和恢复. 如果 caller 在里面存储了非临时信息, 那么在函数调用之前应当由 caller 负责保存.&lt;/li>
-&lt;li>&lt;code>x19-x28&lt;/code> callee-saved 寄存器: callee 应该避免使用. 如果必须要使用，那么在返回前必须恢复.&lt;/li>
-&lt;li>special registers:
-&lt;ul>
-&lt;li>&lt;code>x8&lt;/code> restore indirect result. Commonly used when returning a struct.&lt;/li>
-&lt;li>&lt;code>x18&lt;/code> platform reserved register.&lt;/li>
-&lt;li>&lt;code>x29&lt;/code> frame pointer register(FP).&lt;/li>
-&lt;li>&lt;code>x30&lt;/code> link register(LR).&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;blockquote>
-&lt;p>All general-purpose register &lt;code>xN&lt;/code> is 64-bit width. They all have corresponding &lt;code>wN&lt;/code> register using the lower 32-bit of &lt;code>xN&lt;/code>. And write to &lt;code>wN&lt;/code> will clear the upper 32bit of &lt;code>xN&lt;/code>.&lt;/p>
-&lt;/blockquote>
-&lt;blockquote>
-&lt;p>💫 The different between &lt;strong>Caller-saved&lt;/strong> and &lt;strong>callee-saved&lt;/strong> registers&lt;/p>
-&lt;ul>
-&lt;li>Caller-saved 寄存器又称为&lt;em>临时寄存器&lt;/em>, 常用来存放临时变量. 例如A() 调用 B(), 那么 B() 可以直接使用 caller-saved 寄存器, 也就是说 A() 在调用 B() 之前不会在这些寄存器里保存重要信息(编译器实现), 不能保证调用 B() 前后其值不变. 如果必须要保证, 那么保存和恢复(利用栈)这件事是 A() 来做.&lt;/li>
-&lt;li>Callee-saved 寄存器则相反, 通常持续使用的值会保存到这些寄存器中. 还是拿 A() call B() 来举例. 如果 A() 中的一个变量需要在调用 B() 前后持续有效, 那么它应当保存到 callee-saved 寄存器中. 而且 B() 正常来说不应该动这些寄存器, 如果非得动(例如寄存器不够用), 那么 B() 需要在使用他们的前后进行保存和恢复(利用栈).&lt;/li>
-&lt;/ul>
-&lt;/blockquote>
-&lt;h2 id="每个el的特殊寄存器">每个EL的特殊寄存器&lt;/h2>
-&lt;ol>
-&lt;li>&lt;code>sp_el0/1/2/3&lt;/code> stack pointer register of each EL.&lt;/li>
-&lt;li>&lt;code>elr_el1/2/3&lt;/code> exception link register of each EL except EL0.&lt;/li>
-&lt;li>&lt;code>spsr_el1/2/3&lt;/code> save program status register of each EL except EL0.&lt;/li>
-&lt;/ol>
-&lt;blockquote>
-&lt;p>&lt;code>sp&lt;/code> is an alias of &lt;code>sp_el0&lt;/code>. Do NOT treat &lt;code>sp&lt;/code> as general-purpose register.&lt;/p>
-&lt;/blockquote>
-- https://wangloo.github.io/posts/armv8/register/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/armv8/a64/ - @2019 Notepadium.</description></item></channel></rss>

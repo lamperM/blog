@@ -1,4 +1,162 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/os/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/gnu_tools/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/gnu_tools/ -&lt;p>..&lt;/p>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>git 宝典</title><link>https://wangloo.github.io/posts/git/</link><pubDate>Tue, 13 Dec 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/git/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/git/ -&lt;h2 id="合并操作-git-merge">合并操作: git merge&lt;/h2>
+&lt;p>merge 有两种方式:&lt;/p>
+&lt;ul>
+&lt;li>fast-forward&lt;/li>
+&lt;li>three-way merger&lt;/li>
+&lt;/ul>
+&lt;h3 id="fast-forward-merge">Fast-forward Merge&lt;/h3>
+&lt;p>假设合并的双方为&lt;code>main&lt;/code>为&lt;code>dev&lt;/code>, 如果其中一个是另一个的祖先, 此时直接移动 HEAD 到前方即可, 称为 fast-forward.&lt;/p>
+&lt;p>例如, 当前在 main, 执行&lt;code>git merge dev&lt;/code>的过程如下:&lt;/p>
+&lt;pre tabindex="0">&lt;code> main main
+| |
+M1 --- M2 ===&amp;gt; M1 --- M2 -- F1
+\ |
+\--- F1 dev
+|
+dev
+&lt;/code>&lt;/pre>&lt;h3 id="three-way-merge">three-way Merge&lt;/h3>
+&lt;p>合并的两者不构成直接的祖先-孩子关系, 产生了分叉. 此时进行合并就需要有个基准(参考), 对于两边相较于基准的每个 diff 来说:&lt;/p>
+&lt;ul>
+&lt;li>合并的两者都在基准上进行了改动, 且改动不一致, &lt;strong>标记为冲突&lt;/strong>&lt;/li>
+&lt;li>如果该 diff&lt;strong>仅在其中一方&lt;/strong>有改动, 那么就保留此次改动&lt;/li>
+&lt;/ul>
+&lt;p>合并时使用的参考就是&lt;strong>两个合并 commit 的最近公共祖先&lt;/strong>, 这种借助三个 commit(main, dev, 公共祖先)才能完成的合并操作就叫做 three-way merge.&lt;/p>
+&lt;p>例如, 当前在 main, 执行&lt;code>git merge dev&lt;/code>的过程如下:&lt;/p>
+&lt;pre tabindex="0">&lt;code> main main
+| |
+M1 --- M2 --- M3 ===&amp;gt; M1 --- M2 --- M3 --- M4
+\ \ /
+\--- F1 \--- F1 ---
+| |
+dev dev
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>three-way 的合并方式如果发生了冲突, 会产生一次额外的 merge commit, 下面介绍它&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="什么情况下-merge-commit-没有任何-diff">什么情况下 merge commit 没有任何 diff?&lt;/h3>
+&lt;p>按照上面的例子, three-way merge 发生冲突后会产生一次额外的 merge commit, 即 M4. 如果这是去查看 M4 相较前一次 commit 的 diff, 有时是没有的, 有时又会产生 diff.&lt;/p>
+&lt;p>如果在解决冲突的过程中, 我们仅仅是接收了 M2,M3 或者 F1 的修改, 那么此时 merge commit 就不会有 diff.&lt;/p>
+&lt;p>然而, 在解决冲突时, 我们也可以不采用来自两条路径的修改, 做一次新的修改(可以说, 同时接收两条 diff 就是这种情况), 此时查看 merge commit 的 diff 就是有内容的.&lt;/p>
+&lt;h2 id="变基-rebase">变基: rebase&lt;/h2>
+&lt;p>rebase 命令需要指定一个&lt;strong>基准分支&lt;/strong>，&lt;code>git rebase &amp;lt;base-branch&amp;gt;&lt;/code>，
+rebase 会将当前所处分支整体移动到&lt;code>base-branch&lt;/code>之后，即改变了当前分支的历史。&lt;/p>
+&lt;pre tabindex="0">&lt;code>// before rebase
+[A]---[B]---[C]---[D]&amp;lt;-dev
+\
+\--[E]&amp;lt;-master
+// after rebase
+[A]---[E]---[B]---[C]---[D]&amp;lt;-dev
+|
+master
+&lt;/code>&lt;/pre>&lt;h3 id="交互式-rebase">交互式 rebase&lt;/h3>
+&lt;p>交互式 rebase 是一种更高级的用法。基础的 rebase 上面说了是将当前分支的所有提交移动到 base-branch 之后。而交互式 rebase 提供一个方法，在移动之前&amp;quot;挑选&amp;quot;当前分支的 commit。&lt;/p>
+&lt;p>实际工程中，通常来说，我们将开发分支移动到 master 之前，可以经过交互 rebase 来整理开发分支中混乱的 commit 记录。&lt;/p>
+&lt;p>具体的使用方法是，为&lt;code>git rebase&lt;/code>指令提供&lt;code>-i&lt;/code>参数:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>git checkout dev
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git rebase -i master
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这个命令会打开一个文本编辑器，列出当前 feature 分支的所有提交:&lt;/p>
+&lt;pre tabindex="0">&lt;code>pick 33d5b7a Message for commit #1
+pick 9480b3d Message for commit #2
+pick 5c67e61 Message for commit #3
+&lt;/code>&lt;/pre>&lt;p>列出的内容就能完整的表示 dev 分支的所有提交，按照顺序。而我们不仅可以任意的重排这些 commit，而且修改&lt;code>pick&lt;/code>关键字就能对这些 commit 做改动。举个例子，我们可能发现 commit2 只是对于 commit1 做了一个很小的改动，它们完全可以合并为一个 commit，那么直接 commit2 的&lt;code>pick&lt;/code>修改为&lt;code>fixup&lt;/code>，整个内容变为:&lt;/p>
+&lt;pre tabindex="0">&lt;code>pick 33d5b7a Message for commit #1
+fixup 9480b3d Message for commit #2
+pick 5c67e61 Message for commit #3
+&lt;/code>&lt;/pre>&lt;p>当你保存并退出这个文件时，改动就会生效，不仅将 dev 整体移动到了 master 后，并且合并了前两个 commit。&lt;/p>
+&lt;pre tabindex="0">&lt;code>// after rebase interactive
+[A]---[E]---[B]---[D]&amp;lt;-dev
+|
+master
+&lt;/code>&lt;/pre>&lt;h3 id="rebase-整理多个-commit">rebase 整理多个 commit&lt;/h3>
+&lt;p>如上面交互式 rebase 所述，当你开发完 dev 分支，需要&lt;code>merge&lt;/code>到 main 分支时，可以先利用交互式 rebase&amp;quot;整理&amp;quot;一下 dev 分支的 commit。&lt;/p>
+&lt;p>这里其实要用到一个小 trick，上面说过 rebase 命令需要指定一个 base-branch，实际上是一个 base-commit，这种场景下我们不是要合并其他分支，所以&lt;strong>base-branch&lt;/strong>可以选择当前 dev 分支的前面某一次 commit。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>git checkout dev
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git rebase -i HEAD~3
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>以上指令实现的功能就是给你整理最后 3 次提交的机会，但&lt;strong>不会合并其他分支的东西&lt;/strong>。&lt;/p>
+&lt;p>那如果我想整理整个 dev 分支呢？是向上找到 dev 的第一次 commit 吗？ Git 提供了一个方便找到 dev 分叉出来的那次 commit，将其输出传递给&lt;code>git rebase -i&lt;/code>即可实现整理整个 dev 的所有 commit。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>git merger-base dev main
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="git-merege-vs-git-rebase">&lt;code>git merege&lt;/code> vs &lt;code>git rebase&lt;/code>&lt;/h2>
+&lt;h3 id="准则">准则&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>如果分支已经被提交到远程仓库，就不能再改变他的历史了，即不能使用 rebase。
+git 也会阻止你这么做，因为分支的历史已经被修改，除非 force-push。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>你能进行 rebase 的分支是本地的”私人分支”，私人表示为: 只有你自己在使用，别人不会基于你的分支做东西。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="dev-同步主分支的改动-rebase">dev 同步主分支的改动: rebase&lt;/h3>
+&lt;p>假设我们正在本地的 dev 分支开发一个特性，此时你的同事在 main(也可以是其他的远程分支)上提交了一个重要的 commit，以至于你需要它来继续你的开发任务。&lt;/p>
+&lt;p>这种情况我们使用 rebase 和 merge 都能完成目标，但是 rebase 是更好的选择。&lt;/p>
+&lt;ul>
+&lt;li>首先满足 rebase 的使用条件，我们仅仅是破坏了本地 dev 分支的历史，并没有动到其他的远程分支，所以就不存在干涉别人&lt;/li>
+&lt;li>其次，在 dev 上 merge 其他分支会产生一次不必要的&lt;em>merge commit&lt;/em>，其不代表任何实际意义，没必要存在的&lt;/li>
+&lt;/ul>
+&lt;h3 id="合并-dev-到主分支-merge">合并 dev 到主分支: merge&lt;/h3>
+&lt;p>很简单的逻辑，主分支或者其他合作开发的分支并不是你一个人在用，并且需要最后同步到远程仓库，不符合使用 rebase 的准则&lt;/p>
+&lt;h1 id="git-log">git log&lt;/h1>
+&lt;h2 id="参数">参数:&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Parameter&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>non-param&lt;/td>
+&lt;td>列出所有历史提交的SHA、作者、提交日期和commit&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-p&lt;/td>
+&lt;td>按补丁显示每次更新，比&amp;ndash;stat更全&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&amp;ndash;stat&lt;/td>
+&lt;td>显示每次更新修改文件的名称及添加（删除）的行数。比&amp;ndash;name-only更全&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&amp;ndash;name-only&lt;/td>
+&lt;td>显示文件清单&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&amp;ndash;name-status&lt;/td>
+&lt;td>显示文件清单及改动方式(新增、删除、修改)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&amp;ndash;oneline&lt;/td>
+&lt;td>只显示前6位SHA值和commit&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-n&lt;/td>
+&lt;td>显示前n条log&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&amp;lt;branch&amp;gt;&lt;/td>
+&lt;td>查看某个分支的历史提交。&lt;strong>该参数只能log命令之后&lt;/strong>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&amp;lt;branch1&amp;gt;..&amp;lt;branch2&amp;gt;&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>参考网站：https://www.cnblogs.com/bellkosmos/p/5923439.html&lt;/p>
+&lt;h2 id="example-1-彩色显示重要信息">Example 1: 彩色显示重要信息&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>git log --graph --pretty&lt;span style="color:#ff79c6">=&lt;/span>format:&lt;span style="color:#f1fa8c">&amp;#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&amp;lt;%an&amp;gt;%Creset&amp;#39;&lt;/span> --abbrev-commit
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="gitlog_1.png" alt="">&lt;/p>
+&lt;h2 id="example-2-查看本地分支和对应远程分支的commit差异">Example 2: 查看本地分支和对应远程分支的commit差异&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>git log --oneline main..origin/main
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/git/ - @2019 Notepadium.</description></item><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/os/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/gnu_tools/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/gnu_tools/ -&lt;p>..&lt;/p>
 &lt;h2 id="nm---列出符号">nm - 列出符号&lt;/h2>
 &lt;p>&lt;a href="https://sourceware.org/binutils/docs/binutils/nm.html">nm (GNU Binary Utilities) (sourceware.org)&lt;/a>&lt;/p>
 - https://wangloo.github.io/posts/os/gnu_tools/ - @2019 Notepadium.</description></item><item><title>Makefile 一些技巧</title><link>https://wangloo.github.io/posts/c/makefile_tricks/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/makefile_tricks/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/makefile_tricks/ -&lt;h2 id="伪目标的依赖关系">伪目标的依赖关系&lt;/h2>
@@ -297,33 +455,4 @@ start addr of `a` start addr of `a`
 &lt;p>Easily to do mathematical computations “because of the 1:1 relationship between address offset and byte number (offset 0 is byte 0), multiple precision math routines are correspondingly easy to write.”&lt;/p>
 &lt;/li>
 &lt;/ol>
-- https://wangloo.github.io/posts/os/big-little-endian/ - @2019 Notepadium.</description></item><item><title>操作系统——上下文切换</title><link>https://wangloo.github.io/posts/os/context/</link><pubDate>Mon, 14 Nov 2022 22:13:06 +0800</pubDate><guid>https://wangloo.github.io/posts/os/context/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/context/ -&lt;p>本文基于&lt;strong>AArch64&lt;/strong>执行环境, 介绍现代操作系统中上下文切换的相关内容.&lt;/p>
-&lt;h2 id="什么是上下文">什么是上下文？&lt;/h2>
-&lt;p>上下文又称“现场”,&lt;/p>
-&lt;h2 id="为什么需要上下文切换">为什么需要上下文切换?&lt;/h2>
-&lt;p>(TODO: 为什么说线程是调度的单位?)&lt;/p>
-&lt;p>现代操作系统中同时存在着成千上百个线程, 但是一个CPU同一时刻只能运行一个线程, 他们是轮流的占用CPU, 也叫并发执行. (TODO: 如何查看线程切换的间隔?) 线程高频率的切换, 操作系统是如何保证切换到下一个执行的线程时, 它能够继续上次的工作呢?&lt;/p>
-&lt;h3 id="什么是上下文-1">什么是上下文?&lt;/h3>
-&lt;p>我们正在看一本书的时候如果被其他的事情打断, 返回时为了能够从上次被打断的位置继续读, 就要在被打断的时候记下来当前是读到了哪个第几页的第几行.&lt;/p>
-&lt;p>操作系统对待线程也是如此, 需要保存的用于恢复线程执行的信息就称为线程的上下文.&lt;/p>
-&lt;p>那么对于线程来说需要记下的内容有什么呢? 寄存器和栈即可. 拿AArch64架构来距离, 线程的上下文就是:&lt;/p>
-&lt;ol>
-&lt;li>通用寄存器&lt;code>x0-x29&lt;/code>: 函数调用的参数, 某些计算过程的中间值, 都要用到这些寄存器. &lt;strong>线程的执行流可能在任何时候被打断&lt;/strong>, 当然这些内容也不能丢.&lt;/li>
-&lt;li>通用寄存器&lt;code>lr(x30)&lt;/code>: &lt;code>lr&lt;/code> 保存着返回地址, 即当前函数结束之后该返回到哪执行.&lt;/li>
-&lt;li>栈顶指针 &lt;code>sp&lt;/code>: 栈的重要性无需多言. 但是需要说明的是我们保存栈的方式&lt;strong>并非将栈中的所有内容保存, 而是保存栈的位置&lt;/strong>即可. 因为操作系统有别的机制(TODO), 能够保证即便线程不在执行, 属于该线程的栈也不会被破坏.&lt;/li>
-&lt;li>程序计数器 &lt;code>pc&lt;/code>: 被打断的线程如果再次执行, 从哪里执行呢? 显然是被打断指令的下一条(或者重新执行当前). 这个指令的地址当然也需要被保存好.&lt;/li>
-&lt;li>PSTATE: 想一下, 有了以上的内容就能够保证线程完整的恢复之前的环境吗? 其他的例如中断是开还是关, 有哪些标志位(NZCV)被设置了. 这些信息在AArch64中是保存在PSTATE的各个字段中.&lt;/li>
-&lt;/ol>
-&lt;p>如果我们能够有一个适当的逻辑, 在线程切换出去的时候将上下文保存起来, 然后恢复新线程的上下文, 是不是线程切换这件事就能做到了. 如何组织这个保存和恢复的过程在下面会介绍到.&lt;/p>
-&lt;h2 id="linux-如何处理上下文切换">Linux 如何处理上下文切换&lt;/h2>
-&lt;h2 id="另一种处理上下文切换的思路">另一种处理上下文切换的思路&lt;/h2>
-&lt;h2 id="协程的上下文">协程的上下文&lt;/h2>
-&lt;p>协程是用户级别的线程,&lt;/p>
-&lt;ul>
-&lt;li>协程之间的切换不进入内核&lt;/li>
-&lt;li>切换协程只能是某个协程&lt;strong>主动放弃控制权&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>我们在这里讨论一下协程切换时需要保存的上下文是否与线程有所不同.&lt;/p>
-&lt;p>首先, PC一定属于, 这个毋庸置疑. 其次是栈顶指针sp, &lt;strong>每个协程都有单独的栈&lt;/strong>, 如果不保存栈的位置, 那么协程内部定义局部变量就没法访问了(局部变量的访问指令都是以sp为base的偏移来做的).&lt;/p>
-&lt;p>另外, 关于通用寄存器, 由于协程的切换需要主动调用某个函数(通常叫做&lt;code>yield()&lt;/code>), 在函数的最后将PC设置为新协程的上下文PC. 保存当前协程上下文的操作也在这个函数中, 而其参数我们并不关心, 即&lt;code>x0&lt;/code>-&lt;code>x7&lt;/code>没必要保存. 同样的, &lt;strong>caller-saved寄存器也是没必要保存的&lt;/strong>, 因为这些寄存器作为函数调用使用的临时变量, 当再次返回该协程时, PC=yield()返回地址, caller如果关心这些寄存器应当自己执行保存和恢复. 但是&lt;strong>callee-saved寄存器必须要保存到上下文中&lt;/strong>, 因为在yield()中, 我们如果修改了callee-saved寄存器, 就需要在返回时(也就是再次调度到该协程时) 恢复, 这是callee该做的, 也就是上下文中应该有的唯一通用寄存器组.&lt;/p>
-- https://wangloo.github.io/posts/os/context/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/os/big-little-endian/ - @2019 Notepadium.</description></item></channel></rss>
