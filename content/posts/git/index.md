@@ -160,31 +160,86 @@ git merger-base dev main
 
 ## 参数:
 
-| Parameter                | Description                                                       |
-|--------------------------|-------------------------------------------------------------------|
-| non-param                | 列出所有历史提交的SHA、作者、提交日期和commit                     |
-| -p                       | 按补丁显示每次更新，比--stat更全                                  |
-| --stat                   | 显示每次更新修改文件的名称及添加（删除）的行数。比--name-only更全 |
-| --name-only              | 显示文件清单                                                      |
-| --name-status            | 显示文件清单及改动方式(新增、删除、修改)                          |
-| --oneline                | 只显示前6位SHA值和commit                                          |
-| -n                       | 显示前n条log                                                      |
-| \<branch\>               | 查看某个分支的历史提交。**该参数只能log命令之后**                 |
-| \<branch1\>..\<branch2\> |                                                                   |
-|                          |                                                                   |  
-|                          |                                  |
-	
+| Parameter                | Description                                                        |
+| ------------------------ | ------------------------------------------------------------------ |
+| non-param                | 列出所有历史提交的 SHA、作者、提交日期和 commit                    |
+| -p                       | 按补丁显示每次更新，比--stat 更全                                  |
+| --stat                   | 显示每次更新修改文件的名称及添加（删除）的行数。比--name-only 更全 |
+| --name-only              | 显示文件清单                                                       |
+| --name-status            | 显示文件清单及改动方式(新增、删除、修改)                           |
+| --oneline                | 只显示前 6 位 SHA 值和 commit                                      |
+| -n                       | 显示前 n 条 log                                                    |
+| \<branch\>               | 查看某个分支的历史提交。**该参数只能 log 命令之后**                |
+| \<branch1\>..\<branch2\> |                                                                    |
+|                          |                                                                    |
+|                          |                                                                    |
+
 参考网站：https://www.cnblogs.com/bellkosmos/p/5923439.html
 
 ## Example 1: 彩色显示重要信息
+
 ```sh
 git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 ```
 
 ![](gitlog_1.png)
 
+## Example 2: 查看本地分支和对应远程分支的 commit 差异
 
-## Example 2: 查看本地分支和对应远程分支的commit差异
 ```sh
 git log --oneline main..origin/main
 ```
+
+# 子模块: submodule
+
+## 新增一个子模块
+0. 将子模块上传到远端仓库上
+1. 执行`git submodule add [url] [path]` 
+2. 此时执行`git status` 会有两个changes，分别是：
+   - `.gitmodules`: 记录子模块的path和url
+   - `[子模块同名的文件]`: 记录主项目追踪的是子模块的哪个commit.
+   >也就是说主项目中惠济路自己跟踪子模块的commit，并不一定总是最新的。
+
+3. `git add`这两处改动，`git commit -m "add submodule xxx"`
+
+## clone一个使用子模块的项目
+1. 用常规的`git clone`命令将主项目拿下，此时子模块不会自动下载，只是一个空的目录
+2. `git submodule init`，**这个命令其实是带参数的**，指定你想更新哪些子模块，
+   缺省代表所有子模块。该命令实际的行为是将`.gitmodule`中的内容写入`.git/config`
+3. `git submodule update`, 按照`.git/config`指定的子模块去下载，**注意下载的
+   commit不一定是最新的，上面讲过**
+
+>:question: `git submodule init`命令是否有意义？
+>
+> 有时我们并不想同步所有的子模块，而是其中的某几个，因为可能想自己重写一些，这时可以添加参数
+> 指定想要同步的那些子模块。
+
+>:two::three:可以合并为一条命令： `git submodule update --init`， 同步所有子模块。
+   
+## 修改更新子模块
+如果仅仅是使用子模块，并不做修改，那不用关注这个。但如果你同时参与submodule的开发，那就需要注意。
+
+1. 修改子模块并提交；这一步很常规，`cd`到子模块中，做完修改commit即可
+2. 此时会发现在主项目中也多了一个额外的change，是刚才修改子模块的同名文件，
+   查看diff会发现改动为commit id改为了刚才提交的那次子模块修改
+
+Q1: 这次改动代表什么含义？
+
+我们知道，子模块同名文件中记录主项目跟踪此子模块的commit，也是`git commit update` 会达到的
+commit。含义是**主项目配合子模块的这个commit是ok的**。而这次改动也就代表跟踪的commit想要
+发生变化，由于你刚才对子模块修改造成的，git自动猜测你想同时改动主项目的追踪。
+
+
+Q2: 对这个改动应该做什么操作？
+
+分两种场景: (1)如果子项目的这些更新有意义同步到主项目中，那么就add并commit这个同名文件的改动，
+message为"更新submodule"。 (2)如若只是更新子项目而已，或许是为了其他依赖的项目所改的，并不
+想涉及到本主项目，那么就restore此次更新，或者重新执行`submodule update`即可(前提是对子模块
+的修改已经push)。
+
+所以说，同意主项目中的这次change的人必须是更新这次子模块的人，由他决定是否同步到主项目。
+其他人**甚至在使用期间都不需要`cd`进入子模块做`git pull`的**，这样也就不会有决策产生，即便
+子项目在远端更新了，你要做的就是关注那个同名文件就行，当同名文件更新了，在主项目中 
+`submodule update`即可，
+## 子模块的优缺点
+TODO
