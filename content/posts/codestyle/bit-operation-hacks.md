@@ -1,10 +1,83 @@
 ---
 title: "C 语言位操作技巧"
 date: 2022-07-03T09:44:13+08:00
-tags: [c, weapons]
+tags: [c]
 description: Some hacks about bit-operation. Updating...
 
 ---
+
+## 连续内存取n bit
+```c
+#include <stdio.h>
+#include <stdint.h>
+#include <assert.h>
+
+#define bitmask(n) ((1ul << (n)) - 1)
+
+/* 
+ * 从ptr指向的内存开始，抽取第start个bit开始的连续n个bit
+ * 限制: n < 32
+ */
+uint32_t extract_bits(uint8_t *ptr, uint32_t start, uint32_t n)
+{
+  uint32_t start_byte = start / 8;
+  uint32_t start_offset = start % 8;
+  uint32_t *pstart = (uint32_t *)(ptr + start_byte);
+
+  uint32_t end = start + n - 1;
+  uint32_t end_byte = end / 8;
+  uint32_t end_offset = end % 8;
+  uint32_t *pend = (uint32_t *)(ptr + end_byte);
+
+  uint32_t data = *pstart >> start_offset;
+
+  if (n > 32 - start_offset) {
+    /* 由于n < 32, 所以补齐*pend一定就够了，
+     * end_offset对齐到最后一位(n-1).
+     * 
+     * 严谨性证明: n 一定> end_offset + 1
+     * 因为n > 32-start_offset ==> n > 25, 
+     * 且end_offset + 1 < 9, 故得证
+     */
+    data |= *pend << (n - end_offset - 1);
+  }
+
+  return data & bitmask(n);
+}
+
+void test_val(uint32_t val, uint32_t expect)
+{
+  if (val != expect) {
+    printf("error: val: 0x%x, expect: 0x%x\n", val, expect);
+  }
+  assert(val == expect);
+}
+
+
+int main(void)
+{
+  uint32_t vals[] = {0x11223344, 0x11223344};
+  uint32_t ret;
+
+  ret = extract_bits((uint8_t *)vals, 31, 30);
+  test_val(ret, 0x22446688);
+
+
+  printf("Test Passed!\n");
+  return 0;
+}
+```
+
+## 一个数取连续n bit
+```c
+/*
+ * 从一个数中取第start个bit开始的连续n个bit
+ */
+uint32_t extract_bits (uint32_t val, uint32_t start, uint32_t n)
+{
+  return (val >> start) & bitmask(n);
+}
+```
 
 ## 判断一个数是否为2的幂
 ```c
