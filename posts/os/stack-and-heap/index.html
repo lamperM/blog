@@ -28,6 +28,6 @@
 如果某些程序的需求过大, 运行库也可以使用<code>mmap</code>系统调用直接向操作系统申请, 然后
 返回给用户进程.</p><blockquote><p>GLIBC的<code>malloc</code>函数的处理方式是: 对于小于<code>128KB</code>的申请, 会从运行库"批发的"堆空间
 里分出一块来; 但若申请的空间过大, 则使用<code>mmap</code>系统调用来创建匿名空间分配给用户.</p></blockquote><blockquote><p>Linux中虚拟地址块(VMA)的管理使用了红黑树, 可以用于运行库管理自己向操作系统
-&ldquo;批发"的堆空间. 使得用户程序动态申请和释放内存性能提高.</p></blockquote><hr width=100% id=EOF><p style=color:#777>Last modified on 2023-02-27</p></div></div><nav class=post-pagination><a class=newer-posts href=/posts/codestyle/bit-operation-hacks/>Next<br>C 语言位操作技巧</a>
+&ldquo;批发"的堆空间. 使得用户程序动态申请和释放内存性能提高.</p></blockquote><hr width=100% id=EOF><p style=color:#777>Last modified on 2023-02-27</p></div></div><nav class=post-pagination><a class=newer-posts href=/posts/c/bitops/>Next<br>C 语言位操作技巧</a>
 <a class=older-posts href=/posts/os/dynamic-link/>Previous<br>动态链接</a></nav><div class=post-comment-wrapper><div id=gitalk-container></div></div></div></div></div></div><div id=single-column-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://risehere.net/>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
 @2019 Notepadium.</div></div><script src=/js/journal.js></script></body></html>

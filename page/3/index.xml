@@ -832,7 +832,74 @@ Light Gray 0;37 White 1;37
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>INFO &lt;span style="color:#f1fa8c">&amp;#34;This is an infomation&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>WARN &lt;span style="color:#f1fa8c">&amp;#34;This is a log&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/shell/shell-script/ - @2019 Notepadium.</description></item><item><title>C 语言位操作技巧</title><link>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/bit-operation-hacks/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ -&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/shell/shell-script/ - @2019 Notepadium.</description></item><item><title>C 语言位操作技巧</title><link>https://wangloo.github.io/posts/c/bitops/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/posts/c/bitops/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/bitops/ -&lt;h2 id="连续内存取n-bit">连续内存取n bit&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdint.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;assert.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define bitmask(n) ((1ul &amp;lt;&amp;lt; (n)) - 1)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/*
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 从ptr指向的内存开始，抽取第start个bit开始的连续n个bit
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 限制: n &amp;lt; 32
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#50fa7b">extract_bits&lt;/span>(&lt;span style="color:#8be9fd">uint8_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>ptr, &lt;span style="color:#8be9fd">uint32_t&lt;/span> start, &lt;span style="color:#8be9fd">uint32_t&lt;/span> n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> start_byte &lt;span style="color:#ff79c6">=&lt;/span> start &lt;span style="color:#ff79c6">/&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> start_offset &lt;span style="color:#ff79c6">=&lt;/span> start &lt;span style="color:#ff79c6">%&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>pstart &lt;span style="color:#ff79c6">=&lt;/span> (&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>)(ptr &lt;span style="color:#ff79c6">+&lt;/span> start_byte);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> end &lt;span style="color:#ff79c6">=&lt;/span> start &lt;span style="color:#ff79c6">+&lt;/span> n &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> end_byte &lt;span style="color:#ff79c6">=&lt;/span> end &lt;span style="color:#ff79c6">/&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> end_offset &lt;span style="color:#ff79c6">=&lt;/span> end &lt;span style="color:#ff79c6">%&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>pend &lt;span style="color:#ff79c6">=&lt;/span> (&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>)(ptr &lt;span style="color:#ff79c6">+&lt;/span> end_byte);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> data &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>pstart &lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&lt;/span> start_offset;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (n &lt;span style="color:#ff79c6">&amp;gt;&lt;/span> &lt;span style="color:#bd93f9">32&lt;/span> &lt;span style="color:#ff79c6">-&lt;/span> start_offset) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">/* 由于n &amp;lt; 32, 所以补齐*pend一定就够了，
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * end_offset对齐到最后一位(n-1).
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> *
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 严谨性证明: n 一定&amp;gt; end_offset + 1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 因为n &amp;gt; 32-start_offset ==&amp;gt; n &amp;gt; 25,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 且end_offset + 1 &amp;lt; 9, 故得证
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> data &lt;span style="color:#ff79c6">|=&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>pend &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;&lt;/span> (n &lt;span style="color:#ff79c6">-&lt;/span> end_offset &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> data &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> bitmask(n);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">test_val&lt;/span>(&lt;span style="color:#8be9fd">uint32_t&lt;/span> val, &lt;span style="color:#8be9fd">uint32_t&lt;/span> expect)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (val &lt;span style="color:#ff79c6">!=&lt;/span> expect) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;error: val: 0x%x, expect: 0x%x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, val, expect);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> assert(val &lt;span style="color:#ff79c6">==&lt;/span> expect);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>(&lt;span style="color:#8be9fd">void&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> vals[] &lt;span style="color:#ff79c6">=&lt;/span> {&lt;span style="color:#bd93f9">0x11223344&lt;/span>, &lt;span style="color:#bd93f9">0x11223344&lt;/span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> ret;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ret &lt;span style="color:#ff79c6">=&lt;/span> extract_bits((&lt;span style="color:#8be9fd">uint8_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>)vals, &lt;span style="color:#bd93f9">31&lt;/span>, &lt;span style="color:#bd93f9">30&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> test_val(ret, &lt;span style="color:#bd93f9">0x22446688&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;Test Passed!&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="一个数取连续n-bit">一个数取连续n bit&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/*
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 从一个数中取第start个bit开始的连续n个bit
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#50fa7b">extract_bits&lt;/span> (&lt;span style="color:#8be9fd">uint32_t&lt;/span> val, &lt;span style="color:#8be9fd">uint32_t&lt;/span> start, &lt;span style="color:#8be9fd">uint32_t&lt;/span> n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> (val &lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&lt;/span> start) &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> bitmask(n);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> v;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> ((v &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> (v &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>)) &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>)
@@ -973,7 +1040,7 @@ Light Gray 0;37 White 1;37
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> s[i] = TO_UPPER(s[i]); \
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> } \
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/codestyle/bit-operation-hacks/ - @2019 Notepadium.</description></item><item><title>Stack and Heap</title><link>https://wangloo.github.io/posts/os/stack-and-heap/</link><pubDate>Tue, 28 Jun 2022 16:41:54 +0800</pubDate><guid>https://wangloo.github.io/posts/os/stack-and-heap/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/stack-and-heap/ -&lt;p> &lt;/p>
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/c/bitops/ - @2019 Notepadium.</description></item><item><title>Stack and Heap</title><link>https://wangloo.github.io/posts/os/stack-and-heap/</link><pubDate>Tue, 28 Jun 2022 16:41:54 +0800</pubDate><guid>https://wangloo.github.io/posts/os/stack-and-heap/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/stack-and-heap/ -&lt;p> &lt;/p>
 &lt;h2 id="堆的含义">堆的含义&lt;/h2>
 &lt;p>我们都知道&lt;code>malloc&lt;/code>动态申请的变量是存放在堆中. 所以相比栈来说, 堆是动态的.&lt;/p>
 &lt;p>堆占据进程虚拟地址空间的大部分, 我们可能通过堆来申请&lt;code>1GB&lt;/code>的数组, 但是栈通常不行
