@@ -133,13 +133,53 @@ def FlagsForFile( filename, **kwargs ):
 
 需要的compilation database生成工具介绍: [Compilation database — Sarcasm notebook](https://sarcasm.github.io/notes/dev/compilation-database.html)
 
+
+# 终端软件安装
+## 源替换
+## apt
+```sh
+sudo apt install python3-pip
+sudo apt install tmux
+sudo apt install fzf
+sudo apt install zsh
+```
+## pip3
+```shell
+# CLI 代码高亮
+sudo pip3 install pygments
+```
+
 # shell
 
 ## zsh
+### oh-my-zsh
+oh-my-zsh可以看作对zsh的配置文件做一层抽象，使配置更方便。
+带来的缺点就是速度变慢。
+
+> 进入git目录下太卡
+>
+> TODO： 是主题的原因，可以配置
 
 ## 配置文件
 
+- .bashrc
+- .zshrc
+- .bash_aliase
+- .bash_path
+
+
+
 # terminal
 ubuntu自带的终端我觉得还不错，有些人说Terminitor不错，分屏功能还是挺常用的！
+
+
+
+
 # tmux
+
+
+# ssh 密钥
+```sh
+ssh-keygen -t rsa -C "cnwanglu@icloud.com"
+```
 

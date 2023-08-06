@@ -6,14 +6,27 @@ tags: [shell, bash]
 
 
 
+# 开发
+
+## mkfs.ext4
+格式化文件为ext4分区
+```sh
+mkfs.ext4 <file> # 将file格式化为ext4
+```
+
+## dd
+
+https://www.runoob.com/linux/linux-comm-dd.html
+
+## mount 
+```sh
+sudo mount [file] [dir] # 挂载file到dir
+sudo umount [dir] 
+sudo mount # 输出当前已经挂载的分区
+```
 
 
-> 我使用的 shell 是 Bash
-
-### mount 相关
-
-`mount` 输出当前已经挂在的分区
-
+# 通用
 ### where and which
 
 which 查看可执行文件的位置
