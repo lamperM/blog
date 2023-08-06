@@ -1,4 +1,231 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>动态链接</title><link>https://wangloo.github.io/posts/os/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os/dynamic-link/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/dynamic-link/ -&lt;h2 id="静态链接带来的问题">静态链接带来的问题&lt;/h2>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>C 语言位操作技巧</title><link>https://wangloo.github.io/posts/c/bitops/</link><pubDate>Sun, 03 Jul 2022 09:44:13 +0800</pubDate><guid>https://wangloo.github.io/posts/c/bitops/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/bitops/ -&lt;h2 id="连续内存取n-bit">连续内存取n bit&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;stdint.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#include&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;assert.h&amp;gt;&lt;/span>&lt;span style="color:#ff79c6">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define bitmask(n) ((1ul &amp;lt;&amp;lt; (n)) - 1)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/*
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 从ptr指向的内存开始，抽取第start个bit开始的连续n个bit
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 限制: n &amp;lt; 32
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#50fa7b">extract_bits&lt;/span>(&lt;span style="color:#8be9fd">uint8_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>ptr, &lt;span style="color:#8be9fd">uint32_t&lt;/span> start, &lt;span style="color:#8be9fd">uint32_t&lt;/span> n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> start_byte &lt;span style="color:#ff79c6">=&lt;/span> start &lt;span style="color:#ff79c6">/&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> start_offset &lt;span style="color:#ff79c6">=&lt;/span> start &lt;span style="color:#ff79c6">%&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>pstart &lt;span style="color:#ff79c6">=&lt;/span> (&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>)(ptr &lt;span style="color:#ff79c6">+&lt;/span> start_byte);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> end &lt;span style="color:#ff79c6">=&lt;/span> start &lt;span style="color:#ff79c6">+&lt;/span> n &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> end_byte &lt;span style="color:#ff79c6">=&lt;/span> end &lt;span style="color:#ff79c6">/&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> end_offset &lt;span style="color:#ff79c6">=&lt;/span> end &lt;span style="color:#ff79c6">%&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>pend &lt;span style="color:#ff79c6">=&lt;/span> (&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>)(ptr &lt;span style="color:#ff79c6">+&lt;/span> end_byte);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> data &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>pstart &lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&lt;/span> start_offset;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (n &lt;span style="color:#ff79c6">&amp;gt;&lt;/span> &lt;span style="color:#bd93f9">32&lt;/span> &lt;span style="color:#ff79c6">-&lt;/span> start_offset) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">/* 由于n &amp;lt; 32, 所以补齐*pend一定就够了，
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * end_offset对齐到最后一位(n-1).
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> *
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 严谨性证明: n 一定&amp;gt; end_offset + 1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 因为n &amp;gt; 32-start_offset ==&amp;gt; n &amp;gt; 25,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 且end_offset + 1 &amp;lt; 9, 故得证
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> data &lt;span style="color:#ff79c6">|=&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>pend &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;&lt;/span> (n &lt;span style="color:#ff79c6">-&lt;/span> end_offset &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> data &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> bitmask(n);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">test_val&lt;/span>(&lt;span style="color:#8be9fd">uint32_t&lt;/span> val, &lt;span style="color:#8be9fd">uint32_t&lt;/span> expect)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (val &lt;span style="color:#ff79c6">!=&lt;/span> expect) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;error: val: 0x%x, expect: 0x%x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, val, expect);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> assert(val &lt;span style="color:#ff79c6">==&lt;/span> expect);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>(&lt;span style="color:#8be9fd">void&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> vals[] &lt;span style="color:#ff79c6">=&lt;/span> {&lt;span style="color:#bd93f9">0x11223344&lt;/span>, &lt;span style="color:#bd93f9">0x11223344&lt;/span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> ret;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ret &lt;span style="color:#ff79c6">=&lt;/span> extract_bits((&lt;span style="color:#8be9fd">uint8_t&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>)vals, &lt;span style="color:#bd93f9">31&lt;/span>, &lt;span style="color:#bd93f9">30&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> test_val(ret, &lt;span style="color:#bd93f9">0x22446688&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;Test Passed!&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="一个数取连续n-bit">一个数取连续n bit&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/*
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 从一个数中取第start个bit开始的连续n个bit
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#50fa7b">extract_bits&lt;/span> (&lt;span style="color:#8be9fd">uint32_t&lt;/span> val, &lt;span style="color:#8be9fd">uint32_t&lt;/span> start, &lt;span style="color:#8be9fd">uint32_t&lt;/span> n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> (val &lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&lt;/span> start) &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> bitmask(n);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="判断一个数是否为2的幂">判断一个数是否为2的幂&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> v;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> ((v &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> (v &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>)) &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;v is a power of 2&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">printf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;v is not a power of 2&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="统计一个数的二进制中1的数量">统计一个数的二进制中1的数量&lt;/h2>
+&lt;p>依然是利用&lt;code>v &amp;amp; (v -1)&lt;/code>的运算结果会将v的最低位的&lt;code>1&lt;/code>(如果有的话)置&lt;code>0&lt;/code>.&lt;/p>
+&lt;p>循环执行此操作就可统计v中&lt;code>1&lt;/code>的数量.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">numberof1&lt;/span>(&lt;span style="color:#8be9fd">int&lt;/span> v) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> count &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">while&lt;/span>(v) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> count&lt;span style="color:#ff79c6">++&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> v &lt;span style="color:#ff79c6">=&lt;/span> v &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> (v &lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> count;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="将一个数向上取整为2的幂">将一个数向上取整为2的幂&lt;/h2>
+&lt;p>用一个&lt;code>1&lt;/code>一直左移, 直到比这个数大为止.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">uint32_t&lt;/span> &lt;span style="color:#50fa7b">roundup_pow_of_two&lt;/span>(&lt;span style="color:#ff79c6">const&lt;/span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> x) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">uint32_t&lt;/span> ret &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">while&lt;/span> (ret &lt;span style="color:#ff79c6">&amp;lt;&lt;/span> x) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ret &lt;span style="color:#ff79c6">=&lt;/span> ret &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> ret;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Linux内核中使用了一种更快的方案, amazing!!!&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">static&lt;/span> __inline__ &lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">generic_fls&lt;/span>(&lt;span style="color:#8be9fd">int&lt;/span> x)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> r &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">32&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>x)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>(x &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> &lt;span style="color:#bd93f9">0xffff0000u&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">16&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r &lt;span style="color:#ff79c6">-=&lt;/span> &lt;span style="color:#bd93f9">16&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>(x &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> &lt;span style="color:#bd93f9">0xff000000u&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r &lt;span style="color:#ff79c6">-=&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>(x &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> &lt;span style="color:#bd93f9">0xf0000000u&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">4&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r &lt;span style="color:#ff79c6">-=&lt;/span> &lt;span style="color:#bd93f9">4&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>(x &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> &lt;span style="color:#bd93f9">0xc0000000u&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">2&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r &lt;span style="color:#ff79c6">-=&lt;/span> &lt;span style="color:#bd93f9">2&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>(x &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> &lt;span style="color:#bd93f9">0x80000000u&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r &lt;span style="color:#ff79c6">-=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;&lt;span style="color:#bd93f9">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> r;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">static&lt;/span> &lt;span style="color:#ff79c6">inline&lt;/span> &lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">long&lt;/span> __attribute_const__ &lt;span style="color:#50fa7b">roundup_pow_of_two&lt;/span>(&lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">long&lt;/span> x)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> (&lt;span style="color:#bd93f9">1UL&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;&lt;/span> generic_fls(x &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="向上向下对齐-检查是否对齐">向上/向下对齐, 检查是否对齐&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/* uintptr_t 代表指针的位数
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * 加uintptr_t转换的原因是: (void *)不能进行运算
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define IS_ALIGNED(X, align) (((uintptr_t)(const void *)(X)) % (align) == 0)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define ALIGN_UP(X, align) (((X) + ((align) - 1)) &amp;amp; ~((align) - 1))
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define ALIGN_DOWN(x, align) ((X) &amp;amp; ~((align) - 1))
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define X (0x12345675)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define align (1 &amp;lt;&amp;lt; 2)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> v &lt;span style="color:#ff79c6">=&lt;/span> IS_ALIGNED(X, align);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#bd93f9">0&lt;/span> &lt;span style="color:#ff79c6">==&lt;/span> v) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;Given X(0x%x) is not align to 0x%08x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, X, align);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;After align up, new X = 0x%x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, ALIGN_UP(X, align));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;After align down, new X = 0x%x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, ALIGN_DOWN(X, align));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#ff79c6">else&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;Give X(0x%x) is aligned to 0x%08x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, X, align);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;After align up, new X = 0x%x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, ALIGN_UP(X, align));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;After align down, new X = 0x%x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, ALIGN_DOWN(X, align));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="检查两个有符号数是否异号">检查两个有符号数是否异号&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> x,y;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> ((x &lt;span style="color:#ff79c6">^&lt;/span> y) &lt;span style="color:#ff79c6">&amp;lt;&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;They have opposite signs&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#50fa7b">printf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;They have same signs&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="大小端转换">大小端转换&lt;/h2>
+&lt;p> &lt;/p>
+&lt;h2 id="对某个位的getsetclear操作">对某个位的get/set/clear操作&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define GET_BIT(x, bit) ( ((x) &amp;amp; (1ULL &amp;lt;&amp;lt; (bit))) &amp;gt;&amp;gt; (bit) )
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define SET_BIT(x, bit) ( (x) |= (1ULL &amp;lt;&amp;lt; (bit)) )
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define CLEAR_BIT(x, bit) ( (x) &amp;amp;= ~(1ULL &amp;lt;&amp;lt; (bit)) )
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Release note:&lt;/p>
+&lt;ol>
+&lt;li>添加对&lt;code>unsigned long long&lt;/code>长度的支持&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
+&lt;p> &lt;/p>
+&lt;h2 id="sign-extending-from-a-varaiable-bit-width">Sign extending from a varaiable bit-width&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> bits &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">2&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span> &lt;span style="color:#bd93f9">8&lt;/span>; &lt;span style="color:#6272a4">// number of bits representing the number in x
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> x &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0xFFC1&lt;/span>; &lt;span style="color:#6272a4">// ready to get sign-extended
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> rst; &lt;span style="color:#6272a4">// resulting sign-extended number
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#ff79c6">const&lt;/span> mask &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1U&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;&lt;/span> (bits &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>); &lt;span style="color:#6272a4">// mask can be pre-computed if bits if fixed.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#ff79c6">=&lt;/span> x &lt;span style="color:#ff79c6">&amp;amp;&lt;/span> ((&lt;span style="color:#bd93f9">1U&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;&amp;lt;&lt;/span> bits) &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>); &lt;span style="color:#6272a4">// cut x if it holds more bits
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> rst &lt;span style="color:#ff79c6">=&lt;/span> (x &lt;span style="color:#ff79c6">^&lt;/span> mask) &lt;span style="color:#ff79c6">-&lt;/span> mask; &lt;span style="color:#6272a4">// excellent trick!
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf(&lt;span style="color:#f1fa8c">&amp;#34;INPUT: 0x%x, RESULT: 0x%x&lt;/span>&lt;span style="color:#f1fa8c">\n&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>, x, rst);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p> &lt;/p>
+&lt;h2 id="字符字符数组的大小写转换">字符/字符数组的大小写转换&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define TO_LOWER(c) (unsigned char)((c &amp;gt;= &amp;#39;A&amp;#39; &amp;amp;&amp;amp; c &amp;lt;= &amp;#39;Z&amp;#39;) ? (c | 0x20) : c)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define TO_UPPER(c) (unsigned char)((c &amp;gt;= &amp;#39;a&amp;#39; &amp;amp;&amp;amp; c &amp;lt;= &amp;#39;z&amp;#39;) ? (c &amp;amp; ~0x20) : c)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define TO_LOWER_STR(s, len) { \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> for (int i = 0; i &amp;lt; len &amp;amp;&amp;amp; s[i] != &amp;#39;\0&amp;#39;; i++) { \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> s[i] = TO_LOWER(s[i]); \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> } \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define TO_UPPER_STR(s, len) {\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> for (int i = 0; i &amp;lt; len &amp;amp;&amp;amp; s[i] != &amp;#39;\0&amp;#39;; i++) { \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> s[i] = TO_UPPER(s[i]); \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"> } \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/c/bitops/ - @2019 Notepadium.</description></item><item><title>Stack and Heap</title><link>https://wangloo.github.io/posts/os/stack-and-heap/</link><pubDate>Tue, 28 Jun 2022 16:41:54 +0800</pubDate><guid>https://wangloo.github.io/posts/os/stack-and-heap/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/stack-and-heap/ -&lt;p> &lt;/p>
+&lt;h2 id="堆的含义">堆的含义&lt;/h2>
+&lt;p>我们都知道&lt;code>malloc&lt;/code>动态申请的变量是存放在堆中. 所以相比栈来说, 堆是动态的.&lt;/p>
+&lt;p>堆占据进程虚拟地址空间的大部分, 我们可能通过堆来申请&lt;code>1GB&lt;/code>的数组, 但是栈通常不行
+, 大多也就几兆的空间.&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="堆空间的管理">堆空间的管理&lt;/h2>
+&lt;p>进程中堆空间的管理是&lt;code>运行库&lt;/code>负责的, 在Linux中是&lt;code>GLIBC&lt;/code>.&lt;/p>
+&lt;p>运行库在初始化时会像操作系统申请一大块的堆空间, 再为每个进行分别分配需求. 当然,
+如果某些程序的需求过大, 运行库也可以使用&lt;code>mmap&lt;/code>系统调用直接向操作系统申请, 然后
+返回给用户进程.&lt;/p>
+&lt;blockquote>
+&lt;p>GLIBC的&lt;code>malloc&lt;/code>函数的处理方式是: 对于小于&lt;code>128KB&lt;/code>的申请, 会从运行库&amp;quot;批发的&amp;quot;堆空间
+里分出一块来; 但若申请的空间过大, 则使用&lt;code>mmap&lt;/code>系统调用来创建匿名空间分配给用户.&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>Linux中虚拟地址块(VMA)的管理使用了红黑树, 可以用于运行库管理自己向操作系统
+&amp;ldquo;批发&amp;quot;的堆空间. 使得用户程序动态申请和释放内存性能提高.&lt;/p>
+&lt;/blockquote>
+- https://wangloo.github.io/posts/os/stack-and-heap/ - @2019 Notepadium.</description></item><item><title>动态链接</title><link>https://wangloo.github.io/posts/os/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os/dynamic-link/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/dynamic-link/ -&lt;h2 id="静态链接带来的问题">静态链接带来的问题&lt;/h2>
 &lt;ol>
 &lt;li>
 &lt;p>像是&lt;code>libc&lt;/code>这种几乎每个程序都要用到的库, 如果是静态的, 那么不仅意外着每个程序的
@@ -1158,98 +1385,4 @@ That is where &lt;em>universal element&lt;/em> selector is needed. It&amp;rsquo;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> @/ = &lt;span style="color:#f1fa8c">&amp;#39;\V&amp;#39;&lt;/span> . substitute(escape(@s, a:cmdtype.&lt;span style="color:#f1fa8c">&amp;#39;\&amp;#39;&lt;/span>), &lt;span style="color:#f1fa8c">&amp;#39;\n&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;\\n&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;g&amp;#39;&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">let&lt;/span> @s = temp
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">endfunction&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/vim/basic/ - @2019 Notepadium.</description></item><item><title>reveal.js Tutorial</title><link>https://wangloo.github.io/posts/revealjs/</link><pubDate>Sun, 08 May 2022 19:34:44 +0800</pubDate><guid>https://wangloo.github.io/posts/revealjs/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/revealjs/ -&lt;h1 id="change-code-theme">Change code theme&lt;/h1>
-&lt;p>Default use &lt;code>monokai.css&lt;/code>. see &lt;a href="https://revealjs.com/code/">官方文档&lt;/a>&lt;/p>
-&lt;p>修改需要下载新的&lt;code>css&lt;/code>放到&lt;code>plugin/highlight/&lt;/code>目录下.&lt;/p>
-&lt;p>其他可用的&lt;code>css&lt;/code>在&lt;a href="https://github.com/highlightjs/highlight.js/tree/main/src/styles">highlight.js仓库&lt;/a>中下载.&lt;/p>
-&lt;h1 id="align">Align&lt;/h1>
-&lt;h2 id="slide-align">Slide Align&lt;/h2>
-&lt;p>取消center对齐方式:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>Reveal.initialize({
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> center&lt;span style="color:#ff79c6">:&lt;/span> &lt;span style="color:#ff79c6">false&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ... })
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>所有slide左对齐: &lt;a href="https://github.com/hakimel/reveal.js/issues/1897">https://github.com/hakimel/reveal.js/issues/1897&lt;/a>&lt;/p>
-&lt;p>用markdown写的方式下使某一幻灯片左对齐: &lt;a href="https://github.com/hakimel/reveal.js/issues/890#issuecomment-129735291">https://github.com/hakimel/reveal.js/issues/890#issuecomment-129735291&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/revealjs/ - @2019 Notepadium.</description></item><item><title>ARM64: A64指令集</title><link>https://wangloo.github.io/posts/armv8/a64/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/armv8/a64/ -&lt;h1 id="loadstore-指令">Load/Store 指令&lt;/h1>
-&lt;h2 id="寻址模式">寻址模式&lt;/h2>
-&lt;p>Base register - &lt;code>w0=[x1]&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>ldr w0, [x1]
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Offset addressing mode - &lt;code>w0=[x1+12]&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>ldr w0, [x1, &lt;span style="color:#bd93f9">12&lt;/span>]
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Pre-index addressing mode - &lt;code>x1+=12; w0=[x1]&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>ldr w0, [x1, &lt;span style="color:#bd93f9">12&lt;/span>]&lt;span style="color:#ff79c6">!&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Post-index addressing mode - &lt;code>w0=[x1]; x1+=12&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>ldr w0, [x1], &lt;span style="color:#bd93f9">12&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="更多示例">更多示例&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// load a byte from x1
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ldrb w0, [x1]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// load a signed byte from x1
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ldrsb w0, [x1]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// store a 32-bit word to address in x1
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>str w0, [x1]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// load two 32-bit words from stack, then add 8-byte to sp
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ldp w0, w1, [sp], &lt;span style="color:#bd93f9">8&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// store two 64-bit words at [sp-96] and subtract 96-byte from sp.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>stp x1, x2, [sp, &lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">96&lt;/span>]&lt;span style="color:#ff79c6">!&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// LDR伪指令. load 32-bit immediate from literal pool(addr: 0x12345678)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ldr w0, &lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">0x12345678&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="数据处理指令">数据处理指令&lt;/h1>
-&lt;h2 id="bitfield-操作指令">Bitfield 操作指令&lt;/h2>
-&lt;p>Bitfield 指令常用于设置/提取寄存器的某个字段.&lt;/p>
-&lt;pre tabindex="0">&lt;code class="language-assembly" data-lang="assembly">;BFI(Bit Field Insert)
-BFI w0, w0, #9, #6 ;w0[0, 5] = w0[9, 14]
-;BFC(Bit Field Clear)
-BFC w0, #4, #2 ;w0[4, 5] = 0
-;UBFX(Unsigned Bit Field Extract)
-UBFX w1, w0, #18, #7 ;w1=w0[18, 24]
-&lt;/code>&lt;/pre>&lt;blockquote>
-&lt;p>与 UBFX 相对的是 SBFX, 若提取后的字段高位为 1, 会进行符号扩展&lt;/p>
-&lt;/blockquote>
-&lt;h1 id="分支控制指令">分支/控制指令&lt;/h1>
-&lt;h1 id="获得地址的相关指令">获得地址的相关指令&lt;/h1>
-&lt;p>写汇编中，常常会获取一个变量或者函数(label)的地址，A64 中一共有几种获取地址的指令，
-包括&lt;code>adr&lt;/code>, &lt;code>adrp&lt;/code>, &lt;code>adrl&lt;/code>, &lt;code>ldr&lt;/code>等，下面我就对这些指令进行介绍。&lt;/p>
-&lt;h2 id="adr">ADR&lt;/h2>
-&lt;p>首先是 adr，它的作用是&lt;strong>加载 PC 相对地址&lt;/strong>，adr 指令的格式是:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-asm" data-lang="asm">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">adr&lt;/span> reg, offset
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>输入一个 offset，输出 PC+offset 的值，但我们常用的是 offset 填某一个 label，例如函数
-或者变量，此时 reg 中存的就是此函数的地址了。例如，&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-asm" data-lang="asm">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">adr&lt;/span> x0, a_func &lt;span style="color:#6272a4"># x0 = addr(a_func)
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>adr 指令中留给 offset 的位数是 21，所以最大的寻址范围为+-1MB。&lt;/p>
-&lt;h2 id="adrp">ADRP&lt;/h2>
-&lt;p>adrp 的指令格式与 adr 相同，不同点是会将计算的结果&lt;strong>向下对齐到 4k&lt;/strong>，但这样直接计算的
-地址结果往往是不正确的，因为少了页内的偏移。需要一个额外的 add 指令进行纠正，一般来说
-是组合起来用的：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-asm" data-lang="asm">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">adrp&lt;/span> x0, a_func
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">add&lt;/span> x0, x0, :lo12:a_func
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>显然 adrp 这样做是为了更大的寻址空间，能到+-4GB。&lt;/p>
-&lt;h2 id="ldr-伪指令">LDR 伪指令&lt;/h2>
-&lt;p>如果 ldr 指令的参数是&lt;code>=&amp;lt;label&amp;gt;&lt;/code>，那就代表伪指令，作用是加载 label 的绝对地址，即
-VMA。好处是可以获取到一个位于任意 label 的地址，不受寻址空间的约束。&lt;/p>
-&lt;blockquote>
-&lt;p>注意&lt;code>label&lt;/code>是一个 offset, &lt;code>=label&lt;/code>是一个绝对地址。&lt;/p>
-&lt;/blockquote>
-&lt;blockquote>
-&lt;p>当目前指令执行地址不等于它们的虚拟地址时，比如当 MMU 未开始时通过 uboot 加载到内存
-中直接运行的那段程序，此时用&lt;code>adr/adrp&lt;/code>这些加载 pc 相对地址的指令就会正确的返回
-label 的实际运行地址；而&lt;code>ldr&lt;/code>则是永远返回其编译链接后绑定的虚拟地址。这种情况下
-如果寻址范围允许，用&lt;code>adr*&lt;/code>指令更方便。&lt;/p>
-&lt;/blockquote>
-&lt;h1 id="有趣特性常见误区">有趣特性/常见误区&lt;/h1>
-&lt;h2 id="-before-the-immediate-value">&amp;lsquo;#&amp;rsquo; before the immediate value&lt;/h2>
-&lt;ul>
-&lt;li>A64 assembly language does not require the &lt;code>#&lt;/code> to introduce constant immediate value. But the assembler can also indentify the &lt;code>#&lt;/code>.&lt;/li>
-&lt;li>In armv7, there must be a &lt;code>#&lt;/code> or &lt;code>$&lt;/code> before other than using &lt;code>.syntax unified&lt;/code>. &lt;a href="https://sourceware.org/binutils/docs/as/ARM_002dInstruction_002dSet.html#ARM_002dInstruction_002dSet">About syntax unified&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>&lt;a href="https://stackoverflow.com/questions/21652884/is-the-hash-required-for-immediate-values-in-arm-assembly">Agreed Recommendation&lt;/a>&lt;/p>
-&lt;p>Use &lt;code>.syntax unified&lt;/code> in v7 code, and never use &lt;code>#&lt;/code> on any literal on either v7 or v8.
-Unified syntax is newer and better, and those &lt;code>#&lt;/code> and &lt;code>$&lt;/code> signs are just more code noise.&lt;/p>
-&lt;/blockquote>
-- https://wangloo.github.io/posts/armv8/a64/ - @2019 Notepadium.</description></item></channel></rss>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/vim/basic/ - @2019 Notepadium.</description></item></channel></rss>

@@ -1,4 +1,46 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>git 宝典</title><link>https://wangloo.github.io/posts/tools/git/git/</link><pubDate>Tue, 13 Dec 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/git/git/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/tools/git/git/ -&lt;h2 id="合并操作-git-merge">合并操作: git merge&lt;/h2>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>行结束符在windows和linux的区别</title><link>https://wangloo.github.io/posts/c/end-of-line/</link><pubDate>Sat, 24 Dec 2022 01:35:24 +0800</pubDate><guid>https://wangloo.github.io/posts/c/end-of-line/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/end-of-line/ -&lt;p>使用VIM 打开一个文件时, 有时会看到例如 &lt;code>^M&lt;/code> 这类字符出现. 下面我会挖一下其出现的原因.&lt;/p>
+&lt;h2 id="eol-字符">EOL 字符&lt;/h2>
+&lt;p>EOL 或者说 end-of-line 表示一个新行的开始.&lt;/p>
+&lt;p>EOL 字符在不同的操作系统中是不同的. 本文中仅以 Linux 和 Windows 为例说明.&lt;/p>
+&lt;ul>
+&lt;li>Windows中是以读到回车&amp;lt;CR&amp;gt;和换行&amp;lt;LF&amp;gt; 表示 EOL.&lt;/li>
+&lt;li>Linux 中仅以换行作为EOL&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;ul>
+&lt;li>回车&amp;lt;CR&amp;gt; : Carriage return. 将光标回到行首, 对应C语言中的 &lt;code>\r&lt;/code>&lt;/li>
+&lt;li>换行&amp;lt;LF&amp;gt; : Line feed. 将光标下移一行, 对应C语言中的 &lt;code>\n&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;p>在 Linux 中打开 Windows 下的文件将多余的回车通常显示成 &lt;code>^M&lt;/code> 或者 &lt;code>Control-M&lt;/code>&lt;/p>
+&lt;h2 id="ref">Ref&lt;/h2>
+&lt;p>&lt;a href="https://peterbenjamin.com/seminars/crossplatform/texteol.html">End Of Line Characters&lt;/a>&lt;/p>
+- https://wangloo.github.io/posts/c/end-of-line/ - @2019 Notepadium.</description></item><item><title>浅谈 errno 的线程安全问题</title><link>https://wangloo.github.io/posts/os/errno_thread_safe/</link><pubDate>Wed, 21 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/errno_thread_safe/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/errno_thread_safe/ -&lt;p>我始终以为，C库中常用的 &lt;code>errno&lt;/code> 仅是一个全局变量，使用了全局变量就无法保证线程安全了，因为全局变量在所有线程中都是共享的。&lt;/p>
+&lt;p>要实现线程安全的&lt;code>errno&lt;/code> 就必须将其设置为&lt;strong>线程私有的变量&lt;/strong>，下面就来看看GCC是如何巧妙的实现的。&lt;/p>
+&lt;h2 id="正文">正文&lt;/h2>
+&lt;p>现在的&lt;code>errno&lt;/code>定义并非一个全局变量, 而是一个&lt;strong>宏定义&lt;/strong>, 以下是在&lt;code>usr/include/errno&lt;/code>中的声明:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">extern&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>&lt;span style="color:#50fa7b">__errno_location&lt;/span> (&lt;span style="color:#8be9fd">void&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"># define errno (*__errno_location ())
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这种方式下其实现原理大概是: &lt;code>__errno_location&lt;/code> 函数返回一个&lt;code>int&lt;/code>指针, 而这个函数的实现中, 返回的就恰好是&lt;strong>实际的&lt;/strong>&lt;code>errno&lt;/code> 变量(与宏同名)的地址, 所以对其&lt;strong>解引用&lt;/strong>就相当于对其值进行操作. 所以, 这种定义规则下, 左值和右值表达式均成立.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>errno &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">10&lt;/span>; &lt;span style="color:#6272a4">// *__errno_location () = 10
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#8be9fd">int&lt;/span> x &lt;span style="color:#ff79c6">=&lt;/span> errno; &lt;span style="color:#6272a4">// x = *__errno_location ();
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>__errno_location&lt;/code> 的实现就至关重要, 因为如果其返回的变量地址不包含任何技巧的话, 就和原先直接定义全局变量的方式没差了, &lt;strong>说到底能否实现线程安全, 还得看实际保存errno的变量是否为线程独有的&lt;/strong>. 目前还没有发掘到其精髓, 只是套壳而已.&lt;/p>
+&lt;p>以下给出&lt;code>/csu/errno-loc.c&lt;/code>中&lt;code>__errno_location&lt;/code> 的实现, 与我们预期一致, 返回变量的地址. 而同名变量&lt;code>errno&lt;/code>则定义在&lt;code>/csu/errno.c&lt;/code>中, &lt;strong>决定了能够实现errno的线程安全&lt;/strong>.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">__errno_location&lt;/span> (&lt;span style="color:#8be9fd">void&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&lt;/span>errno;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>__thread &lt;span style="color:#8be9fd">int&lt;/span> errno;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&amp;ldquo;&lt;code>__thread&lt;/code>&amp;rdquo; 是GCC提供的扩展前缀, 表示该变量将被库处理为线程私有的, 注意这一步是C库完成的, 对程序员透明. 相关的理论叫 &lt;em>Thread-local Storage&lt;/em>, AArch64 架构实现的原理是利用&lt;code>TPIDR_EL0&lt;/code> 寄存器, 其他架构可以参考&lt;a href="https://akkadia.org/drepper/tls.pdf">此PDF&lt;/a>&lt;/p>
+&lt;blockquote>
+&lt;p>❓ 以上源文件中有注释为 &lt;em>non-threaded&lt;/em>版本的实现, 是代表什么含义呢?&lt;/p>
+&lt;/blockquote>
+&lt;p>​&lt;/p>
+&lt;p>虽然我暂时没有查阅到errno的其他线程安全的实现原理, 但起码GCC下该方式这是可行的. 依靠的是&amp;quot;&lt;code>__thread&lt;/code>&amp;ldquo;的支持, &lt;strong>与换成宏定义的方式无关&lt;/strong>, 不排除可能为了考虑兼容其他实现方式的可能性.&lt;/p>
+&lt;h2 id="参考">参考&lt;/h2>
+&lt;p>&lt;a href="https://stackoverflow.com/questions/18025995/how-is-thread-safe-errno-initialized-if-define-substitutes-errno-symbol">c - How is thread-safe errno initialized if #define substitutes errno symbol? - Stack Overflow&lt;/a>&lt;/p>
+- https://wangloo.github.io/posts/os/errno_thread_safe/ - @2019 Notepadium.</description></item><item><title>git 宝典</title><link>https://wangloo.github.io/posts/tools/git/git/</link><pubDate>Tue, 13 Dec 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/git/git/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/tools/git/git/ -&lt;h2 id="合并操作-git-merge">合并操作: git merge&lt;/h2>
 &lt;p>merge 有两种方式:&lt;/p>
 &lt;ul>
 &lt;li>fast-forward&lt;/li>
@@ -295,11 +337,17 @@ gcc 语句是否执行取决于&lt;code>main.c&lt;/code> 和 &lt;code>main.elf&l
 &lt;p>md&lt;/p>
 &lt;p>mmcinfo&lt;/p>
 &lt;p>cp&lt;/p>
-- https://wangloo.github.io/posts/os/uboot/commands/ - @2019 Notepadium.</description></item><item><title>常用的 shell 命令</title><link>https://wangloo.github.io/posts/shell/shell-commands/</link><pubDate>Sun, 27 Nov 2022 14:45:58 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-commands/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/shell/shell-commands/ -&lt;blockquote>
-&lt;p>我使用的 shell 是 Bash&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="mount-相关">mount 相关&lt;/h3>
-&lt;p>&lt;code>mount&lt;/code> 输出当前已经挂在的分区&lt;/p>
+- https://wangloo.github.io/posts/os/uboot/commands/ - @2019 Notepadium.</description></item><item><title>常用的 shell 命令</title><link>https://wangloo.github.io/posts/shell/shell-commands/</link><pubDate>Sun, 27 Nov 2022 14:45:58 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-commands/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/shell/shell-commands/ -&lt;h1 id="开发">开发&lt;/h1>
+&lt;h2 id="mkfsext4">mkfs.ext4&lt;/h2>
+&lt;p>格式化文件为ext4分区&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>mkfs.ext4 &amp;lt;file&amp;gt; &lt;span style="color:#6272a4"># 将file格式化为ext4&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="dd">dd&lt;/h2>
+&lt;p>&lt;a href="https://www.runoob.com/linux/linux-comm-dd.html">https://www.runoob.com/linux/linux-comm-dd.html&lt;/a>&lt;/p>
+&lt;h2 id="mount">mount&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>sudo mount &lt;span style="color:#ff79c6">[&lt;/span>file&lt;span style="color:#ff79c6">]&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span>dir&lt;span style="color:#ff79c6">]&lt;/span> &lt;span style="color:#6272a4"># 挂载file到dir&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo umount &lt;span style="color:#ff79c6">[&lt;/span>dir&lt;span style="color:#ff79c6">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount &lt;span style="color:#6272a4"># 输出当前已经挂载的分区&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="通用">通用&lt;/h1>
 &lt;h3 id="where-and-which">where and which&lt;/h3>
 &lt;p>which 查看可执行文件的位置&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ which python3
@@ -430,90 +478,4 @@ gcc 语句是否执行取决于&lt;code>main.c&lt;/code> 和 &lt;code>main.elf&l
 &lt;/ol>
 &lt;h2 id="结语">结语&lt;/h2>
 &lt;p>能够正确达到函数调用和返回的实现方式有很多, &lt;strong>不是仅有这一种方式&lt;/strong>, 约定仅仅是一个约定, 大家都这样去做降低了开发的难度.&lt;/p>
-- https://wangloo.github.io/posts/os/function-call-conventions/ - @2019 Notepadium.</description></item><item><title>二级指针操作链表</title><link>https://wangloo.github.io/posts/c/pointers-pointers-list/</link><pubDate>Sun, 20 Nov 2022 23:40:30 +0800</pubDate><guid>https://wangloo.github.io/posts/c/pointers-pointers-list/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/pointers-pointers-list/ -&lt;p>问题源于我在知乎刷到的一个回答: &lt;a href="https://www.zhihu.com/question/477832027/answer/2044206446">能分享你C指针用得最灵活（飘）的一次吗?&lt;/a>&lt;/p>
-&lt;p>文中提到了Linus关于&lt;strong>无头节点单项链表的删除操作&lt;/strong>给出的一种新的思路, 我觉得对理解指针非常有帮助, 所以在这里详细描述一下这件事.&lt;/p>
-&lt;p>从我学习数据结构起, 对不含头节点的单向链表的删除操作, 做法常是: 借用&lt;strong>pre指针&lt;/strong>搜索. 这种情况下避免不了对于链表中第一个节点的特判(第一个节点没有pre).&lt;/p>
-&lt;p>Linus提到了一种借助&lt;strong>二级指针避免该分支&lt;/strong>的方法.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">remove_if&lt;/span>(node &lt;span style="color:#ff79c6">**&lt;/span> head, remove_fn rm)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">for&lt;/span> (node&lt;span style="color:#ff79c6">**&lt;/span> curr &lt;span style="color:#ff79c6">=&lt;/span> head; &lt;span style="color:#ff79c6">*&lt;/span>curr; )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> node &lt;span style="color:#ff79c6">*&lt;/span> entry &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>curr;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (rm(entry))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">*&lt;/span>curr &lt;span style="color:#ff79c6">=&lt;/span> entry&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> free(entry);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">else&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> curr &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&lt;/span>entry&lt;span style="color:#ff79c6">-&amp;gt;&lt;/span>next;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>指针的内容就是地址, &lt;code>int *p = a&lt;/code> 也就意味着变量&lt;code>p&lt;/code> 中保存着变量&lt;code>a&lt;/code>的地址. 所以参数&lt;code>head&lt;/code>在内存中的含义为:&lt;/p>
-&lt;p>&lt;img src="./mem.png" alt="list的内存布局">&lt;/p>
-&lt;p>假如要删除node2, 那么改变&lt;code>*curr&lt;/code>实际上就是&lt;strong>改了node1的&lt;code>next&lt;/code>成员&lt;/strong>.&lt;/p>
-- https://wangloo.github.io/posts/c/pointers-pointers-list/ - @2019 Notepadium.</description></item><item><title>大小端问题</title><link>https://wangloo.github.io/posts/os/big-little-endian/</link><pubDate>Thu, 17 Nov 2022 10:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/os/big-little-endian/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/big-little-endian/ -&lt;hr>
-&lt;h2 id="大小端问题的由来">大小端问题的由来&lt;/h2>
-&lt;p>为什么计算机世界需要区分大小端? &lt;strong>内存里存取的单位是字节&lt;/strong>, 如果所有的数据类型长度都是一个字节, 那就完全不需要大小端了, 每个变量都仅占据单独一个字节.&lt;/p>
-&lt;p>例如, 三个变量 &lt;code>a=10, b=20, c=30&lt;/code>, 在内存中的布局可能就是:&lt;/p>
-&lt;pre tabindex="0">&lt;code> ┌────────────┐
-│ │
-│ 10 │ a
-├────────────┤
-│ │
-│ 20 │ b
-├────────────┤
-│ │
-│ 30 │ c
-├────────────┤
-│ │
-│ │
-│ │
-│ │
-│ │
-└────────────┘
-&lt;/code>&lt;/pre>&lt;p>但是我们最常使用的数据类型肯定有超过一个字节的, &lt;code>int&lt;/code>类型在64位的系统中就占&lt;strong>4个字节&lt;/strong>. 例如变量&lt;code>a=0xaabbccdd&lt;/code>&lt;/p>
-&lt;p>一个变量的大小一旦超过4个字节, &lt;strong>内存的存取又是以字节位单位的&lt;/strong>, 那么要把它塞到内存里就必然会产生两种不同存放方式: &lt;strong>先放&lt;code>0xaa&lt;/code>还是先放&lt;code>0xdd&lt;/code>&lt;/strong>&lt;/p>
-&lt;p>首先, &lt;code>0xdd&lt;/code>是变量a的低8位, &lt;code>0xaa&lt;/code>是最高8位, 这是确定的.&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>如果先放&lt;code>0xaa&lt;/code>, 即低地址放高位, 就叫做&lt;em>大端&lt;/em>, 如左图;&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>如果先放&lt;code>0xdd&lt;/code>, 即低地址放低位, 就叫&lt;em>小端&lt;/em>, 如右图.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;pre tabindex="0">&lt;code>
-start addr of `a` start addr of `a`
-┌────────────┐ ┌────────────┐
-│ │ │ │
-│ aa │ │ dd │
-├────────────┤ ├────────────┤
-│ │ │ │
-│ bb │ │ cc │
-├────────────┤ ├────────────┤
-│ │ │ │
-│ cc │ │ bb │
-├────────────┤ ├────────────┤
-│ │ │ │
-│ dd │ │ aa │
-├────────────┤ ├────────────┤
-│ │ │ │
-│ │ │ │
-└────────────┘ └────────────┘
-&lt;/code>&lt;/pre>&lt;h2 id="什么情况">什么情况?&lt;/h2>
-&lt;p>看下面的代码, 猜测输出的结果&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">unsigned&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> i &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0x00646c72&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>printf(&lt;span style="color:#f1fa8c">&amp;#34;Hello Wo%s&amp;#34;&lt;/span>, &lt;span style="color:#ff79c6">&amp;amp;&lt;/span>i);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>%s&lt;/code> 会按字节一直打印内存中的字符, 直到遇到&lt;code>\0&lt;/code>. 首先打印的字符便是变量&lt;code>i&lt;/code>的地址处的内容.&lt;/p>
-&lt;p>如果是小端存储方式, 变量&lt;code>i&lt;/code>的地址处的一个字节值是0x72, 即字符&lt;code>r&lt;/code>. 以此类推, 所以如果CPU的字节序是小端形式, 那么&lt;code>printf&lt;/code>的结果是: Hello world&lt;/p>
-&lt;h2 id="大小端形式的优缺点">大小端形式的优缺点&lt;/h2>
-&lt;p>小端的优势:&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>以不同的长度读取变量非常方便, 不用计算地址. 例如&lt;code>u64 a=0x1234&lt;/code>, 当&lt;code>(u16)a&lt;/code>时, CPU不需要重新计算读取的起始位置, 永远都是变量a的起始地址.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Easily to do mathematical computations “because of the 1:1 relationship between address offset and byte number (offset 0 is byte 0), multiple precision math routines are correspondingly easy to write.”&lt;/p>
-&lt;/li>
-&lt;/ol>
-- https://wangloo.github.io/posts/os/big-little-endian/ - @2019 Notepadium.</description></item></channel></rss>
+- https://wangloo.github.io/posts/os/function-call-conventions/ - @2019 Notepadium.</description></item></channel></rss>

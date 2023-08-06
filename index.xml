@@ -1,4 +1,130 @@
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>我的开发环境构建指南</title><link>https://wangloo.github.io/posts/tools/dev_env/</link><pubDate>Mon, 17 Jul 2023 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/dev_env/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/tools/dev_env/ -&lt;h1 id="前言">前言&lt;/h1>
+<?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on Wangloo's BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on Wangloo's BLOG</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>@2019 Notepadium.</copyright><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>openwrt 开发日记</title><link>https://wangloo.github.io/posts/embedded/openwrt/</link><pubDate>Sat, 05 Aug 2023 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/embedded/openwrt/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/embedded/openwrt/ -&lt;h1 id="构建-openwrt">构建 openWRT&lt;/h1>
+&lt;blockquote>
+&lt;p>我在此步骤失败了，后面项目没有依赖完整的编译过程，
+所以可能对你不构成参考&lt;/p>
+&lt;/blockquote>
+&lt;p>过程可参考&lt;a href="https://openwrt.org/docs/guide-developer/toolchain/use-buildsystem">官方教程&lt;/a>,
+编译过程非常长，使用到的工具非常多，这里提供两个优化的思路:&lt;/p>
+&lt;p>&lt;strong>提前安装本地依赖&lt;/strong>，忘了&lt;code>./scripts/feeds update -a&lt;/code>还是&lt;code>./scripts/feeds install -a&lt;/code>时需要检查系统的各种依赖, 可以提前统一安装一波.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>sudo apt install g++
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install libncurses5-dev
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install zlib1g-dev
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install bison
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install flex
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install unzip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install autoconf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install gawk
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install make
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install gettext
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install gcc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install binutils
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install patch
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install bzip2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install libz-dev
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install asciidoc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install subversion
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install python
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>提前下载dl&lt;/strong>, dl是默认在编译时下载的一些工具源码, 你可以将他们提前下载好
+放到&lt;code>dl/&lt;/code>下, 即可省去下载的时间, 特别当你不能翻墙时.&lt;/p>
+&lt;p>就像&lt;a href="https://gitee.com/whilewell/openwrt-dl">这个仓库&lt;/a>这样, 但是它里面
+的软件版本可能比较老了而且有的软件是缺失的, 以后如果真的要自己编译,
+需要查makefile去替换真正依赖的软件和其对应的版本.&lt;/p>
+&lt;p>最终还是因为编译某个模块失败, 且编译时间太长(连交叉编译工具链都需要现场编译)
+, 导致排查困难, 没有编译成功。好在后面也没有直接依赖编译的结果。&lt;/p>
+&lt;h2 id="编译的tips">编译的tips&lt;/h2>
+&lt;ol>
+&lt;li>&lt;code>make V=99&lt;/code> build with verbose&lt;/li>
+&lt;/ol>
+&lt;h1 id="ptgen">ptgen&lt;/h1>
+&lt;p>正如上面所言, 我最终没有完整的编译成功。但其中的一个小工具&lt;code>ptgen&lt;/code>是我
+需要用的到，它在过程中被编译出来了，相对独立些。&lt;/p>
+&lt;p>&lt;code>ptgen&lt;/code>是OpenWRT开发的一个用来生成gpt分区表的工具，创建的sdcard镜像，
+只有配合分区表才能正确的被bootrom加载起来。&lt;/p>
+&lt;h2 id="使用方法及参数">使用方法及参数&lt;/h2>
+&lt;p>&lt;code>ptgen&lt;/code>使用的参数说明:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ptgen &lt;span style="color:#ff79c6">[&lt;/span>-v&lt;span style="color:#ff79c6">]&lt;/span> -h &amp;lt;heads&amp;gt; -s &amp;lt;sectors&amp;gt; -o &amp;lt;outputfile&amp;gt; &lt;span style="color:#ff79c6">[&lt;/span>-a 0..4&lt;span style="color:#ff79c6">]&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span>-l &amp;lt;align kB&amp;gt;&lt;span style="color:#ff79c6">]&lt;/span> &lt;span style="color:#ff79c6">[[&lt;/span>-t &amp;lt;type&amp;gt;&lt;span style="color:#ff79c6">]&lt;/span> -p &amp;lt;size&amp;gt;...&lt;span style="color:#ff79c6">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-v: 指定是否打印调试信息,可选
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-h: 指定起始磁头号
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-s: 指定起始扇区号
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-o: 指定输出文件名
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-a: 指定激活分区为哪个, 可选
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-l: 指定多少KiB对齐,可选，这个参数会决定每个分区的偏移扇区号，非常重要
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-t: 指定文件系统分区标志类型值,是0x83指linux,0x0b指Win95 FAT32,可选
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-p 指定分区大小,可选
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="ptgen使用案例">ptgen使用案例&lt;/h2>
+&lt;p>这里贴出我使用ptgen创建一个BananaPi M2 Ultra可以识别的sd卡镜像文件，
+对bootfs进行挂载可放入一些文件，在uboot下能访问。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#!/bin/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> -f &lt;span style="color:#f1fa8c">&amp;#34;sd.img&amp;#34;&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;warning: sd.img already exist, do nothing&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">exit&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> -f &lt;span style="color:#f1fa8c">&amp;#34;bootfs.ext4&amp;#34;&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span>; &lt;span style="color:#ff79c6">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;warning: bootfs.ext4 already exist, do nothing&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">exit&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">BOOTFS_SIZE&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>16M
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># make ext4 fs which including kernel.bin&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>dd &lt;span style="color:#8be9fd;font-style:italic">bs&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$BOOTFS_SIZE&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>/dev/zero &lt;span style="color:#8be9fd;font-style:italic">of&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>bootfs.ext4 &lt;span style="color:#8be9fd;font-style:italic">count&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mkfs.ext4 bootfs.ext4
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">[&lt;/span> -d &lt;span style="color:#f1fa8c">&amp;#34;./mnt&amp;#34;&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span> &lt;span style="color:#ff79c6">||&lt;/span> mkdir ./mnt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount -o loop bootfs.ext4 ./mnt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo cp kernel.bin ./mnt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo umount ./mnt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># create empty image&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>dd &lt;span style="color:#8be9fd;font-style:italic">bs&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>32M &lt;span style="color:#ff79c6">if&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>/dev/zero &lt;span style="color:#8be9fd;font-style:italic">of&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>sd.img &lt;span style="color:#8be9fd;font-style:italic">count&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># generate parition table&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># -t 0xc: FAT32&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># -t 0x83: ext4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> &lt;span style="color:#ff79c6">$(&lt;/span>./ptgen -o sd.img -h &lt;span style="color:#bd93f9">4&lt;/span> -s &lt;span style="color:#bd93f9">63&lt;/span> -l &lt;span style="color:#bd93f9">1024&lt;/span> -t 0x83 -p &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$BOOTFS_SIZE&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">BOOTFS_OFFSET&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">$((&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$1&lt;/span> &lt;span style="color:#ff79c6">/&lt;/span> &lt;span style="color:#bd93f9">512&lt;/span>&lt;span style="color:#ff79c6">))&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># write in uboot and bootfs&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>dd &lt;span style="color:#8be9fd;font-style:italic">bs&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">1024&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>u-boot-sunxi-with-spl.bin &lt;span style="color:#8be9fd;font-style:italic">of&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>sd.img &lt;span style="color:#8be9fd;font-style:italic">seek&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">8&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">conv&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>notrunc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>dd &lt;span style="color:#8be9fd;font-style:italic">bs&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">512&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>bootfs.ext4 &lt;span style="color:#8be9fd;font-style:italic">of&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>sd.img &lt;span style="color:#8be9fd;font-style:italic">seek&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$BOOTFS_OFFSET&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">conv&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>notrunc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> -e &lt;span style="color:#f1fa8c">&amp;#34;\n\nsd.img is ok&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>我正是依赖这个工具生成了最终的镜像而已，其他的模块其实并不是特别需要。
+本来u-boot也是必须的，但是后面发现我用的硬件(BananaPi M2 Ultra)
+在uboot中有直接的defconfig，所以也就不依赖openWRT的编译结果了。&lt;/p>
+- https://wangloo.github.io/posts/embedded/openwrt/ - @2019 Notepadium.</description></item><item><title>开发资料站集合</title><link>https://wangloo.github.io/posts/tools/useful_sites/</link><pubDate>Sat, 05 Aug 2023 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/useful_sites/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/tools/useful_sites/ -&lt;h2 id="architecture">Architecture&lt;/h2>
+&lt;h3 id="armv8">ARMv8&lt;/h3>
+&lt;ul>
+&lt;li>寄存器、指令速查：http://hehezhou.cn/arm/&lt;/li>
+&lt;/ul>
+&lt;h2 id="u-boot">u-boot&lt;/h2>
+&lt;p>克隆仓库&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>git clone https://github.com/u-boot/u-boot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="交叉编译toolchain">交叉编译toolchain&lt;/h2>
+&lt;h3 id="linaro">Linaro&lt;/h3>
+&lt;p>经常用来编译armv7架构的一些项目。&lt;/p>
+&lt;p>&lt;a href="https://releases.linaro.org/components/toolchain/binaries/">https://releases.linaro.org/components/toolchain/binaries/&lt;/a>&lt;/p>
+&lt;h3 id="gnu">GNU&lt;/h3>
+&lt;p>&lt;a href="https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-a/downloads">https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-a/downloads&lt;/a>&lt;/p>
+&lt;h2 id="c">C&lt;/h2>
+&lt;h3 id="gnu-内联汇编">GNU 内联汇编&lt;/h3>
+&lt;p>&lt;a href="https://gcc.gnu.org/onlinedocs/gcc/Using-Assembly-Language-with-C.html#Using-Assembly-Language-with-C">https://gcc.gnu.org/onlinedocs/gcc/Using-Assembly-Language-with-C.html#Using-Assembly-Language-with-C&lt;/a>&lt;/p>
+&lt;h2 id="构建工具">构建工具&lt;/h2>
+&lt;h3 id="跟我一起写makefile">跟我一起写makefile&lt;/h3>
+&lt;p>PDF：https://seisman.github.io/how-to-write-makefile/Makefile.pdf&lt;/p>
+&lt;h2 id="其他">其他&lt;/h2>
+&lt;ul>
+&lt;li>Emoji cheat sheet
+&lt;a href="https://www.webfx.com/tools/emoji-cheat-sheet/">https://www.webfx.com/tools/emoji-cheat-sheet/&lt;/a>&lt;/li>
+&lt;/ul>
+- https://wangloo.github.io/posts/tools/useful_sites/ - @2019 Notepadium.</description></item><item><title>我的开发环境构建指南</title><link>https://wangloo.github.io/posts/tools/dev_env/</link><pubDate>Mon, 17 Jul 2023 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/dev_env/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/tools/dev_env/ -&lt;h1 id="前言">前言&lt;/h1>
 &lt;p>写这篇博客的背景是&lt;strong>我实在忍受不了每次换新的开发机器都得费好大的劲来完全恢复以前的环境&lt;/strong>， 而且，我平常喜欢搜集各种有用的工具、好看的主题，字体这些，如果零零散散的记录，大概率会忘记或者记不得某些细节。&lt;/p>
 &lt;p>所以，最后期望达到的是&lt;strong>能够使我每次在新机器上搭建环境只需要看这一篇文章就可以了&lt;/strong>。因此这里会记录：&lt;/p>
 &lt;ul>
@@ -84,13 +210,38 @@
 &lt;p>🔻 对于C/C++来说, YCM的使用最好配合&lt;em>compilation database&lt;/em> 来使用, 例如&lt;a href="https://github.com/nickdiego/compiledb">compiledb&lt;/a>. 否则, 可能头文件的path识别出问题(&lt;a href="https://stackoverflow.com/questions/64277317/youcompleteme-not-work-properly-for-c-headers.">stackoverflow&lt;/a>).&lt;/p>
 &lt;p>2022年2月13日我使用的compilation database生成工具从&lt;code>compiledb&lt;/code>换成了&lt;code>bear&lt;/code>, 因为&lt;code>bear&lt;/code>更好的支持递归, 即有&lt;code>make -C&lt;/code>的情况.&lt;/p>
 &lt;p>需要的compilation database生成工具介绍: &lt;a href="https://sarcasm.github.io/notes/dev/compilation-database.html">Compilation database — Sarcasm notebook&lt;/a>&lt;/p>
-&lt;h1 id="shell">shell&lt;/h1>
+&lt;h1 id="终端软件安装">终端软件安装&lt;/h1>
+&lt;h2 id="源替换">源替换&lt;/h2>
+&lt;h2 id="apt">apt&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>sudo apt install python3-pip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install tmux
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install fzf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install zsh
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="pip3">pip3&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># CLI 代码高亮&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo pip3 install pygments
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="shell">shell&lt;/h1>
 &lt;h2 id="zsh">zsh&lt;/h2>
+&lt;h3 id="oh-my-zsh">oh-my-zsh&lt;/h3>
+&lt;p>oh-my-zsh可以看作对zsh的配置文件做一层抽象，使配置更方便。
+带来的缺点就是速度变慢。&lt;/p>
+&lt;blockquote>
+&lt;p>进入git目录下太卡&lt;/p>
+&lt;p>TODO： 是主题的原因，可以配置&lt;/p>
+&lt;/blockquote>
 &lt;h2 id="配置文件">配置文件&lt;/h2>
+&lt;ul>
+&lt;li>.bashrc&lt;/li>
+&lt;li>.zshrc&lt;/li>
+&lt;li>.bash_aliase&lt;/li>
+&lt;li>.bash_path&lt;/li>
+&lt;/ul>
 &lt;h1 id="terminal">terminal&lt;/h1>
 &lt;p>ubuntu自带的终端我觉得还不错，有些人说Terminitor不错，分屏功能还是挺常用的！&lt;/p>
 &lt;h1 id="tmux">tmux&lt;/h1>
-- https://wangloo.github.io/posts/tools/dev_env/ - @2019 Notepadium.</description></item><item><title>面试总结：特斯拉实习</title><link>https://wangloo.github.io/posts/work/tesla/</link><pubDate>Sat, 10 Jun 2023 08:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/work/tesla/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/work/tesla/ -&lt;p>上午结束了特斯拉&lt;em>嵌入式实习生-Linux platform&lt;/em>的二面，特斯拉实习生
+&lt;h1 id="ssh-密钥">ssh 密钥&lt;/h1>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>ssh-keygen -t rsa -C &lt;span style="color:#f1fa8c">&amp;#34;cnwanglu@icloud.com&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/tools/dev_env/ - @2019 Notepadium.</description></item><item><title>面试总结：特斯拉实习</title><link>https://wangloo.github.io/posts/work/tesla/</link><pubDate>Sat, 10 Jun 2023 08:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/work/tesla/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/work/tesla/ -&lt;p>上午结束了特斯拉&lt;em>嵌入式实习生-Linux platform&lt;/em>的二面，特斯拉实习生
 一共有三轮面试，一轮和二轮都是技术面，三面是主管面。
 目前我完成了所有的技术面，且不论结果如何，整个面试过程对我而言还是收获颇丰的，
 故以此文整理下自己的欠缺的技术知识，希望下次能够表现的更好。&lt;/p>
@@ -755,46 +906,4 @@ add eax, edx
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>const.c:16:10: warning: passing argument &lt;span style="color:#bd93f9">1&lt;/span> of ‘free’ discards ‘const’ qualifier from pointer target &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span>-Wdiscarded-qualifiers&lt;span style="color:#ff79c6">]&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bd93f9">16&lt;/span> | free&lt;span style="color:#ff79c6">(&lt;/span>dss_name&lt;span style="color:#ff79c6">)&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | ^~~~~~~~
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/c/experience/ - @2019 Notepadium.</description></item><item><title>行结束符在windows和linux的区别</title><link>https://wangloo.github.io/posts/c/end-of-line/</link><pubDate>Sat, 24 Dec 2022 01:35:24 +0800</pubDate><guid>https://wangloo.github.io/posts/c/end-of-line/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/c/end-of-line/ -&lt;p>使用VIM 打开一个文件时, 有时会看到例如 &lt;code>^M&lt;/code> 这类字符出现. 下面我会挖一下其出现的原因.&lt;/p>
-&lt;h2 id="eol-字符">EOL 字符&lt;/h2>
-&lt;p>EOL 或者说 end-of-line 表示一个新行的开始.&lt;/p>
-&lt;p>EOL 字符在不同的操作系统中是不同的. 本文中仅以 Linux 和 Windows 为例说明.&lt;/p>
-&lt;ul>
-&lt;li>Windows中是以读到回车&amp;lt;CR&amp;gt;和换行&amp;lt;LF&amp;gt; 表示 EOL.&lt;/li>
-&lt;li>Linux 中仅以换行作为EOL&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;ul>
-&lt;li>回车&amp;lt;CR&amp;gt; : Carriage return. 将光标回到行首, 对应C语言中的 &lt;code>\r&lt;/code>&lt;/li>
-&lt;li>换行&amp;lt;LF&amp;gt; : Line feed. 将光标下移一行, 对应C语言中的 &lt;code>\n&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;/blockquote>
-&lt;p>在 Linux 中打开 Windows 下的文件将多余的回车通常显示成 &lt;code>^M&lt;/code> 或者 &lt;code>Control-M&lt;/code>&lt;/p>
-&lt;h2 id="ref">Ref&lt;/h2>
-&lt;p>&lt;a href="https://peterbenjamin.com/seminars/crossplatform/texteol.html">End Of Line Characters&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/c/end-of-line/ - @2019 Notepadium.</description></item><item><title>浅谈 errno 的线程安全问题</title><link>https://wangloo.github.io/posts/os/errno_thread_safe/</link><pubDate>Wed, 21 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/errno_thread_safe/</guid><description>Wangloo's BLOG https://wangloo.github.io/posts/os/errno_thread_safe/ -&lt;p>我始终以为，C库中常用的 &lt;code>errno&lt;/code> 仅是一个全局变量，使用了全局变量就无法保证线程安全了，因为全局变量在所有线程中都是共享的。&lt;/p>
-&lt;p>要实现线程安全的&lt;code>errno&lt;/code> 就必须将其设置为&lt;strong>线程私有的变量&lt;/strong>，下面就来看看GCC是如何巧妙的实现的。&lt;/p>
-&lt;h2 id="正文">正文&lt;/h2>
-&lt;p>现在的&lt;code>errno&lt;/code>定义并非一个全局变量, 而是一个&lt;strong>宏定义&lt;/strong>, 以下是在&lt;code>usr/include/errno&lt;/code>中的声明:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">extern&lt;/span> &lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>&lt;span style="color:#50fa7b">__errno_location&lt;/span> (&lt;span style="color:#8be9fd">void&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6"># define errno (*__errno_location ())
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这种方式下其实现原理大概是: &lt;code>__errno_location&lt;/code> 函数返回一个&lt;code>int&lt;/code>指针, 而这个函数的实现中, 返回的就恰好是&lt;strong>实际的&lt;/strong>&lt;code>errno&lt;/code> 变量(与宏同名)的地址, 所以对其&lt;strong>解引用&lt;/strong>就相当于对其值进行操作. 所以, 这种定义规则下, 左值和右值表达式均成立.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>errno &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">10&lt;/span>; &lt;span style="color:#6272a4">// *__errno_location () = 10
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#8be9fd">int&lt;/span> x &lt;span style="color:#ff79c6">=&lt;/span> errno; &lt;span style="color:#6272a4">// x = *__errno_location ();
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>__errno_location&lt;/code> 的实现就至关重要, 因为如果其返回的变量地址不包含任何技巧的话, 就和原先直接定义全局变量的方式没差了, &lt;strong>说到底能否实现线程安全, 还得看实际保存errno的变量是否为线程独有的&lt;/strong>. 目前还没有发掘到其精髓, 只是套壳而已.&lt;/p>
-&lt;p>以下给出&lt;code>/csu/errno-loc.c&lt;/code>中&lt;code>__errno_location&lt;/code> 的实现, 与我们预期一致, 返回变量的地址. 而同名变量&lt;code>errno&lt;/code>则定义在&lt;code>/csu/errno.c&lt;/code>中, &lt;strong>决定了能够实现errno的线程安全&lt;/strong>.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#ff79c6">*&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#50fa7b">__errno_location&lt;/span> (&lt;span style="color:#8be9fd">void&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&lt;/span>errno;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>__thread &lt;span style="color:#8be9fd">int&lt;/span> errno;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&amp;ldquo;&lt;code>__thread&lt;/code>&amp;rdquo; 是GCC提供的扩展前缀, 表示该变量将被库处理为线程私有的, 注意这一步是C库完成的, 对程序员透明. 相关的理论叫 &lt;em>Thread-local Storage&lt;/em>, AArch64 架构实现的原理是利用&lt;code>TPIDR_EL0&lt;/code> 寄存器, 其他架构可以参考&lt;a href="https://akkadia.org/drepper/tls.pdf">此PDF&lt;/a>&lt;/p>
-&lt;blockquote>
-&lt;p>❓ 以上源文件中有注释为 &lt;em>non-threaded&lt;/em>版本的实现, 是代表什么含义呢?&lt;/p>
-&lt;/blockquote>
-&lt;p>​&lt;/p>
-&lt;p>虽然我暂时没有查阅到errno的其他线程安全的实现原理, 但起码GCC下该方式这是可行的. 依靠的是&amp;quot;&lt;code>__thread&lt;/code>&amp;ldquo;的支持, &lt;strong>与换成宏定义的方式无关&lt;/strong>, 不排除可能为了考虑兼容其他实现方式的可能性.&lt;/p>
-&lt;h2 id="参考">参考&lt;/h2>
-&lt;p>&lt;a href="https://stackoverflow.com/questions/18025995/how-is-thread-safe-errno-initialized-if-define-substitutes-errno-symbol">c - How is thread-safe errno initialized if #define substitutes errno symbol? - Stack Overflow&lt;/a>&lt;/p>
-- https://wangloo.github.io/posts/os/errno_thread_safe/ - @2019 Notepadium.</description></item></channel></rss>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>- https://wangloo.github.io/posts/c/experience/ - @2019 Notepadium.</description></item></channel></rss>

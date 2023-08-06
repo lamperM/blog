@@ -3,14 +3,24 @@
 <a class="a-block nav-link-item false" href=/tags>Tags</a>
 <a class="a-block nav-link-item false" href=/categories>Categories</a></div><div class=nav-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://risehere.net/>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
 @2019 Notepadium.</div></div><div id=extraContainer class=extra-container><div class=pagination><a id=globalBackToTop class="pagination-action animated-visibility" href=#top :class="{ invisible: scrollY == 0 }"><i class="material-icons pagination-action-icon">keyboard_arrow_up</i></a>
-<a type=button class=pagination-action id=darkModeToggleButton><span class="material-icons pagination-action-icon" id=darkModeToggleIcon>dark_mode</span></a><div class=pagination-indicator><span style=text-align:center>3<br><div style=display:inline-block;transform:rotate(-28deg)>-</div><br>5</span></div><a class=pagination-action href=/posts/page/2/><i class="material-icons pagination-action-icon">chevron_left</i></a>
+<a type=button class=pagination-action id=darkModeToggleButton><span class="material-icons pagination-action-icon" id=darkModeToggleIcon>dark_mode</span></a><div class=pagination-indicator><span style=text-align:center>3<br><div style=display:inline-block;transform:rotate(-28deg)>-</div><br>6</span></div><a class=pagination-action href=/posts/page/2/><i class="material-icons pagination-action-icon">chevron_left</i></a>
 <a class=pagination-action href=/posts/page/4/><i class="material-icons pagination-action-icon">chevron_right</i></a></div></div><div class=single-column-drawer-container id=drawer v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }"><div class=drawer-content><div class=drawer-menu><a class="a-block drawer-menu-item active" href=/posts>Archive</a>
 <a class="a-block drawer-menu-item false" href=/tags>Tags</a>
 <a class="a-block drawer-menu-item false" href=/categories>Categories</a></div></div></div><transition name=fade><div id=drawer-mask v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if=isDrawerOpen v-on:click=toggleDrawer></div></transition><nav id=navBar class="navbar sticky-top navbar-light single-column-nav-container"><div id=navBackground class=nav-background></div><div class="container container-narrow nav-content"><button id=nav_dropdown_btn class=nav-dropdown-toggle type=button v-on:click=toggleDrawer>
 <i class=material-icons>menu</i></button>
 <a id=navTitle class=navbar-brand href=https://wangloo.github.io/>Wangloo's BLOG</a>
 <button type=button class=nav-darkmode-toggle id=darkModeToggleButton2>
-<i class=material-icons id=darkModeToggleIcon2>dark_mode</i></button></div></nav><div class=single-column-header-container id=pageHead v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }"><a href=https://wangloo.github.io/><div class=single-column-header-title>Wangloo's BLOG</div><div class=single-column-header-subtitle>花有重开日, 人无再少年</div></a></div><div id=content><div id=streamContainer class=stream-container><div class="post-list-container post-list-container-shadow"><a class=a-block><div class="post-item-wrapper post-item-wrapper-no-hover"><div class="post-item post-item-no-gaps"><div class=post-item-info-wrapper><div class="post-item-title post-item-title-small year">2022</div></div></div></div></a><a href=/posts/os/context/ class=a-block><div class=post-item-wrapper><div class="post-item post-item-no-gaps"><div class=post-item-info-wrapper><div class=post-item-title>操作系统——上下文切换</div><div class=post-item-meta>2022-11-14
+<i class=material-icons id=darkModeToggleIcon2>dark_mode</i></button></div></nav><div class=single-column-header-container id=pageHead v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }"><a href=https://wangloo.github.io/><div class=single-column-header-title>Wangloo's BLOG</div><div class=single-column-header-subtitle>花有重开日, 人无再少年</div></a></div><div id=content><div id=streamContainer class=stream-container><div class="post-list-container post-list-container-shadow"><a class=a-block><div class="post-item-wrapper post-item-wrapper-no-hover"><div class="post-item post-item-no-gaps"><div class=post-item-info-wrapper><div class="post-item-title post-item-title-small year">2022</div></div></div></div></a><a href=/posts/c/pointers-pointers-list/ class=a-block><div class=post-item-wrapper><div class="post-item post-item-no-gaps"><div class=post-item-info-wrapper><div class=post-item-title>二级指针操作链表</div><div class=post-item-meta>2022-11-20
+&emsp;
+<i class=material-icons style=font-size:10px>schedule</i>
+1 min
+28 s
+&emsp;</div></div></div></div></a><a href=/posts/os/big-little-endian/ class=a-block><div class=post-item-wrapper><div class="post-item post-item-no-gaps"><div class=post-item-info-wrapper><div class=post-item-title>大小端问题</div><div class=post-item-meta>2022-11-17
+&emsp;
+<i class=material-icons style=font-size:10px>schedule</i>
+4 min
+7 s
+&emsp;</div></div></div></div></a><a href=/posts/os/context/ class=a-block><div class=post-item-wrapper><div class="post-item post-item-no-gaps"><div class=post-item-info-wrapper><div class=post-item-title>操作系统——上下文切换</div><div class=post-item-meta>2022-11-14
 &emsp;
 <i class=material-icons style=font-size:10px>schedule</i>
 6 min
@@ -50,15 +60,5 @@
 <i class=material-icons style=font-size:10px>schedule</i>
 2 min
 30 s
-&emsp;</div></div></div></div></a><a href=/posts/c/bitops/ class=a-block><div class=post-item-wrapper><div class="post-item post-item-no-gaps"><div class=post-item-info-wrapper><div class=post-item-title>C 语言位操作技巧</div><div class=post-item-meta>2022-07-03
-&emsp;
-<i class=material-icons style=font-size:10px>schedule</i>
-4 min
-55 s
-&emsp;</div></div></div></div></a><a href=/posts/os/stack-and-heap/ class=a-block><div class=post-item-wrapper><div class="post-item post-item-no-gaps"><div class=post-item-info-wrapper><div class=post-item-title>Stack and Heap</div><div class=post-item-meta>2022-06-28
-&emsp;
-<i class=material-icons style=font-size:10px>schedule</i>
-1 min
-48 s
-&emsp;</div></div></div></div></a></div></div></div><div class=pagination><a class=pagination-action href=/posts/page/2/ style=opacity:1><i class="material-icons pagination-action-icon">chevron_left</i></a><div class=pagination-indicator><span>3/5</span></div><a class=pagination-action href=/posts/page/4/ style=opacity:1><i class="material-icons pagination-action-icon">chevron_right</i></a></div><div id=single-column-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://risehere.net/>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+&emsp;</div></div></div></div></a></div></div></div><div class=pagination><a class=pagination-action href=/posts/page/2/ style=opacity:1><i class="material-icons pagination-action-icon">chevron_left</i></a><div class=pagination-indicator><span>3/6</span></div><a class=pagination-action href=/posts/page/4/ style=opacity:1><i class="material-icons pagination-action-icon">chevron_right</i></a></div><div id=single-column-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://risehere.net/>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
 @2019 Notepadium.</div></div><script src=/js/journal.js></script></body></html>
