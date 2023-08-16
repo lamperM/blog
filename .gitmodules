@@ -1,3 +1,15 @@
 [submodule "themes/diary"]
 	path = themes/diary
 	url = https://github.com/AmazingRise/hugo-theme-diary
+[submodule "themes/LoveIt"]
+	path = themes/LoveIt
+	url = git@github.com:dillonzq/LoveIt.git
+[submodule "themes/PaperMod"]
+	path = themes/PaperMod
+	url = git@github.com:adityatelange/hugo-PaperMod.git
+[submodule "themes/puer"]
+    path = themes/puer
+    url = git@github.com:wangloo/hugo-theme-puer.git
+[submodule "themes/ramium"]
+	path = themes/ramium
+	url = https://github.com/rafed/ramium.git

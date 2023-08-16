@@ -1,56 +1,40 @@
+
 baseURL = "https://wangloo.github.io/"
-languageCode = "en-us"
-title = "Wangloo's BLOG"
-theme = "diary"
-copyright = "@2019 Notepadium."
-enableGitInfo = true
-enableEmoji = true
+title = "BLOG"
+theme = "puer"
 
-[params]
-  AuthorName = 'wangloo'
-  GitHubuser = 'wangloo'
-  Subtitle = '花有重开日, 人无再少年'
-  enableGitalk = true
-  enableReadingTime=true
-
-[frontmatter]
-  date = ['date', 'lastmod']
-  lastmod = [':git', 'lastmod', 'date']
-
-[[menu.main]]
-url = "/categories"
-name = "Categories"
-weight = 3
-
-[[menu.main]]
-url = "/tags"
-name = "Tags"
-weight = 2
-
-[[menu.main]]
-url = "/posts"
-name = "Archive"
-weight = 1
 
 [markup]
   [markup.highlight]
-    codeFences = true
-    guessSyntax = false
-    hl_Lines = ""
-    lineNoStart = 1
-    lineNos = false
-    lineNumbersInTable = true
-    noClasses = true
-    style = "dracula"
+    anchorLineNos = false     # 行号格式化为<span>
+    codeFences = true         # 代码围栏, 不启用高亮无效
+    guessSyntax = true        # 自动推断高亮语言
+    hl_Lines = ''             # 突出显示某些特定的行
+    hl_inline = false         # 高亮 inline code, ver>=0.101.0
+    lineAnchors = ''          #　与 anchorLineNos 配合
+    lineNoStart = 1           # 行号开始
+    lineNos = true            # 是否显示行号
+    lineNumbersInTable = true # 生成html中分开行号和代码
+    noClasses = true          
+    noHl = false
+    style = 'vs'
     tabWidth = 4
 
-  [markup.tableOfContents]
-    endLevel = 3
-    ordered = false
-    startLevel = 2
+    
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
 
-[params.gitalk]
-  owner = "wangloo"
-  repo = "blogcomments_gitalk"
-  client_id = "12dfb0f809e5e6afde3d"
-  client_secret = "72aaf5660b3a7b43b0bffb4d683a605a7ea65dad"
+
+weight = 2
+[[menu.main]]
+url = "/tags"
+name = "Tags"
+weight = 3
+[[menu.main]]
+url = "/posts"
+name = "所有文章"
+weight = 1
+[[menu.main]]
+url = "/index.xml"
+name = "RSS Feed"
+weight = 4
