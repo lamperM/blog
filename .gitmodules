@@ -8,8 +8,8 @@
 	path = themes/PaperMod
 	url = git@github.com:adityatelange/hugo-PaperMod.git
 [submodule "themes/puer"]
-    path = themes/puer
-    url = git@github.com:wangloo/hugo-theme-puer.git
+	path = themes/puer
+	url = git@github.com:wangloo/hugo-theme-puer.git
 [submodule "themes/ramium"]
 	path = themes/ramium
 	url = https://github.com/rafed/ramium.git
