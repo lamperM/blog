@@ -14,11 +14,12 @@ theme = "puer"
     lineAnchors = ''          #　与 anchorLineNos 配合
     lineNoStart = 1           # 行号开始
     lineNos = true            # 是否显示行号
-    lineNumbersInTable = true # 生成html中分开行号和代码
+    lineNumbersInTable = false # 生成html中分开行号和代码
     noClasses = true          
     noHl = false
     style = 'vs'
     tabWidth = 4
+
 
     
 [outputs]
