@@ -1,87 +1,51 @@
 <!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>ELF 文件的链接与加载</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>所有文章</a></div><div class="a-block nav-link-item"><a href=/tags>Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput><ul id=searchResults></ul></div></div></div></div><script src=/js/fuse.js></script>
-<script src=/js/fastsearch.js></script><main class=container><article><header><h1>ELF 文件的链接与加载</h1></header><h2 id=elf-is-a-file-format><code>ELF</code> is a file format</h2><p>Files in <code>ELF</code> format includes:</p><table><thead><tr><th>Type</th><th>description</th><th>实例</th></tr></thead><tbody><tr><td>Relocatable File</td><td>这些文件包含了代码和data, 可以被用来链接成可执行文件或共享目标文件.</td><td><code>.o</code>, <code>.a</code></td></tr><tr><td>Executable File</td><td>直接可执行的文件</td><td><code>/bin/ls</code></td></tr><tr><td>Shared Object File</td><td>Including code and data. 链接器可将其与其他Relocatable File或Shared Object File结合, 生成新的目标文件. 动态链接器可将其与Executable File结合, 作为进程映像的一部分来运行.</td><td><code>.so</code></td></tr><tr><td>Core Dump File</td><td>Restore critical infomation when process is terminated unexpectedly</td><td><code>core dump</code></td></tr></tbody></table><blockquote><p>:pushpin: <code>file</code> command in Linux can output the format of a file.</p></blockquote><p> </p><h2 id=elf-文件组成的结构>ELF 文件组成的结构</h2><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>+---------------------------------+
-</span></span><span style=display:flex><span>|           ELF Header            |  包含描述整个ELF的基本信息, 如版本, 入口地址...
-</span></span><span style=display:flex><span>+---------------------------------+
-</span></span><span style=display:flex><span>|           .text                 |
-</span></span><span style=display:flex><span>+---------------------------------+
-</span></span><span style=display:flex><span>|           .data                 |
-</span></span><span style=display:flex><span>+---------------------------------+  紧接着是各个段
-</span></span><span style=display:flex><span>|           .bss                  |
-</span></span><span style=display:flex><span>+---------------------------------+
-</span></span><span style=display:flex><span>|           ...                   |  
-</span></span><span style=display:flex><span>|           other sections        |
-</span></span><span style=display:flex><span>+---------------------------------+
-</span></span><span style=display:flex><span>|                                 |  段表: 与段相关最重要的结构
-</span></span><span style=display:flex><span>|       Section Header table      |  描述了每个段的name, length, authority...
-</span></span><span style=display:flex><span>|                                 |
-</span></span><span style=display:flex><span>+---------------------------------+
-</span></span><span style=display:flex><span>|         String tables           |
-</span></span><span style=display:flex><span>|         Symbol tables           |
-</span></span><span style=display:flex><span>+---------------------------------+
-</span></span></code></pre></td></tr></table></div></div><table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody><tr><td>e_machine</td><td>目标架构</td></tr><tr><td>e_entry</td><td>入口地址</td></tr><tr><td>e_machine</td><td>目标架构</td></tr><tr><td>e_phnum</td><td>number of entries in the <strong>program header table</strong></td></tr><tr><td>e_shnum</td><td>number of entries in the <strong>section header table</strong></td></tr><tr><td>e_shoff</td><td>offset, in bytes, of the section header table</td></tr><tr><td>e_phoff</td><td>offset, in bytes, of the program header table</td></tr><tr><td>e_machine</td><td>目标架构</td></tr><tr><td>e_machine</td><td>目标架构</td></tr></tbody></table><h3 id=段表>段表</h3><p>ELF文件中的各个段的基本属性就是保存在<strong>段表</strong>中，是分析ELF文件最重要的字段。存放了每个段的信息，例如，段名，段的长度，在文件中的偏移，读写权限以及其他属性。</p><p>编译器、链接器都是依靠段表来定位和访问各个段的属性的。</p><p>如何找到段表？ <strong><code>e_shoff</code>字段</strong></p><blockquote><p>使用<code>readelf -S &lt;elfname></code> 就能查看ELF文件的段表</p></blockquote><h3 id=程序头表>程序头表</h3><p> </p><h2 id=分析elf文件的工具>分析ELF文件的工具</h2><h3 id=1-objdump>1. objdump</h3><h3 id=2-readelf>2. readelf</h3><p> </p><h2 id=为什么目标文件中代码和数据要分开放>为什么目标文件中代码和数据要分开放?</h2><p>一方面, 程序被加载进内存后, 代码段和数据段分别被映射到<strong>两个virtual memory region</strong>.
+<script src=/js/fastsearch.js></script><main class=container><article><header><h1>ELF 文件的链接与加载</h1></header><h2 id=elf-is-a-file-format><code>ELF</code> is a file format</h2><p>Files in <code>ELF</code> format includes:</p><table><thead><tr><th>Type</th><th>description</th><th>实例</th></tr></thead><tbody><tr><td>Relocatable File</td><td>这些文件包含了代码和data, 可以被用来链接成可执行文件或共享目标文件.</td><td><code>.o</code>, <code>.a</code></td></tr><tr><td>Executable File</td><td>直接可执行的文件</td><td><code>/bin/ls</code></td></tr><tr><td>Shared Object File</td><td>Including code and data. 链接器可将其与其他Relocatable File或Shared Object File结合, 生成新的目标文件. 动态链接器可将其与Executable File结合, 作为进程映像的一部分来运行.</td><td><code>.so</code></td></tr><tr><td>Core Dump File</td><td>Restore critical infomation when process is terminated unexpectedly</td><td><code>core dump</code></td></tr></tbody></table><blockquote><p>:pushpin: <code>file</code> command in Linux can output the format of a file.</p></blockquote><p> </p><h2 id=elf-文件组成的结构>ELF 文件组成的结构</h2><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>+---------------------------------+
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>|           ELF Header            |  包含描述整个ELF的基本信息, 如版本, 入口地址...
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>+---------------------------------+
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>|           .text                 |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>+---------------------------------+
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>|           .data                 |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>+---------------------------------+  紧接着是各个段
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>|           .bss                  |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>+---------------------------------+
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>|           ...                   |  
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>|           other sections        |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>+---------------------------------+
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>|                                 |  段表: 与段相关最重要的结构
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span>|       Section Header table      |  描述了每个段的name, length, authority...
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>|                                 |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>+---------------------------------+
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span>|         String tables           |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span>|         Symbol tables           |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span><span>+---------------------------------+
+</span></span></code></pre></div><table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody><tr><td>e_machine</td><td>目标架构</td></tr><tr><td>e_entry</td><td>入口地址</td></tr><tr><td>e_machine</td><td>目标架构</td></tr><tr><td>e_phnum</td><td>number of entries in the <strong>program header table</strong></td></tr><tr><td>e_shnum</td><td>number of entries in the <strong>section header table</strong></td></tr><tr><td>e_shoff</td><td>offset, in bytes, of the section header table</td></tr><tr><td>e_phoff</td><td>offset, in bytes, of the program header table</td></tr><tr><td>e_machine</td><td>目标架构</td></tr><tr><td>e_machine</td><td>目标架构</td></tr></tbody></table><h3 id=段表>段表</h3><p>ELF文件中的各个段的基本属性就是保存在<strong>段表</strong>中，是分析ELF文件最重要的字段。存放了每个段的信息，例如，段名，段的长度，在文件中的偏移，读写权限以及其他属性。</p><p>编译器、链接器都是依靠段表来定位和访问各个段的属性的。</p><p>如何找到段表？ <strong><code>e_shoff</code>字段</strong></p><blockquote><p>使用<code>readelf -S &lt;elfname></code> 就能查看ELF文件的段表</p></blockquote><h3 id=程序头表>程序头表</h3><p> </p><h2 id=分析elf文件的工具>分析ELF文件的工具</h2><h3 id=1-objdump>1. objdump</h3><h3 id=2-readelf>2. readelf</h3><p> </p><h2 id=为什么目标文件中代码和数据要分开放>为什么目标文件中代码和数据要分开放?</h2><p>一方面, 程序被加载进内存后, 代码段和数据段分别被映射到<strong>两个virtual memory region</strong>.
 通过MMU的支持, 可以将代码段的区域设置为只读, 防止恶意篡改.</p><p>另一方面, 当下CPU Cache多划分为<em>Instruction Cache</em>和<em>Data Cache</em>, 再配合互相独立的
 地址区域能够提高<strong>局部性原理</strong>的效果.</p><p>最后, 代码段可以被多个进程共享(例如都调用同一外部函数), 节省内存空间.</p><blockquote><p>针对嵌入式设备, 如果内存空间不够大, 只读的代码段可存放在ROM中</p></blockquote><p> </p><h2 id=关于静态库>关于静态库</h2><p>一个静态库可以简单的看作是 a set of object file.<br>这些 object file 可能包括: 输入输出相关的<code>printf.o</code>, <code>scanf.o</code>, 日期时间相关的<code>time.o</code>, <code>date.o</code>等.</p><p>:question: 为什么不直接提供这些<em>目标文件</em>呢?</p><p>这些<strong>零散的</strong>文件若直接提供给使用者, 很大程度上造成文件传输, 管理等方面的不便.<br>于是人们通常使用<code>ar</code>压缩程序将这些目标文件压缩到一起.</p><p>:question: 如何查看一个静态库是由哪些object file压缩到一起的?</p><p>Shell command<code>ar -t libc.a</code> 可以查看<code>libc.a</code>中包含的所有object files.</p><p> </p><h2 id=elf文件加载-运行流程>ELF文件加载-运行流程</h2><blockquote><p>废了半天劲编译生成的ELF文件, 想要最终跑起来则包含的instruction and data必须要在内存中.</p></blockquote><h3 id=静态加载与动态加载>静态加载与动态加载</h3><p>我们能想到的最简单的办法是: 把整个ELF的<strong>所有指令和数据</strong>在运行之前就全部load到内存中. 这就是<em>静态加载</em>.</p><p>更加高效的做法是: 充分利用<em>局部性原理</em>, 将指令和数据划分为<strong>模块</strong>, 只有当该模块被使用时, 才load进内存,
 否则就在外存中老老实实呆着. 这就是<em>动态加载</em>.</p><h3 id=动态加载的步骤>动态加载的步骤</h3><p>借助<em>虚拟内存</em>技术, 上面提到的<strong>模块</strong>的概念可以自然的被<strong>页</strong>(page)代替.
 我们将所有的指令和数据按照page为单位划分.</p><ol><li><p>运行该ELF的线程被创建时, 其virtual space范围被划定, 但其页表是空的, 没有任何映射.</p></li><li><p>OS读取ELF Header, 建立virtual space与<strong>ELF文件</strong>的映射关系. 这个映射关系的表达方式是一个特殊的<strong>数据结构</strong>.
 建立该映射关系的原因是: 当程序运行到某个地址发现该页表项是空的(例如 <code>call 0x1234</code>), 那么必然触发<code>page fault</code>.
-由OS负责到<em>特定的外存地址</em>将页面加载到physical memory中.</p></li></ol><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>OS要想知道缺失的内容在ELF文件的哪个位置, 就是利用该映射, 即某个数据结构
-</span></span></code></pre></td></tr></table></div></div><ol start=3><li>physical memory中有了所需的指令或数据后, 还需建立visual memory到physical memory的映射, 即在<em>页表项</em>中写入.
+由OS负责到<em>特定的外存地址</em>将页面加载到physical memory中.</p></li></ol><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>OS要想知道缺失的内容在ELF文件的哪个位置, 就是利用该映射, 即某个数据结构
+</span></span></code></pre></div><ol start=3><li>physical memory中有了所需的指令或数据后, 还需建立visual memory到physical memory的映射, 即在<em>页表项</em>中写入.
 随着程序的运行, 会继续触发<code>page fault</code>, 从ELF中不断load page到physical memory, 建立缺页visual addr处的页表映射,
 最终填补成一个完整的pagetable.</li></ol><p> </p><h2 id=段地址对齐技术>段地址对齐技术</h2><blockquote><p>由前面动态加载的步骤可知, ELF文件中的代码和数据被按page划分. 并只有在用到时才被加载到内存,
 并建立<code>虚拟内存-物理内存</code>的映射.</p></blockquote><p>假设一个ELF有三个段需要被<code>LOAD</code>, ELF段表如下:</p><table><thead><tr><th>Segment</th><th>Length</th><th>offset</th></tr></thead><tbody><tr><td>SEG 0</td><td>127 B</td><td>34 B</td></tr><tr><td>SEG 1</td><td>9899 B</td><td>164 B</td></tr><tr><td>SEG 2</td><td>1988 B</td><td>0 B</td></tr></tbody></table><h3 id=question-这三个段在elf文件中的布局如何>:question: 这三个段在ELF文件中的布局如何?</h3><p>根据前面ELF文件格式的介绍, 这三个段必然是挨着的(简单考虑, ELF中仅有这三个段).</p><h3 id=question-这三个段在物理内存中的布局>:question: 这三个段在物理内存中的布局?</h3><p>发生<code>page fault</code>之后, OS会为页面分配合适的物理页面, 如利用<code>buddy system</code>等.</p><p>可以保证<em>段内</em>的连续, 不能保证<em>段与段</em>是连续的.</p><blockquote><p>未使用段对齐技术之前, <code>SEG0</code>的长度不足一页, 但是也给它分配一页的空间. 同理为<code>SEG1</code>分配两页, <code>SEG2</code>分配一页.
 总共占用 <code>1+2+1=5</code>个物理页.</p></blockquote><h3 id=question-这三个段在用户virtual-addrspace下的布局如何>:question: 这三个段在用户virtual addrspace下的布局如何?</h3><p>todo</p><h3 id=question-何为段地址对齐技术>:question: 何为段地址对齐技术?</h3><p>上面说了, 在为这三个段分配物理内存时, 虽然他们的真实大小远小于5个页面, 但由于简单采用: <code>每个段的开头必须是page align</code>,
 导致实际上产生了巨大的<strong>内部碎片</strong>.</p><p>段地址对齐实际上就是在为ELF文件中的段分配物理内存时, 不考虑其段的独立性, 强制按照<code>page</code>来划分. 划分的行为如下图所示.
-结果就是仅需占用<code>3</code>个物理页面.</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>+---+---------------+
-</span></span><span style=display:flex><span>| P |     SEG0      |
-</span></span><span style=display:flex><span>| A +---------------+
-</span></span><span style=display:flex><span>| G |               |
-</span></span><span style=display:flex><span>| E |               |
-</span></span><span style=display:flex><span>+---+               |
-</span></span><span style=display:flex><span>| P |     SEG1      |
-</span></span><span style=display:flex><span>| A |               |
-</span></span><span style=display:flex><span>| G |               |
-</span></span><span style=display:flex><span>| E |               |
-</span></span><span style=display:flex><span>+---+               |
-</span></span><span style=display:flex><span>| P +---------------+
-</span></span><span style=display:flex><span>| A |               |
-</span></span><span style=display:flex><span>| G |     SEG2      |
-</span></span><span style=display:flex><span>| E |               |
-</span></span><span style=display:flex><span>+---+---------------+
-</span></span></code></pre></td></tr></table></div></div><blockquote><p>目前, gcc(更准确是说是GUN ld)默认启用段对齐技术. 各个段的虚拟地址并不是<code>page align</code>.</p></blockquote><blockquote><p>:four_leaf_clover: 物理页面到虚拟页面的映射阶段, 那些<em>同时包含</em>两个段的页面会被映射两次, 即一个物理页面对应两个
+结果就是仅需占用<code>3</code>个物理页面.</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>+---+---------------+
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>| P |     SEG0      |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>| A +---------------+
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>| G |               |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>| E |               |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>+---+               |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>| P |     SEG1      |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>| A |               |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>| G |               |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>| E |               |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>+---+               |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>| P +---------------+
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>| A |               |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span>| G |     SEG2      |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>| E |               |
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>+---+---------------+
+</span></span></code></pre></div><blockquote><p>目前, gcc(更准确是说是GUN ld)默认启用段对齐技术. 各个段的虚拟地址并不是<code>page align</code>.</p></blockquote><blockquote><p>:four_leaf_clover: 物理页面到虚拟页面的映射阶段, 那些<em>同时包含</em>两个段的页面会被映射两次, 即一个物理页面对应两个
 虚拟页.</p><p>原因是: 在一个页面的不同段可能<strong>权限不同</strong>, 所以不能使用同一映射.</p></blockquote></article></body></main></div></body></html>

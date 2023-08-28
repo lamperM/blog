@@ -1,151 +1,82 @@
 <!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>openwrt 开发日记</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>所有文章</a></div><div class="a-block nav-link-item"><a href=/tags>Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput><ul id=searchResults></ul></div></div></div></div><script src=/js/fuse.js></script>
 <script src=/js/fastsearch.js></script><main class=container><article><header><h1>openwrt 开发日记</h1></header><h1 id=构建-openwrt>构建 openWRT</h1><blockquote><p>我在此步骤失败了，后面项目没有依赖完整的编译过程，
 所以可能对你不构成参考</p></blockquote><p>过程可参考<a href=https://openwrt.org/docs/guide-developer/toolchain/use-buildsystem>官方教程</a>,
-编译过程非常长，使用到的工具非常多，这里提供两个优化的思路:</p><p><strong>提前安装本地依赖</strong>，忘了<code>./scripts/feeds update -a</code>还是<code>./scripts/feeds install -a</code>时需要检查系统的各种依赖, 可以提前统一安装一波.</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>sudo apt install g++
-</span></span><span style=display:flex><span>sudo apt install libncurses5-dev
-</span></span><span style=display:flex><span>sudo apt install zlib1g-dev
-</span></span><span style=display:flex><span>sudo apt install bison
-</span></span><span style=display:flex><span>sudo apt install flex
-</span></span><span style=display:flex><span>sudo apt install unzip
-</span></span><span style=display:flex><span>sudo apt install autoconf
-</span></span><span style=display:flex><span>sudo apt install gawk
-</span></span><span style=display:flex><span>sudo apt install make
-</span></span><span style=display:flex><span>sudo apt install gettext
-</span></span><span style=display:flex><span>sudo apt install gcc
-</span></span><span style=display:flex><span>sudo apt install binutils
-</span></span><span style=display:flex><span>sudo apt install patch
-</span></span><span style=display:flex><span>sudo apt install bzip2
-</span></span><span style=display:flex><span>sudo apt install libz-dev
-</span></span><span style=display:flex><span>sudo apt install asciidoc
-</span></span><span style=display:flex><span>sudo apt install subversion
-</span></span><span style=display:flex><span>sudo apt install python
-</span></span><span style=display:flex><span>sudo apt install git
-</span></span></code></pre></td></tr></table></div></div><p><strong>提前下载dl</strong>, dl是默认在编译时下载的一些工具源码, 你可以将他们提前下载好
+编译过程非常长，使用到的工具非常多，这里提供两个优化的思路:</p><p><strong>提前安装本地依赖</strong>，忘了<code>./scripts/feeds update -a</code>还是<code>./scripts/feeds install -a</code>时需要检查系统的各种依赖, 可以提前统一安装一波.</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>sudo apt install g++
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>sudo apt install libncurses5-dev
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>sudo apt install zlib1g-dev
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>sudo apt install bison
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>sudo apt install flex
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>sudo apt install unzip
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>sudo apt install autoconf
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>sudo apt install gawk
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>sudo apt install make
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>sudo apt install gettext
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>sudo apt install gcc
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>sudo apt install binutils
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>sudo apt install patch
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span>sudo apt install bzip2
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>sudo apt install libz-dev
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>sudo apt install asciidoc
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span>sudo apt install subversion
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span>sudo apt install python
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span><span>sudo apt install git
+</span></span></code></pre></div><p><strong>提前下载dl</strong>, dl是默认在编译时下载的一些工具源码, 你可以将他们提前下载好
 放到<code>dl/</code>下, 即可省去下载的时间, 特别当你不能翻墙时.</p><p>就像<a href=https://gitee.com/whilewell/openwrt-dl>这个仓库</a>这样, 但是它里面
 的软件版本可能比较老了而且有的软件是缺失的, 以后如果真的要自己编译,
 需要查makefile去替换真正依赖的软件和其对应的版本.</p><p>最终还是因为编译某个模块失败, 且编译时间太长(连交叉编译工具链都需要现场编译)
 , 导致排查困难, 没有编译成功。好在后面也没有直接依赖编译的结果。</p><h2 id=编译的tips>编译的tips</h2><ol><li><code>make V=99</code> build with verbose</li></ol><h1 id=ptgen>ptgen</h1><p>正如上面所言, 我最终没有完整的编译成功。但其中的一个小工具<code>ptgen</code>是我
 需要用的到，它在过程中被编译出来了，相对独立些。</p><p><code>ptgen</code>是OpenWRT开发的一个用来生成gpt分区表的工具，创建的sdcard镜像，
-只有配合分区表才能正确的被bootrom加载起来。</p><h2 id=使用方法及参数>使用方法及参数</h2><p><code>ptgen</code>使用的参数说明:</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>
-</span></span><span style=display:flex><span>ptgen [-v] -h &lt;heads&gt; -s &lt;sectors&gt; -o &lt;outputfile&gt; [-a 0..4] [-l &lt;align kB&gt;] [[-t &lt;type&gt;] -p &lt;size&gt;...]
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>-v: 指定是否打印调试信息,可选
-</span></span><span style=display:flex><span>-h: 指定起始磁头号
-</span></span><span style=display:flex><span>-s: 指定起始扇区号
-</span></span><span style=display:flex><span>-o: 指定输出文件名
-</span></span><span style=display:flex><span>-a: 指定激活分区为哪个, 可选
-</span></span><span style=display:flex><span>-l:  指定多少KiB对齐,可选，这个参数会决定每个分区的偏移扇区号，非常重要
-</span></span><span style=display:flex><span>-t:  指定文件系统分区标志类型值,是0x83指linux,0x0b指Win95 FAT32,可选
-</span></span><span style=display:flex><span>-p  指定分区大小,可选
-</span></span></code></pre></td></tr></table></div></div><h2 id=ptgen使用案例>ptgen使用案例</h2><p>这里贴出我使用ptgen创建一个BananaPi M2 Ultra可以识别的sd卡镜像文件，
-对bootfs进行挂载可放入一些文件，在uboot下能访问。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">39
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#00f>#!/bin/bash
-</span></span></span><span style=display:flex><span><span style=color:#00f></span>
-</span></span><span style=display:flex><span><span style=color:#00f>if</span> [ -f <span style=color:#a31515>&#34;sd.img&#34;</span> ]; <span style=color:#00f>then</span>
-</span></span><span style=display:flex><span>        echo <span style=color:#a31515>&#34;warning: sd.img already exist, do nothing&#34;</span>
-</span></span><span style=display:flex><span>        exit
-</span></span><span style=display:flex><span><span style=color:#00f>fi</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#00f>if</span> [ -f <span style=color:#a31515>&#34;bootfs.ext4&#34;</span> ]; <span style=color:#00f>then</span>
-</span></span><span style=display:flex><span>        echo <span style=color:#a31515>&#34;warning: bootfs.ext4 already exist, do nothing&#34;</span>
-</span></span><span style=display:flex><span>        exit
-</span></span><span style=display:flex><span><span style=color:#00f>fi</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>BOOTFS_SIZE=16M
-</span></span><span style=display:flex><span><span style=color:green># make ext4 fs which including kernel.bin</span>
-</span></span><span style=display:flex><span>dd bs=<span style=color:#a31515>&#34;</span>$BOOTFS_SIZE<span style=color:#a31515>&#34;</span> <span style=color:#00f>if</span>=/dev/zero of=bootfs.ext4 count=1
-</span></span><span style=display:flex><span>sudo mkfs.ext4 bootfs.ext4
-</span></span><span style=display:flex><span>[ -d <span style=color:#a31515>&#34;./mnt&#34;</span> ] || mkdir ./mnt
-</span></span><span style=display:flex><span>sudo mount -o loop bootfs.ext4 ./mnt
-</span></span><span style=display:flex><span>sudo cp kernel.bin ./mnt
-</span></span><span style=display:flex><span>sudo umount ./mnt
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green># create empty image</span>
-</span></span><span style=display:flex><span>dd bs=32M <span style=color:#00f>if</span>=/dev/zero of=sd.img  count=1
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green># generate parition table</span>
-</span></span><span style=display:flex><span><span style=color:green># -t 0xc: FAT32</span>
-</span></span><span style=display:flex><span><span style=color:green># -t 0x83: ext4</span>
-</span></span><span style=display:flex><span>set <span style=color:#00f>$(</span>./ptgen -o sd.img -h 4 -s 63 -l 1024 -t 0x83 -p <span style=color:#a31515>&#34;</span>$BOOTFS_SIZE<span style=color:#a31515>&#34;</span><span style=color:#00f>)</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>BOOTFS_OFFSET=<span style=color:#a31515>&#34;</span><span style=color:#00f>$((</span>$1 / 512<span style=color:#00f>))</span><span style=color:#a31515>&#34;</span>
-</span></span><span style=display:flex><span><span style=color:green># write in uboot and bootfs</span>
-</span></span><span style=display:flex><span>dd bs=1024 <span style=color:#00f>if</span>=u-boot-sunxi-with-spl.bin of=sd.img  seek=8 conv=notrunc
-</span></span><span style=display:flex><span>dd bs=512 <span style=color:#00f>if</span>=bootfs.ext4 of=sd.img seek=<span style=color:#a31515>&#34;</span>$BOOTFS_OFFSET<span style=color:#a31515>&#34;</span> conv=notrunc
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>echo -e <span style=color:#a31515>&#34;\n\nsd.img is ok&#34;</span>
-</span></span></code></pre></td></tr></table></div></div><p>我正是依赖这个工具生成了最终的镜像而已，其他的模块其实并不是特别需要。
+只有配合分区表才能正确的被bootrom加载起来。</p><h2 id=使用方法及参数>使用方法及参数</h2><p><code>ptgen</code>使用的参数说明:</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>ptgen [-v] -h &lt;heads&gt; -s &lt;sectors&gt; -o &lt;outputfile&gt; [-a 0..4] [-l &lt;align kB&gt;] [[-t &lt;type&gt;] -p &lt;size&gt;...]
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>-v: 指定是否打印调试信息,可选
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>-h: 指定起始磁头号
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>-s: 指定起始扇区号
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>-o: 指定输出文件名
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>-a: 指定激活分区为哪个, 可选
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>-l:  指定多少KiB对齐,可选，这个参数会决定每个分区的偏移扇区号，非常重要
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>-t:  指定文件系统分区标志类型值,是0x83指linux,0x0b指Win95 FAT32,可选
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>-p  指定分区大小,可选
+</span></span></code></pre></div><h2 id=ptgen使用案例>ptgen使用案例</h2><p>这里贴出我使用ptgen创建一个BananaPi M2 Ultra可以识别的sd卡镜像文件，
+对bootfs进行挂载可放入一些文件，在uboot下能访问。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span><span style=color:#00f>#!/bin/bash
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span><span style=color:#00f></span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span><span style=color:#00f>if</span> [ -f <span style=color:#a31515>&#34;sd.img&#34;</span> ]; <span style=color:#00f>then</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>        echo <span style=color:#a31515>&#34;warning: sd.img already exist, do nothing&#34;</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>        exit
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span><span style=color:#00f>fi</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span><span style=color:#00f>if</span> [ -f <span style=color:#a31515>&#34;bootfs.ext4&#34;</span> ]; <span style=color:#00f>then</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>        echo <span style=color:#a31515>&#34;warning: bootfs.ext4 already exist, do nothing&#34;</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>        exit
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span><span style=color:#00f>fi</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>BOOTFS_SIZE=16M
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span><span style=color:green># make ext4 fs which including kernel.bin</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>dd bs=<span style=color:#a31515>&#34;</span>$BOOTFS_SIZE<span style=color:#a31515>&#34;</span> <span style=color:#00f>if</span>=/dev/zero of=bootfs.ext4 count=1
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>sudo mkfs.ext4 bootfs.ext4
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span>[ -d <span style=color:#a31515>&#34;./mnt&#34;</span> ] || mkdir ./mnt
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span>sudo mount -o loop bootfs.ext4 ./mnt
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span><span>sudo cp kernel.bin ./mnt
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span><span>sudo umount ./mnt
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23</span><span><span style=color:green># create empty image</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24</span><span>dd bs=32M <span style=color:#00f>if</span>=/dev/zero of=sd.img  count=1
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27</span><span><span style=color:green># generate parition table</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28</span><span><span style=color:green># -t 0xc: FAT32</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29</span><span><span style=color:green># -t 0x83: ext4</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30</span><span>set <span style=color:#00f>$(</span>./ptgen -o sd.img -h 4 -s 63 -l 1024 -t 0x83 -p <span style=color:#a31515>&#34;</span>$BOOTFS_SIZE<span style=color:#a31515>&#34;</span><span style=color:#00f>)</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33</span><span>BOOTFS_OFFSET=<span style=color:#a31515>&#34;</span><span style=color:#00f>$((</span>$1 / 512<span style=color:#00f>))</span><span style=color:#a31515>&#34;</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34</span><span><span style=color:green># write in uboot and bootfs</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35</span><span>dd bs=1024 <span style=color:#00f>if</span>=u-boot-sunxi-with-spl.bin of=sd.img  seek=8 conv=notrunc
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36</span><span>dd bs=512 <span style=color:#00f>if</span>=bootfs.ext4 of=sd.img seek=<span style=color:#a31515>&#34;</span>$BOOTFS_OFFSET<span style=color:#a31515>&#34;</span> conv=notrunc
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">39</span><span>echo -e <span style=color:#a31515>&#34;\n\nsd.img is ok&#34;</span>
+</span></span></code></pre></div><p>我正是依赖这个工具生成了最终的镜像而已，其他的模块其实并不是特别需要。
 本来u-boot也是必须的，但是后面发现我用的硬件(BananaPi M2 Ultra)
 在uboot中有直接的defconfig，所以也就不依赖openWRT的编译结果了。</p></article></body></main></div></body></html>

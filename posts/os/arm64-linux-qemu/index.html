@@ -1,124 +1,63 @@
 <!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title></title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>所有文章</a></div><div class="a-block nav-link-item"><a href=/tags>Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput><ul id=searchResults></ul></div></div></div></div><script src=/js/fuse.js></script>
-<script src=/js/fastsearch.js></script><main class=container><article><header><h1></h1></header><h2 id=编译linux-源码>编译Linux 源码</h2><p><a href=http://ftp.sjtu.edu.cn/sites/ftp.kernel.org/pub/linux/kernel/>上海交通大学镜像站</a></p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:green># get linux source code</span>
-</span></span><span style=display:flex><span>wget http://ftp.sjtu.edu.cn/sites/ftp.kernel.org/pub/linux/kernel/
-</span></span><span style=display:flex><span><span style=color:green># extract</span>
-</span></span><span style=display:flex><span>tar xvf linux-4.12.1.tar.gz
-</span></span><span style=display:flex><span><span style=color:green># enter dir</span>
-</span></span><span style=display:flex><span>cd linux-4.12.1/
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green># generate .config</span>
-</span></span><span style=display:flex><span>make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- defconfig
-</span></span><span style=display:flex><span>make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- menuconfig
-</span></span><span style=display:flex><span><span style=color:green># compile </span>
-</span></span><span style=display:flex><span>make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- Image -j16
-</span></span></code></pre></td></tr></table></div></div><h2 id=构建根文件系统>构建根文件系统</h2><p>使用 Busybox 构建, 下载源码时可能比较慢, 暂时没有发现国内镜像站</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:green># Download busybox source code</span>
-</span></span><span style=display:flex><span>wget https://busybox.net/downloads/busybox-1.35.0.tar.bz2
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green># menuconfig - generate .config</span>
-</span></span><span style=display:flex><span>make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- menuconfig
-</span></span><span style=display:flex><span><span style=color:green># compile</span>
-</span></span><span style=display:flex><span>make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-  -j16
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- install
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green># create rootfs</span>
-</span></span><span style=display:flex><span>cd ../
-</span></span><span style=display:flex><span>qemu-img create -f raw qemu_rootfs.img  128M
-</span></span><span style=display:flex><span><span style=color:green># set ext4 filesystem</span>
-</span></span><span style=display:flex><span>mkfs.ext4 qemu_rootfs.img
-</span></span><span style=display:flex><span><span style=color:green># mount on host</span>
-</span></span><span style=display:flex><span>mkdir mnt-tmp
-</span></span><span style=display:flex><span>sudo mount -o loop qemu_rootfs.img ./mnt-tmp
-</span></span><span style=display:flex><span><span style=color:green># copy file</span>
-</span></span><span style=display:flex><span>sudo cp busybox-1.35.0/_install/* mnt-tmp/ -r
-</span></span><span style=display:flex><span>cd mnt-tmp
-</span></span><span style=display:flex><span><span style=color:green># create other path</span>
-</span></span><span style=display:flex><span>sudo mkdir proc sys dev etc etc/init.d
-</span></span></code></pre></td></tr></table></div></div><p>在<code>etc/init.d/rcS</code>中写入启动脚本</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#00f>#!/bin/sh
-</span></span></span><span style=display:flex><span><span style=color:#00f></span>mount -t proc none /proc
-</span></span><span style=display:flex><span>mount -t sysfs none /sys
-</span></span><span style=display:flex><span>/sbin/mdev -s
-</span></span></code></pre></td></tr></table></div></div><p>赋予rcS可执行权限</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>sudo chmod +x rcS
-</span></span></code></pre></td></tr></table></div></div><p>改为<code>mount -a</code> 之后启动脚本会自动挂在/etc/fstab文件中声明的所有分区</p><p>fstab 在 Linux 开机以后自动配置哪些需要自动挂载的分区</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:green>#device  mount-point    type     options   dump   fsck order</span>
-</span></span><span style=display:flex><span>proc /proc proc defaults 0 0
-</span></span><span style=display:flex><span>tmpfs /tmp tmpfs defaults 0 0
-</span></span><span style=display:flex><span>sysfs /sys sysfs defaults 0 0
-</span></span><span style=display:flex><span>tmpfs /dev tmpfs defaults 0 0
-</span></span><span style=display:flex><span>debugfs /sys/kernel/debug debugfs defaults 0 0
-</span></span><span style=display:flex><span>tracefs /sys/kernel/tracing tracefs defaults        0       0
-</span></span></code></pre></td></tr></table></div></div><h2 id=添加软件>添加软件</h2><h3 id=perf>perf</h3><p><strong>perf</strong>已经集成到了Linux 主分支中，源码的位置在<code>tools/perf</code></p><p>编译命令:</p><h3 id=strace>strace</h3><p>下载源码：<a href=https://github.com/strace/strace/releases>Releases · strace/strace (github.com)</a></p><p>编译&&安装:</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:green># 确定编译的参数</span>
-</span></span><span style=display:flex><span>./configure <span style=color:#a31515>\
-</span></span></span><span style=display:flex><span><span style=color:#a31515></span>--host=aarch64-linux <span style=color:#a31515>\
-</span></span></span><span style=display:flex><span><span style=color:#a31515></span>--prefix=/home/soben/linux-qemu/strace-6.0/_install <span style=color:#a31515>\
-</span></span></span><span style=display:flex><span><span style=color:#a31515></span>--enable-mpers=no <span style=color:#a31515>\
-</span></span></span><span style=display:flex><span><span style=color:#a31515></span>CC=aarch64-none-linux-gnu-gcc <span style=color:#a31515>\
-</span></span></span><span style=display:flex><span><span style=color:#a31515></span>LD=aarch64-none-linux-gnu-ld <span style=color:#a31515>\
-</span></span></span><span style=display:flex><span><span style=color:#a31515></span>RANLIB=aarch64-none-linux-gnu-ranlib
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green># 编译为静态链接方式</span>
-</span></span><span style=display:flex><span>make LDFLAGS+=<span style=color:#a31515>&#39;-static -pthread&#39;</span> -j16
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green># 拷贝到 _install 目录</span>
-</span></span><span style=display:flex><span>make install
-</span></span></code></pre></td></tr></table></div></div><h2 id=启动-qemu-运行-linux>启动 QEMU 运行 Linux</h2></article></body></main></div></body></html>
+<script src=/js/fastsearch.js></script><main class=container><article><header><h1></h1></header><h2 id=编译linux-源码>编译Linux 源码</h2><p><a href=http://ftp.sjtu.edu.cn/sites/ftp.kernel.org/pub/linux/kernel/>上海交通大学镜像站</a></p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span><span style=color:green># get linux source code</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>wget http://ftp.sjtu.edu.cn/sites/ftp.kernel.org/pub/linux/kernel/
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span><span style=color:green># extract</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>tar xvf linux-4.12.1.tar.gz
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span><span style=color:green># enter dir</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>cd linux-4.12.1/
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span><span style=color:green># generate .config</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- defconfig
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- menuconfig
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span><span style=color:green># compile </span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- Image -j16
+</span></span></code></pre></div><h2 id=构建根文件系统>构建根文件系统</h2><p>使用 Busybox 构建, 下载源码时可能比较慢, 暂时没有发现国内镜像站</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span><span style=color:green># Download busybox source code</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>wget https://busybox.net/downloads/busybox-1.35.0.tar.bz2
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span><span style=color:green># menuconfig - generate .config</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- menuconfig
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span><span style=color:green># compile</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-  -j16
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- install
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span><span style=color:green># create rootfs</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>cd ../
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>qemu-img create -f raw qemu_rootfs.img  128M
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span><span style=color:green># set ext4 filesystem</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>mkfs.ext4 qemu_rootfs.img
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span><span style=color:green># mount on host</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span>mkdir mnt-tmp
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span>sudo mount -o loop qemu_rootfs.img ./mnt-tmp
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span><span><span style=color:green># copy file</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span><span>sudo cp busybox-1.35.0/_install/* mnt-tmp/ -r
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21</span><span>cd mnt-tmp
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22</span><span><span style=color:green># create other path</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23</span><span>sudo mkdir proc sys dev etc etc/init.d
+</span></span></code></pre></div><p>在<code>etc/init.d/rcS</code>中写入启动脚本</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span><span style=color:#00f>#!/bin/sh
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2</span><span><span style=color:#00f></span>mount -t proc none /proc
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3</span><span>mount -t sysfs none /sys
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4</span><span>/sbin/mdev -s
+</span></span></code></pre></div><p>赋予rcS可执行权限</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>sudo chmod +x rcS
+</span></span></code></pre></div><p>改为<code>mount -a</code> 之后启动脚本会自动挂在/etc/fstab文件中声明的所有分区</p><p>fstab 在 Linux 开机以后自动配置哪些需要自动挂载的分区</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span><span style=color:green>#device  mount-point    type     options   dump   fsck order</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2</span><span>proc /proc proc defaults 0 0
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3</span><span>tmpfs /tmp tmpfs defaults 0 0
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4</span><span>sysfs /sys sysfs defaults 0 0
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5</span><span>tmpfs /dev tmpfs defaults 0 0
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6</span><span>debugfs /sys/kernel/debug debugfs defaults 0 0
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7</span><span>tracefs /sys/kernel/tracing tracefs defaults        0       0
+</span></span></code></pre></div><h2 id=添加软件>添加软件</h2><h3 id=perf>perf</h3><p><strong>perf</strong>已经集成到了Linux 主分支中，源码的位置在<code>tools/perf</code></p><p>编译命令:</p><h3 id=strace>strace</h3><p>下载源码：<a href=https://github.com/strace/strace/releases>Releases · strace/strace (github.com)</a></p><p>编译&&安装:</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span><span style=color:green># 确定编译的参数</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>./configure <span style=color:#a31515>\
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span><span style=color:#a31515></span>--host=aarch64-linux <span style=color:#a31515>\
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span><span style=color:#a31515></span>--prefix=/home/soben/linux-qemu/strace-6.0/_install <span style=color:#a31515>\
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span><span style=color:#a31515></span>--enable-mpers=no <span style=color:#a31515>\
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span><span style=color:#a31515></span>CC=aarch64-none-linux-gnu-gcc <span style=color:#a31515>\
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span><span style=color:#a31515></span>LD=aarch64-none-linux-gnu-ld <span style=color:#a31515>\
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span><span style=color:#a31515></span>RANLIB=aarch64-none-linux-gnu-ranlib
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span><span style=color:green># 编译为静态链接方式</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>make LDFLAGS+=<span style=color:#a31515>&#39;-static -pthread&#39;</span> -j16
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span><span style=color:green># 拷贝到 _install 目录</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span>make install
+</span></span></code></pre></div><h2 id=启动-qemu-运行-linux>启动 QEMU 运行 Linux</h2></article></body></main></div></body></html>

@@ -4,8 +4,10 @@
 即 （变量 addr % 变量 size) ！= 0, 就称为非对齐内存访问。
 结构体的对齐要求 上面说的还都是一般的数据类型，对于结构体这种复杂的类型，对齐的要求也复杂些。
 首先是结构体成员，每个成员都必须满足其自身的对齐要求 然后是结构体变量自身的起始地址的对齐要求是其所有成员的最大对齐要求。 然而两个要求均满足有时候根本不可能，比如一个结构体声明为:
-1 2 3 4 5 struct foo { char mem1; int mem2; short mem3; }; 不可能同时做到 foo 变量和其成员 mem2 同时满足对齐到 4 字节，所以编译器会依据 上面的两条要求在成员之间添加 padding。</description></item><item><title>ARM64: A64指令集</title><link>https://wangloo.github.io/posts/armv8/a64/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64/</guid><description>Load/Store 指令 寻址模式 Base register - w0=[x1]
-1 ldr w0, [x1] Offset addressing mode - w0=[x1+12]
-1 ldr w0, [x1, 12] Pre-index addressing mode - x1+=12; w0=[x1]
-1 ldr w0, [x1, 12]! Post-index addressing mode - w0=[x1]; x1+=12
-1 ldr w0, [x1], 12 更多示例 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 // load a byte from x1 ldrb w0, [x1] // load a signed byte from x1 ldrsb w0, [x1] // store a 32-bit word to address in x1 str w0, [x1] // load two 32-bit words from stack, then add 8-byte to sp ldp w0, w1, [sp], 8 // store two 64-bit words at [sp-96] and subtract 96-byte from sp.</description></item></channel></rss>
+1struct foo { 2 char mem1; 3 int mem2; 4 short mem3; 5}; 不可能同时做到 foo 变量和其成员 mem2 同时满足对齐到 4 字节，所以编译器会依据 上面的两条要求在成员之间添加 padding。
+除了变量中间添加 padding 外，在末尾也会添加，使得结构体数组容易满足对齐需求。
+最后 foo 变量在内存中的样子可能是:</description></item><item><title>ARM64: A64指令集</title><link>https://wangloo.github.io/posts/armv8/a64/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64/</guid><description>Load/Store 指令 寻址模式 Base register - w0=[x1]
+1ldr w0, [x1] Offset addressing mode - w0=[x1+12]
+1ldr w0, [x1, 12] Pre-index addressing mode - x1+=12; w0=[x1]
+1ldr w0, [x1, 12]! Post-index addressing mode - w0=[x1]; x1+=12
+1ldr w0, [x1], 12 更多示例 1// load a byte from x1 2ldrb w0, [x1] 3 4// load a signed byte from x1 5ldrsb w0, [x1] 6 7// store a 32-bit word to address in x1 8str w0, [x1] 9 10// load two 32-bit words from stack, then add 8-byte to sp 11ldp w0, w1, [sp], 8 12 13// store two 64-bit words at [sp-96] and subtract 96-byte from sp.</description></item></channel></rss>

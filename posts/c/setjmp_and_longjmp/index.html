@@ -1,186 +1,94 @@
 <!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>基于ARM64实现setjmp/longjmp</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>所有文章</a></div><div class="a-block nav-link-item"><a href=/tags>Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput><ul id=searchResults></ul></div></div></div></div><script src=/js/fuse.js></script>
-<script src=/js/fastsearch.js></script><main class=container><article><header><h1>基于ARM64实现setjmp/longjmp</h1></header><h2 id=介绍>介绍</h2><p>setjmp() and longjmp() 是一对组合使用的函数, 可以实现<strong>全局的goto</strong>.</p><p>setjmp() 构造一个运行环境, 调用longjmp() 则将执行流切换到该环境.</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:green>/* setjmp() 保存当前的运行环境(上下文)到 env 参数中 */</span>
-</span></span><span style=display:flex><span><span style=color:#2b91af>int</span> setjmp(jmp_buf env);
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green>/* longjmp() 将控制流切换到 env 指定的运行环境 */</span>
-</span></span><span style=display:flex><span><span style=color:#2b91af>void</span> longjmp(jmp_buf env, <span style=color:#2b91af>int</span> val);
-</span></span></code></pre></td></tr></table></div></div><h2 id=使用方法>使用方法</h2><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#00f>#include</span> <span style=color:#00f>&lt;setjmp.h&gt;</span><span style=color:#00f>
-</span></span></span><span style=display:flex><span><span style=color:#00f>#include</span> <span style=color:#00f>&lt;stdio.h&gt;</span><span style=color:#00f>
-</span></span></span><span style=display:flex><span><span style=color:#00f></span>
-</span></span><span style=display:flex><span>jmp_buf e;
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#2b91af>void</span> foo() {
-</span></span><span style=display:flex><span>    longjmp(e, 1);
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#2b91af>int</span> main(<span style=color:#2b91af>void</span>) {
-</span></span><span style=display:flex><span>    <span style=color:#2b91af>int</span> ret;
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:green>/* After calling longjmp(), the execution flow back to setjmp(), 
-</span></span></span><span style=display:flex><span><span style=color:green>       and setjmp() will return not 0. */</span>
-</span></span><span style=display:flex><span>    ret = setjmp(e);
-</span></span><span style=display:flex><span>    <span style=color:#00f>if</span> (ret == 0) {
-</span></span><span style=display:flex><span>        printf(<span style=color:#a31515>&#34;Return from setjmp</span><span style=color:#a31515>\n</span><span style=color:#a31515>&#34;</span>);
-</span></span><span style=display:flex><span>        foo();
-</span></span><span style=display:flex><span>    } <span style=color:#00f>else</span> {
-</span></span><span style=display:flex><span>        printf(<span style=color:#a31515>&#34;Return from longjmp</span><span style=color:#a31515>\n</span><span style=color:#a31515>&#34;</span>);
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#00f>return</span> 0;
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></td></tr></table></div></div><h2 id=基于-aarch64-的实现>基于 AArch64 的实现</h2><p>需要保存的上下文包括</p><ul><li><strong>callee-saved 通用寄存器</strong>, 因为可能第一次调用 <code>setjmp()</code> 之后的执行流修改了这些寄存器, 从第二次回到 <code>setjmp()</code> 的角度来看, 就是执行setjmp() 中破坏的. caller-saved 寄存器则不必, 因为本来即便看作是 <code>setjmp()</code> 破坏的, 也是正常的.</li></ul><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">39
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">40
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">41
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">42
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">43
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">44
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">45
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">46
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">47
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">48
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">49
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">50
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">51
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">52
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">53
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">54
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">55
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">56
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">57
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">58
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">59
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">60
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">61
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">62
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">63
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span>.macro func _name
-</span></span><span style=display:flex><span>.global <span>\</span>_name
-</span></span><span style=display:flex><span>.type <span>\</span>_name, <span>%</span>function
-</span></span><span style=display:flex><span><span>\</span>_name:
-</span></span><span style=display:flex><span>.endm
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>.macro endfunc _name
-</span></span><span style=display:flex><span>.size <span>\</span>_name, .-<span>\</span>_name
-</span></span><span style=display:flex><span>.endm
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span>/**</span>
-</span></span><span style=display:flex><span> <span>*</span> setjmp (jmp_buf env)
-</span></span><span style=display:flex><span> <span>*</span>
-</span></span><span style=display:flex><span> <span>*</span> See also:
-</span></span><span style=display:flex><span> <span>*</span>          longjmp
-</span></span><span style=display:flex><span> <span>*</span>
-</span></span><span style=display:flex><span> <span>*</span> <span>@</span>return 0 - if returns from direct call,
-</span></span><span style=display:flex><span> <span>*</span>         nonzero - if returns after longjmp.
-</span></span><span style=display:flex><span> <span>*/</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>func setjmp
-</span></span><span style=display:flex><span>    stp     x19, x20, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    stp     x21, x22, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    stp     x23, x24, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    stp     x25, x26, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    stp     x27, x28, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    stp     x29, x18, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    mov     x9, sp
-</span></span><span style=display:flex><span>    stp     lr, x9, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    mov     x0, <span style=color:green>#0
-</span></span></span><span style=display:flex><span><span style=color:green></span>    
-</span></span><span style=display:flex><span>    ret
-</span></span><span style=display:flex><span>endfunc setjmp
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span>/**</span>
-</span></span><span style=display:flex><span> <span>*</span> longjmp (jmp_buf env, int val)
-</span></span><span style=display:flex><span> <span>*</span>
-</span></span><span style=display:flex><span> <span>*</span> Note:
-</span></span><span style=display:flex><span> <span>*</span>      if val is not 0, then it would be returned from setjmp,
-</span></span><span style=display:flex><span> <span>*</span>      otherwise - 1 would be returned.
-</span></span><span style=display:flex><span> <span>*</span>
-</span></span><span style=display:flex><span> <span>*</span> See also:
-</span></span><span style=display:flex><span> <span>*</span>          setjmp
-</span></span><span style=display:flex><span> <span>*/</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>func longjmp
-</span></span><span style=display:flex><span>    ldp     x19, x20, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    ldp     x21, x22, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    ldp     x23, x24, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    ldp     x25, x26, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    ldp     x27, x28, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    ldp     x29, x18, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    ldp     lr, x9, [x0], <span style=color:green>#16
-</span></span></span><span style=display:flex><span><span style=color:green></span>    mov     sp, x9
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    mov     x0, x1
-</span></span><span style=display:flex><span>    cbnz    x0, 1f
-</span></span><span style=display:flex><span>    add x0, x0, <span style=color:green>#1
-</span></span></span><span style=display:flex><span><span style=color:green></span>1:
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    ret
-</span></span><span style=display:flex><span>endfunc longjmp
-</span></span></code></pre></td></tr></table></div></div><h2 id=setjmp-实现-try-catch>setjmp() 实现 try-catch</h2></article></body></main></div></body></html>
+<script src=/js/fastsearch.js></script><main class=container><article><header><h1>基于ARM64实现setjmp/longjmp</h1></header><h2 id=介绍>介绍</h2><p>setjmp() and longjmp() 是一对组合使用的函数, 可以实现<strong>全局的goto</strong>.</p><p>setjmp() 构造一个运行环境, 调用longjmp() 则将执行流切换到该环境.</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span><span style=color:green>/* setjmp() 保存当前的运行环境(上下文)到 env 参数中 */</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2</span><span><span style=color:#2b91af>int</span> setjmp(jmp_buf env);
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4</span><span><span style=color:green>/* longjmp() 将控制流切换到 env 指定的运行环境 */</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5</span><span><span style=color:#2b91af>void</span> longjmp(jmp_buf env, <span style=color:#2b91af>int</span> val);
+</span></span></code></pre></div><h2 id=使用方法>使用方法</h2><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span><span style=color:#00f>#include</span> <span style=color:#00f>&lt;setjmp.h&gt;</span><span style=color:#00f>
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span><span style=color:#00f>#include</span> <span style=color:#00f>&lt;stdio.h&gt;</span><span style=color:#00f>
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span><span style=color:#00f></span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>jmp_buf e;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span><span style=color:#2b91af>void</span> foo() {
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>    longjmp(e, 1);
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>}
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span><span style=color:#2b91af>int</span> main(<span style=color:#2b91af>void</span>) {
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>    <span style=color:#2b91af>int</span> ret;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>    <span style=color:green>/* After calling longjmp(), the execution flow back to setjmp(), 
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span><span style=color:green>       and setjmp() will return not 0. */</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>    ret = setjmp(e);
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>    <span style=color:#00f>if</span> (ret == 0) {
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span>        printf(<span style=color:#a31515>&#34;Return from setjmp</span><span style=color:#a31515>\n</span><span style=color:#a31515>&#34;</span>);
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span>        foo();
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span><span>    } <span style=color:#00f>else</span> {
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span><span>        printf(<span style=color:#a31515>&#34;Return from longjmp</span><span style=color:#a31515>\n</span><span style=color:#a31515>&#34;</span>);
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21</span><span>    }
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23</span><span>    <span style=color:#00f>return</span> 0;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24</span><span>}
+</span></span></code></pre></div><h2 id=基于-aarch64-的实现>基于 AArch64 的实现</h2><p>需要保存的上下文包括</p><ul><li><strong>callee-saved 通用寄存器</strong>, 因为可能第一次调用 <code>setjmp()</code> 之后的执行流修改了这些寄存器, 从第二次回到 <code>setjmp()</code> 的角度来看, 就是执行setjmp() 中破坏的. caller-saved 寄存器则不必, 因为本来即便看作是 <code>setjmp()</code> 破坏的, 也是正常的.</li></ul><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>.macro func _name
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>.global <span>\</span>_name
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>.type <span>\</span>_name, <span>%</span>function
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span><span>\</span>_name:
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>.endm
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>.macro endfunc _name
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>.size <span>\</span>_name, .-<span>\</span>_name
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>.endm
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span><span>/**</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span> <span>*</span> setjmp (jmp_buf env)
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span> <span>*</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span> <span>*</span> See also:
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span> <span>*</span>          longjmp
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span> <span>*</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span> <span>*</span> <span>@</span>return 0 - if returns from direct call,
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span><span> <span>*</span>         nonzero - if returns after longjmp.
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span><span> <span>*/</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22</span><span>func setjmp
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23</span><span>    stp     x19, x20, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24</span><span><span style=color:green></span>    stp     x21, x22, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25</span><span><span style=color:green></span>    stp     x23, x24, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26</span><span><span style=color:green></span>    stp     x25, x26, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27</span><span><span style=color:green></span>    stp     x27, x28, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28</span><span><span style=color:green></span>    stp     x29, x18, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29</span><span><span style=color:green></span>    mov     x9, sp
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30</span><span>    stp     lr, x9, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31</span><span><span style=color:green></span>    mov     x0, <span style=color:green>#0
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32</span><span><span style=color:green></span>    
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33</span><span>    ret
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34</span><span>endfunc setjmp
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36</span><span><span>/**</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37</span><span> <span>*</span> longjmp (jmp_buf env, int val)
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38</span><span> <span>*</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">39</span><span> <span>*</span> Note:
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">40</span><span> <span>*</span>      if val is not 0, then it would be returned from setjmp,
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">41</span><span> <span>*</span>      otherwise - 1 would be returned.
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">42</span><span> <span>*</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">43</span><span> <span>*</span> See also:
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">44</span><span> <span>*</span>          setjmp
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">45</span><span> <span>*/</span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">46</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">47</span><span>func longjmp
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">48</span><span>    ldp     x19, x20, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">49</span><span><span style=color:green></span>    ldp     x21, x22, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">50</span><span><span style=color:green></span>    ldp     x23, x24, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">51</span><span><span style=color:green></span>    ldp     x25, x26, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">52</span><span><span style=color:green></span>    ldp     x27, x28, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">53</span><span><span style=color:green></span>    ldp     x29, x18, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">54</span><span><span style=color:green></span>    ldp     lr, x9, [x0], <span style=color:green>#16
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">55</span><span><span style=color:green></span>    mov     sp, x9
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">56</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">57</span><span>    mov     x0, x1
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">58</span><span>    cbnz    x0, 1f
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">59</span><span>    add x0, x0, <span style=color:green>#1
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">60</span><span><span style=color:green></span>1:
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">61</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">62</span><span>    ret
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">63</span><span>endfunc longjmp
+</span></span></code></pre></div><h2 id=setjmp-实现-try-catch>setjmp() 实现 try-catch</h2></article></body></main></div></body></html>

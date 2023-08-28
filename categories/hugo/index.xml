@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>hugo on BLOG</title><link>https://wangloo.github.io/categories/hugo/</link><description>Recent content in hugo on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sat, 21 May 2022 17:39:42 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/categories/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 HuGo 搭建个人网站</title><link>https://wangloo.github.io/posts/hugo/</link><pubDate>Sat, 21 May 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/</guid><description>HuGo 基础学习 本章将解答Hugo是什么, 以及Hugo是如何工作的. 只有了解Hugo的工作机制之后, 才能发挥想象力进行DIY.
 本章内容大多来自官方手册或者搜索引擎提供的结果.
 Hugo 项目目录结构 一个hugo 项目通常包含以下内容:
-1 2 3 4 5 6 7 8 9 . ├── archetypes ├── config.toml ├── content ├── data ├── layouts ├── public ├── static └── themes 这里面有些是必须的, 有些是可选的.
+1. 2├── archetypes 3├── config.toml 4├── content 5├── data 6├── layouts 7├── public 8├── static 9└── themes 这里面有些是必须的, 有些是可选的.
 archetypes
 定义新创建post时, header的格式.
 asserts
 Note: assets directory is not created by default.
 config
-Hugo uses the config.toml, config.yaml, or config.json (if found in the site root) as the default site config file.</description></item></channel></rss>
+Hugo uses the config.toml, config.yaml, or config.json (if found in the site root) as the default site config file.
+The user can choose to override that default with one or more site config files using the command-line --config switch.</description></item></channel></rss>

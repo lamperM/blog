@@ -2,113 +2,61 @@
 <script src=/js/fastsearch.js></script><main class=container><article><header><h1>Linux 内核数据结构 hlist</h1></header><p>linux 内核为创建【用单链表解决冲突的哈希表】设计了专门的数据结构 hlist。</p><p>hlist 整体来说是带头结点的双向链表，头结点的类型为<code>hlist_head</code>, 普通节点
 的类型为<code>hlist_node</code>. <strong>为什么要区别两种类型？节约空间</strong>， 因为哈希表的
 表项类型可以是<code>hlist_head</code>, 它其实不需要<code>prev</code>指针, 比起一般的结点，一个
-哈希表能节约一半的空间。</p><p>所以一个哈希表和头结点的结构可表示为:</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#00f>struct</span> hlist_head {
-</span></span><span style=display:flex><span>    <span style=color:#00f>struct</span> hlist_node *first;
-</span></span><span style=display:flex><span>};
-</span></span><span style=display:flex><span><span style=color:#00f>struct</span> hlist_head table[TALBE_SZ];
-</span></span></code></pre></td></tr></table></div></div><h2 id=二象性>二象性</h2><p>任何事物都具有二象性，区分两种类型节约空间的空间，也带了一个问题：
+哈希表能节约一半的空间。</p><p>所以一个哈希表和头结点的结构可表示为:</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span><span style=color:#00f>struct</span> hlist_head {
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2</span><span>    <span style=color:#00f>struct</span> hlist_node *first;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3</span><span>};
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4</span><span><span style=color:#00f>struct</span> hlist_head table[TALBE_SZ];
+</span></span></code></pre></div><h2 id=二象性>二象性</h2><p>任何事物都具有二象性，区分两种类型节约空间的空间，也带了一个问题：
 <strong>首个<code>hlist_node</code>结点的<code>prev</code>指向哪呢？</strong></p><p>正常情况下肯定毫不犹豫的指向头结点，即<code>hlist_head</code>，但注意此时类型是
 不同的，<code>prev</code>不能同时是<code>struct hlist_head*</code>和<code>struct hlist_node *</code>。</p><p>解决方案有两个，首先可以使首个结点的<code>prev=NULL</code>, 这样虽然避免了类型引发的
 问题，也能保证功能正确，但是却破坏了一致性，使得操作的复杂度上升，增加了许多
-判断分支。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:green>// delelt a node
-</span></span></span><span style=display:flex><span><span style=color:green></span><span style=color:#2b91af>void</span> del_node(<span style=color:#00f>struct</span> hlist_head *head, <span style=color:#00f>struct</span> hlist_node *node)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>    <span style=color:green>// 这个if 本来是不需要的，甚至参数的head 也不需要传，
-</span></span></span><span style=display:flex><span><span style=color:green></span>    <span style=color:green>// 更好的处理方式见解决方案2
-</span></span></span><span style=display:flex><span><span style=color:green></span>    <span style=color:#00f>if</span> (node == head-&gt;first) {
-</span></span><span style=display:flex><span>        head-&gt;first = node-&gt;next;
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>    <span style=color:#00f>else</span> {
-</span></span><span style=display:flex><span>        node-&gt;prev-&gt;next = node-&gt;next;
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#00f>if</span> (node-&gt;next) {
-</span></span><span style=display:flex><span>        node-&gt;next-&gt;prev = node-&gt;prev;
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:green>// insert a node
-</span></span></span><span style=display:flex><span><span style=color:green></span><span style=color:#2b91af>void</span> add_node_before(<span style=color:#00f>struct</span> hlist_head *head, <span style=color:#00f>struct</span> hlist_node *new
-</span></span><span style=display:flex><span>                        <span style=color:#00f>struct</span> hlist_node *next)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>    <span style=color:green>// 这个if 本来是不需要的，参数head也是不需要传递的
-</span></span></span><span style=display:flex><span><span style=color:green></span>    <span style=color:#00f>if</span> (next == head-&gt;first) {
-</span></span><span style=display:flex><span>        new-&gt;prev = NULL;
-</span></span><span style=display:flex><span>        head-&gt;first = new;
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>    <span style=color:#00f>else</span> {
-</span></span><span style=display:flex><span>        new-&gt;prev = next-&gt;prev;
-</span></span><span style=display:flex><span>        new-&gt;prev-&gt;next = new;
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>    new-&gt;next = next;
-</span></span><span style=display:flex><span>    next-&gt;prev = new;
-</span></span></code></pre></td></tr></table></div></div><h2 id=更好的解决方案-prev>更好的解决方案: <code>**prev</code></h2><p>改变<code>struct hlist_node</code>的构成，使用二级指针:</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#00f>struct</span> hlist_node {
-</span></span><span style=display:flex><span>    <span style=color:#00f>struct</span> hlist_node *next;
-</span></span><span style=display:flex><span>    <span style=color:#00f>struct</span> hlist_node **pprev;
-</span></span><span style=display:flex><span>};
-</span></span></code></pre></td></tr></table></div></div><p>使得每个结点的<code>pprev = &(prev_node->next)</code>, 首先类型是统一的，其次删除和添加
-都无需额外的分支了。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#2b91af>void</span> del_node(<span style=color:#00f>struct</span> hlist_node *node)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>    *(node-&gt;pprev) = node-&gt;next;
-</span></span><span style=display:flex><span>    <span style=color:#00f>if</span> (node-&gt;next)
-</span></span><span style=display:flex><span>        node-&gt;next-&gt;pprev = node-&gt;pprev;
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#2b91af>void</span> add_node(<span style=color:#00f>struct</span> hlist_node *new, <span style=color:#00f>struct</span> hlist_node *next)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>    new-&gt;pprev = next-&gt;pprev;
-</span></span><span style=display:flex><span>    *(new-&gt;pprev) = new;
-</span></span><span style=display:flex><span>    new-&gt;next = next;
-</span></span><span style=display:flex><span>    next-&gt;pprev = &amp;(new-&gt;next);
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></td></tr></table></div></div><p>Ref:</p><ul><li><a href=https://zhuanlan.zhihu.com/p/360217911><code>**prev</code> 可以提高删除的效率</a></li><li>stackoverflow</li></ul></article></body></main></div></body></html>
+判断分支。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span><span style=color:green>// delelt a node
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span><span style=color:green></span><span style=color:#2b91af>void</span> del_node(<span style=color:#00f>struct</span> hlist_head *head, <span style=color:#00f>struct</span> hlist_node *node)
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>{
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>    <span style=color:green>// 这个if 本来是不需要的，甚至参数的head 也不需要传，
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span><span style=color:green></span>    <span style=color:green>// 更好的处理方式见解决方案2
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span><span style=color:green></span>    <span style=color:#00f>if</span> (node == head-&gt;first) {
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>        head-&gt;first = node-&gt;next;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>    }
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>    <span style=color:#00f>else</span> {
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>        node-&gt;prev-&gt;next = node-&gt;next;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>    }
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>    <span style=color:#00f>if</span> (node-&gt;next) {
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span>        node-&gt;next-&gt;prev = node-&gt;prev;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>    }
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>}
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span><span style=color:green>// insert a node
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span><span style=color:green></span><span style=color:#2b91af>void</span> add_node_before(<span style=color:#00f>struct</span> hlist_head *head, <span style=color:#00f>struct</span> hlist_node *new
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span><span>                        <span style=color:#00f>struct</span> hlist_node *next)
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span><span>{
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21</span><span>    <span style=color:green>// 这个if 本来是不需要的，参数head也是不需要传递的
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22</span><span><span style=color:green></span>    <span style=color:#00f>if</span> (next == head-&gt;first) {
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23</span><span>        new-&gt;prev = NULL;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24</span><span>        head-&gt;first = new;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25</span><span>    }
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26</span><span>    <span style=color:#00f>else</span> {
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27</span><span>        new-&gt;prev = next-&gt;prev;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28</span><span>        new-&gt;prev-&gt;next = new;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29</span><span>    }
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30</span><span>    new-&gt;next = next;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31</span><span>    next-&gt;prev = new;
+</span></span></code></pre></div><h2 id=更好的解决方案-prev>更好的解决方案: <code>**prev</code></h2><p>改变<code>struct hlist_node</code>的构成，使用二级指针:</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span><span style=color:#00f>struct</span> hlist_node {
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2</span><span>    <span style=color:#00f>struct</span> hlist_node *next;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3</span><span>    <span style=color:#00f>struct</span> hlist_node **pprev;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4</span><span>};
+</span></span></code></pre></div><p>使得每个结点的<code>pprev = &(prev_node->next)</code>, 首先类型是统一的，其次删除和添加
+都无需额外的分支了。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span><span style=color:#2b91af>void</span> del_node(<span style=color:#00f>struct</span> hlist_node *node)
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>{
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>    *(node-&gt;pprev) = node-&gt;next;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>    <span style=color:#00f>if</span> (node-&gt;next)
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>        node-&gt;next-&gt;pprev = node-&gt;pprev;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>}
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span><span style=color:#2b91af>void</span> add_node(<span style=color:#00f>struct</span> hlist_node *new, <span style=color:#00f>struct</span> hlist_node *next)
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>{
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>    new-&gt;pprev = next-&gt;pprev;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>    *(new-&gt;pprev) = new;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>    new-&gt;next = next;
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>    next-&gt;pprev = &amp;(new-&gt;next);
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>}
+</span></span></code></pre></div><p>Ref:</p><ul><li><a href=https://zhuanlan.zhihu.com/p/360217911><code>**prev</code> 可以提高删除的效率</a></li><li>stackoverflow</li></ul></article></body></main></div></body></html>

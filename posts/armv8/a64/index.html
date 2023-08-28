@@ -1,75 +1,42 @@
 <!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>ARM64: A64指令集</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>所有文章</a></div><div class="a-block nav-link-item"><a href=/tags>Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput><ul id=searchResults></ul></div></div></div></div><script src=/js/fuse.js></script>
-<script src=/js/fastsearch.js></script><main class=container><article><header><h1>ARM64: A64指令集</h1></header><h1 id=loadstore-指令>Load/Store 指令</h1><h2 id=寻址模式>寻址模式</h2><p>Base register - <code>w0=[x1]</code></p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span>ldr     w0, [x1]
-</span></span></code></pre></td></tr></table></div></div><p>Offset addressing mode - <code>w0=[x1+12]</code></p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span>ldr     w0, [x1, 12]
-</span></span></code></pre></td></tr></table></div></div><p>Pre-index addressing mode - <code>x1+=12; w0=[x1]</code></p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span>ldr     w0, [x1, 12]!
-</span></span></code></pre></td></tr></table></div></div><p>Post-index addressing mode - <code>w0=[x1]; x1+=12</code></p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span>ldr     w0, [x1], 12
-</span></span></code></pre></td></tr></table></div></div><h2 id=更多示例>更多示例</h2><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:green>// load a byte from x1
-</span></span></span><span style=display:flex><span><span style=color:green></span>ldrb    w0, [x1]
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green>// load a signed byte from x1
-</span></span></span><span style=display:flex><span><span style=color:green></span>ldrsb   w0, [x1]
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green>// store a 32-bit word to address in x1
-</span></span></span><span style=display:flex><span><span style=color:green></span>str     w0, [x1]
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green>// load two 32-bit words from stack, then add 8-byte to sp
-</span></span></span><span style=display:flex><span><span style=color:green></span>ldp     w0, w1, [sp], 8
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green>// store two 64-bit words at [sp-96] and subtract 96-byte from sp.
-</span></span></span><span style=display:flex><span><span style=color:green></span>stp     x1, x2, [sp, -96]!
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:green>// LDR伪指令. load 32-bit immediate from literal pool(addr: 0x12345678)
-</span></span></span><span style=display:flex><span><span style=color:green></span>ldr     w0, =0x12345678
-</span></span></code></pre></td></tr></table></div></div><h1 id=数据处理指令>数据处理指令</h1><h2 id=bitfield-操作指令>Bitfield 操作指令</h2><p>Bitfield 指令常用于设置/提取寄存器的某个字段.</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>;BFI(Bit Field Insert)
-</span></span><span style=display:flex><span>BFI w0, w0, #9, #6   ;w0[0, 5] = w0[9, 14]
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>;BFC(Bit Field Clear)
-</span></span><span style=display:flex><span>BFC w0, #4, #2       ;w0[4, 5] = 0
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>;UBFX(Unsigned Bit Field Extract)
-</span></span><span style=display:flex><span>UBFX w1, w0, #18, #7 ;w1=w0[18, 24]
-</span></span></code></pre></td></tr></table></div></div><blockquote><p>与 UBFX 相对的是 SBFX, 若提取后的字段高位为 1, 会进行符号扩展</p></blockquote><h1 id=分支控制指令>分支/控制指令</h1><h1 id=获得地址的相关指令>获得地址的相关指令</h1><p>写汇编中，常常会获取一个变量或者函数(label)的地址，A64 中一共有几种获取地址的指令，
-包括<code>adr</code>, <code>adrp</code>, <code>adrl</code>, <code>ldr</code>等，下面我就对这些指令进行介绍。</p><h2 id=adr>ADR</h2><p>首先是 adr，它的作用是<strong>加载 PC 相对地址</strong>，adr 指令的格式是:</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span>adr reg, offset
-</span></span></code></pre></td></tr></table></div></div><p>输入一个 offset，输出 PC+offset 的值，但我们常用的是 offset 填某一个 label，例如函数
-或者变量，此时 reg 中存的就是此函数的地址了。例如，</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span>adr x0, a_func    <span style=color:green># x0 = addr(a_func)
-</span></span></span></code></pre></td></tr></table></div></div><p>adr 指令中留给 offset 的位数是 21，所以最大的寻址范围为+-1MB。</p><h2 id=adrp>ADRP</h2><p>adrp 的指令格式与 adr 相同，不同点是会将计算的结果<strong>向下对齐到 4k</strong>，但这样直接计算的
+<script src=/js/fastsearch.js></script><main class=container><article><header><h1>ARM64: A64指令集</h1></header><h1 id=loadstore-指令>Load/Store 指令</h1><h2 id=寻址模式>寻址模式</h2><p>Base register - <code>w0=[x1]</code></p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>ldr     w0, [x1]
+</span></span></code></pre></div><p>Offset addressing mode - <code>w0=[x1+12]</code></p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>ldr     w0, [x1, 12]
+</span></span></code></pre></div><p>Pre-index addressing mode - <code>x1+=12; w0=[x1]</code></p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>ldr     w0, [x1, 12]!
+</span></span></code></pre></div><p>Post-index addressing mode - <code>w0=[x1]; x1+=12</code></p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>ldr     w0, [x1], 12
+</span></span></code></pre></div><h2 id=更多示例>更多示例</h2><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span><span style=color:green>// load a byte from x1
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span><span style=color:green></span>ldrb    w0, [x1]
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span><span style=color:green>// load a signed byte from x1
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span><span style=color:green></span>ldrsb   w0, [x1]
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span><span style=color:green>// store a 32-bit word to address in x1
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span><span style=color:green></span>str     w0, [x1]
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span><span style=color:green>// load two 32-bit words from stack, then add 8-byte to sp
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span><span style=color:green></span>ldp     w0, w1, [sp], 8
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span><span style=color:green>// store two 64-bit words at [sp-96] and subtract 96-byte from sp.
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span><span style=color:green></span>stp     x1, x2, [sp, -96]!
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span><span style=color:green>// LDR伪指令. load 32-bit immediate from literal pool(addr: 0x12345678)
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span><span style=color:green></span>ldr     w0, =0x12345678
+</span></span></code></pre></div><h1 id=数据处理指令>数据处理指令</h1><h2 id=bitfield-操作指令>Bitfield 操作指令</h2><p>Bitfield 指令常用于设置/提取寄存器的某个字段.</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>;BFI(Bit Field Insert)
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2</span><span>BFI w0, w0, #9, #6   ;w0[0, 5] = w0[9, 14]
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4</span><span>;BFC(Bit Field Clear)
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5</span><span>BFC w0, #4, #2       ;w0[4, 5] = 0
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6</span><span>
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7</span><span>;UBFX(Unsigned Bit Field Extract)
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">8</span><span>UBFX w1, w0, #18, #7 ;w1=w0[18, 24]
+</span></span></code></pre></div><blockquote><p>与 UBFX 相对的是 SBFX, 若提取后的字段高位为 1, 会进行符号扩展</p></blockquote><h1 id=分支控制指令>分支/控制指令</h1><h1 id=获得地址的相关指令>获得地址的相关指令</h1><p>写汇编中，常常会获取一个变量或者函数(label)的地址，A64 中一共有几种获取地址的指令，
+包括<code>adr</code>, <code>adrp</code>, <code>adrl</code>, <code>ldr</code>等，下面我就对这些指令进行介绍。</p><h2 id=adr>ADR</h2><p>首先是 adr，它的作用是<strong>加载 PC 相对地址</strong>，adr 指令的格式是:</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>adr reg, offset
+</span></span></code></pre></div><p>输入一个 offset，输出 PC+offset 的值，但我们常用的是 offset 填某一个 label，例如函数
+或者变量，此时 reg 中存的就是此函数的地址了。例如，</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>adr x0, a_func    <span style=color:green># x0 = addr(a_func)
+</span></span></span></code></pre></div><p>adr 指令中留给 offset 的位数是 21，所以最大的寻址范围为+-1MB。</p><h2 id=adrp>ADRP</h2><p>adrp 的指令格式与 adr 相同，不同点是会将计算的结果<strong>向下对齐到 4k</strong>，但这样直接计算的
 地址结果往往是不正确的，因为少了页内的偏移。需要一个额外的 add 指令进行纠正，一般来说
-是组合起来用的：</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span>adrp x0, a_func
-</span></span><span style=display:flex><span>add  x0, x0, :lo12:a_func
-</span></span></code></pre></td></tr></table></div></div><p>显然 adrp 这样做是为了更大的寻址空间，能到+-4GB。</p><h2 id=ldr-伪指令>LDR 伪指令</h2><p>如果 ldr 指令的参数是<code>=&lt;label></code>，那就代表伪指令，作用是加载 label 的绝对地址，即
+是组合起来用的：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>adrp x0, a_func
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2</span><span>add  x0, x0, :lo12:a_func
+</span></span></code></pre></div><p>显然 adrp 这样做是为了更大的寻址空间，能到+-4GB。</p><h2 id=ldr-伪指令>LDR 伪指令</h2><p>如果 ldr 指令的参数是<code>=&lt;label></code>，那就代表伪指令，作用是加载 label 的绝对地址，即
 VMA。好处是可以获取到一个位于任意 label 的地址，不受寻址空间的约束。</p><blockquote><p>注意<code>label</code>是一个 offset, <code>=label</code>是一个绝对地址。</p></blockquote><blockquote><p>当目前指令执行地址不等于它们的虚拟地址时，比如当 MMU 未开始时通过 uboot 加载到内存
 中直接运行的那段程序，此时用<code>adr/adrp</code>这些加载 pc 相对地址的指令就会正确的返回
 label 的实际运行地址；而<code>ldr</code>则是永远返回其编译链接后绑定的虚拟地址。这种情况下
