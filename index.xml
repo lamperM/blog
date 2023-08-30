@@ -1,4 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>openwrt 开发日记</title><link>https://wangloo.github.io/posts/embedded/openwrt/</link><pubDate>Sat, 05 Aug 2023 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/embedded/openwrt/</guid><description>构建 openWRT 我在此步骤失败了，后面项目没有依赖完整的编译过程， 所以可能对你不构成参考
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homepage 🌈 on BLOG</title><link>https://wangloo.github.io/</link><description>Recent content in Homepage 🌈 on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 15 Sep 2022 15:14:05 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>一道题搞定二分法的细节</title><link>https://wangloo.github.io/posts/algorithm/bsearch/</link><pubDate>Sun, 20 Aug 2023 20:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/algorithm/bsearch/</guid><description>实际上我做过的二分搜索的题目并不少，但是一直以来没有静下心去研究它的 【循环条件】【边界调整】【返回值】的细节，通过这个题目希望自己能完整、 清晰的了解二分搜索。
+题目 https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array
+给你一个按照非递减顺序排列的整数数组 nums，和一个目标值 target。请你找出给定目标值在数组中的开始位置和结束位置。
+如果数组中不存在目标值 target，返回 [-1, -1]。
+你必须设计并实现时间复杂度为 O(log n) 的算法解决此问题。
+示例 1：
+输入：nums = [5,7,7,8,8,10], target = 8 输出：[3,4]
+解答(python): 1def searchRange(self, nums: List[int], target: int) -&amp;gt; List[int]: 2 3 if nums == []: 4 return [-1, -1] 5 6 # 第一次二分，确定右边界 7 left, right = 0, len(nums)-1 8 while left &amp;lt;= right: 9 mid = (left + right) // 2 10 if nums[mid] &amp;lt;= target: 11 left = mid+1 12 else: 13 right = mid-1 14 end = right 15 16 # 第二次二分，确定左边界 17 left, right = 0, len(nums)-1 18 while left &amp;lt;= right: 19 mid = (left + right) // 2 20 if nums[mid] &amp;lt; target: 21 left = mid+1 22 else: 23 right = mid-1 24 sta = left 25 26 print(sta, end) 27 if end &amp;lt; 0 or sta &amp;gt; len(nums)-1 or nums[sta] !</description></item><item><title>C/python: cmp函数应该怎么写</title><link>https://wangloo.github.io/posts/codestyle/cmp-func/</link><pubDate>Sun, 20 Aug 2023 17:59:22 +0800</pubDate><guid>https://wangloo.github.io/posts/codestyle/cmp-func/</guid><description>C 中的qsort, python 中的sorted()很多时间需要自己构造比较的规则，也就是告诉排序函数怎么衡量两个值的大小关系？
+TL;DR 升序的写法(C-qsort):
+1int cmp(const void *a, const void *b) 2{ 3 return *(int *)a - *(int *)b; 4} 5 6int main(void) 7{ 8 int nums[] = {2, 1, 3, 5, 4}; 9 10 qsort(nums, 5, sizeof(int), cmp); 11 return 0; 12} 升序的写法(python-sorted()):
+1from functools import cmp_to_key 2nums = [2, 3, 1, 4, 5] 3 4nums = sorted(nums, key=cmp_to_key(lambda x,y: x-y)) 5print(nums) python3 丢弃了sorted()中的cmp选项， 全部用 key 选项进行指定， 所以需要cmp_to_key进行转换</description></item><item><title>ARMv8: cache相关知识</title><link>https://wangloo.github.io/posts/armv8/cache/</link><pubDate>Mon, 14 Aug 2023 22:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/cache/</guid><description>之前在特斯拉面试的时候被问到了 cache 的 maintain 操作有哪些, 一时间竟想不起一个准确的词来, 这里就再学习一下, 把这个坑填上吧。
+可能不会说的很细，目的只是把一些概念复习，做到心中大致有数。
+cache 是个硬件 cache 的本质是一种 SRAM, 容量很小, 速度很快(ns 级)。
+拿 Cortex-A53 来说，共有三级 Cache：
+L1 cache 是 Core 单独的，分为数据 cache 和指令 cache，容量是 KB 级 L2 cache 一般是 cluster 内共享，容量是 MB 级 L3 cache 是所有 core 共享，容量是 MB 级 cache 控制器 单独的 cache 就是一个存储设备，得有一个控制器告诉它存什么以及什么时候存。
+cache 控制器的任务举个例子说：比如 cache miss 的时候，需要从主存向 cache 回填数据，然而此时 CPU 那边记着要数据，我们都知道 cache 操作的单位 是 cache line 嘛，但这是 cache 控制器会有限填充一个 cache line 中 CPU 要的那一条（或几条），最后在后台默默填充完剩下的。</description></item><item><title>openwrt 开发日记</title><link>https://wangloo.github.io/posts/embedded/openwrt/</link><pubDate>Sat, 05 Aug 2023 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/embedded/openwrt/</guid><description>构建 openWRT 我在此步骤失败了，后面项目没有依赖完整的编译过程， 所以可能对你不构成参考
 过程可参考官方教程, 编译过程非常长，使用到的工具非常多，这里提供两个优化的思路:
 提前安装本地依赖，忘了./scripts/feeds update -a还是./scripts/feeds install -a时需要检查系统的各种依赖, 可以提前统一安装一波.
 1sudo apt install g++ 2sudo apt install libncurses5-dev 3sudo apt install zlib1g-dev 4sudo apt install bison 5sudo apt install flex 6sudo apt install unzip 7sudo apt install autoconf 8sudo apt install gawk 9sudo apt install make 10sudo apt install gettext 11sudo apt install gcc 12sudo apt install binutils 13sudo apt install patch 14sudo apt install bzip2 15sudo apt install libz-dev 16sudo apt install asciidoc 17sudo apt install subversion 18sudo apt install python 19sudo apt install git 提前下载dl, dl是默认在编译时下载的一些工具源码, 你可以将他们提前下载好 放到dl/下, 即可省去下载的时间, 特别当你不能翻墙时.</description></item><item><title>开发资料站集合</title><link>https://wangloo.github.io/posts/tools/useful_sites/</link><pubDate>Sat, 05 Aug 2023 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/useful_sites/</guid><description>Architecture ARMv8 寄存器、指令速查：http://hehezhou.cn/arm/ u-boot 克隆仓库
@@ -42,17 +57,19 @@ hlist 整体来说是带头结点的双向链表，头结点的类型为hlist_he
 1struct foo { 2 char mem1; 3 int mem2; 4 short mem3; 5}; 不可能同时做到 foo 变量和其成员 mem2 同时满足对齐到 4 字节，所以编译器会依据 上面的两条要求在成员之间添加 padding。
 除了变量中间添加 padding 外，在末尾也会添加，使得结构体数组容易满足对齐需求。
 最后 foo 变量在内存中的样子可能是:</description></item><item><title>AArch64 内存属性与内存类型</title><link>https://wangloo.github.io/posts/armv8/memory_attr/</link><pubDate>Wed, 12 Apr 2023 08:01:33 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/memory_attr/</guid><description>有了虚拟内存系统之后，MMU 可以抽象出一些可配置的内存属性。
-例如，配置某个虚拟内存区域为不可执行、不被 cache 等，不可执行的属性 有助于防范攻击，不进入 cache 经常划分给 外设 Memory-mapped 区域。
-设置内存属性 相关内容可以在 ARMv8 arm 手册 D5.3.3 Attuibute fields in stage 1 VMSAv8-64 Block and Page descriptors 中找到参考
-对于每一个表示内存块(block)的页表项，都有两个属性字段: lower attr 和 upper attr.
-以下任何类型或者属性的设置都是通过这两个字段完成的。
-大类: 内存类型 AArch64 提供两种内存类型: 普通内存和设备内存。
+例如，配置某个虚拟内存区域为不可执行、不被 cache 等，不可执行的属性 有助于防范攻击，不进入 cache 经常划分给外设 Memory-mapped 区域。
+内存属性和内存类型 首先，我们没法直接设置内存类型，我们能设置的是一些细粒度的内存属性字段， 比如说权限(WRX)、cacheable、shareable 等。
+我们说的内存类型也就是某些有意义的属性字段相互组合，ARM 给出了两种内存类型: 普通内存和设备内存。
 普通内存会启用架构提供的所有优化技术，例如合并访存、乱序执行等。所以 普通内存有最高的性能，但同时不是那么的“安全”，需要底层人员手动使用 内存屏障等手段保证某些情况下的顺序性要求。
 设备内存，顾名思义，常映射到外设的 Memory-mapped 区域。对于设备来说， 那些提高性能的技术会造成一些问题，例如某些寄存器的配置必须按照顺序， 这时就不能使用乱序执行。设备内存就牺牲了性能，优先保证正确性。
 配置内存类型也是通过页表项中的其中一个属性字段: AttrIndx[2:0], 它与系统寄存器MAIR_EL1配合实现。
 具体表现为: mair_el1寄存器被划分为 8 个字段，我们为每个字段写入 不同的值可代表不同的内存类型和一些配套属性，具体的真值表可以参见 mair_el1寄存器的描述。
-mair_el1中内存类型配套属性只是属性的一部分，是和设备类型绑定的 那部分。
-更细分的描述(1): cacheable 内存支持配置为是否被 cache，这在mair_el1的字段中配置。</description></item><item><title>C语言enum的使用</title><link>https://wangloo.github.io/posts/c/enum/</link><pubDate>Thu, 09 Mar 2023 17:18:57 +0800</pubDate><guid>https://wangloo.github.io/posts/c/enum/</guid><description>枚举类型的优势 枚举类型完全可被宏定义替代，类如
+mair_el1中内存类型配套属性只是属性的一部分，是和设备类型绑定的那部分。
+cacheable&amp;amp;shareable 傻傻分不清 先说 cacheable，一段内存被设置为 non-cacheable 属性说明不会进入 cache， inner-cacheable 是实现定义的，可能指进 L1 cache/L2 cache， outer-cacheable 说明会进入 L3 cache。
+要注意，只有普通内存才支持配置是否进入 cache，所有的设备内存需要 non-cacheable。
+内存支持配置为是否被 cacheable，这在mair_el1的字段中配置。
+shareable 说的是一块内存的外部可见性，外部不可见并不是真的看不到，只是说不保证值的正确性。
+shareable 属性和 cacheable 其实是有关联的，他们俩比如配合使用，不能随便设置:</description></item><item><title>C语言enum的使用</title><link>https://wangloo.github.io/posts/c/enum/</link><pubDate>Thu, 09 Mar 2023 17:18:57 +0800</pubDate><guid>https://wangloo.github.io/posts/c/enum/</guid><description>枚举类型的优势 枚举类型完全可被宏定义替代，类如
 1enum Furniture { 2 DOOR = 1, 3 DESK, 4 LOCK, 5} 与下面的代码等效
 1#define DOOR 1 2#define DESK 2 3#define LOCK 3 那么我们如何在两种设计方法中选择呢？在我看来某些情况下使用 enum 会有以下优势：
 提高代码键入效率；仅适用于所需变量的值是连续的整数，就像上面的情况，可以只给第一个 DOOR 赋值，其余的值累加。如果首个变量的值要求是 0，甚至每一个都无需显式赋值 提高代码的可维护性；可以划定范围，编译器也会检查类型是否正确，偶尔会有用 提高代码的可读性；例如 DOOR, DESK, LOCK&amp;hellip; 都属于家具，均定义在 Furniture 中 枚举类型所占的大小 枚举类型所占内存的大小，即枚举变量的大小。
