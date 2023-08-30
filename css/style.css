@@ -4,12 +4,28 @@
 }
 
 
-h1,h2,h3,h4,h5,h6,p,li,a {
+h1,h2,h3,h4,h5,h6,p,li,a,div {
     font-family: 'PT Serif','LXGW WenKai Lite','Noto Serif SC', serif;
+}
+
+h1:before {
+    content: "🚩 ";
+    /* font-size: $h1 - 5px; */
+}
+h2:before {
+    /* content: "> "; */
+    /* font-size: $h1 - 2 * $h-diff; */
 }
 
 code {
     font-family: jetbrains mono,Menlo,Consolas,dejavu sans mono,bitstream vera sans mono,lucida console,Monaco,droid sans mono,monospace !important;
+}
+
+.post-title {
+    font-size:xx-large;
+    font-weight: 600;
+    line-height: 2em;
+    /* text-align: center; */
 }
 
 #fastSearch {
@@ -79,11 +95,10 @@ code {
 }
 
 .container {
-    padding-left: 25%;
-    width: 75%;
+    padding-left: 28%; /* 比sidebar的width稍宽, 因为考虑到滑块 */
+    /* width: 75%; */  /* 有了white-space就不需要 */
     min-height: 100vh;
     white-space: normal;
-
 }
 
 .side-container {
@@ -99,6 +114,7 @@ code {
 }
 
 .nav-link-list {
+    overflow: auto;
     flex-grow: 1;
     .nav-link-item {
       margin-bottom: 10px;
@@ -108,3 +124,20 @@ code {
       transition: all 0.2s linear;
     }
   }
+
+pre {
+    overflow-x:auto; /* 代码超出长度显示滑块 */
+}
+
+blockquote {
+    border-left: 0.3rem solid gray;
+    background-color: rgba(149, 149, 149, 0.2);
+    padding: 3px 10px;
+    
+    /* 禁止默认的缩进 */
+    margin-inline-start: 0; 
+    margin-inline-end: 0;
+}
+
+blockquote p {
+}
