@@ -102,3 +102,18 @@ handin-check:
 ```
 
 > 以上 demo 还使用了 test 命令来终止 make 的执行, 如果用户没有输入`y`, make 将会终止执行
+
+## 使用另一个 Makefile
+
+常见的有三种方式， `make -C`, `make -f` 和 `include`
+
+`make -C <dir>` 的作用等价与 `cd <dir>`+`make`, 常见于在一个工程
+的主目录下，依次编译生成其他子目录的目标文件。有`cd`命令的效果，会切换
+当前目录。
+
+`make -f <file>` 更像临时使用某个 Makefile 来执行一些操作，在指定的
+Makefile 中如果想使用之前的变量，需要`export`. 目前还没有发现有必要的
+应用场景，大部分用`include`方式替代。
+
+`include <file>` 一般用于引入一些通用规则，就像 C 语言的 include 头文件
+一样，变量无需`export`.

@@ -35,6 +35,7 @@ date: 2023-07-17T19:28:12+08:00
 
 ## 主题
 
+## 配置备份
 # vim
 
 ## vimrc
@@ -175,7 +176,9 @@ ubuntu自带的终端我觉得还不错，有些人说Terminitor不错，分屏�
 
 
 
-# tmux
+
+
+
 
 
 # ssh 密钥
@@ -183,3 +186,16 @@ ubuntu自带的终端我觉得还不错，有些人说Terminitor不错，分屏�
 ssh-keygen -t rsa -C "cnwanglu@icloud.com"
 ```
 
+# tmux
+tmux 在远程开发时比较有用。我们在用ssh连到服务器时经常需要有多窗口的需求，
+比起现有terminal软件自带的多窗口功能(Xshell,mobaxterm等)，使用tmux
+会更加方便。
+1. 窗口创建、切换等方式可以做到统一，不用追随终端软件
+2. 可以保存现场，即便因为网络问题ssh断开，也能随便恢复到之前的状态。因为
+   tmux是C/S架构，只要服务器上的server不死，永远可以恢复之前状态！
+3. 甚至，tmux提供了将现场保存到本地文件中的功能。
+
+
+## reference
+
+1. [Tmux使用手册](http://louiszhai.github.io/2017/09/30/tmux/)
