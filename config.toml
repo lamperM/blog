@@ -3,6 +3,8 @@ baseURL = "https://wangloo.github.io/"
 title = "BLOG"
 theme = "puer"
 
+[frontmatter]
+  lastmod = ['lastmod', ':git', ':fileModTime', 'date', 'publishDate']
 
 [markup]
   [markup.highlight]
