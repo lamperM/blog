@@ -1,0 +1,15 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Linux 内核抢占</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>所有文章</a></div><div class="a-block nav-link-item"><a href=/tags>Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e6%8a%a2%e5%8d%a0%e7%9a%84%e5%90%ab%e4%b9%89 aria-label=抢占的含义>抢占的含义</a></li><li><a href=#%e7%94%a8%e6%88%b7%e6%8a%a2%e5%8d%a0 aria-label=用户抢占>用户抢占</a></li><li><a href=#%e5%86%85%e6%a0%b8%e6%8a%a2%e5%8d%a0 aria-label=内核抢占>内核抢占</a></li><li><a href=#%e6%8a%a2%e5%8d%a0%e5%8f%91%e7%94%9f%e7%9a%84%e6%9d%a1%e4%bb%b6 aria-label=抢占发生的条件>抢占发生的条件</a></li></ul></div></details></div></div></div></div><script src=/js/fuse.js></script>
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Linux 内核抢占</div></header><h2 id=抢占的含义>抢占的含义</h2><p>抢占指的是强制使一个任务让出 CPU 给其他任务。</p><p>抢占是调度器做的，每次执行<code>schedule()</code>就可能发生一次抢占，所以
+抢占发生的<strong>地点是内核</strong>，也就是<code>schedule()</code>的执行环境。</p><h2 id=用户抢占>用户抢占</h2><p>与内核抢占相对应的是用户抢占，用户抢占不是指抢占发生的地点，因为
+上面说了抢占发生的地点一定是内核。</p><p>所以用户抢占的含义是：抢占的时机是用户态，换句话说就是抢占发生之前，
+系统正处于用户态。</p><p>用户抢占的经典场景是时钟中断，用户进程 1 执行的好好地，被时钟中断打断
+然后中断返回时执行重调度，选择了新的用户进程 2。其他的可能用户抢占的场景
+还有系统调用返回时， 总之是<strong>内核返回用户态时都会发生用户抢占</strong>。</p><h2 id=内核抢占>内核抢占</h2><p>启用内核抢占增加了系统中发生抢占的点，即抢占前系统正处于内核。</p><p>当一个进程正处于内核态执行任务时，比如执行<code>mmap()</code>系统调用的任务，在
+未开启内核抢占的情况下，中断返回时只可能继续执行当前进程的任务，不会
+发生调度。</p><p>当启用内核抢占时，上述情况下若发生中断，系统在退出中断后，即使此时不是
+返回用户态，也可以执行<code>schedule()</code>，即可以发生抢占。此之谓内核抢占。</p><h2 id=抢占发生的条件>抢占发生的条件</h2><p>启用内核抢占之后，其实抢占的过程也不区分用户态和内核态，只要满足条件都会
+执行<code>schedule()</code>。</p><p>执行重调度的条件有两个:</p><ol><li>是否需要重调度?</li><li>是否可以重调度?</li></ol><p>是否需要重调度也就是何时执行<code>schedule()</code>的问题，大概包含以下的场景:</p><ul><li>时钟中断</li><li>新进程创建</li><li>修改进程的 nice 值</li><li>中断返回内核态</li><li>内核恢复为可抢占(下面会介绍)</li></ul><p>然而有一些情况不可以重新调度，比如内核中一些关键的步骤，那些不能被打断的
+原子操作。</p><p>在关键步骤之前，需要调用<code>preempt_disable()</code>，此时 linux 会在 tcb 中会改变
+<code>preempt_count</code>的值，这个操作不是关闭中断，而是在中断返回时即使有更高优先级的其他进程，
+只要该值不符合要求，重调度也不会发生。</p><p>关键步骤执行完，调用<code>preempt_enable()</code>，此时为了去满足关键区域内可能
+有新加入的高优先级进程，会调用一次重调度，这也正是上面所说需要重调度的场景之一。</p></article></body></main></div></body></html>

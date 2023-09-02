@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>linux SLAB 内存分配器(1): 概述</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>所有文章</a></div><div class="a-block nav-link-item"><a href=/tags>Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#slab-%e6%98%af%e4%bb%80%e4%b9%88 aria-label="slab 是什么">slab 是什么</a></li><li><a href=#slab-%e7%9a%84%e8%ae%be%e8%ae%a1%e6%80%9d%e6%83%b3 aria-label="slab 的设计思想">slab 的设计思想</a><ul><li><a href=#%e5%af%b9%e8%b1%a1%e7%bc%93%e5%ad%98%e7%89%b9%e6%80%a7 aria-label=对象缓存特性>对象缓存特性</a></li><li><a href=#%e6%95%b4%e4%bd%93%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%9a%84%e8%a7%84%e5%88%92 aria-label=整体数据结构的规划>整体数据结构的规划</a></li></ul></li><li><a href=#reference aria-label=Reference>Reference</a></li></ul></div></details></div></div></div></div><script src=/js/fuse.js></script>
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>linux SLAB 内存分配器(1): 概述</div></header><blockquote><p>参考的 linux kernel 代码版本 4.12</p></blockquote><h2 id=slab-是什么>slab 是什么</h2><p>slab 属于 linux 内核内存分配器的一种，满足细粒度的<strong>小块内存</strong>的请求。
+内核中还有其他的内存分配器例如伙伴系统，它是满足<strong>页为单位</strong>的分配请求。
+因为内核中大部分的分配请求都用不到一个页那么大，所以 slab 的出现能够减小
+内存碎片的出现。</p><p>另外，非常重要的是，除了基本的小块内存分配， slab 的最初设计开始就基于
+<strong>对象缓存</strong>的思想，加速分配和初始化的过程，下面将详细介绍缓存的设计思想。</p><blockquote><p>slab 分配器的实现在 linux 中是基于伙伴系统的，slab 管理的内存来源
+就是伙伴系统，只是进行“二次管理”， 。</p></blockquote><h2 id=slab-的设计思想>slab 的设计思想</h2><h3 id=对象缓存特性>对象缓存特性</h3><p>经常会在 slab 接口中看到<code>kmem_cache</code>这个前缀，我最初也有疑问说 slab
+不就是一个内存分配算法，和 cache 扯上什么关系呢？</p><p>slab 一般用于分配一些结构的内存，拿<code>struct task</code>来举例，我们通常会为
+<code>struct task</code>创建一个内存池，里面包含了若干大小为<code>sizeof(struct task)</code>
+的内存块，用的时候从里面取，释放之后回归池子里即可。这是 slab 分配小块内存的
+基本思想。</p><p>内核中的很多数据结构，我们在申请完空间之后立马做的一件事，就是初始化对象的成员
+为某些特定的值，可以称这个过程为<strong>结构体(类)的构造函数</strong>，意为所有对象都会
+做的那些相同的事。比如说，多核环境下很多结构中会有锁，或者链表，那么申请完空间
+之后都会做锁或链表做初始化，这是固定的。实际上这些操作消耗的时间甚至大于申请
+一块内存。</p><p>基于以上事实，slab 分配器做的缓存优化是：为每个类别的内存池都绑定一个构造函数
+和析构函数，当用完的对象空间被释放时，调用析构函数将某些成员的值恢复为默认状态
+，这样下次申请的时候，直接拿就行了，省略了重复的初始化流程。而构造函数被调用的
+情况仅仅是当该小块内存第一次被申请时。</p><p>由于这个思想，整个内存池也就被声明结构 <code>struct kmem_cache</code>, 它是整个 slab
+算法的顶层数据结构，其中包含了许多相同大小的小内存块，slab 通过一些算法对其进行
+管理。</p><h3 id=整体数据结构的规划>整体数据结构的规划</h3><p>上面说了整个系统的顶层结构是<code>struct kmem_cache</code>, 其中可以再划分为多个"slab",
+这个 slab 就能代表一个或多个连续的物理页嘛，从 buddy 申请来的。</p><p>表示一个 slab 的描述符可以与<code>struct page</code>，即物理页描述符共用，只是有一些
+特定的成员不同，但毕竟 slab 描述符含义上来说也是表示一个或多个联系的物理页。
+只是这些物理页中可以再此进行划分为小的内存块。</p><p>slab 算法称这些小的内存块为<strong>object, 对象</strong>, 每个<code>kmem_cache</code>中的所有 slab
+中的所有 object 的大小都是一致的。</p><p><strong><code>slab</code>所指向的连续物理页中的内容=（一大堆 object +辅助快速定位 object 的结构）</strong>。
+[图]</p><p>这个结构就差不多了，另外，如果让<code>kmem_cache</code>下的所有 slab 都放在一起，不好判断那些
+slab 中的 object 已经全部分配了，哪些 slab 是空的？为了方便管理和查找，slab 算法还
+封装了一个<code>struct kmem_cache_node</code>结构，组织了三条链表: free, partial, full。
+特定状态的 slab 挂在特定的链表上，方便查找。【图】</p><h2 id=reference>Reference</h2><p><a href=https://blog.csdn.net/u010923083/article/details/116518248>https://blog.csdn.net/u010923083/article/details/116518248</a></p></article></body></main></div></body></html>

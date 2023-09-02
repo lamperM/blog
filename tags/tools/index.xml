@@ -14,11 +14,10 @@ C GNU 内联汇编 https://gcc.gnu.org/onlinedocs/gcc/Using-Assembly-Language-wi
 详情及安装参考github
 霞鹜文楷 开源的中文字体，做博客、PPT 不错。
 详情及安装参考github
-vscode 主题 vim vimrc ycm 特别注意 YCM 插件对 python, vim 的版本均有要求。
+vscode 主题 配置备份 vim vimrc ycm 特别注意 YCM 插件对 python, vim 的版本均有要求。
 下载 可以使用 vim-plug 等工具下载, 也可以下载源码然后拷贝到.vim目录下
 编译 编译用到 python3, 这里是问题最多的一步
-1# 编译并添加对C的提示支持 2python3 install.py --clangd-completer --verbose 3 4Searching Python 3.8 libraries... 5... 6Downloading Clangd from https://github.com/ycm-core/llvm/releases/download/13.0.0/clangd-13.0.0-x86_64-unknown-linux-gnu.tar.bz2... 使用--clangd-completer参数时, 脚本会去下载 clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2 文件, 比较慢. 也可以提前根据提示的网站自己手动下载压缩包.
-下载完成后, 放到本地目录下:</description></item><item><title>git 宝典</title><link>https://wangloo.github.io/posts/tools/git/git/</link><pubDate>Tue, 13 Dec 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/git/git/</guid><description>合并操作: git merge merge 有两种方式:
+1# 编译并添加对C的提示支持 2python3 install.py --clangd-completer --verbose 3 4Searching Python 3.8 libraries... 5... 6Downloading Clangd from https://github.com/ycm-core/llvm/releases/download/13.0.0/clangd-13.0.0-x86_64-unknown-linux-gnu.tar.bz2... 使用--clangd-completer参数时, 脚本会去下载 clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2 文件, 比较慢. 也可以提前根据提示的网站自己手动下载压缩包.</description></item><item><title>git 宝典</title><link>https://wangloo.github.io/posts/tools/git/git/</link><pubDate>Tue, 13 Dec 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/git/git/</guid><description>合并操作: git merge merge 有两种方式:
 fast-forward three-way merger Fast-forward Merge 假设合并的双方为main为dev, 如果其中一个是另一个的祖先, 此时直接移动 HEAD 到前方即可, 称为 fast-forward.
 例如, 当前在 main, 执行git merge dev的过程如下:
 1 main main 2 | | 3M1 --- M2 ===&amp;gt; M1 --- M2 -- F1 4 \ | 5 \--- F1 dev 6 | 7 dev three-way Merge 合并的两者不构成直接的祖先-孩子关系, 产生了分叉. 此时进行合并就需要有个基准(参考), 对于两边相较于基准的每个 diff 来说:

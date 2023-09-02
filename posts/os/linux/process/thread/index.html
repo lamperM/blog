@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Linux 进程与线程的关系</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>所有文章</a></div><div class="a-block nav-link-item"><a href=/tags>Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e5%86%85%e6%a0%b8%e7%ba%bf%e7%a8%8b aria-label=内核线程>内核线程</a></li></ul></div></details></div></div></div></div><script src=/js/fuse.js></script>
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Linux 进程与线程的关系</div></header><p>Linux 中其实并不区别进程和线程，都用<code>task_struct</code>来描述，可以说
+它们之间的联系大于区别。</p><p>创建进程的接口是<code>fork()</code>， 创建线程的接口是<code>pthread_create()</code>，
+但是它们最终都是调用的<code>clone()</code>系统调用， 只是参数不同而已。</p><p>当一个进程/线程发起<strong>创建线程</strong>的请求时，不像创建进程那样重新申请<code>mm_struct</code>
+和打开的文件等结构， 而是直接将指针赋值为父进程的值，所以它和父进程共享同一个
+地址空间这些。</p><blockquote><p>上面说的父进程，因为没有父线程的概念，如果创建线程的<code>task_struct</code>也是一个
+线程，那么它的地址空间也是最终指向某个进程的，所以父亲和新的线程就是同等
+地位了。</p></blockquote><p>再说说 PID，PID 能够唯一的标识一个进程，一个进程下所有的线程的 PID 都与父进程
+相同，那么问题来了，<strong>如何标识线程的从属关系呢？</strong></p><p><code>task_struct.tgid</code>标识自己所归属的进程 ID，或者叫主线程 ID，反正就是地址空间
+的真正来源。 而<strong>进程如何知道自己创建了哪些线程呢？</strong>， 通过<code>task_struct.children</code>
+链表来查找，但这里面即有子进程又有线程，需要过滤。</p><blockquote><p>有的地方会使用一个名词 <em>管理线程</em>， 其实就是线程共享的地址空间这些的原主。</p></blockquote><h2 id=内核线程>内核线程</h2><p>内核线程是一种特殊的进程，当然也是用<code>task_struct</code>来描述，内核线程的特殊点：</p><ol><li><code>mm</code>成员=NULL，没有用户空间的数据，不能访问用户空间</li><li>每个内核线程有私有数据，用<code>set_child_tid</code>成员指向，
+是一个<code>struct kthread</code>结构，用<code>to_kthread()</code>来访问私有数据</li></ol><p>内核线程也像普通线程一样参与调度，其创建的地方在内核，使用<code>kthread_create()</code>
+创建，不能由用户态创建。</p><p>内核线程一般负责执行一些内核任务，比如软中断
+就有一个内核线程，来专门执行到来中断的服务函数中不着急的部分。</p></article></body></main></div></body></html>
