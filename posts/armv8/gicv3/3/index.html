@@ -15,4 +15,4 @@ active->inactive.</p><blockquote><p>中断服务程序中，承认中断和标�
 都属于实现中断上下部机制的实现。</p><h2 id=softirq>softIRQ</h2><p>softirq 定义了一些中断事件和处理函数，在中断的上半部中，如果 INTID 属于定义的软中断
 之一， 则添加标志其处理函数需要被执行，只是标志，并不实际执行。</p><p>当中断服务程序退出之前，会遍历软中断列表中的状态，如果有需要处理的，则调用注册的处理函数。</p><p>注意，软中断处理函数的执行是在中断上下文中，用户进程只能等待中断完成才能有机会被调用，
 所以软中断的一个问题是， 如果需要执行的处理函数过多，会导致一般线程长时间不能被调度。</p><p>同样地，因为处理函数的执行在中断上下文，所以也不能执行可能导致进程睡眠的操作，
-例如申请锁，可能导致优先级反转。</p><h2 id=tasklet>tasklet</h2><h2 id=workqueue>workqueue</h2></article></body></main></div></body></html>
+例如申请锁，可能导致优先级反转。</p><h2 id=tasklet>tasklet</h2><h2 id=workqueue>workqueue</h2></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-04-13T23:51:49, Lastmod: 2023-09-02T15:27:14</p></main></div></body></html>

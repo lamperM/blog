@@ -4,4 +4,4 @@
 如果某些程序的需求过大, 运行库也可以使用<code>mmap</code>系统调用直接向操作系统申请, 然后
 返回给用户进程.</p><blockquote><p>GLIBC的<code>malloc</code>函数的处理方式是: 对于小于<code>128KB</code>的申请, 会从运行库"批发的"堆空间
 里分出一块来; 但若申请的空间过大, 则使用<code>mmap</code>系统调用来创建匿名空间分配给用户.</p></blockquote><blockquote><p>Linux中虚拟地址块(VMA)的管理使用了红黑树, 可以用于运行库管理自己向操作系统
-&ldquo;批发"的堆空间. 使得用户程序动态申请和释放内存性能提高.</p></blockquote></article></body></main></div></body></html>
+&ldquo;批发"的堆空间. 使得用户程序动态申请和释放内存性能提高.</p></blockquote></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2022-06-28T16:41:54, Lastmod: 2023-09-02T15:27:14</p></main></div></body></html>
