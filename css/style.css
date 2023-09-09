@@ -12,9 +12,29 @@ h1:before {
     content: "🚩 ";
     /* font-size: $h1 - 5px; */
 }
+
 h2:before {
     /* content: "> "; */
     /* font-size: $h1 - 2 * $h-diff; */
+}
+
+table {
+    table-layout: auto;
+    overflow-x: auto;
+    /* width: 100%; */
+    max-width: 100%;
+    margin: .625rem 0;
+
+    /* 解决重叠边框：https://zhuanlan.zhihu.com/p/138310384 */
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+table thead {
+    background-color: gainsboro;
+}
+table th, td {
+    padding: .3rem 1rem;
+    border: 1px solid gray;
 }
 
 code {

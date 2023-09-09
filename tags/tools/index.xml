@@ -7,6 +7,7 @@ https://releases.linaro.org/components/toolchain/binaries/
 GNU https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-a/downloads
 C GNU 内联汇编 https://gcc.gnu.org/onlinedocs/gcc/Using-Assembly-Language-with-C.html#Using-Assembly-Language-with-C
 构建工具 跟我一起写makefile PDF：https://seisman.github.io/how-to-write-makefile/Makefile.pdf
+嵌入式开发小工具 网络调试工具 http://free.cmsoft.cn/download/cmsoft/assistant/netassist5.0.3.zip
 其他 Emoji cheat sheet https://www.webfx.com/tools/emoji-cheat-sheet/</description></item><item><title>我的开发环境构建指南</title><link>https://wangloo.github.io/posts/tools/dev_env/</link><pubDate>Mon, 17 Jul 2023 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/dev_env/</guid><description>前言 写这篇博客的背景是我实在忍受不了每次换新的开发机器都得费好大的劲来完全恢复以前的环境， 而且，我平常喜欢搜集各种有用的工具、好看的主题，字体这些，如果零零散散的记录，大概率会忘记或者记不得某些细节。
 所以，最后期望达到的是能够使我每次在新机器上搭建环境只需要看这一篇文章就可以了。因此这里会记录：
 帮助提升开发效率的小工具 好看的字体、主题 配置某些环境的要点及注意事项 🥀 到目前为止，我还未发现一种方式能够完全达到“一键式布置”，这也不是本文的目的。 付出至少半天的时间的一定的，希望未来能发现一种好的方法。
