@@ -11,4 +11,4 @@
 共享这些地址无关代码.</p><blockquote><p>上面说PIC的动态库不需要重定位其实是错误的, 只不过它的重定位过程不需要修改代码段,
 而是设置了一个放置在数据段的<em>GOT</em>表来实现代码段部分的地址无关特性.</p></blockquote><blockquote><p>现在貌似GCC ARM版本在编译动态库时强制使用-fPIC选项, 否则会报错. 对此我不是
 非常确定!</p></blockquote><blockquote><p>一般来说, 不将主程序编译为地址无关码. 因为主程序不需要共享, 而且地址无关码的调用
-需要两个指令: <code>计算地址</code> + <code>跳转</code>. 多了一步根据偏移得到绝对地址.</p></blockquote></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2022-06-26T19:50:45, Lastmod: 2023-09-02T15:27:14</p></main></div></body></html>
+需要两个指令: <code>计算地址</code> + <code>跳转</code>. 多了一步根据偏移得到绝对地址.</p></blockquote></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2022-06-26T19:50:45, Lastmod: 2023-02-27T20:37:54</p></main></div></body></html>

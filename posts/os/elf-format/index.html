@@ -48,4 +48,4 @@
 </span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>| E |               |
 </span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>+---+---------------+
 </span></span></code></pre></div><blockquote><p>目前, gcc(更准确是说是GUN ld)默认启用段对齐技术. 各个段的虚拟地址并不是<code>page align</code>.</p></blockquote><blockquote><p>:four_leaf_clover: 物理页面到虚拟页面的映射阶段, 那些<em>同时包含</em>两个段的页面会被映射两次, 即一个物理页面对应两个
-虚拟页.</p><p>原因是: 在一个页面的不同段可能<strong>权限不同</strong>, 所以不能使用同一映射.</p></blockquote></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2022-06-20T16:21:27, Lastmod: 2023-09-02T15:27:14</p></main></div></body></html>
+虚拟页.</p><p>原因是: 在一个页面的不同段可能<strong>权限不同</strong>, 所以不能使用同一映射.</p></blockquote></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2022-06-20T16:21:27, Lastmod: 2023-02-27T20:37:54</p></main></div></body></html>
