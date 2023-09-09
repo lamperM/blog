@@ -4,7 +4,7 @@ date: 2022-06-20T16:21:27+08:00
 tags: [Operating System]
 ---
 
-## `ELF` is a file format
+# ELF不只是可执行文件
 
 Files in `ELF` format includes:
 
@@ -17,8 +17,8 @@ Files in `ELF` format includes:
 
 > :pushpin: `file` command in Linux can output the format of a file.
 
-&nbsp;
-## ELF 文件组成的结构
+
+# ELF 文件组成的结构
 ```
 +---------------------------------+
 |           ELF Header            |  包含描述整个ELF的基本信息, 如版本, 入口地址...
@@ -32,14 +32,20 @@ Files in `ELF` format includes:
 |           ...                   |  
 |           other sections        |
 +---------------------------------+
-|                                 |  段表: 与段相关最重要的结构
-|       Section Header table      |  描述了每个段的name, length, authority...
+|                                 |  与section相关最重要的结构
+|       Section Header table      |  描述了每个section的名称,长度,权限...
+|                                 |
++---------------------------------+
+|                                 |  与segment相关最重要的结构
+|       Program Header table      |  描述了每个segment的位置、属性(RWX)、size...
 |                                 |
 +---------------------------------+
 |         String tables           |
 |         Symbol tables           |
 +---------------------------------+
 ```
+
+## ELF Header
 
 |字段| 含义 |
 |--|--|
@@ -54,25 +60,113 @@ Files in `ELF` format includes:
 | e_machine | 目标架构 |
 
 
-### 段表
-ELF文件中的各个段的基本属性就是保存在**段表**中，是分析ELF文件最重要的字段。存放了每个段的信息，例如，段名，段的长度，在文件中的偏移，读写权限以及其他属性。
+## Program Header Table
+每个表项对应一个segment，表明其位置、属性(LOAD?动态链接用?)、memory size和file size，权限(RWX)等。
 
-编译器、链接器都是依靠段表来定位和访问各个段的属性的。
+>Memory Size >= Segment Size, 因为有BSS段存在。
 
-如何找到段表？ **`e_shoff`字段**
+## Section Header Table
+相应地，每个表项指定一个section的信息，包括名字、大小、地址等。
 
->使用`readelf -S <elfname>` 就能查看ELF文件的段表
+# 为什么要区分section和segment
+segment是加载关心的, section是链接过程关心的。
+
+- segment中包含了多个section, 这些section地址相连、属性类似, 加载器只按照segment去加载。
+- 而链接时, 链接器会对每个section进行重定位, 同时也需要 `.rel*` section来完成重定位。
+- 调试信息也是按照section进行存储的，调试器依赖他们得到符号信息。
+
+# 加载ELF时要将AUX信息放在栈底， AUX是什么
+
+AUX全称Auxiliary Information，即辅助信息。
+
+输出一个ELF的AUX:
+```sh
+~ $ LD_SHOW_AUXV=1 /bin/ls
+AT_SYSINFO_EHDR:      0x7ffc3b3de000
+AT_HWCAP:             1f8bfbff
+AT_PAGESZ:            4096
+AT_CLKTCK:            100
+AT_PHDR:              0x55a318711040
+AT_PHENT:             56
+AT_PHNUM:             13
+AT_BASE:              0x7f0f5ac91000
+AT_FLAGS:             0x0
+AT_ENTRY:             0x55a3187177d0
+AT_UID:               1000
+AT_EUID:              1000
+AT_GID:               1000
+AT_EGID:              1000
+AT_SECURE:            0
+AT_RANDOM:            0x7ffc3b272ab9
+AT_HWCAP2:            0x2
+AT_EXECFN:            /bin/ls
+AT_PLATFORM:          x86_64
+
+```
+
+AUX是内核加载用户程序时可以将ELF的一些信息传到用户态，该应用可以读取。
+通常用于加载某个外部解释器，一般程序员用不到。
+
+# 链接
+
+链接即多个.o生成最终可执行程序的过程，编译时对于外部的函数，编译器无法确定实际跳转的地址，
+只能先写0，链接过程会对这个值进行修改。
+
+主要包含两个过程：（1）地址空间分配（2）重定位
+- 地址空间分配：这么多.o，这么多section，他们结合为可执行文件后地址怎么规划呢？是不是有的
+  section 可以合并，比如多个代码段。
+- 重定位：对于外部调用的函数，这些实际的值也需要更正，或者采用别的方法来间接寻址（动态链接）
+
+## 静态链接
+
+重定位
+
+合并后的每个section都有一个重定位表，`.rel.xx`， 里面的内容大概是:
+```
+RELOCATION RECORDS FOR [.text]:
+OFFSET TYPE VALUE
+0000001c R_386_32 shared
+00000027 R_386_PC32 swap
+```
+对于每个需要重定位的指令，都会在这里表里对应到，所以链接时需要遍历它，填充上真正的地址。
 
 
-### 程序头表
+## 动态链接
 
-&nbsp;
-## 分析ELF文件的工具
-### 1. objdump
+静态链接的做法就决定了，程序A和B不能共享同一份库，浪费内存。库编进了可执行文件中，所以生成的可执行文件就很大，
+另外这样如果要修改库的话就需要对所有依赖的A和B都重新编译。
 
-### 2. readelf
+动态链接是目的是解决上面的问题，也就是说，库不编到ELF里，ELF在运行的时候能找到它就行。
+这样一个程序编译链接后其实不能确定库的地址
 
-&nbsp;
+# ELF加载
+> 废了半天劲编译生成的ELF文件, 想要最终跑起来则包含的instruction and data必须要在内存中. 
+
+我们能想到的最简单的办法是: 把整个ELF的**所有指令和数据**在运行之前就全部load到内存中. 这就是*静态加载*.
+
+更加高效的做法是: 充分利用*局部性原理*, 将指令和数据划分为**模块**, 只有当该模块被使用时, 才load进内存,
+否则就在外存中老老实实呆着. 这就是*动态加载*.
+## 静态加载
+1. 读取ELF header, 校验magic number和架构是否正确
+2. 根据ELF header中指定的 program header table地址去读 segments
+3. 加载segments 中属性为LOAD的segment, 先要分配对应的虚拟空间, 根据ELF的LMA
+4. 加载程序为ELF分配栈空间，并填充argc, argv，env等。
+5. 将PC设置为ELF header中entry point, 返回到用户态开始执行
+
+## 动态加载
+
+没什么好说的，就是第一次加载时只分配页表，建立映射，并不实际分配物理空间。
+
+# 分析ELF文件的工具
+## 1. objdump
+
+## 2. readelf
+常用参数:
+```sh
+readelf -S xxx.elf  # display section header table
+readelf -h xxx.elf  # display ELF header
+```
+
 ## 为什么目标文件中代码和数据要分开放?
 一方面, 程序被加载进内存后, 代码段和数据段分别被映射到**两个virtual memory region**.
 通过MMU的支持, 可以将代码段的区域设置为只读, 防止恶意篡改.
@@ -97,33 +191,6 @@ ELF文件中的各个段的基本属性就是保存在**段表**中，是分析E
 :question: 如何查看一个静态库是由哪些object file压缩到一起的?
 
 Shell command`ar -t libc.a`  可以查看`libc.a`中包含的所有object files.
-
-&nbsp;
-## ELF文件加载-运行流程
-> 废了半天劲编译生成的ELF文件, 想要最终跑起来则包含的instruction and data必须要在内存中. 
-
-### 静态加载与动态加载
-我们能想到的最简单的办法是: 把整个ELF的**所有指令和数据**在运行之前就全部load到内存中. 这就是*静态加载*.
-
-更加高效的做法是: 充分利用*局部性原理*, 将指令和数据划分为**模块**, 只有当该模块被使用时, 才load进内存,
-否则就在外存中老老实实呆着. 这就是*动态加载*.
-
-### 动态加载的步骤
-借助*虚拟内存*技术, 上面提到的**模块**的概念可以自然的被**页**(page)代替.
-我们将所有的指令和数据按照page为单位划分.
-
-1. 运行该ELF的线程被创建时, 其virtual space范围被划定, 但其页表是空的, 没有任何映射.
-
-2. OS读取ELF Header, 建立virtual space与**ELF文件**的映射关系. 这个映射关系的表达方式是一个特殊的**数据结构**.
-建立该映射关系的原因是: 当程序运行到某个地址发现该页表项是空的(例如 `call 0x1234`), 那么必然触发`page fault`. 
-由OS负责到*特定的外存地址*将页面加载到physical memory中. 
-```
-OS要想知道缺失的内容在ELF文件的哪个位置, 就是利用该映射, 即某个数据结构
-```
-
-3. physical memory中有了所需的指令或数据后, 还需建立visual memory到physical memory的映射, 即在*页表项*中写入.
-随着程序的运行, 会继续触发`page fault`, 从ELF中不断load page到physical memory, 建立缺页visual addr处的页表映射,
-最终填补成一个完整的pagetable.
 
 &nbsp;
 ## 段地址对齐技术

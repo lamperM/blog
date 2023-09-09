@@ -37,10 +37,7 @@ TODO: 标定正确答案
 
 ## 操作系统角度如何加载一个ELF文件?
 静态加载：
-1. 读取ELF header, 校验magic number和架构是否正确
-2. 根据ELF header中指定的segment header table地址去读segment table
-3. 加载segment table中属性为LOAD的segment, 先要分配对应的虚拟空间, 根据ELF的LMA
-4. 将PC设置为ELF header中entry point, 返回到用户态开始执行
+
 
 
 ## 介绍一下ARM ABI

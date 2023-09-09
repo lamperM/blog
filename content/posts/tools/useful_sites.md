@@ -32,12 +32,20 @@ https://developer.arm.com/tools-and-software/open-source-software/developer-tool
 ### GNU 内联汇编
 https://gcc.gnu.org/onlinedocs/gcc/Using-Assembly-Language-with-C.html#Using-Assembly-Language-with-C
 
+
 ## 构建工具
 
 ### 跟我一起写makefile
 
 PDF：https://seisman.github.io/how-to-write-makefile/Makefile.pdf
 
+## 嵌入式开发小工具
+
+### 网络调试工具
+
+http://free.cmsoft.cn/download/cmsoft/assistant/netassist5.0.3.zip
+
+### 
 ## 其他
 - Emoji cheat sheet
 https://www.webfx.com/tools/emoji-cheat-sheet/

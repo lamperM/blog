@@ -143,6 +143,7 @@ sudo apt install python3-pip
 sudo apt install tmux
 sudo apt install fzf
 sudo apt install zsh
+sudo apt install cmake
 ```
 ## pip3
 ```shell
