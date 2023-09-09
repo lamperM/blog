@@ -3,7 +3,12 @@ baseURL = "https://wangloo.github.io/"
 title = "BLOG"
 theme = "puer"
 
+# 是否使用 git 信息
+enableGitInfo = true
+
+
 [frontmatter]
+  # 左边意为，变量 .LastMod 将会被赋值为右边数组中最先找到的的日期值
   lastmod = ['lastmod', ':git', ':fileModTime', 'date', 'publishDate']
 
 [markup]

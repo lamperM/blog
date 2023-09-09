@@ -6,6 +6,8 @@ on:
       - main  # Set a branch to deploy
   pull_request:
 
+env:
+  TZ: Asia/Shanghai # 设置当前环境时区
 jobs:
   deploy:
     runs-on: ubuntu-20.04
@@ -14,6 +16,13 @@ jobs:
         with:
           submodules: true  # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Git Configuration
+        run: |
+          git config --global core.quotePath false
+          git config --global core.autocrlf false
+          git config --global core.safecrlf true
+          git config --global core.ignorecase false       
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
