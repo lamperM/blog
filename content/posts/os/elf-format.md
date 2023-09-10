@@ -68,6 +68,17 @@ Files in `ELF` format includes:
 ## Section Header Table
 相应地，每个表项指定一个section的信息，包括名字、大小、地址等。
 
+# 为什么目标文件中代码和数据要分开放?
+一方面, 程序被加载进内存后, 代码段和数据段分别被映射到**两个virtual memory region**.
+通过MMU的支持, 可以将代码段的区域设置为只读, 防止恶意篡改.
+
+另一方面, 当下CPU Cache多划分为*Instruction Cache*和*Data Cache*, 再配合互相独立的
+地址区域能够提高**局部性原理**的效果.
+
+最后, 代码段可以被多个进程共享(例如都调用同一外部函数), 节省内存空间.
+
+> 针对嵌入式设备, 如果内存空间不够大, 只读的代码段可存放在ROM中
+
 # 为什么要区分section和segment
 segment是加载关心的, section是链接过程关心的。
 
@@ -107,7 +118,8 @@ AT_PLATFORM:          x86_64
 AUX是内核加载用户程序时可以将ELF的一些信息传到用户态，该应用可以读取。
 通常用于加载某个外部解释器，一般程序员用不到。
 
-# 链接
+
+# ELF 链接
 
 链接即多个.o生成最终可执行程序的过程，编译时对于外部的函数，编译器无法确定实际跳转的地址，
 只能先写0，链接过程会对这个值进行修改。
@@ -139,7 +151,7 @@ OFFSET TYPE VALUE
 动态链接是目的是解决上面的问题，也就是说，库不编到ELF里，ELF在运行的时候能找到它就行。
 这样一个程序编译链接后其实不能确定库的地址
 
-# ELF加载
+# ELF 加载
 > 废了半天劲编译生成的ELF文件, 想要最终跑起来则包含的instruction and data必须要在内存中. 
 
 我们能想到的最简单的办法是: 把整个ELF的**所有指令和数据**在运行之前就全部load到内存中. 这就是*静态加载*.
@@ -151,35 +163,18 @@ OFFSET TYPE VALUE
 2. 根据ELF header中指定的 program header table地址去读 segments
 3. 加载segments 中属性为LOAD的segment, 先要分配对应的虚拟空间, 根据ELF的LMA
 4. 加载程序为ELF分配栈空间，并填充argc, argv，env等。
+    >参数、环境变量怎么填充需要参考体系结构的ABI手册
 5. 将PC设置为ELF header中entry point, 返回到用户态开始执行
 
 ## 动态加载
 
 没什么好说的，就是第一次加载时只分配页表，建立映射，并不实际分配物理空间。
 
-# 分析ELF文件的工具
-## 1. objdump
 
-## 2. readelf
-常用参数:
-```sh
-readelf -S xxx.elf  # display section header table
-readelf -h xxx.elf  # display ELF header
-```
 
-## 为什么目标文件中代码和数据要分开放?
-一方面, 程序被加载进内存后, 代码段和数据段分别被映射到**两个virtual memory region**.
-通过MMU的支持, 可以将代码段的区域设置为只读, 防止恶意篡改.
 
-另一方面, 当下CPU Cache多划分为*Instruction Cache*和*Data Cache*, 再配合互相独立的
-地址区域能够提高**局部性原理**的效果.
 
-最后, 代码段可以被多个进程共享(例如都调用同一外部函数), 节省内存空间.
-
-> 针对嵌入式设备, 如果内存空间不够大, 只读的代码段可存放在ROM中
-
-&nbsp;
-## 关于静态库
+# 关于静态库
 一个静态库可以简单的看作是 a set of object file.  
 这些 object file 可能包括: 输入输出相关的`printf.o`, `scanf.o`, 日期时间相关的`time.o`, `date.o`等.
 
@@ -192,8 +187,8 @@ readelf -h xxx.elf  # display ELF header
 
 Shell command`ar -t libc.a`  可以查看`libc.a`中包含的所有object files.
 
-&nbsp;
-## 段地址对齐技术
+
+# 段地址对齐技术
 > 由前面动态加载的步骤可知, ELF文件中的代码和数据被按page划分. 并只有在用到时才被加载到内存, 
 > 并建立`虚拟内存-物理内存`的映射.
 
@@ -205,10 +200,10 @@ Shell command`ar -t libc.a`  可以查看`libc.a`中包含的所有object files.
 | SEG 1   | 9899 B | 164 B  |
 | SEG 2   | 1988 B | 0   B  |
 
-### :question: 这三个段在ELF文件中的布局如何?
+## :question: 这三个段在ELF文件中的布局如何?
 根据前面ELF文件格式的介绍, 这三个段必然是挨着的(简单考虑, ELF中仅有这三个段).
 
-### :question: 这三个段在物理内存中的布局?
+## :question: 这三个段在物理内存中的布局?
 发生`page fault`之后, OS会为页面分配合适的物理页面, 如利用`buddy system`等. 
 
 可以保证*段内*的连续, 不能保证*段与段*是连续的.
@@ -216,10 +211,10 @@ Shell command`ar -t libc.a`  可以查看`libc.a`中包含的所有object files.
 > 未使用段对齐技术之前, `SEG0`的长度不足一页, 但是也给它分配一页的空间. 同理为`SEG1`分配两页, `SEG2`分配一页.
 > 总共占用 `1+2+1=5`个物理页.
 
-### :question: 这三个段在用户virtual addrspace下的布局如何?
+## :question: 这三个段在用户virtual addrspace下的布局如何?
 todo
 
-### :question: 何为段地址对齐技术?
+## :question: 何为段地址对齐技术?
 上面说了, 在为这三个段分配物理内存时, 虽然他们的真实大小远小于5个页面, 但由于简单采用: `每个段的开头必须是page align`,
 导致实际上产生了巨大的**内部碎片**.
 
@@ -249,3 +244,20 @@ todo
 > 虚拟页.
 >
 > 原因是: 在一个页面的不同段可能**权限不同**, 所以不能使用同一映射.
+
+
+
+
+
+# 分析ELF文件的命令
+
+```sh
+# 输出 section header table
+readelf -S xxx.elf  
+# 输出 program header table
+readelf -l xxx.elf
+# 输出 ELF header
+readelf -h xxx.elf  
+# 输出 elf header，section header table，program header table(常用）
+readelf -e xxx.elf 
+```
