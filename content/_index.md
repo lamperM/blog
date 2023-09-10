@@ -2,7 +2,7 @@
 title: "Homepage 🌈"
 date: 2022-09-15T15:14:05+08:00
 ---
-Welcome to wangloo\'s Home! 😎
+你好，这里是wangloo的个人世界  😎
 
-Other contents are under renovation, please wait.... 🧫
+首页正在设计中，敬请期待。目前可以移步我的[个人博客]({{< ref "posts" >}})，感谢你的到来！
 
