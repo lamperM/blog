@@ -5,7 +5,8 @@ theme = "puer"
 
 # 是否使用 git 信息
 enableGitInfo = true
-
+# 是否使用 emoji 代码
+enableEmoji = true
 
 [frontmatter]
   # 左边意为，变量 .LastMod 将会被赋值为右边数组中最先找到的的日期值
