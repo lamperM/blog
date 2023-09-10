@@ -166,10 +166,10 @@ Linux中虚拟地址块(VMA)的管理使用了红黑树, 可以用于运行库�
 维护和更新难. 一旦静态链接的其中一个目标文件更新, 所有的可执行程序都要重新链接.
 不满足局部性原理. 上面提到, 内存中同时存在多份的printf源码会破坏局部性原理的. 显然如果所有的程序共享一份printf源码的想法更好. 即动态加载.
 可移植性差. 静态链接, 只要有一个依赖目标文件的实现不同, 软件厂商就得专门发布一个 版本. 而动态链接则信赖客户电脑上的动态库, 相当于一个中间层.
- 动态链接的过程 对比静态链接使用ld链接器在编译后即执行链接, 动态链接则是将链接过程推迟到运行时, 即装载到内存时.
+动态链接的过程 对比静态链接使用ld链接器在编译后即执行链接, 动态链接则是将链接过程推迟到运行时, 即装载到内存时.
 这样, 链接器在链接产生可执行文件时就有两种做法:
-对于静态符号, 按照静态链接的规则进行地址引用重定位 对于动态符号, 链接器则仅标记其为动态链接中的符号, 不进行处理. 而是等到装载时由 专门的动态链接器来完成动态符号的链接工作. :interrobang: 链接器如何确定一个符号是静态的or动态的?
+对于静态符号, 按照静态链接的规则进行地址引用重定位 对于动态符号, 链接器则仅标记其为动态链接中的符号, 不进行处理. 而是等到装载时由 专门的动态链接器来完成动态符号的链接工作. ⁉️ 链接器如何确定一个符号是静态的 or 动态的?
 在动态共享对象(.so)中保存了完整的动态符号表*, 表中存在的符号即为动态的, 否则为静态.
-Linux的C语言运行库glib的动态链接版本叫libc.so. 它在外存上只保存一份, 所有的程序 都可以在运行时使用它. 所以千万不要删掉它.
-动态链接有一定的性能损失, 因为每次运行程序时都要重新链接, 并不像静态链接是一劳永逸的. 也有例如延迟绑定对性能进行优化的方法, 大概仅有5%的损耗, 与带来的便利相比可以忽略不计.</description></item><item><title>ELF 文件的链接与加载</title><link>https://wangloo.github.io/posts/os/elf-format/</link><pubDate>Mon, 20 Jun 2022 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os/elf-format/</guid><description>ELF不只是可执行文件 Files in ELF format includes:
-Type description 实例 Relocatable File 这些文件包含了代码和data, 可以被用来链接成可执行文件或共享目标文件. .o, .a Executable File 直接可执行的文件 /bin/ls Shared Object File Including code and data. 链接器可将其与其他Relocatable File或Shared Object File结合, 生成新的目标文件. 动态链接器可将其与Executable File结合, 作为进程映像的一部分来运行. .so Core Dump File Restore critical infomation when process is terminated unexpectedly core dump :pushpin: file command in Linux can output the format of a file.</description></item></channel></rss>
+Linux 的 C 语言运行库glib的动态链接版本叫libc.so. 它在外存上只保存一份, 所有的程序 都可以在运行时使用它. 所以千万不要删掉它.
+动态链接有一定的性能损失, 因为每次运行程序时都要重新链接, 并不像静态链接是一劳永逸的.</description></item><item><title>ELF 文件的链接与加载</title><link>https://wangloo.github.io/posts/os/elf-format/</link><pubDate>Mon, 20 Jun 2022 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os/elf-format/</guid><description>ELF不只是可执行文件 Files in ELF format includes:
+Type description 实例 Relocatable File 这些文件包含了代码和data, 可以被用来链接成可执行文件或共享目标文件. .o, .a Executable File 直接可执行的文件 /bin/ls Shared Object File Including code and data. 链接器可将其与其他Relocatable File或Shared Object File结合, 生成新的目标文件. 动态链接器可将其与Executable File结合, 作为进程映像的一部分来运行. .so Core Dump File Restore critical infomation when process is terminated unexpectedly core dump 📌 file command in Linux can output the format of a file.</description></item></channel></rss>

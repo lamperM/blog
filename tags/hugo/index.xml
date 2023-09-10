@@ -40,9 +40,9 @@ TODO 只能搜索标题，不能搜索内容、tag？</description></item><item>
 搜索；我经常需要翻阅之前的博客/笔记，期望可以检索Tag，且不需要二次点击（ 上方直接是一个搜索框而不是一个按钮）。 TOC；要求可是展开显示三级的目录，且布局好看些。 外观；简洁，不花里胡哨，代码高亮看起来舒服。 xxx 所以，既然Hugo是一个开源的、社区环境较好的工具，那么为什么不尝试打造一款属于自己主题呢。
 我是一名嵌入式开发工程师，对于前端的知识生疏，希望在良好的社区环境下能帮助我早日完成满足我个人需求的主题。
 计划 搭建框架 制作模板，熟悉模板的概念，各个模板负责的区域 在上面的了解过程中逐渐加入对布局的调整，这一块可能需要学习css的知识 观摩学习前人的代码，结合百家之长，磨合出适合自己的布局和功能 开始动手：搭建脚手架 创建的过程可以参考这个博客 , 我主要想按照我的理解对整个框架进行详细的介绍。
-目录结构 1. 2├── layouts 3│ ├── 404.html 4│ ├── _default &amp;lt;--- 此次重点研究 5│ │ ├── baseof.html 6│ │ ├── section.html 7│ │ ├── single.html 8│ │ └── list.html 9│ ├── index.html &amp;lt;--- 此次重点研究 10│ └── partials 11│ ├── footer.html 12│ ├── header.</description></item><item><title>使用 HuGo 搭建个人网站</title><link>https://wangloo.github.io/posts/hugo/basic/</link><pubDate>Sat, 21 May 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/basic/</guid><description>HuGo 基础学习 本章将解答Hugo是什么, 以及Hugo是如何工作的. 只有了解Hugo的工作机制之后, 才能发挥想象力进行DIY.
+目录结构 1. 2├── layouts 3│ ├── 404.html 4│ ├── _default &amp;lt;--- 此次重点研究 5│ │ ├── baseof.html 6│ │ ├── section.html 7│ │ ├── single.html 8│ │ └── list.html 9│ ├── index.html &amp;lt;--- 此次重点研究 10│ └── partials 11│ ├── footer.html 12│ ├── header.</description></item><item><title>Hugo 官方文档学习</title><link>https://wangloo.github.io/posts/hugo/basic/</link><pubDate>Sat, 21 May 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/basic/</guid><description>本章将解答Hugo是什么, 以及Hugo是如何工作的. 只有了解Hugo的工作机制之后, 才能发挥想象力进行DIY.
 本章内容大多来自官方手册或者搜索引擎提供的结果.
-Hugo 项目目录结构 一个hugo 项目通常包含以下内容:
+Hugo 项目结构 一个hugo 项目通常包含以下内容:
 1. 2├── archetypes 3├── config.toml 4├── content 5├── data 6├── layouts 7├── public 8├── static 9└── themes 这里面有些是必须的, 有些是可选的.
 archetypes
 定义新创建post时, header的格式.
