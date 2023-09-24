@@ -1,6 +1,7 @@
 ---
-title: "C语言的内存对齐"
+title: "C 语言的内存对齐要求"
 tags: ["arm64", "c", "Operating System"]
+categories: ["C Language"]
 date: 2023-05-08T17:19:44+08:00
 ---
 

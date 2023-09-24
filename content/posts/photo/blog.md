@@ -2,6 +2,7 @@
 title: "近期对于摄影的感悟"
 date: 2023-08-20T20:30:35+08:00
 tags: [photo]
+categories: ["Life"]
 ---
 
 # 胶片风格受大众喜爱

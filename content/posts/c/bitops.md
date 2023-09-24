@@ -2,6 +2,7 @@
 title: "C 语言位操作技巧"
 date: 2022-07-03T09:44:13+08:00
 tags: [c]
+categories: ["C Language"]
 description: Some hacks about bit-operation. Updating...
 
 ---

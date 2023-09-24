@@ -2,7 +2,6 @@
 title: "2019 Stanford Commencement Timcook"
 description: Apple CEO Tim Cook delivered the Commencement address at Stanford's 128th Commencement on June 16, 2019.
 tags: [tim cook, address]
-categories: [motivation]
 date: 2022-05-18T19:32:38+08:00
 ---
 

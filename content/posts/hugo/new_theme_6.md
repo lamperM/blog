@@ -2,6 +2,7 @@
 title: "Hugo 主题创建(6): shortcode"
 date: 2023-08-20T18:39:42+08:00
 tags: [hugo]
+categories: ["Hugo"]
 ---
 
 shortcode 可以当成是一些对 html 代码块封装的函数，在写 markdown 的时候就会方便一些，

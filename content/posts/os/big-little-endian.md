@@ -1,13 +1,9 @@
 ---
-title: "大小端问题"
+title: "操作系统：大小端问题"
 date: 2022-11-17T10:30:35+08:00
 tags: [Operating System]
+categories: ["Operating System"]
 ---
-
-
----
-
-
 
 ## 大小端问题的由来
 

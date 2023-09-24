@@ -2,6 +2,7 @@
 title: "Hugo 主题创建(2): 添加侧边栏"
 date: 2023-08-11T15:39:42+08:00
 tags: [hugo]
+categories: ["Hugo"]
 ---
 
 > commit: https://github.com/wangloo/hugo-theme-puer/commit/32abfccc6bafd3763e07b751f0315a5403c6eaff

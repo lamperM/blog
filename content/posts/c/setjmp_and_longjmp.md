@@ -1,7 +1,8 @@
 ---
-title: "基于ARM64实现setjmp/longjmp"
+title: "ARM64 上实现 setjmp/longjmp"
 date: 2022-11-01T23:38:54+08:00
 tags: [armv8, c]
+categories: ["C Language"]
 ---
 
 

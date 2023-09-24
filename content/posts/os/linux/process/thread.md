@@ -1,6 +1,7 @@
 ---
 title: "Linux 进程与线程的关系"
 tags: ["Operating System"]
+categories: ["Operating System"]
 date: 2023-05-10T20:51:49+08:00
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: "Linux 进程地址空间 写时复制"
 tags: ["Operating System"]
+categories: ["Operating System"]
 date: 2023-05-08T09:51:49+08:00
 ---
 

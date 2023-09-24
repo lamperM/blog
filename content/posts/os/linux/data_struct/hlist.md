@@ -1,6 +1,7 @@
 ---
 title: "Linux 内核数据结构 hlist"
 tags: ["c", "linux"]
+categories: ["Operating System","C Language"]
 date: 2023-05-11T20:51:49+08:00
 ---
 

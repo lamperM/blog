@@ -1,6 +1,7 @@
 ---
 title: "openwrt 开发日记"
 tags: [tools]
+categories: ["Openwrt"]
 date: 2023-08-05T19:28:12+08:00
 ---
 

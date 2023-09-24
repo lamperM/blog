@@ -1,7 +1,7 @@
 ---
 title: "Uboot: 常用命令"
 date: 2022-11-27T22:03:48+08:00
-categories: [Operating system]
+drift: true
 ---
 
 --------------------------------------

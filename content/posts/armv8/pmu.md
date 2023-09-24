@@ -1,7 +1,8 @@
 ---
-title: "Cortex-A53: PMU"
+title: "Cortex-A53 PMU介绍"
 date: 2023-09-02T22:02:04+08:00
 tags: [armv8]
+categories: ["Architecture"]
 ---
 
 # 关于PMU

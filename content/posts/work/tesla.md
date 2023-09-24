@@ -1,6 +1,8 @@
 ---
 title: "面试总结：特斯拉实习"
 tags: ["work"]
+categories: ["Job"]
+draft: true
 date: 2023-06-10T08:51:49+08:00
 ---
 

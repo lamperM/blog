@@ -1,7 +1,8 @@
 ---
-title: "C语言enum的使用"
+title: "C 语言enum的使用"
 date: 2023-03-09T17:18:57+08:00
 tags: [c]
+categories: ["C Language"]
 ---
 
 ## 枚举类型的优势

@@ -1,7 +1,8 @@
 ---
-title: "操作系统：进程间通信方式介绍"
+title: "Linux 进程间通信概述"
 date: 2023-09-08T16:21:27+08:00
 tags: [Operating System, linux]
+categories: ["Operating System"]
 ---
 
 # SystemV IPC

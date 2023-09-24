@@ -1,6 +1,7 @@
 ---
-title: "ARMv8-A 寄存器"
+title: "AArch64 寄存器"
 tags: ["armv8"]
+categories: ["Architecture"]
 date: 2022-05-07T20:19:44+08:00 
 ---
 

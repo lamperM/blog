@@ -2,6 +2,7 @@
 title: "ARMv8: cache相关知识"
 date: 2023-08-14T22:02:04+08:00
 tags: [armv8]
+categories: ["Architecture"]
 ---
 
 之前在特斯拉面试的时候被问到了 cache 的 maintain 操作有哪些,

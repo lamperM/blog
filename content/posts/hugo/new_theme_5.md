@@ -2,6 +2,7 @@
 title: "Hugo 主题创建(5): Tag 分类支持"
 date: 2023-08-15T18:39:42+08:00
 tags: [hugo]
+categories: ["Hugo"]
 ---
 
 通过 tag 可以实现对post进行分类，用到的支持是 HUGO Taxonomy Template（分类模板）
@@ -34,3 +35,9 @@ tags: [hugo]
 > 对应的 commit: https://github.com/wangloo/hugo-theme-puer/commit/63d8bb762b16a3d4657ba3523d6b6fb38cf5f9ca
 >
 > 上面的commit不小心提交了menu.html, 实际不属于taxonomy的目的，所以在这纠正: https://github.com/wangloo/hugo-theme-puer/commit/0af07f66807b540fd9d3be84e8d7faca7f962c4b
+
+
+# References
+
+- 中文博客介绍Taxonomy(1): https://hugo-in-action.foofun.cn/zh/docs/part1/chapter4/4/
+- 中文博客介绍Taxonomy(2): https://note.qidong.name/2017/10/hugo-taxonomy/

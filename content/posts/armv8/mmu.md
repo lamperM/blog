@@ -1,7 +1,8 @@
 ---
-title: "ARMv8-A MMU介绍"
+title: "AArch64 MMU介绍"
 date: 2022-09-29T08:01:33+08:00
 tags: [armv8]
+categories: ["Architecture"]
 ---
 
 ## Introduction

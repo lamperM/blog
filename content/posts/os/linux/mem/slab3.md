@@ -1,6 +1,7 @@
 ---
-title: "linux SLAB 内存分配器(3): SLUB/SLOB"
+title: "Linux SLAB 内存分配器(3): SLUB/SLOB"
 tags: ["linux", "Operating System"]
+categories: ["Operating System"]
 date: 2023-05-26T18:51:49+08:00
 ---
 

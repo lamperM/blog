@@ -2,6 +2,7 @@
 title: "Hugo 主题创建(4): 样式打磨"
 date: 2023-08-11T18:39:42+08:00
 tags: [hugo]
+categories: ["Hugo"]
 ---
 
 

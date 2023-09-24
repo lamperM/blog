@@ -1,7 +1,7 @@
 ---
-title: "工程配置方案: Kconfig"
+title: "Linux Kconfig 概述"
+categories: ["Operating System"]
 date: 2023-03-28T16:15:03+08:00
-draft: true
 ---
 
 ## Kconfig 介绍

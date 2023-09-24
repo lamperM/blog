@@ -1,6 +1,7 @@
 ---
 title: "Linux 内核抢占"
 tags: ["linux", "Operating System"]
+categories: ["Operating System"]
 date: 2023-04-13T23:51:49+08:00
 ---
 

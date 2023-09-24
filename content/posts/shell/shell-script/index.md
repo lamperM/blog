@@ -1,7 +1,7 @@
 ---
-title: "武器库: shell scripts"
+title: "武器库: Shell Scripts"
 tags: ["shell", "bash"]
-categories: ["weapons"]
+categories: ["Shell"]
 date: 2022-07-20T11:54:13+08:00
 tags: [shell, bash]
 ---

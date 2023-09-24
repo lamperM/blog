@@ -1,7 +1,8 @@
 ---
-title: "GNU C内联汇编学习笔记"
+title: "GNU C 内联汇编学习"
 date: 2022-09-24T16:48:58+08:00
 tags: [c]
+categories: ["C Language"]
 ---
 
 
@@ -22,7 +23,7 @@ The `asm` keyword is a GNU extension.  当使用编译选项 `-ansi` 或 `-std` 
 
 ## Qualifiers
 
-- volatile: 避免编译器的过分优化
+- volatile: 向**编译器**说明禁止内敛的语句与其他语句 reorder。但不能保证内部 reorder，那是*内存屏障*的任务
 - goto
 - inline
 
@@ -102,7 +103,8 @@ z   AArch64中存在. 表达可以使用零寄存器(XZR or WZR). Useful when co
 
 
 - "memory"  
-  告诉编译器, 这段内联汇编代码对输入和输出操作数中列出的项以外的内存读取或写入操作(例如，访问输入参数之一指向的内存). 为确保内存包含正确的值，GCC可能需要在执行ASM之前将特定寄存器值刷新到内存。此外, 阻止编译器越过该 ASM 语句进行 reorder, 形成针对编译器的 memory barrier. 注意, 此 clobber 不会阻止处理器在ASM语句之后执行推测性读取。为了防止出现这种情况，您需要特定于处理器的防护指令。
+  向**编译器**说明对于所有内存访问操作，不能使用 asm 之前预加载到寄存器中的值，
+  而必须在 asm 内部重新加载。保证其内部访问内存值具有可见性和正确性。
 
 - "cc"  
   This stands for "condition codes". Since the add instruction will affect the carry flag amongst other things, we need to tell gcc about it. Otherwise it might want to split a test-and-branch around our code. If it did so, the branch might go the wrong way due to the condition codes being corrupted. Basically, any inline asm that does arithmetic should explicitly clobber the flags like this.

@@ -2,6 +2,7 @@
 title: "AArch64 内存属性与内存类型"
 date: 2023-04-12T08:01:33+08:00
 tags: [armv8]
+categories: ["Architecture"]
 ---
 
 有了虚拟内存系统之后，MMU 可以抽象出一些可配置的内存属性。

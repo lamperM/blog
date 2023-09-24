@@ -1,6 +1,7 @@
 ---
-title: "Dwarf: 基础"
-tags: ["debug"]
+title: "DWARF(1): 基础"
+tags: ["Binary", "ELF"]
+categories: ["Binary"]
 date: 2023-05-09T15:51:49+08:00
 ---
 

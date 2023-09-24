@@ -1,7 +1,8 @@
 ---
-title: "浅谈 errno 的线程安全问题"
+title: "操作系统：浅谈 errno 的线程安全问题"
 date: 2022-12-21T19:08:22+08:00
 tags: [Operating System]
+categories: ["Operating System"]
 ---
 
 

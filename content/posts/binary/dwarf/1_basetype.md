@@ -1,6 +1,7 @@
 ---
-title: "Dwarf-数据类型: basetype"
-tags: ["debug"]
+title: "DWARF(2): basetype类型"
+tags: ["Binary", "ELF"]
+categories: ["Binary"]
 date: 2023-05-09T16:51:49+08:00
 ---
 

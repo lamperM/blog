@@ -1,11 +1,9 @@
 ---
 title: "LaTeX Vim Tutorial"
 description: A tutorial about how I confiure LaTeX in vim.
-tags: [LaTeX, vim, Tutorial]
-categories:
-- vim
+tags: ["Vim"]
+categories: ["Vim"]
 date: 2022-05-04T17:07:51+08:00 
-lastmod: 2022-05-06T14:37:00+08:00
 ---
 
 

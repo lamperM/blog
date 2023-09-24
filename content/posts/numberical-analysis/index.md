@@ -2,6 +2,7 @@
 title: "Numberical Analysis Exam"
 enableLaTeX: true
 tags: [Math, Examination]
+categories: ["Math"]
 date: 2022-05-07T18:04:58+08:00
 ---
 

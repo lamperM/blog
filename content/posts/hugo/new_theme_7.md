@@ -2,6 +2,7 @@
 title: "Hugo 主题创建(7): footer"
 date: 2023-09-02T18:39:42+08:00
 tags: [hugo]
+categories: ["Hugo"]
 ---
 
 footer属于 partial模板之一, 创建一个新文件`footer.html`, 然后在baseof模板中, 

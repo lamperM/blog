@@ -2,6 +2,7 @@
 title: "前端学习: display"
 date: 2023-08-11T22:02:04+08:00
 tags: [css]
+categories: ["HTML/CSS"]
 ---
 
 display 是规定元素排列方式的属性，总的来说，元素的排列方式可分两种：block 和 inline。

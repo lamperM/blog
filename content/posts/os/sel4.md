@@ -1,5 +1,6 @@
 ---
-title: "MicroKernel Learning: SeL4"
+title: "操作系统：SeL4 基础概念"
+categories: ["Operating System"]
 date: 2022-06-04T11:52:51+08:00
 ---
 

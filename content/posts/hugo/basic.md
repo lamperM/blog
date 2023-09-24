@@ -2,6 +2,7 @@
 title: "Hugo 官方文档学习"
 date: 2022-05-21T17:39:42+08:00
 tags: [hugo]
+categories: ["Hugo"]
 ---
 
 

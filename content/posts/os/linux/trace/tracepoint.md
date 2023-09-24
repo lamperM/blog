@@ -1,6 +1,7 @@
 ---
-title: "Linux追踪系统学习(1): tracepoint"
+title: "Linux Trace(1): Tracepoint"
 tags: ["linux", "Operating System", "trace"]
+categories: ["Operating System"]
 date: 2023-04-23T23:51:49+08:00
 ---
 

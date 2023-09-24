@@ -1,6 +1,7 @@
 ---
-title: "我的开发环境构建指南"
+title: "开发环境构建指南"
 tags: [tools]
+categories: ["DevTools"]
 date: 2023-07-17T19:28:12+08:00
 ---
 

@@ -1,7 +1,8 @@
 ---
-title: "ARMv8: 内存模型与屏障"
+title: "ARMv8 内存模型"
 date: 2023-09-10T18:02:04+08:00
 tags: [armv8]
+categories: ["Architecture"]
 ---
 
 # 为什么要关心内存模型
@@ -95,6 +96,17 @@ void poweroff(dev_t ID, reg_addr_t volatile *busy) {
 > 延申阅读材料: 为什么大部分情况下使用`volatile`关键字都是错误的. 只要锁正确实现, 那么被锁锁住的变量就完全不需要`volatile`来声明, 因为获得锁时其他的 core 不能修改它. 这是锁来保证的, 不应该添加多次一举的 volatile!
 >
 > [Why the “volatile” type class should not be used — The Linux Kernel documentation](https://www.kernel.org/doc/html/latest/process/volatile-considered-harmful.html)
+
+>内敛汇编中的 volatile
+
+>```c
+>asm volatile("":::"memory");
+>```
+>
+>- `volatile` 向**编译器**说明禁止内敛的语句与其他语句 reorder。但不能保证内部 reorder，
+>  那是下面*内存屏障*的任务
+>- `"memory"` 向**编译器**说明对于所有内存访问操作，不能使用 asm 之前预加载到寄存器中的值
+>  ，而必须在 asm 内部重新加载。保证其内部访问内存值具有可见性和正确性。
 
 ## 内存屏障 Memory Barrier
 

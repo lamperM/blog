@@ -3,6 +3,7 @@ title: "git 宝典"
 description:
 date: 2022-12-13T17:39:42+08:00
 tags: [git, tools]
+categories: ["Git"]
 ---
 
 ## 合并操作: git merge

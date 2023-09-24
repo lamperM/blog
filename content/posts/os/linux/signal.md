@@ -1,6 +1,7 @@
 ---
-title: "OS信号 概述"
+title: "操作系统：信号概述"
 tags: ["Operating System"]
+categories: ["Operating System"]
 date: 2023-05-05T20:51:49+08:00
 ---
 

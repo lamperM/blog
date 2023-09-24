@@ -1,6 +1,7 @@
 ---
-title: "Linux 进程间通信: 管道"
+title: "Linux 进程间通信(1): 管道"
 tags: ["Operating System"]
+categories: ["Operating System"]
 date: 2023-05-11T20:51:49+08:00
 ---
 

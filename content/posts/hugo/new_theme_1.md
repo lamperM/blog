@@ -2,6 +2,7 @@
 title: "Hugo 主题创建(1): 内置样式"
 date: 2023-08-11T07:39:42+08:00
 tags: [hugo]
+categories: ["Hugo"]
 ---
 
 > 本次对应的commit，应该属于站点的仓库，因为仅修改 `config.toml`

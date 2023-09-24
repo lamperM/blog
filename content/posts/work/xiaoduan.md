@@ -1,6 +1,7 @@
 ---
 title: "面试总结：希奥端秋招一面"
 tags: ["work"]
+categories: ["Job"]
 date: 2023-08-28T08:51:49+08:00
 draft: true
 ---

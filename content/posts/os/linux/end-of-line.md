@@ -2,6 +2,7 @@
 title: "行结束符在windows和linux的区别"
 date: 2022-12-24T01:35:24+08:00
 tags: [other]
+categories: ["Operating System"]
 ---
 
 使用VIM 打开一个文件时, 有时会看到例如 `^M` 这类字符出现. 下面我会挖一下其出现的原因.

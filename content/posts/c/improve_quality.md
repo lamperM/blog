@@ -1,7 +1,8 @@
 ---
-title: "写高质量的C语言工程的技巧"
+title: "写高质量的C语言工程的规范"
 description: Some useful rules to improve programming quality of C.
 tags: [c]
+categories: ["C Language"]
 date: 2022-06-14T17:59:22+08:00
 ---
 

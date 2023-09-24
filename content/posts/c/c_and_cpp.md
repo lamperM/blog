@@ -1,6 +1,7 @@
 ---
 title: "C 和 C++ 的区别与联系"
 tags: ["c"]
+categories: ["C Language"]
 date: 2023-05-09T20:51:49+08:00
 ---
 

@@ -2,6 +2,7 @@
 title: "操作系统：相关名词汇总"
 date: 2023-09-08T16:21:27+08:00
 tags: [Operating System]
+categories: ["Operating System"]
 ---
 
 | 名词      | 含义解释                                                                              |

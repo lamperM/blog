@@ -1,7 +1,8 @@
 ---
-title: "GCC '-M' and Related Parameters"
+title: "\"GCC -M\" 选项在Makefile中的使用"
 date: 2022-04-26T19:08:22+08:00
 tags: [c, makefile]
+categories: ["Makefile"]
 ---
 
 As we all know, there are huge number of parameters for GCC. With them, we can make many things possible. Now we talk about -M and related ones.

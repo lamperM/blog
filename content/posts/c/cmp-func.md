@@ -1,6 +1,7 @@
 ---
 title: "C/python: cmp函数应该怎么写"
 tags: [c, python]
+categories: ["C Language"]
 date: 2023-08-20T17:59:22+08:00
 ---
 

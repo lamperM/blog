@@ -1,7 +1,6 @@
 ---
 title: "Stack and Heap"
 tags: [Operating system, Virtual memory]
-categories: [Operating system]
 date: 2022-06-28T16:41:54+08:00
 ---
 

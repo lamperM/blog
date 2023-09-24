@@ -2,6 +2,7 @@
 title: "前端学习: position"
 date: 2023-08-11T21:02:04+08:00
 tags: [css]
+categories: ["HTML/CSS"]
 ---
 
 position 属性决定了一个元素在页面中的排放方式, 通过与 top、bottom、left、right

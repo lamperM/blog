@@ -1,7 +1,8 @@
 ---
-title: "x86/ARMv8 函数调用约定"
+title: "AArch64/X86 函数调用约定"
 date: 2022-11-21T10:30:35+08:00
 tags: [armv8, x86, Operating System]
+categories: ["Architecture"]
 ---
 
 符合调用约定使得调用函数能够正常获取参数, callee结束之后能够回到原来位置继续执行.
@@ -95,7 +96,7 @@ call   f01000ad <Func> ;Func()'addr is f01000ad
 add    $0x10,%esp   ;recycle stack(12 bytes parameters plus 4 bytes alignment)
 ```
 
-## Armv8 调用约定
+## AArch64 调用约定
 
 大体的思想与x86相似, 只是细节有些许不同
 

@@ -1,7 +1,8 @@
 ---
 title: "一道题搞定二分法的细节"
 date: 2023-08-20T20:30:35+08:00
-tags: [algorithm]
+tags: [Algorithm]
+categories: ["Algorithm"]
 ---
 
 实际上我做过的二分搜索的题目并不少，但是一直以来没有静下心去研究它的

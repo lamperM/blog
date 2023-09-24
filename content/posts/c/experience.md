@@ -1,7 +1,8 @@
 ---
-title: "C语言程序设计的一些经验"
+title: "C 语言程序设计的一些经验"
 date: 2023-02-27T19:20:20+08:00
 tags: [c]
+categories: ["C Language"]
 ---
 
 ## 头文件的引用形式

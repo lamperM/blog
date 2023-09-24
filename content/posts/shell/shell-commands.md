@@ -2,6 +2,7 @@
 title: "常用的 shell 命令"
 date: 2022-11-27T14:45:58+08:00
 tags: [shell, bash]
+categories: ["Shell"]
 ---
 
 

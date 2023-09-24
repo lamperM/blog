@@ -1,6 +1,7 @@
 ---
 title: "Linux 中断管理: 软中断/tasklet/工作队列"
 tags: ["Operating System"]
+categories: ["Operating System"]
 date: 2023-05-13T20:51:49+08:00
 ---
 

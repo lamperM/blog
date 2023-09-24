@@ -1,7 +1,7 @@
 ---
 title: "我的 vim 调教随笔"
-tags: [vim]
-categories: [vim]
+tags: ["Vim"]
+categories: ["Vim"]
 date: 2022-05-09T19:28:12+08:00
 ---
 

@@ -2,6 +2,7 @@
 title: "Hugo 主题创建(0): 脚手架"
 date: 2023-08-10T17:39:42+08:00
 tags: [hugo]
+categories: ["Hugo"]
 ---
 > commit: https://github.com/wangloo/hugo-theme-puer/commit/c014d1fae09eea1fcc44e03c69b6dd4d185f91fd
 

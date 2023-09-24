@@ -1,6 +1,7 @@
 ---
-title: "linux SLAB 内存分配器(1): 概述"
+title: "Linux SLAB 内存分配器(1): 概述"
 tags: ["linux", "Operating System"]
+categories: ["Operating System"]
 date: 2023-05-20T17:51:49+08:00
 ---
 

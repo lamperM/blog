@@ -1,7 +1,8 @@
 ---
-title: "C语言的特点与难点"
+title: "C 语言的特点与难点"
 date: 2023-03-09T17:18:57+08:00
 tags: [c]
+categories: ["C Language"]
 ---
 
 # 函数指针

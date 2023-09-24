@@ -2,6 +2,7 @@
 title: "Hugo 主题创建(3): 站内搜索"
 date: 2023-08-11T16:39:42+08:00
 tags: [hugo]
+categories: ["Hugo"]
 ---
 
 > commit: 
