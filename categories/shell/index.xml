@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Shell on BLOG</title><link>https://wangloo.github.io/categories/shell/</link><description>Recent content in Shell on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 27 Nov 2022 14:45:58 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/categories/shell/index.xml" rel="self" type="application/rss+xml"/><item><title>常用的 shell 命令</title><link>https://wangloo.github.io/posts/shell/shell-commands/</link><pubDate>Sun, 27 Nov 2022 14:45:58 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-commands/</guid><description>开发 mkfs.ext4 格式化文件为ext4分区
+1mkfs.ext4 &amp;lt;file&amp;gt; # 将file格式化为ext4 dd https://www.runoob.com/linux/linux-comm-dd.html
+mount 1sudo mount [file] [dir] # 挂载file到dir 2sudo umount [dir] 3sudo mount # 输出当前已经挂载的分区 通用 where and which which 查看可执行文件的位置
+1$ which python3 2/usr/bin/python3 whereis 除了可执行文件还能搜索其他类型的文件, 不常用, 详见 man whereis
+- 的妙用 一些命令支持使用 - 代替文件名, 输入输出都可以:
+代替标准输出; 一些命令会将-o/-O 后面的-判定为输出到STDOUT, 详见下面示例. 代替标准输入; 下面给出两个同时代替输入输出的例子:
+1# 将标准输入(STDIN)的内容作为gcc的输入, 编译后的结果输出到标准输出(STDOUT) 2echo &amp;#39;void foo() {}&amp;#39; | gcc -x c -o - - 3# 将下载的文件输出到标准输出, 同时作为tar命令的输入文件, 进行解压 4wget -O - &amp;#34;https://www.</description></item><item><title>武器库: Shell Scripts</title><link>https://wangloo.github.io/posts/shell/shell-script/</link><pubDate>Wed, 20 Jul 2022 11:54:13 +0800</pubDate><guid>https://wangloo.github.io/posts/shell/shell-script/</guid><description>ℹ️ 以下命令/脚本的执行环境均为 bash.
+统计代码量 使用到的命令包含: find, wc, xargs, sort 等
+列出所有的文件及其代码行数, 只统计.c 和.h, 过滤./scripts目录.
+1find -name &amp;#39;*.[c|h]&amp;#39; ! -path &amp;#39;./scripts/*&amp;#39; | xargs wc -l +将内容按照代码行数降序排列
+1find -name &amp;#39;*.[c|h]&amp;#39; ! -path &amp;#39;./scripts/*&amp;#39; | xargs wc -l | sort -rn 若仅列出总的代码行数, 去除空行
+1(find ./ -name &amp;#39;*.[c|h]&amp;#39; -print0 | xargs -0 cat) | sed &amp;#39;/^\s*$/d&amp;#39; | wc -l 删除目录下所有的可执行文件 1find . -maxdepth 1 -executable -type f | xargs rm 判断执行脚本时带的参数 1if [ $# -ne 1 ]; then 2 echo &amp;#34;ONE parameter is needed&amp;#34; 3 exit -1 4fi 5 6if [ $1 == &amp;#39;build&amp;#39; ]; then 7 # do something 8elif [ $1 == &amp;#39;run&amp;#39; ]; then 9 # do something 10elif [ $1 == &amp;#39;gdb&amp;#39; ]; then 11 # do something 12else 13 echo &amp;#34;Not supported command&amp;#34; 14fi 自动拷贝文件到 SD Card TODO</description></item></channel></rss>

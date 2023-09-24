@@ -1,10 +1,154 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Operating system on BLOG</title><link>https://wangloo.github.io/categories/operating-system/</link><description>Recent content in Operating system on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 27 Nov 2022 22:03:48 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/categories/operating-system/index.xml" rel="self" type="application/rss+xml"/><item><title>Uboot: 常用命令</title><link>https://wangloo.github.io/posts/os/uboot/commands/</link><pubDate>Sun, 27 Nov 2022 22:03:48 +0800</pubDate><guid>https://wangloo.github.io/posts/os/uboot/commands/</guid><description>..
-环境变量相关 内存操作 网络操作 EMMC和SD卡 BOOT操作指令 bootm go 其他命令 启动相关
-md
-mmcinfo
-cp</description></item><item><title>Stack and Heap</title><link>https://wangloo.github.io/posts/os/stack-and-heap/</link><pubDate>Tue, 28 Jun 2022 16:41:54 +0800</pubDate><guid>https://wangloo.github.io/posts/os/stack-and-heap/</guid><description> 堆的含义 我们都知道malloc动态申请的变量是存放在堆中. 所以相比栈来说, 堆是动态的.
-堆占据进程虚拟地址空间的大部分, 我们可能通过堆来申请1GB的数组, 但是栈通常不行 , 大多也就几兆的空间.
- 堆空间的管理 进程中堆空间的管理是运行库负责的, 在Linux中是GLIBC.
-运行库在初始化时会像操作系统申请一大块的堆空间, 再为每个进行分别分配需求. 当然, 如果某些程序的需求过大, 运行库也可以使用mmap系统调用直接向操作系统申请, 然后 返回给用户进程.
-GLIBC的malloc函数的处理方式是: 对于小于128KB的申请, 会从运行库&amp;quot;批发的&amp;quot;堆空间 里分出一块来; 但若申请的空间过大, 则使用mmap系统调用来创建匿名空间分配给用户.
-Linux中虚拟地址块(VMA)的管理使用了红黑树, 可以用于运行库管理自己向操作系统 &amp;ldquo;批发&amp;quot;的堆空间. 使得用户程序动态申请和释放内存性能提高.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Operating System on BLOG</title><link>https://wangloo.github.io/categories/operating-system/</link><description>Recent content in Operating System on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 18 Sep 2023 17:51:49 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/categories/operating-system/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux Buddy 内存分配器</title><link>https://wangloo.github.io/posts/os/linux/mem/buddy/</link><pubDate>Mon, 18 Sep 2023 17:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/mem/buddy/</guid><description>伙伴系统的优势 作为一个页分配器，伙伴系统主要解决外部碎片过多的问题， 保证系统中尽可能有大的连续空间可以使用。
+这也正是伙伴系统要设计成相邻内存块合并的原因。</description></item><item><title>Linux 进程间通信概述</title><link>https://wangloo.github.io/posts/os/linux/ipc/linux-ipc/</link><pubDate>Fri, 08 Sep 2023 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/ipc/linux-ipc/</guid><description>SystemV IPC Linux 引入了 SystemV 中 IPC 的集中实现方式，包括：信号量、共享内存、消息队列。
+共享内存 共享内存基于文件实现，用操作文件的方式来操作共享内存区。
+原理是对一块物理内存做多个映射，用引用计数来维护，只有引用计数为0时，才能释放。
+共享内存的特点是：
+速度快，但自身没有同步功能，需要配合外部的同步机制。 信号量 为什么说信号量也是一种通信机制?
+其实通信并不一定就是要发送数据，只要能够相互感知，通知到对方，就算是一种通信。 类比抛媚眼也算是通信的一种。
+消息队列 并非基于文件，由自己的一套API，使用起来不方便。 消息队列是面向消息的（并非字节流），消息由类型。 消息队列有自己的同步机制，无需外部添加。 信号 常用于父子之间通信，只要你知道了对方的PID，就可以给对方发信号。
+用kill(pid, signal)来发送信号。</description></item><item><title>操作系统：相关名词汇总</title><link>https://wangloo.github.io/posts/os/abbreviation/</link><pubDate>Fri, 08 Sep 2023 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/os/abbreviation/</guid><description> 名词 含义解释 Unix 起源于BELL实验室的一个操作系统家族, 指代一类OS。
+这些OS共同遵守Unix特性，但各个分支在实现上有所不同。
+包括SystemV、BSD等分支 SystemV 是Unix的特殊版本，由AT&amp;amp;T公司开发 GNU 目标是开发一个完全自由、开源的OS，借鉴Unix Linux OS内核，借鉴了Linux。后与GNU工具集结合，称为GNU/Linux</description></item><item><title>Linux SLAB 内存分配器(3): SLUB/SLOB</title><link>https://wangloo.github.io/posts/os/linux/mem/slab3/</link><pubDate>Fri, 26 May 2023 18:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/mem/slab3/</guid><description>slub 和 slob 是基于 slab 思想针对某些场景下的优化实现。
+SLUB 当 slab 分配器面对过多的申请需求时，cache 中就会有多个 slab (struct slab), 在以前的 slab 分配器设计中， slab 描述符是放在物理页中的，即物理页的结构为： （slab 描述符+freelist+对象 s）,管理数据结构的开销就比较大。后期 SLUB 首先将 slab 描述符与struct page共用（通过 union 实现）。后面该思想被 SLAB 采纳。 SLAB 中每个 cache node 有三个 list: free, partial, full， 管理起来很麻烦， SLUB 中只有一个 partial 链表。 放弃着色，效果不明显 SLOB SLOB 的设计更加简洁，只有 600 行左右代码（SLAB，SLUB 都是 4000+），适合小内存的嵌入式设备。
+SLOB 中没有对象的概念，每个 slab 中分配的小块内存大小可以是不同的， 通过长度+偏移来记录下一个小块内存的位置。
+另外，SLOB 基本上放弃了 cache 的思想，系统中通过创建三个全局的链表: small, medium, large, 分别应对&amp;lt;256b, &amp;lt;1k, &amp;lt;PAGESIZE 的请求， slab 直接挂在这三个链表上，因为 slab 中的内存分配大小可以不同， 用三个链表可以加速查找。</description></item><item><title>Linux SLAB 内存分配器(2): 算法</title><link>https://wangloo.github.io/posts/os/linux/mem/slab2/</link><pubDate>Sat, 20 May 2023 18:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/mem/slab2/</guid><description>上一篇介绍了数据结构，这一篇主要介绍 slab 分配器的分配和释放算法。
+最外层接口: kmalloc()/kfree() 最上层的接口是kmalloc(size, flag)。
+slab 分配器维护了多个不同大小的 kmem_cache，放在数组kmem_caches[]中, 其对应的 object 大小和该 kmem_cache 的 name 在另一个数组kmalloc_info[] 中，它们的下标是对应的。使得我们能根据请求分配的大小来找到对应的struct kmem_cache结构。 【代码】
+专用的&amp;quot;cache&amp;quot; 上面的结构，会遍历系统初始化创建的一些内存池，来寻找一个大小满足要求的 object， 但是通常不能找到大小相等的，如果系统中存在的固定 cache 中 object 的大小太稀疏， 就容易发生空间浪费的问题。
+因此，我们可以为某个特定大小的内存请求再创建一个单独的 cache，仅仅用于满足这一类 结构体的申请，也是符合 slab 分配器关于面向对象的设计思想。
+slab 分配器提供的相关接口是:
+kmem_cache_create(): 创建一个专用 cache kmem_cache_alloc()： 从指定的 cache 里分配 object kmem_cache_free(): 释放对象到指定的 cache kmem_cache_destory(): 销毁某个 cache Reference https://blog.csdn.net/u010923083/article/details/116518646?spm=1001.2014.3001.5502</description></item><item><title>Linux SLAB 内存分配器(1): 概述</title><link>https://wangloo.github.io/posts/os/linux/mem/slab1/</link><pubDate>Sat, 20 May 2023 17:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/mem/slab1/</guid><description>参考的 linux kernel 代码版本 4.12
+slab 是什么 slab 属于 linux 内核内存分配器的一种，满足细粒度的小块内存的请求。 内核中还有其他的内存分配器例如伙伴系统，它是满足页为单位的分配请求。 因为内核中大部分的分配请求都用不到一个页那么大，所以 slab 的出现能够减小 内存碎片的出现。
+另外，非常重要的是，除了基本的小块内存分配， slab 的最初设计开始就基于 对象缓存的思想，加速分配和初始化的过程，下面将详细介绍缓存的设计思想。
+slab 分配器的实现在 linux 中是基于伙伴系统的，slab 管理的内存来源 就是伙伴系统，只是进行“二次管理”， 。
+slab 的设计思想 对象缓存特性 经常会在 slab 接口中看到kmem_cache这个前缀，我最初也有疑问说 slab 不就是一个内存分配算法，和 cache 扯上什么关系呢？
+slab 一般用于分配一些结构的内存，拿struct task来举例，我们通常会为 struct task创建一个内存池，里面包含了若干大小为sizeof(struct task) 的内存块，用的时候从里面取，释放之后回归池子里即可。这是 slab 分配小块内存的 基本思想。
+内核中的很多数据结构，我们在申请完空间之后立马做的一件事，就是初始化对象的成员 为某些特定的值，可以称这个过程为结构体(类)的构造函数，意为所有对象都会 做的那些相同的事。比如说，多核环境下很多结构中会有锁，或者链表，那么申请完空间 之后都会做锁或链表做初始化，这是固定的。实际上这些操作消耗的时间甚至大于申请 一块内存。
+基于以上事实，slab 分配器做的缓存优化是：为每个类别的内存池都绑定一个构造函数 和析构函数，当用完的对象空间被释放时，调用析构函数将某些成员的值恢复为默认状态 ，这样下次申请的时候，直接拿就行了，省略了重复的初始化流程。而构造函数被调用的 情况仅仅是当该小块内存第一次被申请时。
+由于这个思想，整个内存池也就被声明结构 struct kmem_cache, 它是整个 slab 算法的顶层数据结构，其中包含了许多相同大小的小内存块，slab 通过一些算法对其进行 管理。
+整体数据结构的规划 上面说了整个系统的顶层结构是struct kmem_cache, 其中可以再划分为多个&amp;quot;slab&amp;quot;, 这个 slab 就能代表一个或多个连续的物理页嘛，从 buddy 申请来的。</description></item><item><title>Linux 中断管理: 软中断/tasklet/工作队列</title><link>https://wangloo.github.io/posts/os/linux/interrupt/softirq/</link><pubDate>Sat, 13 May 2023 20:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/interrupt/softirq/</guid><description>软中断、tasklet、工作队列都是中断上下部分离的具体实现方案。
+软中断 我们可以将某些中断配置为软中断，相当于建立一张 INTID 到软中断的映射表，这样在 中断到来时就能判断是否为软中断。
+这张“表”的建立是静态的，即编译时确定的。key 为 INTID，value 为描述一个软中断 的数据结构，在下面会介绍。
+软中断的服务函数必须是可重入的，即多个 CPU 可以同时执行同一个 softirq 的处理函数，涉及到的全局结构可以用 spinlock 钳制。
+表示 softirq 的数据结构 struct softirq_action代表一个软中断，系统中所有支持的软中断组成一个数据 softirq_vec[], 所有的软中断按照优先级来分配下标。
+1struct softirq_action { 2 // 指向softirq的处理函数 3 void (*action)(struct softirq_action *); 4}; softirq 的中断流程 在中断的上部，如果识别到当前中断是一个 softirq， 那么系统会标记一个软中断发生， 即raise_softirq()函数。其做的事情包括:
+标记某个软中断发生，记录的结构是irq_cpustate_t.__softirq_pending (这个字段使loca_softirq_pending()访问) 唤醒ksoftirqd内核线程，之后介绍 光标记不行，那么什么时候执行它们的服务函数呢？
+几个可能的检查点:(1) 中断退出前 (2)ksoftirq被唤醒时
+如果在检查点发现有标记挂起的 softirq(local_softirq_pending() != 0), 内核调用do_softirq()处理它们：
+如何in_interrupt()返回非 0， 直接返回。此时代表要么禁用了 softirq，要么当前是 在中断嵌套的环境下，也可能正在执行do_softirq()时中断嵌套的，而do_softirq() 函数是不能嵌套执行的。 调用__dosoft_irq(), 对于local_softirq_pending()的每一位都调用其 softirq_vec[nr]-&amp;gt;action() 这里有个重要的问题，此时处于中断下部，即开中断的情况，所以在处理 softirq 时会有新的 softirq 到来，这里就有两种策略：</description></item><item><title>Linux 内核数据结构 hlist</title><link>https://wangloo.github.io/posts/os/linux/data_struct/hlist/</link><pubDate>Thu, 11 May 2023 20:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/data_struct/hlist/</guid><description>linux 内核为创建【用单链表解决冲突的哈希表】设计了专门的数据结构 hlist。
+hlist 整体来说是带头结点的双向链表，头结点的类型为hlist_head, 普通节点 的类型为hlist_node. 为什么要区别两种类型？节约空间， 因为哈希表的 表项类型可以是hlist_head, 它其实不需要prev指针, 比起一般的结点，一个 哈希表能节约一半的空间。
+所以一个哈希表和头结点的结构可表示为:
+1struct hlist_head { 2 struct hlist_node *first; 3}; 4struct hlist_head table[TALBE_SZ]; 二象性 任何事物都具有二象性，区分两种类型节约空间的空间，也带了一个问题： 首个hlist_node结点的prev指向哪呢？
+正常情况下肯定毫不犹豫的指向头结点，即hlist_head，但注意此时类型是 不同的，prev不能同时是struct hlist_head*和struct hlist_node *。
+解决方案有两个，首先可以使首个结点的prev=NULL, 这样虽然避免了类型引发的 问题，也能保证功能正确，但是却破坏了一致性，使得操作的复杂度上升，增加了许多 判断分支。
+1// delelt a node 2void del_node(struct hlist_head *head, struct hlist_node *node) 3{ 4 // 这个if 本来是不需要的，甚至参数的head 也不需要传， 5 // 更好的处理方式见解决方案2 6 if (node == head-&amp;gt;first) { 7 head-&amp;gt;first = node-&amp;gt;next; 8 } 9 else { 10 node-&amp;gt;prev-&amp;gt;next = node-&amp;gt;next; 11 } 12 13 if (node-&amp;gt;next) { 14 node-&amp;gt;next-&amp;gt;prev = node-&amp;gt;prev; 15 } 16} 17// insert a node 18void add_node_before(struct hlist_head *head, struct hlist_node *new 19 struct hlist_node *next) 20{ 21 // 这个if 本来是不需要的，参数head也是不需要传递的 22 if (next == head-&amp;gt;first) { 23 new-&amp;gt;prev = NULL; 24 head-&amp;gt;first = new; 25 } 26 else { 27 new-&amp;gt;prev = next-&amp;gt;prev; 28 new-&amp;gt;prev-&amp;gt;next = new; 29 } 30 new-&amp;gt;next = next; 31 next-&amp;gt;prev = new; 更好的解决方案: **prev 改变struct hlist_node的构成，使用二级指针:</description></item><item><title>Linux 进程间通信(1): 管道</title><link>https://wangloo.github.io/posts/os/linux/ipc/pipe/</link><pubDate>Thu, 11 May 2023 20:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/ipc/pipe/</guid><description>管道属于实现进程间通信的一种方式，正如其名，一个进程在一头读，另一个进程在一头写。
+管道被看做是打开的文件，但在已安装的文件系统中没有相应的实体，即并不是一个 真正的文件。
+管道的创建和使用 可以使用pipe()系统调用来创建一个管道(后面会介绍另一个方式)，其返回一对文件 描述符，一个用来写一个用来读。必须返回两个描述符的原因是： POSIX 只定义了半双工 的管道，所以读写需要两个端口。
+POSIX 另外要求使用一个描述符前需要关闭另一个描述符。 但 Linux 中则可以不关闭， 可以实现全双工，但为了可移植性， 一般还是将另一个先关闭。
+用ls | more组合命令来解释如何使用pipe()实现通信:
+shell 调用pipe(), 返回 fd3(对应读通道),fd4(对应写通道) 两次调用 fork() 创建两个子进程，由于属于不同的地址空间， 所以操作自己的文件描述符不会影响其他进程，但都指向同一个管道 父进程调用close()关闭这两个文件描述符 第一个子进程执行ls程序，其操作如下，
+调用dup2(fd4, stdout), 执行文件描述符的拷贝，从此stdout 就代表管道的写通道 由于stdout代表写通道，所以可将 fd3 和 fd4 均关闭 exec()执行ls程序，默认情况下，其输出结果到 stdout， 当下即管道的写通道，即向管道中写了数据 第二个子进程执行more程序，其操作如下：
+调用dup2(fd3, stdin), 从此stdin代表管道的读通道 同样可以将 fd3 和 fd4 关闭 exec()执行more程序，由于现在stdin就是管道的读通道, 上面的子进程向管道中写了数据，所以stdin现在有数据，more 可以正常输出 popen(): 更简单的 API 当管道的使用是单向的，即某个进程仅仅想知道另一个进程的执行输出，或者 某个进程想把数据灌入到另一个进程的输入。
+此时 Linux C 库中的popen()和pclose()简化使用pipe()中 调用dup2(), close()这些繁琐的步骤。</description></item><item><title>Linux 进程与线程的关系</title><link>https://wangloo.github.io/posts/os/linux/process/thread/</link><pubDate>Wed, 10 May 2023 20:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/process/thread/</guid><description>Linux 中其实并不区别进程和线程，都用task_struct来描述，可以说 它们之间的联系大于区别。
+创建进程的接口是fork()， 创建线程的接口是pthread_create()， 但是它们最终都是调用的clone()系统调用， 只是参数不同而已。
+当一个进程/线程发起创建线程的请求时，不像创建进程那样重新申请mm_struct 和打开的文件等结构， 而是直接将指针赋值为父进程的值，所以它和父进程共享同一个 地址空间这些。
+上面说的父进程，因为没有父线程的概念，如果创建线程的task_struct也是一个 线程，那么它的地址空间也是最终指向某个进程的，所以父亲和新的线程就是同等 地位了。
+再说说 PID，PID 能够唯一的标识一个进程，一个进程下所有的线程的 PID 都与父进程 相同，那么问题来了，如何标识线程的从属关系呢？
+task_struct.tgid标识自己所归属的进程 ID，或者叫主线程 ID，反正就是地址空间 的真正来源。 而进程如何知道自己创建了哪些线程呢？， 通过task_struct.children 链表来查找，但这里面即有子进程又有线程，需要过滤。
+有的地方会使用一个名词 管理线程， 其实就是线程共享的地址空间这些的原主。
+内核线程 内核线程是一种特殊的进程，当然也是用task_struct来描述，内核线程的特殊点：
+mm成员=NULL，没有用户空间的数据，不能访问用户空间 每个内核线程有私有数据，用set_child_tid成员指向， 是一个struct kthread结构，用to_kthread()来访问私有数据 内核线程也像普通线程一样参与调度，其创建的地方在内核，使用kthread_create() 创建，不能由用户态创建。
+内核线程一般负责执行一些内核任务，比如软中断 就有一个内核线程，来专门执行到来中断的服务函数中不着急的部分。</description></item><item><title>Linux 进程地址空间 写时复制</title><link>https://wangloo.github.io/posts/os/linux/addrspace/cow/</link><pubDate>Mon, 08 May 2023 09:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/addrspace/cow/</guid><description>当前存在的问题 未启用写时复制时，fork()创建子进程地址空间的流程如下:
+动态申请子进程的页表 动态申请子进程的物理页面，大小和父进程的相同 创建父进程虚拟地址-新物理页的映射到子进程页表 memcpy()将父进程所有页面拷贝到子进程地址空间下 这样做有什么问题呢？ 在fork()的常规调用环境下，fork()之后 接的一般是exec()类函数，即载入一个新的可执行文件，继续用父进程 的情况不多。
+这样的话，上述过程中memcpy()父进程的页面就是多余的，而且如果 父进程比较大，会非常耗时。
+写时复制的优化 执行 fork() 时，不给子进程分配新的物理页，而是将父进程的页表项 完全的拷贝到子进程中，结果就是父子进程的虚拟地址指向同一个物理地址。
+换句话说，这样做就不需要memcpy()父进程所有的页面，仅仅是memcpy()一份 父进程的页表，给子进程用。
+那么是否连新页表都不申请，直接用父进程的页表？
+显然是不行的，因为本质上父子进程拥有不同的地址空间， 最后都要分隔开（无论是否执行exec()），所以没必要 推迟页表的申请，本身不怎么耗时。
+但是创建线程时，确实使用同一张页表。
+当然，仅设计到这步是不行的，因为按理来说父子进程是独立的，对子进程的 修改不应该影响父进程的地址空间。
+所有，在 copy 完页表后，会将父子进程的所有地址空间（实际是页表项）设置 为只读属性，当父/子进程尝试修改地址空间时，触发异常，配合特定的 异常处理机制，为其创建一个新的屋里也，拷贝原来的+执行修改。
+下图是对上述情况的描述，仅给出一个页面的示例，可以推广到整个地址空间：
+1 VMA VMA 2 ┌───────┐ │ ┌───────┐ 3Parent │ │ │ Parent │ │ 4 │ │ │ │ │ 5 ├───────┤ │ ├───────┤ 6 │ ├────┐ │ │ ├────┐ 7 ├───────┤ │ PMA Write │ ├───────┤ │ PMA 8 │ │ │ ┌───────┐ ────┼───► │ │ │ ┌───────┐ 9 │ │ │ │ │ │ │ │ │ │ │ 10 │ │ │ │ │ │ │ │ │ │ │ 11 └───────┘ │ ├───────┤ │ └───────┘ │ ├───────┤ 12 ├────►│ │ Read │ └────►│ │ RW 13 ┌───────┐ │ ├───────┤ only │ ┌───────┐ ├───────┤ 14Child │ │ │ │ │ │ Child │ │ │ │ 15 │ │ │ │ │ │ │ │ ├───────┤ 16 ├───────┤ │ │ │ │ ├───────┤ ┌─►│ │ RW 17 │ ├────┘ └───────┘ │ │ ├───────┘ ├───────┤ 18 ├───────┤ │ ├───────┤ │ │ 19 │ │ │ │ │ └───────┘ 20 │ │ │ │ │ 21 │ │ │ │ │ 22 └───────┘ │ └───────┘ 23 │ 这样就完美了吗 实际上不是的，拷贝父进程的页表和vm_area_struct就不占内存了吗？</description></item><item><title>操作系统：信号概述</title><link>https://wangloo.github.io/posts/os/linux/signal/</link><pubDate>Fri, 05 May 2023 20:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/signal/</guid><description>信号是内核通知用户态进程的一种方式，也可用于用户进程间相互通知。
+我更愿称其为通知而不是通信，因为目标进程只能知道信号的 ID，发送方不能 附带更多的信息。
+为什么要引入信号? 使用户态进程能够知道系统中某些事件发生了。
+例如，系统定时器时间到会产生SIGALRM 信号，用户态程序可以捕获此信号做一些事。
+当然有些信号的产生可能不会“轮到”用户态感知，比如SIGKILL信号，由 内核直接将进程给杀死。 但无论怎么说，都是一种提醒该进程某件事发生了， 你该做点什么了的方式。
+信号的两个阶段 信号的生命周期可分为两个阶段:
+信号生成 信号被处理 下面会详细介绍两个阶段的实现原理，但总体上来说， 信号生成即更新目标进程的数据结构，代表某个信号产生了。
+注意：信号可以发送给处理任何状态的进程，发送给非运行状态的信号由内核保存 知道进程恢复运行状态。
+而且，目标进程只能同时有一个同种类型的信号处于挂起状态，也就是说，如果 上一个同种信号没有被处理，那么之后到来的同类信号会被忽略。
+信号被处理可能有三种不同的方式: 忽略、执行默认行为或者调用自定义的 handler。
+信号相关的数据结构 (1) 一个信号可能同时存在多个不同类信号处于挂起状态，所以需要队列来记录它们。 实际上需要两个: 进程组共享和进程私有的挂起队列。 因为某些信号是发送给整个进程组的，比如kill()，而一些是指定某个进程的， 比如tkill().
+(2) 另外，tcb 中还需要记录所有信号的处理函数，缺省的和自定义。
+所有的数据结构都记录在进程的 tcb 中。
+信号的产生过程 信号可能来自内核或者其他进程，后者是通过系统调用的形式，故最终都会 转化为内核函数，操作目标进程的数据结构来实现信号发送。
+详细来说就是项目标进程的挂起队列中插入一个项。
+信号的处理过程 信号的整个处理过程包括：内核检查进程上是否有挂起的信号，若有则执行相应操作(忽略、缺省、自定义)。 以上描述对应内核函数do_signal().
+注意： 这个检查过程仅发生在目标进程将返回用户态时。
+有一个问题是，自定义的信号处理函数是在用户态的, 而do_signal()是发生在 内核态，所以内核要做一些特殊的操作：
+创建一个临时的用户栈，不能破坏保存的原来用户态环境 ELR(返回地址) = 自定义处理程序，和其他的用户态环境构建 返回用户态，CPU 会执行处理函数 执行完毕后，通过之前对用户栈的特殊构建，使得程序接下来会运行一个 syscall (sys_sigreturn), 返回内核态 如上述操作检查完所有挂起的信号 当所有信号都被处理完成后，则恢复用户进程的原有环境，继续执行</description></item><item><title>操作系统：同步互斥机制</title><link>https://wangloo.github.io/posts/os/linux/sync/</link><pubDate>Thu, 04 May 2023 20:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/sync/</guid><description>为何需要同步互斥机制 同步互斥存在的意义只针对多个任务都会修改同一块内存的场景。这块内存也叫临界区， 要求是必须各个任务独占访问的。比如说许多线程都会往 ringbuffer 中填数据， 必须使用同步互斥机制才能保证数据的正确性。
+所以说，在以下的场景中，无需考虑同步互斥：
+如果你只有1个CPU，该CPU上只运行1一个线程 如果会存在多个线程（可能是多个core或者一个core上的多线程环境），但是他们不会涉及同一块内存 即便是多个线程访问了同一块内存，但是都是读操作 需要同步互斥的场景在OS内核和用户态程序中都很常见：
+内核中常见的临界资源包括：对内存区域的引用计数操作，或者对调度队列的修改操作等。 用户态那就更不用说了，同步互斥的场景很多，比如典型的读者写者问题(Buffer) 因为OS内核和用户态程序的权限不同，所以实现同步互斥的方案也不太相同。
+同步互斥的常见方案 per-cpu 变量 OS 内核里有些数据结构如果不需要CPU之间共享，可以定义成per-cpu形式。
+比如说调度队列，每个CPU只关心自己核上队列的情况，如果想要访问其他CPU的， 比如进程迁移请通过核间通信IPI来做，并不能直接访问。
+per-cpu 变量通常被安排在不同的 cache line，避免 cache 的频繁刷新
+优点：多 CPU 之间互不干扰 缺点： 要求逻辑独立， 极少数临界资源可以实现为 per-CPU 形式 需要考虑内核抢占的影响，如果OS内核修改percpu变量时被调度，新的进程也可能修改这个变量。 如果在中断服务函数中可能修改，还需要另外关闭内核中断。 原子操作 如果临界资源只是一个基础类型变量，比如说一个Flag或者引用计数。那么实现同步互斥的逻辑就比较简单。
+我们知道，如果多个CPU同时对一个变量做修改(flag++)，结果是不可知的。这是因为一次修改其实在处理器来看分为三步:
+load mem =&amp;gt; register update register store register =&amp;gt; mem ISA 会提供一些原子操作的指令，将这三步绑定在一起，一旦有一个core执行了写动作，会对该内存总线独占， 只有此次写入完成后，其他core才能发起写入请求。</description></item><item><title>Linux Trace(1): Tracepoint</title><link>https://wangloo.github.io/posts/os/linux/trace/tracepoint/</link><pubDate>Sun, 23 Apr 2023 23:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/trace/tracepoint/</guid><description>tracepoint 是 Linux trace system 中 data source 之一， 其 trace 的对象是 kernel，属于一种静态的插桩方法。
+添加和删除需要手动修改内核源码 可以向上提供接口，可以通过 frontend 来开启或者关闭，也可以自定义数据处理方式 在 disable 时， 仅有一次 if 判断的损耗，所以效率还算高。但缺点是不够灵活。 tracepoint 的组成 看其源码struct tracepoint就能知道它的组成结构：
+1struct tracepoint { 2 const char *name; 3#define TP_STATE_DISABLE 0 4#define TP_STATE_ENABLE 1 5 int state; 6 7 // 并非用于注册hook的函数，而是注册hook时的hook 8 int (*reghook)(void); 9 void (*unreghook)(void); 10 11 // 在tracepoint触发时将调用的hook 12 struct tracepoint_hook *hooks; 13}; name: 是该 tracepoint 的名称 state: 用于控制其开关状态 hooks: 是一系列的函数指针，当 tracepoint hit 时，这些函数会被依次调用 reghook/unreghook: 在注册/注销 hook 时将被调用，可以用来输出一些提示信息 为了提供对 tracepoint 操作的接口，定义一个 tracepoint 时，会同时定义一系列功能函数, 包括：</description></item><item><title>Linux 内核抢占</title><link>https://wangloo.github.io/posts/os/linux/schedule/kernel_preempt/</link><pubDate>Thu, 13 Apr 2023 23:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/schedule/kernel_preempt/</guid><description>抢占的含义 抢占指的是强制使一个任务让出 CPU 给其他任务。
+抢占是调度器做的，每次执行schedule()就可能发生一次抢占，所以 抢占发生的地点是内核，也就是schedule()的执行环境。
+用户抢占 与内核抢占相对应的是用户抢占，用户抢占不是指抢占发生的地点，因为 上面说了抢占发生的地点一定是内核。
+所以用户抢占的含义是：抢占的时机是用户态，换句话说就是抢占发生之前， 系统正处于用户态。
+用户抢占的经典场景是时钟中断，用户进程 1 执行的好好地，被时钟中断打断 然后中断返回时执行重调度，选择了新的用户进程 2。其他的可能用户抢占的场景 还有系统调用返回时， 总之是内核返回用户态时都会发生用户抢占。
+内核抢占 启用内核抢占增加了系统中发生抢占的点，即抢占前系统正处于内核。
+当一个进程正处于内核态执行任务时，比如执行mmap()系统调用的任务，在 未开启内核抢占的情况下，中断返回时只可能继续执行当前进程的任务，不会 发生调度。
+当启用内核抢占时，上述情况下若发生中断，系统在退出中断后，即使此时不是 返回用户态，也可以执行schedule()，即可以发生抢占。此之谓内核抢占。
+抢占发生的条件 启用内核抢占之后，其实抢占的过程也不区分用户态和内核态，只要满足条件都会 执行schedule()。
+执行重调度的条件有两个:
+是否需要重调度? 是否可以重调度? 是否需要重调度也就是何时执行schedule()的问题，大概包含以下的场景:
+时钟中断 新进程创建 修改进程的 nice 值 中断返回内核态 内核恢复为可抢占(下面会介绍) 然而有一些情况不可以重新调度，比如内核中一些关键的步骤，那些不能被打断的 原子操作。
+在关键步骤之前，需要调用preempt_disable()，此时 linux 会在 tcb 中会改变 preempt_count的值，这个操作不是关闭中断，而是在中断返回时即使有更高优先级的其他进程， 只要该值不符合要求，重调度也不会发生。
+关键步骤执行完，调用preempt_enable()，此时为了去满足关键区域内可能 有新加入的高优先级进程，会调用一次重调度，这也正是上面所说需要重调度的场景之一。</description></item><item><title>Linux Kconfig 概述</title><link>https://wangloo.github.io/posts/os/linux/kconfig/</link><pubDate>Tue, 28 Mar 2023 16:15:03 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/kconfig/</guid><description>Kconfig 介绍 Kconfig 是一个通用的配置系统，最初由 Linux 开发，提供了一种简单的可扩展的配置语言， 实现工程的模块化和可定制需求。
+在简单的工程中，或许我们使用简单的 C 语言宏就能解决问题，不必用到 Kconfig。 但对于大型项目，并不只是一个选项的开启和关闭，并不只是影响到源代码，还有基于 Makefile 的编译工作。并且，当可配置的选项增加时，开发者手动管理这些配置选项就显得不那么智能了。
+Kconfig 的出现使得上述工作变得轻松：
+在 build 前，我们可以使用图形化界面来选择此次构建启用了哪些编译选项, (menuconfig) 对于不同的厂商驱动，可以有不同的配置文件，厂商可以为我们提供一个默认的 config 文件，我们可以方便的应用这些默认选项进行编译, 或者基于这些默认选项进行改动，保存为自己的配置项文件(defconfig) 选项之间可以建立依赖关系，例如，只有 A 启用时，BCD 选项才有意义。对此 Kconfig 提供了一套简单上手的编辑语言 Kconfig 的使用必须配合 Makefile 进行，应该说，Kconfig 与 Makefile 结合是简化了 Kconfig 的使用步骤。
+Kconfig 的使用方法 我们常用的功能大概包括：
+使用一些默认配置文件来构建项目 自定义配置构建项目 将某套配置选项保存下来，方便下次使用 在分别介绍这些功能的使用方法之前，先得说明这些 Kconfig 中各种配置文件的用途了，还是比较容易混淆的。
+Kconfig: Kconfig 不仅在根目录，还可能存在于各级子目录下。里面的内容是整个 Kconfig 系统的所有配置项，以及每个配置项的默认值、描述等。如果想要添加、删除配置项，需要改动这个文件 xxxdefconfig: xxx 可以替换为任意字符，这些都是默认的配置项，通常由开发人员提供给使用者 .config: 这个文件存在于根目录下，我们可以叫他当前配置。可以把他当为服务与一次构建的“临时文件”，每次构建都是基于当前配置进行的 autoconfig.h: 由 Kconfig 系统根据当前构建使用的配置自动生成的头文件，C 源代码可以通过它来知道当前的配置情况 其实它们之间的关系不是那么复杂，到底是谁根据谁生成的谁，下面将要说明。</description></item><item><title>行结束符在windows和linux的区别</title><link>https://wangloo.github.io/posts/os/linux/end-of-line/</link><pubDate>Sat, 24 Dec 2022 01:35:24 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/end-of-line/</guid><description>使用VIM 打开一个文件时, 有时会看到例如 ^M 这类字符出现. 下面我会挖一下其出现的原因.
+EOL 字符 EOL 或者说 end-of-line 表示一个新行的开始.
+EOL 字符在不同的操作系统中是不同的. 本文中仅以 Linux 和 Windows 为例说明.
+Windows中是以读到回车&amp;lt;CR&amp;gt;和换行&amp;lt;LF&amp;gt; 表示 EOL. Linux 中仅以换行作为EOL 回车&amp;lt;CR&amp;gt; : Carriage return. 将光标回到行首, 对应C语言中的 \r 换行&amp;lt;LF&amp;gt; : Line feed. 将光标下移一行, 对应C语言中的 \n 在 Linux 中打开 Windows 下的文件将多余的回车通常显示成 ^M 或者 Control-M
+Ref End Of Line Characters</description></item><item><title>操作系统：浅谈 errno 的线程安全问题</title><link>https://wangloo.github.io/posts/os/errno_thread_safe/</link><pubDate>Wed, 21 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/errno_thread_safe/</guid><description>我始终以为，C库中常用的 errno 仅是一个全局变量，使用了全局变量就无法保证线程安全了，因为全局变量在所有线程中都是共享的。
+要实现线程安全的errno 就必须将其设置为线程私有的变量，下面就来看看GCC是如何巧妙的实现的。
+正文 现在的errno定义并非一个全局变量, 而是一个宏定义, 以下是在usr/include/errno中的声明:
+1extern int *__errno_location (void); 2# define errno (*__errno_location ()) 这种方式下其实现原理大概是: __errno_location 函数返回一个int指针, 而这个函数的实现中, 返回的就恰好是实际的errno 变量(与宏同名)的地址, 所以对其解引用就相当于对其值进行操作. 所以, 这种定义规则下, 左值和右值表达式均成立.
+1errno = 10; // *__errno_location () = 10 2int x = errno; // x = *__errno_location (); __errno_location 的实现就至关重要, 因为如果其返回的变量地址不包含任何技巧的话, 就和原先直接定义全局变量的方式没差了, 说到底能否实现线程安全, 还得看实际保存errno的变量是否为线程独有的. 目前还没有发掘到其精髓, 只是套壳而已.
+以下给出/csu/errno-loc.c中__errno_location 的实现, 与我们预期一致, 返回变量的地址. 而同名变量errno则定义在/csu/errno.c中, 决定了能够实现errno的线程安全.
+1int * 2__errno_location (void) 3{ 4 return &amp;amp;errno; 5} 1__thread int errno; &amp;ldquo;__thread&amp;rdquo; 是GCC提供的扩展前缀, 表示该变量将被库处理为线程私有的, 注意这一步是C库完成的, 对程序员透明.</description></item><item><title>操作系统：大小端问题</title><link>https://wangloo.github.io/posts/os/big-little-endian/</link><pubDate>Thu, 17 Nov 2022 10:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/os/big-little-endian/</guid><description>大小端问题的由来 为什么计算机世界需要区分大小端? 内存里存取的单位是字节, 如果所有的数据类型长度都是一个字节, 那就完全不需要大小端了, 每个变量都仅占据单独一个字节.
+例如, 三个变量 a=10, b=20, c=30, 在内存中的布局可能就是:
+1 ┌────────────┐ 2 │ │ 3 │ 10 │ a 4 ├────────────┤ 5 │ │ 6 │ 20 │ b 7 ├────────────┤ 8 │ │ 9 │ 30 │ c 10 ├────────────┤ 11 │ │ 12 │ │ 13 │ │ 14 │ │ 15 │ │ 16 └────────────┘ 但是我们最常使用的数据类型肯定有超过一个字节的, int类型在64位的系统中就占4个字节. 例如变量a=0xaabbccdd
+一个变量的大小一旦超过4个字节, 内存的存取又是以字节位单位的, 那么要把它塞到内存里就必然会产生两种不同存放方式: 先放0xaa还是先放0xdd
+首先, 0xdd是变量a的低8位, 0xaa是最高8位, 这是确定的.</description></item><item><title>操作系统：上下文切换</title><link>https://wangloo.github.io/posts/os/context/</link><pubDate>Mon, 14 Nov 2022 22:13:06 +0800</pubDate><guid>https://wangloo.github.io/posts/os/context/</guid><description>本文基于AArch64执行环境, 介绍现代操作系统中上下文切换的相关内容.
+何为上下文 我们正在看一本书的时候如果被其他的事情打断, 返回时为了能够从上次被打断的位置继续读, 就要在被打断的时候记下来当前是读到了哪个第几页的第几行.
+操作系统对待线程也是如此, 需要保存的用于恢复线程执行的信息就称为线程的上下文.
+那么对于线程来说需要记下的内容有什么呢? 寄存器和栈即可. 拿 AArch64 架构来距离, 线程的上下文就是:
+通用寄存器x0-x29: 函数调用的参数, 某些计算过程的中间值, 都要用到这些寄存器. 线程的执行流可能在任何时候被打断, 当然这些内容也不能丢. 通用寄存器lr(x30): lr 保存着返回地址, 即当前函数结束之后该返回到哪执行. 栈顶指针 sp: 栈的重要性无需多言. 程序计数器 pc: 被打断的线程如果再次执行, 从哪里执行呢? 显然是被打断指令的下一条(或者重新执行当前). 这个指令的地址当然也需要被保存好. PSTATE: 想一下, 有了以上的内容就能够保证线程完整的恢复之前的环境吗? 其他的例如中断是开还是关, 有哪些标志位(NZCV)被设置了. 这些信息在 AArch64 中是保存在 PSTATE 的各个字段中. ttbr0：保存着进程的页表 上下文保存和恢复 TODO
+协程的上下文 协程是用户级别的线程,
+协程之间的切换不进入内核 切换协程只能是某个协程主动放弃控制权 我们在这里讨论一下协程切换时需要保存的上下文是否与线程有所不同.
+首先, PC 一定属于, 这个毋庸置疑. 其次是栈顶指针 sp, 每个协程都有单独的栈, 如果不保存栈的位置, 那么协程内部定义局部变量就没法访问了(局部变量的访问指令都是以 sp 为 base 的偏移来做的).
+另外, 关于通用寄存器, 由于协程的切换需要主动调用某个函数(通常叫做yield()), 在函数的最后将 PC 设置为新协程的上下文 PC.</description></item><item><title>操作系统：动态链接/动态加载</title><link>https://wangloo.github.io/posts/os/dynamic-link/</link><pubDate>Sun, 26 Jun 2022 19:50:45 +0800</pubDate><guid>https://wangloo.github.io/posts/os/dynamic-link/</guid><description>静态链接带来的问题 像是libc这种几乎每个程序都要用到的库, 如果是静态的, 那么不仅意外着每个程序的 可执行文件很大, 浪费磁盘空间. 并且当程序加载到内存时, 可能许多程序都会用到printf , 使得内存中会存在好多份的printf源码.
+维护和更新难. 一旦静态链接的其中一个目标文件更新, 所有的可执行程序都要重新链接.
+不满足局部性原理. 上面提到, 内存中同时存在多份的printf源码会破坏局部性原理的. 显然如果所有的程序共享一份printf源码的想法更好. 即动态加载.
+可移植性差. 静态链接, 只要有一个依赖目标文件的实现不同, 软件厂商就得专门发布一个 版本. 而动态链接则信赖客户电脑上的动态库, 相当于一个中间层.
+动态链接的过程 对比静态链接使用ld链接器在编译后即执行链接, 动态链接则是将链接过程推迟到运行时, 即装载到内存时.
+这样, 链接器在链接产生可执行文件时就有两种做法:
+对于静态符号, 按照静态链接的规则进行地址引用重定位 对于动态符号, 链接器则仅标记其为动态链接中的符号, 不进行处理. 而是等到装载时由 专门的动态链接器来完成动态符号的链接工作. ⁉️ 链接器如何确定一个符号是静态的 or 动态的?
+在动态共享对象(.so)中保存了完整的动态符号表*, 表中存在的符号即为动态的, 否则为静态.
+Linux 的 C 语言运行库glib的动态链接版本叫libc.so. 它在外存上只保存一份, 所有的程序 都可以在运行时使用它. 所以千万不要删掉它.
+动态链接有一定的性能损失, 因为每次运行程序时都要重新链接, 并不像静态链接是一劳永逸的.</description></item><item><title>ELF 文件的链接与加载</title><link>https://wangloo.github.io/posts/binary/elf-format/</link><pubDate>Mon, 20 Jun 2022 16:21:27 +0800</pubDate><guid>https://wangloo.github.io/posts/binary/elf-format/</guid><description>ELF是什么 ELF（Executable Linkable Format）可执行文件格式不止是单指“可以被执行的文件”， 动态链接库、静态链接库都按照可执行文件格式来存储。
+ELF标准里把采用ELF格式的文件分为四类：
+Type description 实例 Relocatable File 这些文件包含了代码和data, 可以被用来链接成可执行文件或共享目标文件. .o, .a Executable File 直接可执行的文件 /bin/ls Shared Object File Including code and data. 链接器可将其与其他Relocatable File或Shared Object File结合, 生成新的目标文件. 动态链接器可将其与Executable File结合, 作为进程映像的一部分来运行. .so Core Dump File Restore critical infomation when process is terminated unexpectedly core dump 📌 file command in Linux can output the format of a file.</description></item><item><title>操作系统：SeL4 基础概念</title><link>https://wangloo.github.io/posts/os/sel4/</link><pubDate>Sat, 04 Jun 2022 11:52:51 +0800</pubDate><guid>https://wangloo.github.io/posts/os/sel4/</guid><description>seL4 Capabilities In seL4, capabilities are stored in C-space. C-space is a hierarchical data structure very similar to page table.
+page table is a mapping from virtual address to physical address. C-space is a mapping from object ID to capability. Kernel object is made up of several C-nodes, just like a page table made up of individual page tables. Each C-nodes is an array of cap slots, which contain capability.</description></item></channel></rss>

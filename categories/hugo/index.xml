@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hugo on BLOG</title><link>https://wangloo.github.io/categories/hugo/</link><description>Recent content in Hugo on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sat, 02 Sep 2023 18:39:42 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/categories/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>Hugo 主题创建(7): footer</title><link>https://wangloo.github.io/posts/hugo/new_theme_7/</link><pubDate>Sat, 02 Sep 2023 18:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/new_theme_7/</guid><description>footer属于 partial模板之一, 创建一个新文件footer.html, 然后在baseof模板中, 指定footer内容显示的位置.
+1&amp;lt;body&amp;gt; 2 &amp;lt;div id=&amp;#34;app&amp;#34;&amp;gt; 3 {{- partial &amp;#34;sidebar.html&amp;#34; . -}} 4 &amp;lt;main class=&amp;#34;container&amp;#34;&amp;gt; 5 {{- block &amp;#34;main&amp;#34; . }} 6 {{- end }} 7 {{- partial &amp;#34;footer.html&amp;#34; . -}} 8 &amp;lt;/main&amp;gt; 9 {{- partial &amp;#34;script.html&amp;#34; . -}} 10 &amp;lt;/div&amp;gt; 11 12&amp;lt;/body&amp;gt; 下面将按照功能划分, 添加各种内容到footer模板中.
+文件创建和lastmode时间 commit: https://github.com/wangloo/hugo-theme-puer/commit/d263d9af65808ff03b2307abfb4db397ae1bcc2a
+文件创建时间是获取的footer中的变量, lastmod其实也可以通过这种方式获取, 但是这样每次修改都要手动更新太复杂, 我们可以借助git追踪的文件的修改时间来作为lastmod, 默认不是这样的, 需要在config.toml中指定.
+1[frontmatter] 2 lastmod = [&amp;#39;lastmod&amp;#39;, &amp;#39;:git&amp;#39;, &amp;#39;:fileModTime&amp;#39;, &amp;#39;date&amp;#39;, &amp;#39;publishDate&amp;#39;] 然后就是在footer.html中引用这两个变量即可:
+1&amp;lt;HR width=&amp;#34;100%&amp;#34; id=&amp;#34;EOF&amp;#34;&amp;gt; 2 3{{- if not .</description></item><item><title>Hugo 主题创建(6): shortcode</title><link>https://wangloo.github.io/posts/hugo/new_theme_6/</link><pubDate>Sun, 20 Aug 2023 18:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/new_theme_6/</guid><description>shortcode 可以当成是一些对 html 代码块封装的函数，在写 markdown 的时候就会方便一些， 举个例子来说，我有时需要往 post 中插入图片，并调整它的大小，这时候每次都手动写一些 html 简直是太麻烦了，使用 shortcode 就像是调用函数一样，告诉它函数名和必要的参数， 它会在生成网页时自动转换为对应的 html 语法。
+shortcode 分为两种：Hugo 默认和自定义的。Hugo 默认支持的 shortcode 有这些 https://gohugo.io/content-management/shortcodes/ ，这里面同时包含了告诉我们如果使用 shortcode 的基本语法。
+当然hugo支持创建自定义 shortcode，详细的使用方法可以看这里， https://gohugo.io/templates/shortcode-templates/ ，我会大概说一下。
+定义一个新的shortcode，即在layouts/shortcodes/下创建一个新的xxx.html文件，文件名就是你的函数名 这个shortcode会做什么事，就是在这个html中进行实现 插入链接图片 remoteFigure，参考的是diary主题的实现支持调整图片大小、填充样式、对齐、添加图片描述等。
+puer 主题的 Github commit</description></item><item><title>Hugo 主题创建(5): Tag 分类支持</title><link>https://wangloo.github.io/posts/hugo/new_theme_5/</link><pubDate>Tue, 15 Aug 2023 18:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/new_theme_5/</guid><description>通过 tag 可以实现对post进行分类，用到的支持是 HUGO Taxonomy Template（分类模板）
+原理 实现tag的功能需要完成两类页面的设计： /tags/ 和 /tags/&amp;lt;one-tag&amp;gt;
+前者属于 Taxonomy Terms（分类术语）页面，用分类术语模板实现， 后者属于 Taxonomy List （分类列表）页面，用分类列表模板实现，他们都属于 Taxonomy 模板。
+不难推测出，分类术语模板规定了如何展现某个分类方式，比如说用云图来展示tag分类方法。 而分类list模板的作用是展示选中某一类之后的页面，比如说在云图中选中了某个tag。
+更加详细的描述可以看官方文档: https://gohugobrasil.netlify.app/templates/taxonomy-templates/
+设计 正与文档中所说，分类terms模板可以有多个查找的优先级：
+/layouts/taxonomy/.terms.html /layouts/_default/terms.html /themes//layouts/taxonomy/.terms.html /themes//layouts/_default/terms.html 这样的好处是，比如说我有两种terms，tag和categories，我想在分类术语页面对这两种分类展示不用的页面， 就可以定义tags.terms.html和categories.terms.html, 而我目前就用terms.html，简单。
+分类list模板也是，使用最通用的list.html, 和其他的list公用，并没有对分类list做单独的页面。
+对应的 commit: https://github.com/wangloo/hugo-theme-puer/commit/63d8bb762b16a3d4657ba3523d6b6fb38cf5f9ca
+上面的commit不小心提交了menu.html, 实际不属于taxonomy的目的，所以在这纠正: https://github.com/wangloo/hugo-theme-puer/commit/0af07f66807b540fd9d3be84e8d7faca7f962c4b
+References 中文博客介绍Taxonomy(1): https://hugo-in-action.foofun.cn/zh/docs/part1/chapter4/4/ 中文博客介绍Taxonomy(2): https://note.qidong.name/2017/10/hugo-taxonomy/</description></item><item><title>Hugo 主题创建(4): 样式打磨</title><link>https://wangloo.github.io/posts/hugo/new_theme_4/</link><pubDate>Fri, 11 Aug 2023 18:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/new_theme_4/</guid><description>字体替换 commit: https://github.com/wangloo/hugo-theme-puer/commit/861ca01617c06c83b701506c9a574cc2726d36d8
+修改的参考：
+一般文字用最近很火的【霞鹜文楷】 代码使用一些比较通用的代码字体，注意用!important提高优先级</description></item><item><title>Hugo 主题创建(3): 站内搜索</title><link>https://wangloo.github.io/posts/hugo/new_theme_3/</link><pubDate>Fri, 11 Aug 2023 16:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/new_theme_3/</guid><description> commit:
+为什么选择fast search? hugo本身是不支持站内搜索功能的, 如果你写的文章较多就只能按照tag去检索分类. 这样至少也需要三次点击操作, 如果每个页面的边栏或者顶栏有一个搜索框, 能够 搜索文章的内容或者标题、Tag这些，对我来说效率就能得到显著提升。
+fast search 是我检索到的目前比较简单、成熟的方案，它的亮点：
+最小外部依赖（无需jQuery） 支持实现键盘唤出 无需NPM, grunt等外部工具 无需额外的编译步骤，你只需要像往常一样执行hugo 可以方便地切换到任意可使用json索引的客户端搜索工具 集成 集成的步骤我是参照的这篇文章 , fast search官方也有说明类似的步骤，过程不难，大概可分为：
+Add index.json file to layouts/_default Add JSON as additional output format in config.toml Add search.js and fuse.js (downloaded from fusejs.io) to static/js Add searchbox html 到你想布局的位置 对searchbox添加样式文件 具体的步骤看博文或者官方文档就行，这里不赘述。
+改动 做了一些让自己舒服的改动：
+让搜索框常驻，只是搜索结果可以隐藏(ESC) /聚焦搜索框，和vim相同 简化样式，贴合我的主题 搜索结果只显示title就够 这样以后不论在哪，想要切换到一篇文章只需要两次鼠标（或者两次键盘）就能精准定位并打开，不必使用鼠标的方式可能更有作用哈哈。
+TODO 只能搜索标题，不能搜索内容、tag？</description></item><item><title>Hugo 主题创建(2): 添加侧边栏</title><link>https://wangloo.github.io/posts/hugo/new_theme_2/</link><pubDate>Fri, 11 Aug 2023 15:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/new_theme_2/</guid><description>commit: https://github.com/wangloo/hugo-theme-puer/commit/32abfccc6bafd3763e07b751f0315a5403c6eaff
+与顶栏相比，我更喜欢侧边栏，现在的屏幕纵向空间很宝贵。
+本文创建了侧边栏模板的框架，预留了未来实现各种功能的布局，这个过程也是第一次接触partials/ 下的文件的作用——页面的某个组成部分。而_default/下的模板则是描述不同类型的页面。
+布局 基于hugo模板的分类思想，侧边栏属于页表的一个部分，所以侧边栏的模板需要放在partials/下， 同理的还有footer、toc、comment等。我们给侧边栏模板起一个名字sidebar.html。
+因为想在站点所有的页面（section、single、list）都显示侧边栏， 所以在baseof.html中需要引入sidebar模板：
+1&amp;lt;!DOCTYPE html&amp;gt; 2&amp;lt;html&amp;gt; 3 4&amp;lt;head&amp;gt; 5 6 {{- partial &amp;#34;head.html&amp;#34; . -}} 7 &amp;lt;title&amp;gt; 8 {{ block &amp;#34;title&amp;#34; . }} 9 {{ .Site.Title }} 10 {{ end }} 11 &amp;lt;/title&amp;gt; 12&amp;lt;/head&amp;gt; 13 14&amp;lt;body&amp;gt; 15 &amp;lt;div id=&amp;#34;app&amp;#34;&amp;gt; 16 {{- partial &amp;#34;sidebar.html&amp;#34; . -}} 17 &amp;lt;main class=&amp;#34;container&amp;#34;&amp;gt; 18 {{- block &amp;#34;main&amp;#34; . }} 19 {{- end }} 20 &amp;lt;/main&amp;gt; 21 &amp;lt;/div&amp;gt; 22&amp;lt;/body&amp;gt; 23 24&amp;lt;/html&amp;gt; sidebar.</description></item><item><title>Hugo 主题创建(1): 内置样式</title><link>https://wangloo.github.io/posts/hugo/new_theme_1/</link><pubDate>Fri, 11 Aug 2023 07:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/new_theme_1/</guid><description>本次对应的commit，应该属于站点的仓库，因为仅修改 config.toml
+代码高亮 hugo 内置一套highlight引擎, 参见官网的描述 , 所以我们只需要对站点的配置文件(注意不是模板的配置文件)进行修改, 就能最简单的实现代码高亮.
+如果你需要对其进行自定义, 且将其固化到你的主题中, 那么就可能需要使用highlight.js来完成, 遵循&amp;quot;提前优化是万恶之源&amp;quot;的理论, 暂时使用hugo提供的高亮支持就能符合我们的目标.
+这是我的配置文件config.toml中关于代码高亮的启用:
+1[markup] 2 [markup.highlight] 3 anchorLineNos = false # 行号格式化为&amp;lt;span&amp;gt; 4 codeFences = true # 代码围栏, 不启用高亮无效 5 guessSyntax = true # 自动推断高亮语言 6 hl_Lines = &amp;#39;&amp;#39; # 突出显示某些特定的行 7 hl_inline = false # 高亮 inline code, ver&amp;gt;=0.101.0 8 lineAnchors = &amp;#39;&amp;#39; #　与 anchorLineNos 配合 9 lineNoStart = 1 # 行号开始 10 lineNos = true # 是否显示行号 11 lineNumbersInTable = true # 生成html中分开行号和代码 12 noClasses = true 13 noHl = false 14 style = &amp;#39;vs&amp;#39; 15 tabWidth = 4 参考 hugo代码高亮引擎描述引导页: https://gohugo.</description></item><item><title>Hugo 主题创建(0): 脚手架</title><link>https://wangloo.github.io/posts/hugo/new_theme_0/</link><pubDate>Thu, 10 Aug 2023 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/new_theme_0/</guid><description>commit: https://github.com/wangloo/hugo-theme-puer/commit/c014d1fae09eea1fcc44e03c69b6dd4d185f91fd
+背景交代 到现在为止我使用hugo也一年多了, 记了几十条的博客，对于使用频率如此高的工具来说， 有一个顺眼的外观、方便的功能布局简直是梦寐以求。
+然而，试过了这么多的现有主题，始终没有一个让我觉得满意，可能我的要求过于苛刻：
+搜索；我经常需要翻阅之前的博客/笔记，期望可以检索Tag，且不需要二次点击（ 上方直接是一个搜索框而不是一个按钮）。 TOC；要求可是展开显示三级的目录，且布局好看些。 外观；简洁，不花里胡哨，代码高亮看起来舒服。 xxx 所以，既然Hugo是一个开源的、社区环境较好的工具，那么为什么不尝试打造一款属于自己主题呢。
+我是一名嵌入式开发工程师，对于前端的知识生疏，希望在良好的社区环境下能帮助我早日完成满足我个人需求的主题。
+计划 搭建框架 制作模板，熟悉模板的概念，各个模板负责的区域 在上面的了解过程中逐渐加入对布局的调整，这一块可能需要学习css的知识 观摩学习前人的代码，结合百家之长，磨合出适合自己的布局和功能 开始动手：搭建脚手架 创建的过程可以参考这个博客 , 我主要想按照我的理解对整个框架进行详细的介绍。
+目录结构 1. 2├── layouts 3│ ├── 404.html 4│ ├── _default &amp;lt;--- 此次重点研究 5│ │ ├── baseof.html 6│ │ ├── section.html 7│ │ ├── single.html 8│ │ └── list.html 9│ ├── index.html &amp;lt;--- 此次重点研究 10│ └── partials 11│ ├── footer.html 12│ ├── header.</description></item><item><title>Hugo 官方文档学习</title><link>https://wangloo.github.io/posts/hugo/basic/</link><pubDate>Sat, 21 May 2022 17:39:42 +0800</pubDate><guid>https://wangloo.github.io/posts/hugo/basic/</guid><description>本章将解答Hugo是什么, 以及Hugo是如何工作的. 只有了解Hugo的工作机制之后, 才能发挥想象力进行DIY.
+本章内容大多来自官方手册或者搜索引擎提供的结果.
+Hugo 项目结构 一个hugo 项目通常包含以下内容:
+1. 2├── archetypes 3├── config.toml 4├── content 5├── data 6├── layouts 7├── public 8├── static 9└── themes 这里面有些是必须的, 有些是可选的.
+archetypes
+定义新创建post时, header的格式.
+asserts
+Note: assets directory is not created by default.
+config
+Hugo uses the config.toml, config.yaml, or config.json (if found in the site root) as the default site config file.
+The user can choose to override that default with one or more site config files using the command-line --config switch.</description></item></channel></rss>

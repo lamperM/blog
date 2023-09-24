@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>TODO on BLOG</title><link>https://wangloo.github.io/categories/todo/</link><description>Recent content in TODO on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 08 May 2023 10:51:49 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/categories/todo/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux 进程地址空间 堆的管理</title><link>https://wangloo.github.io/posts/os/linux/addrspace/heap/</link><pubDate>Mon, 08 May 2023 10:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/addrspace/heap/</guid><description>当进程被创建时，就预留了一块特殊的线性区，其开始地址和结束地址单独保存在 mm_struct.start_brk和mm_strcut.brk成员中，并不由vm_area_struct 链接，这块特殊的线性区就叫堆。
+进程使用的malloc()和free()等相关 API 都是操纵的堆空间。
+修改堆空间的接口 对用户态进程来说，提供brk()系统调用来修改自身的堆空间。
+brk(): 参数addr, 效果是修改mm_struct.brk到 addr，即修改一个堆的结束地址。
+brk() 系统调用的实现，在内核态是调用do_mmap()扩充堆，或者do_unmap()缩小堆。 并且移动mm_struct.brk的值而已，这是 brk()的实现。
+用户态进程还有一个接口: sbrk(), 参数是字节，代表扩充的字节数。 其下层还是调用的 brk()。
+malloc()的实现 进程刚创建时，堆空间的大小为 0， 即bkr==start_brk。
+调用malloc()，即对堆空间扩充，上面介绍了修改堆空间的接口， 所以我们可以使用brk()来实现malloc().
+对于进程本身来说，只能通过brk()简单的增加/减少堆的总大小，这样做的效率是比较低的。 比如连续执行了三次malloc(), 如果要将中间的地址 free 掉，其实是无法实现的。
+而且这种最简单的情况下，每次malloc()都要使用brk()系统调用，效率也是很低的。
+所以，通常在 C 库则一层，即malloc()和brk()之间，会有一层对堆内存的管理， 包含碎片回收，内存池等算法来避免频繁的使用系统调用。</description></item><item><title>Linux 进程地址空间 概述</title><link>https://wangloo.github.io/posts/os/linux/addrspace/addrspace/</link><pubDate>Sun, 07 May 2023 14:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/addrspace/addrspace/</guid><description>何为进程地址空间? 进程地址空间由允许进程使用的若干线性地址区域(也称&amp;quot;虚拟内存区域&amp;quot;)构成。
+每个线性区域由起始地址、长度和属性来描述。
+在进程刚创建时，其地址空间仅包含 3 个线性区，分别是：代码段、数据段和堆区，其中 堆区的初始大小为 0。
+栈区虽然也属于进程使用的内存区域，但这个区域对用户是透明的，所以我们一般将其 归于内核管理，并非进程本身。
+线性区增加的典型情况:
+使用mmap()为一个文件映射内存空间 创建一个 IPC 共享线性区与其他进程协作 调用malloc()扩张自己的堆区 Linux 描述地址空间的数据结构 在进程的 tcb 中，描述地址空间相关的结构都保存在成员mm中，其类型为struct mm_struct, 其中重要的成员有：
+mmap(struct vm_area_struct*): 指向所有线性区的链表头 mm_rb(struct rb_root): 指向所有线性区对象红黑树的根 pgd(pgd_t *): 指向进程的页表 mmlist(struct list_head): 指向下一个地址空间描述符(所有进程的地址空间描述符 被链接起来) Linux 描述线性区的数据结构 用struct vm_area_struct描述一个线性去，其中重要的成员有:
+vm_mm(struct mm_struct *): 指向所属的地址空间描述符 vm_start(unsigned long): 此线性区的开始 vm_end(unsigned long): 下一个线性区的开始(此线性区结束地址+1） vm_next(struct vm_area_struct *): 指向进程线性区的 next vm_rb(struct rb_node): 此线性区对应红黑树中的节点 此线性区的大小就可以表示为: vm_end - vm_start.</description></item></channel></rss>

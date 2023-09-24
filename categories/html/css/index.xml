@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>HTML/CSS on BLOG</title><link>https://wangloo.github.io/categories/html/css/</link><description>Recent content in HTML/CSS on BLOG</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://wangloo.github.io/categories/html/css/index.xml" rel="self" type="application/rss+xml"/><item><title>前端学习: display</title><link>https://wangloo.github.io/posts/html-css/display/</link><pubDate>Fri, 11 Aug 2023 22:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/html-css/display/</guid><description>display 是规定元素排列方式的属性，总的来说，元素的排列方式可分两种：block 和 inline。
+block 的含义是，该元素默认情况下的 width 表现为充满整个父元素，height 表现为根据内容决定。 inline 的含义是，该元素的 width 和 height 都是必须根据内容决定，不能使用显示的width和height来改变。 即便 block 可以去设置 width, 比如为 50%, 但是它永远必须独占一行，下面的元素也不会排到它的空白处， 这就是 block 称之为 block 的原因。
+细分来说，其实 display 这个属性共有五种取值： block, inline, inline-block, flex, grid。 我们将依次介绍。
+block 默认 display 方式为 block 的标签有: p, h1-h6, div, li 等
+inline 默认 display 方式为 inline 的标签有: span, a, strong
+inline-block inline-block 是结合了 block 和 inline 的优势：既不必独占一行，又可以调整 width 和 height。
+一些 button 经常使用的 display 就是 inline-block。</description></item><item><title>前端学习: position</title><link>https://wangloo.github.io/posts/html-css/position/</link><pubDate>Fri, 11 Aug 2023 21:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/html-css/position/</guid><description>position 属性决定了一个元素在页面中的排放方式, 通过与 top、bottom、left、right 结合可以决定任一元素在页面中应该在什么位置上。
+position 的取值可以是: static/absolute/relative/fixed/sticky ，下面我将依次对他们的使用方法和场景进行介绍。
+static static 是元素默认的 position，它使得元素按照顺序排列（什么样的顺序取决于display)。
+它不能与 top、bottom 等属性结合，就是最简单的依次排布。
+relative relative 与 static 相比，支持了 tom、bottom 这些属性，使得元素在依次排布的同时 能调整相对于上一个元素的位置变化。
+据我所知，relative 并不常见。
+absolute absolute 也就是我们常称的&amp;quot;绝对定位&amp;quot;， 产生的效果相对于父元素做了一些偏移，而不是上面所说的上一个元素，只有父元素的位置改变，它才按照偏移数值进行改变。 偏移数值的指定通过 top、bottom 来实现。
+absolute 可以与 fixed 进行对比，两者相差很小。
+absolute 无视 static。上面说 absolute 是基于父元素进行调整，仅当父元素是 static 时例外，absolute 会跳过这一层，找它的爷爷元素。
+fixed fixed的含义是使元素的排列始终固定在页面的某个位置，换句话也可以说它总是基于body做relative的 排列。当然，偏移是通过top、bottom给出的。
+一些页面的小广告用的排列就是fixed。
+sticky sticky像默认的static，但它也有top、bottom等属性值，这些值有特殊含义： 当元素随着页面滚动变化，而使元素的页面绝对位置（相对于body）达到top、bottom值时， 便固定在那不会再移动，使元素永远不会被移动出页面。
+看起来就好像是用页面的外框对sticky元素画了一个笼子，它永远跑不出页面之外。
+sticky目前被广泛应用与导航栏，只要设置top=0
+sticky是新增的属性，某些浏览器支持的可能不是很好</description></item><item><title>Html Css Learning note (0)</title><link>https://wangloo.github.io/posts/html-css/0/</link><pubDate>Tue, 17 May 2022 11:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/html-css/0/</guid><description>Get start What is HTML&amp;amp;CSS? HTML is resonsible for the content of the page. That&amp;rsquo;s the text, images, buttons, etc.
+CSS is resonsible for the presentation of the content. That&amp;rsquo;s the color, layout, etc.
+Web designers create the overall look and fell of a website.
+Web developers implement the design using HTML, CSS and JavaScript code.
+Configure VIM as HTML code-editor Finally in the arms of vscode 🙉</description></item></channel></rss>

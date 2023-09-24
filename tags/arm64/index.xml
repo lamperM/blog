@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>arm64 on BLOG</title><link>https://wangloo.github.io/tags/arm64/</link><description>Recent content in arm64 on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 08 May 2023 17:19:44 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/arm64/index.xml" rel="self" type="application/rss+xml"/><item><title>C语言的内存对齐</title><link>https://wangloo.github.io/posts/c/alignment/</link><pubDate>Mon, 08 May 2023 17:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/c/alignment/</guid><description>内存对齐为何被需要 架构规定了数据类型大小的同时，也规定了对这些类型的变量合法访问的对齐要求。 也就是说，变量不能随便的放在内存的任意位置，起始地址必须满足特定的对齐要求， 对不满足要求的变量强行访问就叫做非对齐访问， 非对齐访问通常会触发异常。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>arm64 on BLOG</title><link>https://wangloo.github.io/tags/arm64/</link><description>Recent content in arm64 on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 08 May 2023 17:19:44 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/arm64/index.xml" rel="self" type="application/rss+xml"/><item><title>C 语言的内存对齐要求</title><link>https://wangloo.github.io/posts/c/alignment/</link><pubDate>Mon, 08 May 2023 17:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/c/alignment/</guid><description>内存对齐为何被需要 架构规定了数据类型大小的同时，也规定了对这些类型的变量合法访问的对齐要求。 也就是说，变量不能随便的放在内存的任意位置，起始地址必须满足特定的对齐要求， 对不满足要求的变量强行访问就叫做非对齐访问， 非对齐访问通常会触发异常。
 一般数据类型的对齐要求 对于一般的数据类型，比如 int, long, char 这些，要求其变量地址对齐到自身大小， 比如 ARM64 中，int 变量的地址必须对齐到 4 字节，long 变量地址必须对齐到 8 字节等等。
 那么对于*(int *)0x1001 = 1234;, 这类的内存访问就叫非对齐的内存访问。
 即 （变量 addr % 变量 size) ！= 0, 就称为非对齐内存访问。
@@ -6,7 +6,7 @@
 首先是结构体成员，每个成员都必须满足其自身的对齐要求 然后是结构体变量自身的起始地址的对齐要求是其所有成员的最大对齐要求。 然而两个要求均满足有时候根本不可能，比如一个结构体声明为:
 1struct foo { 2 char mem1; 3 int mem2; 4 short mem3; 5}; 不可能同时做到 foo 变量和其成员 mem2 同时满足对齐到 4 字节，所以编译器会依据 上面的两条要求在成员之间添加 padding。
 除了变量中间添加 padding 外，在末尾也会添加，使得结构体数组容易满足对齐需求。
-最后 foo 变量在内存中的样子可能是:</description></item><item><title>ARM64: A64指令集</title><link>https://wangloo.github.io/posts/armv8/a64/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64/</guid><description>Load/Store 指令 寻址模式 Base register - w0=[x1]
+最后 foo 变量在内存中的样子可能是:</description></item><item><title>AArch64 A64 指令集</title><link>https://wangloo.github.io/posts/armv8/a64/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64/</guid><description>Load/Store 指令 寻址模式 Base register - w0=[x1]
 1ldr w0, [x1] Offset addressing mode - w0=[x1+12]
 1ldr w0, [x1, 12] Pre-index addressing mode - x1+=12; w0=[x1]
 1ldr w0, [x1, 12]! Post-index addressing mode - w0=[x1]; x1+=12

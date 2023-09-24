@@ -48,6 +48,18 @@ code {
     /* text-align: center; */
 }
 
+
+
+.a-block {
+    text-decoration: none; /* 仅悬浮时显式下划线 */
+}
+.a-block:hover {
+    text-decoration: underline; /* 仅悬浮时显式下划线 */
+}
+.a-block:visited {
+    color: blue; /* 点击后颜色不会改变 */
+}
+
 #fastSearch {
   display: inline-block;
   width: 90%;
