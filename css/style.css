@@ -1,11 +1,12 @@
 @font-face {
     font-family: "LXGWWenKai-Regular";
-    src: "/fonts/LXGWWenKai-Regular.ttf" format("truetype");
+    src: "/fonts/LXGWWenKai-Regular.ttf";
 }
 
 
 h1,h2,h3,h4,h5,h6,p,li,a,div {
-    font-family: 'PT Serif','LXGW WenKai Lite','Noto Serif SC', serif;
+    /* TODO: 目前使用本地字体有问题, 为了面试先使用默认字体 */
+    /* font-family: 'PT Serif','LXGWWenKai-Regular','Noto Serif SC', serif; */
 }
 
 h1:before {
