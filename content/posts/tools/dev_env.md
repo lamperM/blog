@@ -39,6 +39,12 @@ date: 2023-07-17T19:28:12+08:00
 ## 配置备份
 # vim
 
+## 升级Vim
+
+```sh
+sudo add-apt-repository ppa:jonathonf/vim
+```
+
 ## vimrc
 
 ## ycm 特别注意
@@ -201,3 +207,138 @@ tmux 在远程开发时比较有用。我们在用ssh连到服务器时经常需
 ## reference
 
 1. [Tmux使用手册](http://louiszhai.github.io/2017/09/30/tmux/)
+
+
+# 科学上网 Clash for Linux
+
+目前clash的作者已经删除跑路，但是已经发布的版本还是可以正常使用的。这一章节介绍如何在Linux上用命令行配置Clash。
+
+首先需要准备好一些文件：
+1. clash在linux中的命令行可执行文件，目前这里还可以下载 https://github.com/Kuingsmile/clash-core/releases， 去下载clash-linux-amd64-v1.18.0.gz
+2. Country.mmdb为全球IP库，可以实现各个国家的IP信息解析和地理定位，没有这个文件clash是无法运行的。 但目前版本的clash有点问题，不会自动生成MMDB文件，所以需要使用命令行下载。去[这个地方](https://github.com/Dreamacro/maxmind-geoip/releases/latest/download/Country.mmdb)或者[这个地方](https://gitee.com/dnqbob/sp_engine/blob/SPcn-01-02-20/GeoLite2-Country.mmdb.gz)看看
+3. config.yaml为clash的代理规则和clash的一些其他设置。代理规则不需要我们自己编写，通过订阅地址直接下载即可。
+此处将订阅链接粘贴进双引号中间。注意不要删除双引号，不要删除空格。
+`wget -O ~/.config/clash/config.yaml "订阅链接"`。或者，如果你有clash的其他客户端，可以由已有的配置导出。
+
+下载上面的文件，就可以准备好安装了：
+1.  创建`~/.config/clash/`，并将config.yaml和Country.mmdb放进去，如果已经存在请忽略
+    ```sh
+    mkdir ~/.config/clash/
+    mv Country.mmbd ~/.config/clash/
+    mv config.yaml ~/.config/clash/
+    ```
+2. 解压`clash-linux-amd64-v1.18.0.gz`，并将可执行文件放到一个合适的位置
+   ```sh
+   gunzip clash-linux-amd64-v1.18.0.gz
+   chmod +x clash-linux-amd64-v1.18.0.gz
+   mv clash-linux-amd64-v1.18.0 ~/tools/clash-v1.18.0
+   cd ~/tools/
+   ```
+3. 运行clash可执行文件，如果成功运行应该可以看到以下LOG
+   ```sh
+    $ ./clash-linux-amd64-v1.18.0
+    INFO[0000] Start initial compatible provider 故障转移       
+    INFO[0000] Start initial compatible provider 自动选择       
+    INFO[0000] Start initial compatible provider 大机场 Big Airport 
+    INFO[0000] inbound mixed://:7890 create success.        
+    INFO[0000] RESTful API listening at: 127.0.0.1:9090
+   ```
+
+到此，clash就可以正常运行了，由于我的订阅地址有3条规则，所以会有3条Start initial compatible provider xxxx。
+
+inbound mixed://:7890 则代表已经开启了http(含https)和socks代理，只要服务器内有软件流量通过7890这个端口，流量都将进入clash从而被代理。（但有些不支持设置，后面会说如何使用全局代理）
+
+RESTful API listening at: [::]:9090代表clash已经开启了ui控制面板，是的，Linux的clash有可视化控制面板。
+
+## 验证科学上网
+根据我们之前前台运行可得知，默认是监控了自己的7890端口，验证方式可以通过`curl`向google发送一个请求看是否能正常返回。
+
+```sh
+curl --proxy 127.0.0.1:7890 www.google.com
+```
+返回正常 Google成功返回数据，代表7890端口代理正常，clash运行正常。**注意目前必须手动指定代理的地址和端口，后面会介绍启用全局代理。**
+
+
+## Clash全局代理
+
+可以添加这个配置到你的`.bashrc`/`.zshrc`中，使得终端的所有请求都走代理。
+```sh
+export http_proxy=127.0.0.1:7890 
+export https_proxy=127.0.0.1:7890
+```
+
+这里只设置了http和https，初次之外，还可代理其他协议。
+
+可以做成一个sh命令，当想临时关闭科学上网的时候执行unproxy。
+```sh
+function proxy() {
+    export http_proxy=http://127.0.0.1:7890
+    export https_proxy=$http_proxy
+    echo -e "proxy on!"
+}
+function unproxy(){
+    unset http_proxy https_proxy
+    echo -e "proxy off"
+}
+```
+
+验证全局代理配置成功只需要再执行一次`curl`即可，这次无需手动指定代理。
+```sh
+curl www.google.com
+```
+
+
+## 将Clash作为一个服务
+使clash一直运行在前台会占用一个终端，而且总感觉不是很优雅，更好的方法是将clash作为一个服务来操作。
+
+1. 在`/etc/systemd/system/`目录新建一个clash.service文件
+   ```sh
+   [Unit]
+   Description=Clash service 
+   After=network.target 
+   
+   [Service] 
+   Type=simple 
+   User=root 
+   ExecStart=这里写你的clash运行的绝对路径（本文中的路径是`~/tools/clash-v1.18.0`） 
+   Restart=on-failure RestartPreventExitStatus=23 
+   
+   [Install] 
+   WantedBy=multi-user.target
+   ```
+2. 之后就可以用systemctl系列命令来确认是否启用成功：
+    ```sh
+    systemctl status clash 查看clash服务
+    systemctl start clash 启动clash服务 
+    systemctl stop clash 停止clash服务 
+    systemctl restart clash 重启clash服务 
+    systemctl enable clash 设置开机自启clash服务 
+    systemctl daemon-reload 如果修改了clash.service文件，需要此命令来重载被修改的服务文件
+    ```
+
+## Reference
+1. [Linux中安装Clash并且实现全局代理（纯命令行）](https://www.zztongyun.com/article/clash%20for%20linux%20ubuntu)
+2. https://github.com/Kuingsmile/clash-core/releases
+3. [clash-for-linux](https://iyuantiao.me/clash-for-linux.html)
+4. [Ubuntu配置 命令行Clash 教程](https://zhuanlan.zhihu.com/p/662552814#:~:text=Ubuntu%E9%85%8D%E7%BD%AE%20%E5%91%BD%E4%BB%A4%E8%A1%8CClash%20%E6%95%99%E7%A8%8B%201%201.%E4%B8%8B%E8%BD%BD%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%20%E9%A6%96%E5%85%88%EF%BC%8C%E4%BD%A0%E9%9C%80%E8%A6%81%E5%88%B0%20Releases%20%C2%B7,%E5%BD%93%E5%87%BA%E7%8E%B0%E9%97%AE%E9%A2%98%E7%9A%84%E6%97%B6%E5%80%99%EF%BC%8C%20%E5%BB%BA%E8%AE%AE%20tmux%20a%20-t%20clash%20%E6%9F%A5%E7%9C%8B%E6%97%A5%E5%BF%97%E6%9C%89%E4%BD%95%E6%8A%A5%E9%94%99%20)
+5. [Clash can't initial MMDB of Country.mmdb](https://zhuanlan.zhihu.com/p/472152669)
+
+
+# Linux组织Dotfiles
+
+Linux开发环境中的许多软件都由配置文件，重新捣鼓一台新环境时去重新设置这些配置文件是非常复杂的一件事情，所以我想着用一种统一的方式进行管理。
+
+- vim插件使用单独的子仓库管理
+- 其他的配置文件暂时都使用mackup管理
+
+>不将vim插件也归于`mackup`管理的原因是: 我的`.vim/pack/xx/`下的所有插件都是通过submodule的方式管理,这样有利于维护和更新。但是在mackup的管理方式中是将整个`pack/`的内容拷贝过来，这就与submodule的理念冲突了。此时去改mackup的实现不如将vim的插件系统单独进行维护更容易。
+
+
+## 新环境恢复Dotfile
+
+1. 恢复除了vim插件之外的其他配置文件，教程参考：[wangloo/dotfiles](https://github.com/wangloo/dotfiles/tree/master)
+2. 单独恢复vim插件，教程参考: [wangloo/myvimpack](https://github.com/wangloo/myvimpack)
+
+
+## Reference
+- [Installing Vim(8) plugins with the native pack system](https://medium.com/@paulodiovani/installing-vim-8-plugins-with-the-native-pack-system-39b71c351fea)

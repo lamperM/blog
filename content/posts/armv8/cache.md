@@ -70,3 +70,51 @@ cache的三种维护操作（软件可见）：
 >以上的三种操作都是有粒度的，包括整个 cache、指定va范围、某一路等。
 
 >软件只能通过体系结构提供的维护指令来控制 cache。
+
+## ARMv8获取Cache信息
+
+想要管理好整个cache系统, 首先要了解的信息是:
+
+1. 系统实现了几级cache?
+2. Cache line 是多大?
+3. 对于每一级的Cache, 它的 set/way 分别是多少?
+
+这些信息都可以通过ARMv8的系统控制寄存器来读取. 
+
+### CLIDR_EL1
+
+标识每一级Cache的类型以及系统最多支持几级Cache.
+
+![image-20220925170644091](C:\Users\wangloo\AppData\Roaming\Typora\typora-user-images\image-20220925170644091.png)
+
+`Ctype<n>`字段用来描述缓存的类型. 系统最多支持7级缓存, 软件需要遍历`Ctype<n>`字段,  当读到的值为000时, 说明该级及以上都没有实现.
+
+> 具体每种类型对应的值, 和其他字段的含义, RTFM
+
+### CTR_EL0
+
+记录了Cache line的大小, 以及Cache的策略.
+
+![image-20220925171028981](C:\Users\wangloo\AppData\Roaming\Typora\typora-user-images\image-20220925171028981.png)
+
+`IminLine`: 表示所有指令cache中最小的cache line, 单位是 word.
+
+`DminLine`: 表示所有数据cache中最小的cache line, 单位是 word.
+
+`L1IP`: 表示 L1 指令cache的策略. RTFM
+
+### CSSELR_EL1
+
+与CSSIDR配合工作. CSSELR用于选定查看某级的Cache, 再去读CSSIDR就是该级Cache的信息.
+
+### CSSIDR_EL1
+
+![image-20220925171843984](C:\Users\wangloo\AppData\Roaming\Typora\typora-user-images\image-20220925171843984.png)
+
+`LineSize`: 该级cache的cache line.
+
+`Associativity`: 该级Cache的way
+
+`NumSets`: 该级Cache的set
+
+> 该寄存器的字段分布与是否实现`FEAT_CCIDX`有关, RTFM## 获取Cache信息

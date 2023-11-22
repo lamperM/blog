@@ -22,10 +22,10 @@ draft: true
 TODO
 
 ## ELF文件的格式包括什么?
-[ELF文件格式]({{< ref "posts/os/elf-format" >}} "ELF文件格式")
+[ELF文件格式]({{< ref "posts/binary/elf-format" >}} "ELF文件格式")
 
 ## ELF文件的segment和section的区别是什么?
-[ELF文件格式]({{< ref "posts/os/elf-format" >}} "ELF文件格式")
+[ELF文件格式]({{< ref "posts/binary/elf-format" >}} "ELF文件格式")
 
 
 ## 应用程序在main函数之前和return之后会发生什么?

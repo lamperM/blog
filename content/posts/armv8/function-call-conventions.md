@@ -96,15 +96,16 @@ call   f01000ad <Func> ;Func()'addr is f01000ad
 add    $0x10,%esp   ;recycle stack(12 bytes parameters plus 4 bytes alignment)
 ```
 
-## AArch64 调用约定
+# AArch64 调用约定
 
 大体的思想与x86相似, 只是细节有些许不同
 
-### 函数调用
+## Call A Function
 
-ARMv8架构中, 函数调用以一条`bl`指令为分界.
+**ARMv8的函数调用以bl指令为分界**，在bl执行之前，caller需要将参数准备好。**少于8个参数的函数在传参时, 参数是放在x0-x7中**,  最左边的参数先使用x0, 以此类推. 参数超过8个的情况下才使用栈,  这与x86的方式不同.
 
-执行`bl`指令之前, 需要将参数准备好. 注意, **ARMv8中, 少于8个参数的函数在传参时, 参数是放在x0-x7中**,  最左边的参数先使用x0, 以此类推. 参数超过8个的情况下才使用栈,  这与x86的方式不同.
+
+
 
 `bl`指令保存返回地址, 并跳转到callee执行, 其语义是:
 
@@ -114,30 +115,79 @@ mov lr, pc+1     ;preserve return address
 mov pc, new_func ;set pc = new function
 ```
 
-与x86相同, 跳转到callee之后必须先进行栈的设置, **Arm与x86不同的是它不需要管理栈底寄存器**. 因为参数大部分是通过寄存器来传递, 返回地址也是存储在`lr(x30)`寄存器中, 没必要为了极少的情况来做优化. 
+**至此到了callee的职责范围**。进入函数时, 需要完成三个前置动作:
 
 ```asm
-sub sp, sp, #enough-space
+; 为callee()的执行留出足够的栈空间
+; 0x10不是固定的, 编译器计算得到
+sub sp, sp, #0x10
+
+; 保存lr和fp, 因为callee可能调用
+; 其他的函数, 会破坏当前的
+stp x29, x30, [sp]
+
+; 保存sp的值, 所以x29也称为帧指针
+; 原因是sp在callee的执行过程中可能
+; 会变化. 与退出时配合理解较好
+mov x29, sp
 ```
 
-### 函数返回
+上述动作完成后, sp是自由的了, callee()的函数体开始执行.
 
-要完成两件事: (1) 恢复栈 (2)返回原来位置执行
-
-先说(2), 由于`lr`寄存器始终保存返回地址, 直接 `mov sp, lr` 就能返回caller继续执行. **这也就是`ret`指令的语义**.
-
-(1)恢复栈的这件事同x86一样由callee完成, 
+## Function Return
+callee()执行完后, 也需要执行一些后置动作, 以便恢复调用前caller()的环境.
 
 ```asm
-add sp, sp, #enough-space
+; 经过callee的指令执行过后, sp
+; 可能早就不是以前的sp了, 但是帧指针
+; fp总是保存着callee初始的sp
+mov sp, x29
+
+; callee如果调用了其他函数, lr和fp
+; 也会被破坏, 所以从栈中恢复callee
+; 正确的lr和fp, 才能正确回到caller
+ldp x29, x30, [sp]
+
+; 收回为callee分配的栈空间, 此时sp
+; 是调用callee之前的值.
+add sp, sp, #0x10
 ```
 
+后置动作完成后, 环境已经大致恢复到调用callee()之前的状态了, 通用寄存器中的值, 其实不必担心, 因为ARMv8规定了哪些寄存器是caller-saved或者callee-saved, 再说到lr和sp, caller也会保存到栈中, 就像callee调用其他的函数时的情况相同.
+
+所以, 完成后置动作后, 执行`ret`来返回到lr的位置即可.
+
+## 为什么编译出的汇编文件没有`mov sp, x29`?
+
+如果查看实际C函数编译后的汇编结果, 大部分情况下会发现前置和后置行为不是严格的按照A64PCS中规定的样子, 常见的是后置动作缺少恢复sp的执行, 即`mov sp, x29`.
+
+原因其实不难发现, callee中使用的寻址方式都是相对于sp寻址, 即不修改sp. 既然sp从始至终都没被改过, 自然也不需要恢复了. 这样不需要每次都需要sp, 更加高效.
+
+**但是, 前置动作中的保存sp到fp的行为通常是不会被省略的, 我猜是因为调试行为(例如backtrace)的实现需要用到fp.**
+
+不是每次都这样, 也有时会修改sp, 此时就必须恢复.
+
+## 帧指针(fp)存在的意义
+
+上面说了, 如果一直使用sp相对寻址来操作栈, 那么fp的存在似乎是非必要的.
+
+我了解到的事实也是如此, fp存在的必要性似乎就是使得一些调试功能更加方便. **堆栈回溯**是一个典型的利用fp的场景, 从callee的fp可以找到其caller的fp, 也就是caller的堆栈空间, 以此类推可以找到caller-caller的fp...
 
 
-## 参考
+
+
+## 如何关闭帧指针
+
+仅针对AArch64来说, GCC提供了一些相关的编译选项来给程序员选择是否启用fp的权利.
+
+- `-fomit-frame-pointer` 强制省略fp
+- `-fno-omit-frame-pointer` 强制不省略fp
+
+# 参考
 
 1. x86 call 指令执行前需要esp对齐到 16-byte: [x86 - What are the following instructions after this call (assembly) - Stack Overflow](https://stackoverflow.com/questions/41971481/what-are-the-following-instructions-after-this-call-assembly)
 2. [x86栈帧原理 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/290689333)
+3. [破获ARM64位CPU下linux crash要案之神技能：手动恢复函数调用栈](https://www.cnblogs.com/coder51up/p/6940030.html)
 
 ## 结语
 
