@@ -324,6 +324,75 @@ curl www.google.com
 5. [Clash can't initial MMDB of Country.mmdb](https://zhuanlan.zhihu.com/p/472152669)
 
 
+# Windows下迁移WSL
+
+WSL2目前已经相当好用了，在对性能要求不极致的场景下用WSL开发非常舒服。
+
+迁移WSL到别的位置/别的机器还是比较方便的，也有人写了[脚本](https://github.com/pxlrbt/move-wsl)来做这些，它是针对迁移到其他硬盘位置的，所以我这次还是自己手动做一遍，原理都是相同的。
+
+## 步骤
+### 1. 关闭WSL
+```sh
+# 检查WSL是否在运行
+wsl -l -v
+  NAME          STATE           VERSION
+* Ubuntu2004    Running         1
+# 关闭
+wsl --shutdown 
+```
+
+### 2. 导出WSL镜像
+```sh
+wsl --export Ubuntu2004 D:\Ubuntu2004_202311.tar
+```
+
+### 3. 注销原系统(可选)
+```sh
+wsl --unregister Ubuntu2004
+```
+
+### 4. 将镜像压缩文件复制到新机器/新位置
+如果是新机器，还需要重新配置好WSL，开启一些选项:
+```
+控制面板->程序->启用或关闭 windows 功能，开启 Windows 虚拟化和 Linux 子系统（WSL2)以及Hyper-V。
+
+勾选完成后，Windows11 会自己下载些东西，并提示你重启。等电脑彻底重启完以后，进行后续操作。
+```
+
+![](https://gitee.com/wangloocn/image-bed/raw/master/202311221925110.png)
+![](https://gitee.com/wangloocn/image-bed/raw/master/202311221925827.png)
+
+
+### 5. 在新机器上导入镜像文件
+```sh
+wsl --import Ubuntu2004 D:\wsl\Ubuntu2004\ D:\Ubuntu2004_202311.tar
+```
+执行的时间比较长, 执行完后至此WSL就迁移完毕了，剩下的是一下配置的修正。
+
+### 6. 配置
+
+#### 设置默认用户
+
+这样移过来现在登陆就是root，我们需要进行一些配置:
+
+Set your default user inside your distro by adding the following configuration to your /etc/wsl.conf.
+```
+[user]
+default=loo
+```
+If the file doesn't exist create it manually. Then exit your distro, terminate it (`wsl -t Ubuntu2004`) and start it again.
+
+#### 设置默认distro
+
+```sh
+wsl -s Ubuntu2004
+```
+
+这样完成后，所有的一切就OK了。
+
+## Reference
+1. https://zhuanlan.zhihu.com/p/622706723
+
 # Linux组织Dotfiles
 
 Linux开发环境中的许多软件都由配置文件，重新捣鼓一台新环境时去重新设置这些配置文件是非常复杂的一件事情，所以我想着用一种统一的方式进行管理。
