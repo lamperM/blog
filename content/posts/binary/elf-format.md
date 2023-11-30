@@ -229,41 +229,6 @@ segment是加载关心的, section是链接过程关心的。
 
 
 
-## 加载ELF时要将AUX信息放在栈底， AUX是什么
-
-AUX全称Auxiliary Information，即辅助信息。
-
-输出一个ELF的AUX:
-```sh
-~ $ LD_SHOW_AUXV=1 /bin/ls
-AT_SYSINFO_EHDR:      0x7ffc3b3de000
-AT_HWCAP:             1f8bfbff
-AT_PAGESZ:            4096
-AT_CLKTCK:            100
-AT_PHDR:              0x55a318711040
-AT_PHENT:             56
-AT_PHNUM:             13
-AT_BASE:              0x7f0f5ac91000
-AT_FLAGS:             0x0
-AT_ENTRY:             0x55a3187177d0
-AT_UID:               1000
-AT_EUID:              1000
-AT_GID:               1000
-AT_EGID:              1000
-AT_SECURE:            0
-AT_RANDOM:            0x7ffc3b272ab9
-AT_HWCAP2:            0x2
-AT_EXECFN:            /bin/ls
-AT_PLATFORM:          x86_64
-
-```
-
-AUX是内核加载用户程序时可以将ELF的一些信息传到用户态，该应用可以读取。
-通常用于加载某个外部解释器，一般程序员用不到。
-
-
-
-
 
 
 ## 段地址对齐技术

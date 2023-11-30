@@ -192,6 +192,7 @@ git log --oneline main..origin/main
 
 # 子模块: submodule
 
+
 ## 新增一个子模块
 0. 将子模块上传到远端仓库上
 1. 执行`git submodule add [url] [path]` 
@@ -202,7 +203,25 @@ git log --oneline main..origin/main
 
 3. `git add`这两处改动，`git commit -m "add submodule xxx"`
 
+
+!! 子模块追踪的是分支，而不是commit
+
+添加时默认跟踪master分支， 也就是添加到`.gitmodules`中的commit
+
+```sh
+# 将子模块的内容更新到指定的跟踪分支的本地HEAD
+# 即.gitmodules中指定的那个, 不会修改.gitmodules
+git submodule update --init
+# 先去远端pull子仓库，如果跟踪的分支有更新的commit，
+# 则会修改.gitmoudles, 因为子模块始终追踪的是分支
+# 请注意，只有当你作为仓库的管理者时使用--remote
+# 如果你是使用者，请保持管理者设定的子模块commitid
+git submodule update --init --remote
+```
+
 ## clone一个使用子模块的项目
+
+
 1. 用常规的`git clone`命令将主项目拿下，此时子模块不会自动下载，只是一个空的目录
 2. `git submodule init`，**这个命令其实是带参数的**，指定你想更新哪些子模块，
    缺省代表所有子模块。该命令实际的行为是将`.gitmodule`中的内容写入`.git/config`

@@ -34,113 +34,33 @@ date: 2023-07-17T19:28:12+08:00
 
 # vscode
 
-## 主题
+vscode的所有配置通过其内置的sync功能实现, 目前用的是Github账号同步。
 
-## 配置备份
-# vim
 
-## 升级Vim
+# Ubuntu2004源
+
+## 新版本的Clangd
+>Clangd用15+才能用vscode的inlay hint功能。
+
+获取签名
+```sh
+wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+```
+
+添加源地址到`/etc/apt/sources.list`, 修改完后别忘了`sudo apt update`
+```
+# 15, 后缀可以改成你需要的版本号
+deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main
+deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main
+```
+
+## 新版本的Vim
+
+>Vim 8+才有pack插件管理
 
 ```sh
 sudo add-apt-repository ppa:jonathonf/vim
 ```
-
-## vimrc
-
-## ycm 特别注意
-
-YCM 插件对 python, vim 的版本均有要求。
-
-### 下载
-
-可以使用 vim-plug 等工具下载, 也可以下载源码然后拷贝到`.vim`目录下
-
-### 编译
-
-编译用到 python3, 这里是问题最多的一步
-
-```shell
-# 编译并添加对C的提示支持
-python3 install.py --clangd-completer --verbose
-
-Searching Python 3.8 libraries...
-...
-Downloading Clangd from https://github.com/ycm-core/llvm/releases/download/13.0.0/clangd-13.0.0-x86_64-unknown-linux-gnu.tar.bz2...
-
-```
-
-使用`--clangd-completer`参数时, 脚本会去下载 clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2 文件, 比较慢. 也可以**提前根据提示的网站自己手动下载**压缩包.
-
-下载完成后, 放到本地目录下:
-
-```shell
-:~/.vim/plugged/YouCompleteMe/third_party/ycmd/third_party/clangd/cache$ ls
-clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2
-```
-
-还需对脚本`YouCompleteMe/third_party/ycmd/build.py`进行修改, 防止重新下载.
-
-```python
-def DownloadClangd( printer ):
-  ...
-  MakeCleanDirectory( CLANGD_OUTPUT_DIR )
-
-  if not p.exists( CLANGD_CACHE_DIR ):
-    os.makedirs( CLANGD_CACHE_DIR )
-    # 注释下面的语句
-    #  elif p.exists( file_name ) and not CheckFileIntegrity( file_name, check_sum ):
-    #  printer( 'Cached Clangd archive does not match checksum. Removing...' )
-    #  os.remove( file_name )
-
-  if p.exists( file_name ):
-    printer( f'Using cached Clangd: { file_name }' )
-```
-
-### 配置
-
-YCM 配合一个配置文件`.ycm_c_c++_conf.py`, YCM 搜索的位置在 vimrc 中指定:
-
-```vimrc
-Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-let g:ycm_global_ycm_extra_conf = "~/.ycm_c_c++_conf.py"
-```
-
-其内容的 example:
-
-```py
-import os
-import ycm_core
-
-flags = [
-  '-Wall',
-  '-Wextra',
-#  '-Werror',
-  '-Wno-long-long',
-#  '-Wno-variadic-macros',
-  '-fexceptions',
-  '-ferror-limit=10000',
-  '-DNDEBUG',
-  '-std=c99',
-  '-xc',
-  '-isystem/usr/include/',
-  ]
-
-SOURCE_EXTENSIONS = [ '.cpp', '.cxx', '.cc', '.c', ]
-
-def FlagsForFile( filename, **kwargs ):
-  return {
-  'flags': flags,
-  'do_cache': True
-  }
-```
-
-### 优化
-:small_red_triangle_down: 对于C/C++来说, YCM的使用最好配合*compilation database* 来使用, 例如[compiledb](https://github.com/nickdiego/compiledb). 否则, 可能头文件的path识别出问题([stackoverflow](https://stackoverflow.com/questions/64277317/youcompleteme-not-work-properly-for-c-headers.)).
-
-2022年2月13日我使用的compilation database生成工具从`compiledb`换成了`bear`, 因为`bear`更好的支持递归, 即有`make -C`的情况. 
-
-需要的compilation database生成工具介绍: [Compilation database — Sarcasm notebook](https://sarcasm.github.io/notes/dev/compilation-database.html)
-
 
 # 终端软件安装
 ## 源替换
@@ -358,9 +278,8 @@ wsl --unregister Ubuntu2004
 
 勾选完成后，Windows11 会自己下载些东西，并提示你重启。等电脑彻底重启完以后，进行后续操作。
 ```
-
-![](https://gitee.com/wangloocn/image-bed/raw/master/202311221925110.png)
-![](https://gitee.com/wangloocn/image-bed/raw/master/202311221925827.png)
+![202311232214971.png](https://s2.loli.net/2023/11/23/xMOZ7yugXmcWJnG.png)
+![](https://s2.loli.net/2023/11/23/xMOZ7yugXmcWJnG.png)
 
 
 ### 5. 在新机器上导入镜像文件
@@ -397,7 +316,8 @@ wsl -s Ubuntu2004
 
 Linux开发环境中的许多软件都由配置文件，重新捣鼓一台新环境时去重新设置这些配置文件是非常复杂的一件事情，所以我想着用一种统一的方式进行管理。
 
-- vim插件使用单独的子仓库管理
+- vimrcs 用单独的子仓库管理
+- vim 插件使用单独的子仓库管理
 - 其他的配置文件暂时都使用mackup管理
 
 >不将vim插件也归于`mackup`管理的原因是: 我的`.vim/pack/xx/`下的所有插件都是通过submodule的方式管理,这样有利于维护和更新。但是在mackup的管理方式中是将整个`pack/`的内容拷贝过来，这就与submodule的理念冲突了。此时去改mackup的实现不如将vim的插件系统单独进行维护更容易。
@@ -405,8 +325,9 @@ Linux开发环境中的许多软件都由配置文件，重新捣鼓一台新环
 
 ## 新环境恢复Dotfile
 
-1. 恢复除了vim插件之外的其他配置文件，教程参考：[wangloo/dotfiles](https://github.com/wangloo/dotfiles/tree/master)
-2. 单独恢复vim插件，教程参考: [wangloo/myvimpack](https://github.com/wangloo/myvimpack)
+1. vimrcs的恢复方法: [wangloo/myvimrcs](https://github.com/wangloo/myvimrcs)
+2. vim插件的恢复方法: [wangloo/myvimpack](https://github.com/wangloo/myvimpack)
+2. 其他配置文件，教程参考：[wangloo/dotfiles](https://github.com/wangloo/dotfiles/tree/master)
 
 
 ## Reference

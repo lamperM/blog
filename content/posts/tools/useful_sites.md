@@ -52,3 +52,5 @@ http://free.cmsoft.cn/download/cmsoft/assistant/netassist5.0.3.zip
 ## 其他
 - Emoji cheat sheet
 https://www.webfx.com/tools/emoji-cheat-sheet/
+
+[Windows10搭建局域网FTP服务器](https://zhuanlan.zhihu.com/p/112249506)
