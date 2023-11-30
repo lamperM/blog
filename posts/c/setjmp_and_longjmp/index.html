@@ -28,7 +28,7 @@
 </span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22</span><span>
 </span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23</span><span>    <span style=color:#00f>return</span> 0;
 </span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24</span><span>}
-</span></span></code></pre></div><h2 id=基于-aarch64-的实现>基于 AArch64 的实现</h2><p>需要保存的上下文包括</p><ul><li><strong>callee-saved 通用寄存器</strong>, 因为可能第一次调用 <code>setjmp()</code> 之后的执行流修改了这些寄存器, 从第二次回到 <code>setjmp()</code> 的角度来看, 就是执行setjmp() 中破坏的. caller-saved 寄存器则不必, 因为本来即便看作是 <code>setjmp()</code> 破坏的, 也是正常的.</li></ul><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>.macro func _name
+</span></span></code></pre></div><h2 id=基于-aarch64-的实现>基于 AArch64 的实现</h2><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>.macro func _name
 </span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>.global <span>\</span>_name
 </span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>.type <span>\</span>_name, <span>%</span>function
 </span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span><span>\</span>_name:
@@ -91,4 +91,22 @@
 </span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">61</span><span>
 </span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">62</span><span>    ret
 </span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">63</span><span>endfunc longjmp
-</span></span></code></pre></div><h2 id=setjmp-实现-try-catch>setjmp() 实现 try-catch</h2></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2022-11-01T23:38:54, Lastmod: 2023-09-24T18:08:59</p></main></div></body></html>
+</span></span></code></pre></div><p>需要保存的上下文包括</p><ul><li><strong>callee-saved 通用寄存器</strong>, 因为可能第一次调用 <code>setjmp()</code> 之后的执行流修改了这些寄存器, 从第二次回到 <code>setjmp()</code> 的角度来看, 就是执行setjmp() 中破坏的. caller-saved 寄存器则不必, 因为本来即便看作是 <code>setjmp()</code> 破坏的, 也是正常的.</li></ul><p>解释一下：在如下的调用场景中, 可以看到在setjmp()之前分别赋值了x2和x19，
+这其中x2是caller-saved，x19属于callee-saved。
+callee-saved寄存器在子函数调用之前和之后应该是不变的，所以说如果子函数需要修改他们应该在函数进入前进行备份。
+所以说显然在(1)的步骤中应该有x19的备份过程，(6)中也应该有对应的恢复。</p><p>那么对于setjmp()呢？它自身也是一个函数，也需要满足规定。所以必须保证(5)访问到数据一定是(3)中保存的。
+问题是对于setjmp()的使用方法来说，不是都遵循(1)(2)(3)(4)(5)的调用，下次会从别的位置直接跳到(4)。
+此时仍然需要确保x19寄存器的正确性，<strong>只能在首次调用setjmp()时将x19保存下来，以后每次不管从哪里调过来先去恢复保存的x19</strong>。这样就能够实现callee-saved寄存器的正确性。</p><p>再说说caller-saved寄存器，也就是demo中的x2为例，在中间跨越一个setjmp()的条件下，
+arch不能保证(4)中得到的值一定是(2)保存的，因为setjmp()可以随意的修改caller-saved寄存器。所以说，如果func()不得不要求(4)访问值的正确性，
+一个解决方法就是<strong>在调用setjmp()之前保存x2到栈中，在setjmp()之后立马恢复</strong>。
+这是caller的责任，所以这个过程会在func()完成，而不是setjmp()内部。</p><p>以上就是为什么setjmp()只需要保存callee-saved寄存器的解释。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>func()
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>{
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>  <span style=color:green>// (1)
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span><span style=color:green></span>  Set    x2  <span style=color:green>// (2)
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span><span style=color:green></span>  Set    x19 <span style=color:green>// (3)
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span><span style=color:green></span>  setjmp()
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>  Access x2  <span style=color:green>// (4)
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span><span style=color:green></span>  Access x19 <span style=color:green>// (5)
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span><span style=color:green></span>  <span style=color:green>// (6)
+</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span><span style=color:green></span>}
+</span></span></code></pre></div><h2 id=setjmp-实现-try-catch>setjmp() 实现 try-catch</h2></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2022-11-01T23:38:54, Lastmod: 2023-11-30T17:56:18</p></main></div></body></html>
