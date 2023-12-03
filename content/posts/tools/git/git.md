@@ -193,63 +193,130 @@ git log --oneline main..origin/main
 # 子模块: submodule
 
 
+
+
 ## 新增一个子模块
-0. 将子模块上传到远端仓库上
-1. 执行`git submodule add [url] [path]` 
-2. 此时执行`git status` 会有两个changes，分别是：
-   - `.gitmodules`: 记录子模块的path和url
-   - `[子模块同名的文件]`: 记录主项目追踪的是子模块的哪个commit.
-   >也就是说主项目中惠济路自己跟踪子模块的commit，并不一定总是最新的。
 
-3. `git add`这两处改动，`git commit -m "add submodule xxx"`
+(1) 将子模块上传到远端仓库上，或者使用已有的第三方项目
 
-
-!! 子模块追踪的是分支，而不是commit
-
-添加时默认跟踪master分支， 也就是添加到`.gitmodules`中的commit
-
+(2) 执行
 ```sh
-# 将子模块的内容更新到指定的跟踪分支的本地HEAD
-# 即.gitmodules中指定的那个, 不会修改.gitmodules
-git submodule update --init
-# 先去远端pull子仓库，如果跟踪的分支有更新的commit，
-# 则会修改.gitmoudles, 因为子模块始终追踪的是分支
-# 请注意，只有当你作为仓库的管理者时使用--remote
-# 如果你是使用者，请保持管理者设定的子模块commitid
-git submodule update --init --remote
+git submodule add [url] [path]
+```
+(3) 此时看`git status` 会有两个changes，分别是：
+
+  1. `.gitmodules`中会增加一条项目, 记录子模块的名称和地址
+      ```
+      [submodule "SubmoduleTestRepo"]
+          path = SubmoduleTestRepo
+          url = https://github.com/jzaccone/SubmoduleTestRepo.git   
+      ```
+  2. `[子模块同名的文件]`: 记录主项目追踪的是子模块的哪个commit
+
+>.gitmodule和子模块同名文件的作用
+>
+>- 先说比较简单的.gitmodule，**记录主项目中用到的所有子模块**。
+>一般来说仅仅记录子模块的路径和url，但有时还会有指定的分支名。
+>这个我们在下面会介绍。
+>
+>- 然后是和子模块同名的文件，我们想一下，上面的.gitmodules仅仅告诉了从哪来，
+>但是一个仓库是有多个分支，对应多个commit的，那么需要有一种方式去指定使用绑定哪个commit，
+>这就是同名文件的作用。在同名文件中会记录一下commitid，表明主项目依赖这个commitid下的子模块，
+>他们之间具有绑定关系。
+
+(4) `git add`这两处改动，`git commit -m "add submodule xxx"`
+
+
+
+## Submodule Command
+
+Execute `git submodule --help` to get more info.
+
+### `git submodule init`
+
+此命令clone新项目的时候会用到, 完整的命令是
+```
+git submodule init [path]
 ```
 
-## clone一个使用子模块的项目
+>**在详细介绍前需要说明两个文件的差别: .gitmodule和.git/config**:
+>- .gitmoudles在上面已经介绍过一些，这里主要想说**它是跟随主项目一起提交的**，
+>而.git/config是后面生成的本地文件。
+>- .gitmodules会给出列出所有子模块，但是不一定每次都全部使用。
+>**具体会启用哪些由.git/config文件规定。
 
 
-1. 用常规的`git clone`命令将主项目拿下，此时子模块不会自动下载，只是一个空的目录
-2. `git submodule init`，**这个命令其实是带参数的**，指定你想更新哪些子模块，
-   缺省代表所有子模块。该命令实际的行为是将`.gitmodule`中的内容写入`.git/config`
-3. `git submodule update`, 按照`.git/config`指定的子模块去下载，**注意下载的
-   commit不一定是最新的，上面讲过**
-
->:question: `git submodule init`命令是否有意义？
->
-> 有时我们并不想同步所有的子模块，而是其中的某几个，因为可能想自己重写一些，这时可以添加参数
-> 指定想要同步的那些子模块。
-
->:two::three:可以合并为一条命令： `git submodule update --init`， 同步所有子模块。
-   
-## 修改更新子模块
-如果仅仅是使用子模块，并不做修改，那不用关注这个。但如果你同时参与submodule的开发，那就需要注意。
-
-1. 修改子模块并提交；这一步很常规，`cd`到子模块中，做完修改commit即可
-2. 此时会发现在主项目中也多了一个额外的change，是刚才修改子模块的同名文件，
-   查看diff会发现改动为commit id改为了刚才提交的那次子模块修改
-
-Q1: 这次改动代表什么含义？
-
-我们知道，子模块同名文件中记录主项目跟踪此子模块的commit，也是`git commit update` 会达到的
-commit。含义是**主项目配合子模块的这个commit是ok的**。而这次改动也就代表跟踪的commit想要
-发生变化，由于你刚才对子模块修改造成的，git自动猜测你想同时改动主项目的追踪。
+`git submodule init`指令会指定生成.git/config文件的内容。
+选择某几个子模块启用即写入`.git/config`。
 
 
-Q2: 对这个改动应该做什么操作？
+- 在缺省参数下的含义是添加所有在.gitmodules中的子模块。
+- 未来`update`指令只会更新`.git/config`中的项目。
+
+### `git submodule update`
+
+刚才说了，因为.gitmodules中的所有子模块并不一定都使用，
+所以新clone下来的项目并不会同时下载所有的子模块。
+在上面的init阶段生成了.git/config来指定需要哪些之后，
+update命令就是用于下载指定的子模块。
+
+#### --init
+由于此命令配合init命令使用，两者通常连续操作，所以可以合并为:
+```
+git submodule update --init
+```
+
+#### --remote
+一般情况下，下载子模块都是checkout到.git/config指定的commit。
+`--remote`则会checkout到**追踪分支的最新commit**，下面会说到如何设置追踪分支，
+默认是master。
+
+如果最新的commit不等于.git/config指定的，那么执行完该指令后会产生一次同名文件的改动。
+
+### `git submoudle set-x`
+
+修改的是哪个文件？
+
+"x"可以是url，修改子模块的地址。
+
+这里我主要想着重介绍`set-branch`命令，**将原来追踪自模块的方式由commit更改为(branch+commit)。** 想要修改追踪子模块的commit到某个分支的最新，有两种方法:
+1. 传统方案
+   ```sh
+   cd lib1/
+   git checkout <branch>
+   cd ..
+   git add lib1
+   git commit -m "change lib1's tracked commit"
+   ```
+2. 使用set-branch参数
+   ```sh
+   git submodule set-branch -b <branch> lib1/ 
+   # 改变设置之后，子模块不会立即变化
+   # 必须指定带remote参数的update命令，才会用更新到显式指定的分支最新，
+   # 而不是同名文件中规定的commitid
+   git submodule update --remote
+   git add lib1 .gitmodules
+   git commit -m "change lib1's tracked commit"
+   ```
+
+>`set-branch`修改了.gitmodules, 也同步到了.git/config中。如果你想手动修改.gitmodules来设置分支，不要忘了`submodule init`来同步到.git/config
+
+
+## 使用Submodule注意事项
+
+
+### 1.Submodule到底是追踪分支还是commit
+
+事实证明子模块默认追踪的不是分支，容易验证。
+我们将子模块基于当前分支（假设master）新建一个子分支，并做一些修改，
+可以看到主项目中的子模块同名文件也发生了改动。
+所以说，它默认并不是跟踪分支。
+
+我感觉可以证明**它默认跟踪的是HEAD**。还是用上面的例子，
+此时主项目中同名文件发生了改动。但是如果将子模块的分支切换回原来的master，
+子模块同名文件的改动就消失了。以我目前的见解我暂且这么认为。
+
+### 2. 同名文件发生了修改，应不应该stage？
 
 分两种场景: (1)如果子项目的这些更新有意义同步到主项目中，那么就add并commit这个同名文件的改动，
 message为"更新submodule"。 (2)如若只是更新子项目而已，或许是为了其他依赖的项目所改的，并不
@@ -260,5 +327,7 @@ message为"更新submodule"。 (2)如若只是更新子项目而已，或许是�
 其他人**甚至在使用期间都不需要`cd`进入子模块做`git pull`的**，这样也就不会有决策产生，即便
 子项目在远端更新了，你要做的就是关注那个同名文件就行，当同名文件更新了，在主项目中 
 `submodule update`即可，
+
+
 ## 子模块的优缺点
 TODO
