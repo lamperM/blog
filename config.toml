@@ -25,7 +25,7 @@ enableEmoji = true
     lineNumbersInTable = false # 生成html中分开行号和代码
     noClasses = true          
     noHl = false
-    style = 'vs'
+    style = 'dracula'
     tabWidth = 4
   [markup.goldmark]
     [markup.goldmark.renderer]
