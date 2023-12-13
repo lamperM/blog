@@ -1,5 +1,5 @@
 ---
-title: "Hugo 官方文档学习"
+title: "Hugo 基础概念"
 date: 2022-05-21T17:39:42+08:00
 tags: [hugo]
 categories: ["Hugo"]
@@ -10,7 +10,7 @@ categories: ["Hugo"]
 
 本章内容大多来自[官方手册](https://gohugo.io/documentation/)或者搜索引擎提供的结果.
 
-# Hugo 项目结构
+## Hugo 项目结构
 
 一个hugo 项目通常包含以下内容:
 
@@ -47,7 +47,7 @@ hugo --config debugconfig.toml
 hugo --config a.toml,b.toml,c.toml
 ```
 
-> Note: config directory is not created by default.
+> `Config` directory is not created by default.
 
 **content**
 
@@ -81,9 +81,9 @@ The static files are served on the site root path (eg. if you have the file `sta
 
 一些缓存文件
 
-> Note: resources directory is not created by default.
+> `resources` directory is not created by default.
 
-# Hugo CLI 命令
+## Hugo Cli Command
 
 hugo 支持的所有命令可以通过 `hugo help` 命令来查看. 每一条命令的具体用法, 可以执行 `hugo [command] help` 来查看
 
@@ -93,27 +93,27 @@ Usage:
   hugo [command]
 ```
 
-## hugo completion
+**hugo completion**
 
 用来配置补全 hugo command 和 flag 的. 该命令会输出一段脚本, 将该脚本复制到你的 shell 的配置文件中就可以使用 hugo tab 补全了.
 
-## hugo config
+**hugo config**
 
 打印hugo的配置文件, 即根目录下的 `config.toml`.
 
-## hugo env
+**hugo env**
 
 打印 hugo 的版本和环境信息
 
-## hugo list
+**hugo list**
 
 打印所有post的info, 包含标题, 发布日志, 链接等.
 
-## hugo new
+**hugo new**
 
 非常重要的命令, 可以用来新建一个 website, 主题, 或者一篇post(常用). 带有许多 flag可以使用.
 
-## hugo server
+**hugo server**
 
 执行`hugo server`之后, 首先构建了你的网站(但是默认并不在本地创建文件, 而是放在内存), 然后启动hugo 自带的 web服务器让我们能看见网站的效果.
 
@@ -126,7 +126,7 @@ hugo server 的常用flag:
 --theme strings 使用[strings]主题进行构建
 ```
 
-## hugo [flags]
+**hugo [flags]**
 
 `hugo` 自身就是一个命令, 用于build website, 放到 `public/`目录下. 
 
@@ -145,7 +145,7 @@ hugo server 的常用flag:
 
 
 
-# Hugo 内容管理
+## Hugo 内容管理
 
 hugo build 后的website页面的布局和你源文件的布局相同, 所有源文件都放置在 `content/` 目录下.
 
@@ -168,7 +168,7 @@ hugo build 后的website页面的布局和你源文件的布局相同, 所有源
 
 > hugo 将content/ 下的那级目录(例如 content/posts)特殊看待, 称为 *section*.
 
-## 页面资源(Page Resources)
+### 页面资源(Page Resources)
 
 页面资源指每个页面**私有的**图片, 文档等静态资源. 与`static/` 中全局的资源不同.
 
@@ -192,15 +192,19 @@ content
         └── index.md (root of page bundle, 但不能访问first-post/下的资源)
 ```
 
-## 内容分类(Taxonomy)
+### 内容分类(Taxonomy)
 
 Taxonomy: How to group the content together. Two default taxonomies are *tags* and *categories*.
 
-## 代码高亮(Syntax Highlighter)
+### 代码高亮(Syntax Highlight)
 
 [代码高亮的配置](https://gohugo.io/getting-started/configuration-markup/#configure-markup:~:text=anchorize%20template%20func.-,Highlight,-This%20is%20the)(in `config.toml`): 
 
-## 页面分类
+
+Hugo 使用[chroma](https://github.com/alecthomas/chroma)来执行代码高亮。
+- Example of all style: https://xyproto.github.io/splash/docs/index.html
+
+### 页面分类
 
 从布局上来看, 页面可以分为两类: List page 和 single page.
 
@@ -233,13 +237,13 @@ Taxonomy: How to group the content together. Two default taxonomies are *tags* a
 
 
 
-## shortcodes
+### shortcodes
 
 shortcode 可以理解为 hugo 为了封装了一些代码块, 通过 shortcode 来调用.
 
 
 
-# 模板(Template)
+## 模板(Template)
 
 模板是hugo的一个高级用法, 用来定义你网站的style. 模板不等同与主题(themes), 可以理解为主题是一套模板的集合. 我们可以在使用模板的同时添加DIY的 style. 😎 Hugo 会有优先级的判断.
 
@@ -247,15 +251,15 @@ shortcode 可以理解为 hugo 为了封装了一些代码块, 通过 shortcode 
 
 存储模板的目录为`layout/`, 上面介绍hugo的目录结构时已经说过. 如果你使用了一个 theme, 那么`themes/[your-theme]/layout/`就是该theme的模板.
 
-## homepage 模板
+### homepage 模板
 
-## Base 模板
+### Base 模板
 
 对应`layouts/_default/baseof.html`
 
 base 模板是整个website的核心. 所有的模板包括 list template, single template, homepage template... 都是独立的, base template 将其他的模板联系到一起.
 
-## 分页模板
+### 分页模板
 
 对于条数过多的场景（比如所有的post list，某个tag的post list），可以构建一个分页器，用【上一页】【下一页】来使单个页面简洁一点，避免滑不到头的情况 :X
 
@@ -263,13 +267,13 @@ base 模板是整个website的核心. 所有的模板包括 list template, singl
 
 [Pagination模板 官方说明](https://gohugo.io/templates/pagination/)
 
-## partial 模板
+### partial 模板
 
 包含网站的许多元素, 增加模块化. 我可以为网站的 header 或者 footer 写一个模板(html), 这些HTML可以嵌入其他的模板.
 
 
 
-## 模板优先级
+### 模板优先级
 
 既然同一种页面的模板可以定义在多个位置, 如果他们同时存在时, 优先级规则必然存在. 常见的情况比如我们使用了某个模板, 然而, 我们对模板中的一些布局不满意, 直接修改模板中的文件显然不是一个好方法, 那么该怎么做呢?
 
@@ -279,11 +283,11 @@ base 模板是整个website的核心. 所有的模板包括 list template, singl
 
 
 
-# 变量(Variables)
+## 变量(Variables)
 
 ❗ Hugo 变量仅设计给模板使用, 即在`layouts/`下的html文件.
 
-## Page Variables
+### Page Variables
 
 与post相关的变量, 定义在post 的 front matter中. 
 
@@ -302,23 +306,20 @@ Myvar: "my value"
 
 
 
-## Site Variables
+### Site Variables
 
 站点层面的变量大部分是网站配置相关. 
 
 
 
-# 函数(Functions)
+## 函数(Functions)
 
 函数是hugo为你封装的一些方法你可以直接调用.
 
 ❗ Hugo 函数仅设计给模板使用, 即在`layouts/`下的html文件. Same as variables.
 
-# Hugo pipes
+## Hugo pipes
 
-
-
-# DIY My Own Website
 
 ## 支持 Emoji
 
