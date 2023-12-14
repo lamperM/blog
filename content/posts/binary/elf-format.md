@@ -93,18 +93,6 @@ Shell command`ar -t libc.a`  可以查看`libc.a`中包含的所有object files.
 相应地，每个表项指定一个section的信息，包括名字、大小、地址等。
 
 
-## 分析ELF文件的命令
-
-```sh
-# 输出 section header table
-readelf -S xxx.elf  
-# 输出 program header table
-readelf -l xxx.elf
-# 输出 ELF header
-readelf -h xxx.elf  
-# 输出 elf header，section header table，program header table(常用）
-readelf -e xxx.elf 
-```
 
 # 如何生成一个ELF可执行文件
 
