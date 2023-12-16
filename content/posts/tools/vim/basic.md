@@ -27,7 +27,13 @@ Object
 * s - sentence
 * p - paragraph
 
-&nbsp;
+## 窗口
+
+- \<c-w\>w 切换到下一个窗口
+- \<c-w\>+ 当前窗口大小增加一行
+- \<c-w\>- 当前窗口大小减少一行
+- 2\<c-w\>+ 当前窗口大小增加两行
+
 ## 书签: Bookmark
 `ma`: create bookmark `a` inside file.  
 `mA`: create global bookmark `A`.  

@@ -1,16 +1,104 @@
 ---
-title: "武器库: Shell Scripts"
-tags: ["shell", "bash"]
-categories: ["Shell"]
+title: "Shellscript"
+tags: ["Shellscript"]
+categories: ["Shellscript"]
 date: 2022-07-20T11:54:13+08:00
-tags: [shell, bash]
 ---
 
-:information_source: 以下命令/脚本的执行环境均为 `bash`.
+>:information_source: 如未特殊说明，以下的命令在bash和zsh中都能正确生效。
+
+
+## 变量的定义和引用
+
+```sh
+# 何时变量赋值要加""?
+# => 包含分隔符，空格或tab时
+qemu_opt="-machine raspi3b"
+
+# 引用变量时为什么加{}? ${var}
+
+# 引用变量时为什么加""? "$var"
+
+# 变量赋值为什么$()?
+# => ()里面是shell命令时用
+qemu_ver=$($qemu --version | head -n 1) 
+```
+
+## 常用Shell命令的注意事项
+
+### echo的参数
+
+```sh
+# echo不自动换行
+echo -n "some-string"
+
+# echo转义特殊字符
+echo    "some-string\n" # 不转义\
+echo -e "some-string\n" # 正确转义换行
+```
+>Zsh中，echo默认带`-e`，bash中则不是。
+>所以说，**如果输出的字符串有转义字符，不管要不要转义，都显式指定一下**。
+>- `-e`  强制转义
+>- `-E`  强制不转义
+
+### sort 应付多种场景
+
+```sh
+# 对版本号进行排序(x.y.z)
+echo -ne "1.2.3\n4.5.6\n3.4.5" | sort -V
+```
+
+### shift 操作参数
+
+`shift`命令将参数左移，应用场景:
+```sh
+# 场景1：提取第二个参数及后面的所有
+# ./shell qemu-system-aarch64 -machine raspi3b -smp
+qemu=$1
+shift  # 默认左移1
+qemu_opt=$@
+
+
+## 场景2: 处理多参数且位置不定的情况
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -f|--file)
+      file="$2"
+      shift 2
+      ;;
+    -d|--directory)
+      directory="$2"
+      shift 2
+      ;;
+    -m|--mode)
+      mode="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+  esac
+done
+```
+
+
+## Shellscript的编写技巧
+
+1. Bash脚本正式语句开始前加 `set -e`, 使得任何命令返回非0时立即退出整个Shell脚本。
+2. 规定分隔符。**默认Shell会采用空格、tab、换行都作为分隔符**，
+   有时需要屏蔽某些，仅使用空格
+   ```sh
+   export IFS=' ' # 启用空格分隔only
+   flag="false"
+   for str in $qemu_ver;
+   do
+     # do something
+   done
+   unset IFS  # 恢复默认
+   ```
 
 ## 统计代码量
-
-> 使用到的命令包含: find, wc, xargs, sort 等
 
 列出*所有的文件及其代码行数*, 只统计.c 和.h, 过滤`./scripts`目录.
 
