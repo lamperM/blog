@@ -22,7 +22,7 @@ date: 2023-08-05T19:28:12+08:00
 
 ## 工具站
 
-- Armv8 寄存器、指令速查：http://hehezhou.cn/arm/
+- Armv8 寄存器、指令速查：http://hehezhou.cn/a64/
 - Emoji cheat sheet
 https://www.webfx.com/tools/emoji-cheat-sheet/
 - [Windows10搭建局域网FTP服务器](https://zhuanlan.zhihu.com/p/112249506)

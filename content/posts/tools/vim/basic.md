@@ -239,18 +239,19 @@ global 可以和 substitute 结合使用, 例如想要在包含某个字符串�
 
 https://vi.stackexchange.com/a/7723/43494
 
-&nbsp;
 
 ## 如何同步 VIM Dotfiles
 
 vim 的 dotfiles 主要包含`.vimrc`和`.vim/`中的插件.
 
-* 对于`.vimrc`, 我选择使用mackup 软件和其他system dotfiles 一起备份. [Git repo](https://github.com/wangloo/dotfiles)
+* ~~对于`.vimrc`, 我选择使用mackup 软件和其他system dotfiles 一起备份. [Git repo](https://github.com/wangloo/dotfiles)~~ 
+  一个单独的vimrc太大，将其分成多个子文件，所以就没用mackup，
+  而是一个单独的仓库进行管理。[wangloo/myvimrcs: My vimrcs](https://github.com/wangloo/myvimrcs)
 
-* 对于 plugins, 传统的管理插件的方式(使用`vim-plug`), 也就是放在`~/.vim/plugged/`目录中的, 可以通过`:PlugInstall`命令在新机器上重新从网上克隆. 能够保证使用的是新版本.
-* VIM 8.0 之后, 引入 *pack system* 新的插件管理方式. 对于这类的插件, 我们直接利用`submodule`加入另一个备份的 [Git repo](https://github.com/wangloo/vimpack). 使用方法见`README`.
+* ~~对于 plugins, 传统的管理插件的方式(使用`vim-plug`), 也就是放在`~/.vim/plugged/`目录中的, 可以通过`:PlugInstall`命令在新机器上重新从网上克隆. 能够保证使用的是新版本.~~
+  VIM 8.0 之后, 引入 *pack system* 新的插件管理方式。
+  [wangloo/myvimpack: My Vim8 plugins](https://github.com/wangloo/myvimpack) 使用方法见`README`.
 
-&nbsp;
 
 
 

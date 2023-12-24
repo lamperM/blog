@@ -1,11 +1,10 @@
 ---
-title: "近期对于摄影的感悟"
+title: "Thinking: 胶片风格爆火"
 date: 2023-08-20T20:30:35+08:00
-tags: [photo]
-categories: ["Life"]
+tags: ["Thinking"]
+categories: ["Thinking"]
 ---
 
-# 胶片风格受大众喜爱
 
 富士的价格为什么被炒的越来越高？如果单说是外观，那尼康的zfc、索尼、佳能的一些微单并不输给他很多，
 我觉得其中有一个很重要的原因就是**富士的胶片模拟**风格。 
