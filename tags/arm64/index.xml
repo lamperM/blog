@@ -10,4 +10,4 @@
 1ldr w0, [x1] Offset addressing mode - w0=[x1+12]
 1ldr w0, [x1, 12] Pre-index addressing mode - x1+=12; w0=[x1]
 1ldr w0, [x1, 12]! Post-index addressing mode - w0=[x1]; x1+=12
-1ldr w0, [x1], 12 更多示例 1// load a byte from x1 2ldrb w0, [x1] 3 4// load a signed byte from x1 5ldrsb w0, [x1] 6 7// store a 32-bit word to address in x1 8str w0, [x1] 9 10// load two 32-bit words from stack, then add 8-byte to sp 11ldp w0, w1, [sp], 8 12 13// store two 64-bit words at [sp-96] and subtract 96-byte from sp.</description></item></channel></rss>
+1ldr w0, [x1], 12 更多示例 1// load a byte from x1 2ldrb w0, [x1] 3 4// load a signed byte from x1 5ldrsb w0, [x1] 6 7// store a 32-bit word to address in x1 8str w0, [x1] 9 10// load two 32-bit words from stack, then add 8-byte to sp 11ldp w0, w1, [sp], 8 12 13// Store two 64-bit regs in [sp-96] and subtract 96-byte from sp.</description></item></channel></rss>

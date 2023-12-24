@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Thinking on BLOG</title><link>https://wangloo.github.io/categories/thinking/</link><description>Recent content in Thinking on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 17 Dec 2023 17:19:44 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/categories/thinking/index.xml" rel="self" type="application/rss+xml"/><item><title>Thinking: 感谢姐夫</title><link>https://wangloo.github.io/posts/thinking/growth/</link><pubDate>Sun, 17 Dec 2023 17:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/thinking/growth/</guid><description>在我刚上初中的时候，我姐毕业在青岛差不多稳定了下来，于是我放假便经常去青岛找她玩。 不久，我姐姐与我姐夫相识，姐夫对我不错，除了请我吃喝玩乐以外， 我现在想起仍然感慨万分的是：他帮助我建立厚脸皮、外向的性格。
+其实在此之前我是一个非常内向的人，也是大家口中的乖孩子， 跟圆滑、变通这些词毫无关系，而每当我在青岛的时候，我姐夫便以身作则， 给我展示一个小老板是如何圆滑处事，偶尔也让我开口去和外人交流。 我始终觉得就是这一段段时间，一件件事的影响和磨练，使我现在变得不那么自卑和内向。 面向陌生人也能大大方方的交流，起码不使人尴尬吧。
+这个点我的父母，甚至我的姐姐应该很难观察到，他们估计觉得姐夫就是带我玩而已， 而我自己将永远铭记在心。</description></item><item><title>Thinking: Config Linux Network</title><link>https://wangloo.github.io/posts/thinking/cfg_linux_ip/</link><pubDate>Fri, 08 Dec 2023 17:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/thinking/cfg_linux_ip/</guid><description>起因：今天与一位同学一起尝试去配置Linux静态IP，这中间有不少坎坷，想简单把思考的过程写下来， 复盘一下是不是应该有可以更快的定位到问题并解决的方案。
+提出问题 Cl同学想要达到启动Linux后自动设置某个静态Ip的效果， 在我的理解里这并不是一件很复杂的事。
+他给我的想法是在Kernel Command Line参数中指定Ip， 我之前没有看到过这种方式配网，但是网上搜了一下确实有这样的例子。 所以他目前已经完成的是:
+Linux是通过Uboot起的，要增加Linux Command Line， 可能是在Uboot的bootargs中添加。 但是他在修改完bootargs并重启的时候，发现变量没有成功赋值， 即使已经成功saveenv。所以就邀请我和他一起讨论。
+动手实践 了解到问题之后，我先说出了我的想法：
+配置静态Ip这个事其实我第一时间想到的是以前修改/etc/network/interfaces文件的方式 但是我愿意陪他先看下为什么命令行参数没有配置上去 这是两条路，因为他的系统里没有真正的文件系统，而是initrd， 所以我提出的方案需要去解包inird的压缩文件，还是尽量先去研究为什么命令行参数没有配置上去。
+为什么CMDLINE没有配置上去呢? 首先它说bootargs没有保存成功，这个我也不知道为啥， 可以先不管，即便在每次启动之前在Uboot里设置了Bootargs， 他说在启动之后Kernel的打印也没有输出配置的项目。
+Uboot中Bootargs设置的值是和Kernel Command Line配套吗？ 这个我反正是不太确定。
+好，那能不能通过别的方式来设置CmdLine呢？ 我们搜索找到了两种方式：
+Dts中 Menuconfig中修改 没有尝试Menuconfig是因为他说“目前Menuconfig配置的CmdLine为空， 但是实际Kernel启动后又是有值输出的，那么说明肯定是其他的地方有添加。” 对于这句话我也表示认同，Menuconfig里给的说明是：“默认配置”， 所以即便添加了也无法保证会不会被其他的给冲刷掉。所以，一个根本问题就是： CmdLine配置的顺序，或者说优先级是什么？
+先去Dts里改改试试吧，找到了一个chosen结点有关于bootargs的配置， 不管怎么样改了一下，发现并没有生效，和最终Kernel输出的对不上。
+所以，看起来修改CmdLine这条路要失败了，只能去修改initrd试试。
+修改Initrd达到目的 initrd是打包好的，用的是cpio+lz4的方式。要修改首先要把他解开， 解开到还好说，网上能搜得到命令。 但是重新压缩回去问题很多，前期我就想到了我在华为实习时期遇到的类似的问题， 压缩的算法不对、打包的版本差异都会导致Kernel无法解析重新打包的initrd而panic。
+实际也遇到了这个问题，但是这有个小插曲：即便是换回原来的initrd也还是panic。 最终破案是因为需要make clean之后重新make，猜测可能是用了什么中间文件。 不得不感慨Linux Kernel的构建还是相当复杂的。
+问题来了：修改/etc/network/interfaces并没有改变静态Ip， 这就使我产生了疑惑，想着可以先在系统启动之后修改试试嘛， 执行ip down和ipup发现确实没有成功修改，这不禁让我想问为什么？
+此时，我们突然想到一个问题，既然shell命令能成功修改Ip， 那么就在启动时增加一个脚本去执行设置Ip的行动，不就行了吗？
+确实是可以的，所以暂时先不管为什么interfaces不生效。 那就修改有关于/etc/init.d和/etc/inittab相关的知识了， 这一部分我就没参与了，网上的资料的非常全，最终是成功达到目的。
+感慨 虽然成功达到了目的，但是消耗了4个小时左右的时间，我觉得这件事并不应该这么复杂。 主要原因是Linux可以配置网络的方式太多了，以至于像我们这种不是非常熟悉的人一时间不知道如何下手。</description></item><item><title>Thinking: 胶片风格爆火</title><link>https://wangloo.github.io/posts/thinking/film/</link><pubDate>Sun, 20 Aug 2023 20:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/thinking/film/</guid><description>富士的价格为什么被炒的越来越高？如果单说是外观，那尼康的zfc、索尼、佳能的一些微单并不输给他很多， 我觉得其中有一个很重要的原因就是富士的胶片模拟风格。
+作为一个程序员，我当然知道这些都是软件层面的东西， 其他厂家如果想做是完全可以做的，可能他们对这块也没什么兴趣。不得不承认富士可能在这方面做了一些 功夫，很可能并不单单只是颜色调整而已，它对于高光部分有更加细致的处理。
+今天主要想说的是为什么这种古老的风格会再次风靡？，如今数码时代的进步使得一张照片的清晰度、还原真实诚程度飙升， 为何还要去追求这种模糊与做旧呢？这是审美的倒退吗？
+我觉得，我们对美的认识或者说定义并不是随着科技的进步而进步的，有一些东西是不需要创新或者说无法进行创新的， 老的、旧的并不一定就差于现代的，衡量美的标准可能就是如此。
+那么我就想，其他东西是否也会这样呢？是否在过了几十年几百年的发展之后，我们回过头来再看，还不如原来固有的。 我想中华文化就在这之列，我们盲目的学习西方追求自由、绝对的平等，我相信时间会证明这不是适合中国人的社会风气。</description></item></channel></rss>
