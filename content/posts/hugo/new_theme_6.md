@@ -13,6 +13,8 @@ html 简直是太麻烦了，使用 shortcode 就像是调用函数一样，告�
 shortcode 分为两种：Hugo 默认和自定义的。Hugo 默认支持的 shortcode 有这些
 https://gohugo.io/content-management/shortcodes/
 ，这里面同时包含了告诉我们如果使用 shortcode 的基本语法。
+- figure 插入图片
+- ref/relref 引用本地文档
 
 当然hugo支持创建自定义 shortcode，详细的使用方法可以看这里，
 https://gohugo.io/templates/shortcode-templates/
@@ -26,3 +28,8 @@ remoteFigure，参考的是[diary主题的实现](https://github.com/AmazingRise
 
 >puer 主题的 [Github commit](https://github.com/wangloo/hugo-theme-puer/commit/0865c662f834fb273c1dfa11f6f30af570c40b3b)
 
+
+
+## Reference
+
+- [中文介绍Shortcode](https://matnoble.github.io/tech/hugo/shortcodes-practice-tutorial-for-hugo/#google_vignette)

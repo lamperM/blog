@@ -17,7 +17,7 @@ This is my second blog.
 ![](img/test.jpg)
 ![](/blog/img/test.jpg)
 
-{{< figure src="/blog/img/test.jpg" title="sunset" >}}
+{{< figure src="/test.jpg" title="sunset" >}}
 
 
 
