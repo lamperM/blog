@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Hugo 引用图片</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>所有文章</a></div><div class="a-block nav-link-item"><a href=/tags>Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e5%9b%be%e5%ba%8a aria-label=图床>图床</a></li><li><a href=#hugo aria-label=Hugo>Hugo</a><ul><li><a href=#shortcode aria-label=Shortcode>Shortcode</a></li></ul></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Hugo 引用图片</div></header><p>写博文时避免不了插入一些图片，总结了几种方式。</p><h2 id=图床>图床</h2><p>最早在其他平台写博客时，因为 Markdown 格式编辑，不方便内嵌图片（好像听说支持 Base64 编码，
+没试过）， 此时想要维护单个 md 文件，最好的方式就是用网络图片，
+本地引用必须同时维护图片和文件在同一个目录，而且一些博客平台上传图片太麻烦。</p><p>Markdown 插入图像的语法本就支持网络图片，这里防一张图片作为演示：</p><p><img src=https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png alt=百度Logo></p><p>以前用的 Gitee（码云）搭建图床，后面码云官方禁止这种行为，考虑过换成其他收费的平台，
+例如各家云公司的对象存储 OSS。但是仔细想想如果要迁移平台意味着所有的博客都要改动，
+未免太麻烦了。</p><h2 id=hugo>Hugo</h2><p>使用 Hugo 搭建静态博客页面之后，其实对于远程链接的引用方式的依赖性就消失了。
+反正都是用一个 Hugo 工程管理所有笔记，那么也统一管理所有图片也没太大所谓。
+以前觉得本地管理很麻烦，需要传图片之类的，但最近用 Latex 写论文发现也还好。
+工程放在 Windows 上，传图片直接另存为改下目录就行了，用虚拟机上确实不太方面。
+还好 Hugo 对 Windows 的支持还不错。综上，目前就在尝试使用本地的方法管理图片。</p><p>Hugo 引用图片有两种方式：</p><ol><li>建立一个 Page bundle，图片作为 Page source。通过<code>![](sunset.jpg)</code>
+即可访问，<a href=https://gohugo.io/content-management/image-processing/#page-resource>Hugo 官方描述</a>。
+属于各自 blog 的图片放到各自的目录下，这样的好处是看起啦比较清晰。
+但是麻烦的地方就在于需要引用图片的博文都需要建立一个 Page bundle，
+而且我不喜欢 index.md 这种文件名，难以搜索。<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>content/
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2</span><span>└── posts/
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3</span><span>    └── post-1/           &lt;-- page bundle
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4</span><span>        ├── index.md
+</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5</span><span>        └── sunset.jpg    &lt;-- page resource
+</span></span></code></pre></div></li><li>所有博文的图片都放到的<code>/static</code>目录下，统一管理。
+<code>/static</code>可能不是必须存在，可以手动创建。此时的图片通过
+<code>![](/sunset)</code> 的方式来访问，多了一条斜杠。
+<strong>Latex论文里的图片就是这样管理的</strong>，以前担心混乱，
+实际上因为图片不多，命名规范也还好。</li></ol><h3 id=shortcode>Shortcode</h3><p>Md支持的原生图片引用方式调整大小、对齐等操作比较麻烦，
+Hugo在这方面引入了默认的Shortcode:
+<a href=https://gohugo.io/content-management/shortcodes/#figure>figure</a>
+帮助实现引用本地图片。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>{{&lt; figure src=&#34;/test.jpg&#34; width=&#34;100%&#34; &gt;}}
+</span></span></code></pre></div><p>另外，我自己根据网上的资料写了引用外部图片的shortcode:
+<a href=https://wangloo.github.io/posts/hugo/new_theme_6/>insertFigure</a>。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2024-01-03T13:39:42, Lastmod: 2024-01-03T15:57:20</p></main></div></body></html>
