@@ -1,7 +1,7 @@
 
 baseURL = "https://wangloo.github.io/"
 title = "BLOG"
-theme = "puer"
+theme = ["hugo-notice","puer"]
 
 # 是否使用 git 信息
 enableGitInfo = true
