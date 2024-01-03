@@ -67,3 +67,7 @@ const.c:16:10: warning: passing argument 1 of ‘free’ discards ‘const’ qu
    16 |     free(dss_name);
       |          ^~~~~~~~
 ```
+
+>实际上，不管是用const修饰什么变量或者形参，
+>都不会改变它的存储原理，该存在哪还是存在哪，
+>const提供的仅仅是在编译时提供警示。
