@@ -1,5 +1,5 @@
 ---
-title: "Design a Elf Loader"
+title: "Elf 加载器的工作流程"
 date: 2023-11-24T16:21:27+08:00
 tags: ["Binary"]
 categories: ["Binary"]
