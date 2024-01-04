@@ -25,4 +25,11 @@ Ubuntu2004源 新版本的Clangd Clangd用15+才能用vscode的inlay hint功能�
 获取签名
 1wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - 添加源地址到/etc/apt/sources.list, 修改完后别忘了sudo apt update
 1# 15, 后缀可以改成你需要的版本号 2deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main 3deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main 新版本的Vim Vim 8+才有pack插件管理
-1sudo add-apt-repository ppa:jonathonf/vim 终端软件安装 源替换 apt 1sudo apt install python3-pip 2sudo apt install tmux 3sudo apt install fzf 4sudo apt install zsh 5sudo apt install cmake pip3 1# CLI 代码高亮 2sudo pip3 install pygments shell zsh oh-my-zsh oh-my-zsh可以看作对zsh的配置文件做一层抽象，使配置更方便。 带来的缺点就是速度变慢。</description></item></channel></rss>
+1sudo add-apt-repository ppa:jonathonf/vim 终端软件安装 源替换 apt 1sudo apt install python3-pip 2sudo apt install tmux 3sudo apt install fzf 4sudo apt install zsh 5sudo apt install cmake pip3 1# CLI 代码高亮 2sudo pip3 install pygments shell zsh oh-my-zsh oh-my-zsh可以看作对zsh的配置文件做一层抽象，使配置更方便。 带来的缺点就是速度变慢。</description></item><item><title>Sed/Awk/Grep 三剑客</title><link>https://wangloo.github.io/posts/tools/sed_awk_grep/</link><pubDate>Tue, 03 Jan 2023 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/sed_awk_grep/</guid><description>Sed Sed stands for Stream Editor.
+Basic sed syntax:
+1sed [options] {sed-commands} {input-file} Sed reads one line at a time from the {input-file} and executes the {sed-commands} on that particular line
+The input 并非必须是文件
+echo &amp;quot;Some string&amp;quot; | sed '' 当然也是支持的.
+Option: -n 通常sed是按照行来处理文本的, 然后打印处理后的结果. 然而并不是符合匹配的行被打印, 所有的行都会被打印. 例如sed 's/t/T/'会输出所有的行, 并且替换其中某些行的t.
+这样的结果不是我们想见的(大多数情况下), 所以, 我们可以添加-n option 来 禁止自动打印所有内容, 例如sed -n 's/t/T/' 不会输出任何结果.
+如果想要将匹配的结果单独打印, 则sed为我们提供了p命令. 例如, sed -n 's/t/T/p' 只会打印替换后的行.</description></item></channel></rss>

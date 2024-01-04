@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>电子电路 on BLOG</title><link>https://wangloo.github.io/categories/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/</link><description>Recent content in 电子电路 on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 07 Dec 2022 10:30:35 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/categories/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/index.xml" rel="self" type="application/rss+xml"/><item><title>电子电路基础笔记</title><link>https://wangloo.github.io/posts/ee/</link><pubDate>Wed, 07 Dec 2022 10:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/ee/</guid><description>PWM 占空比 占空比: 高电平持续的时间占整个周期的百分比
+输出的平均电压 = 高电压 x 占空比
+所以通过调整占空比就能调整输出的平均电压.
+频率 仅通过调整占空比, 只能完成高电平时电机全速转动, 低电平时停止转动的效果. 不能达到我们的预期, 所以还需要PWM的另一个参数: 频率
+通过提高频率使得电机还未停下来时就又到达下一个高电平.
+稳压二极管 特性 稳压二极管反向接入电路是能够实现两端电压恒定, 工作时的状态是反向击穿, 能一直稳定在这个状态不会坏.
+稳压二极管的参数有两个: 稳压值和功率. 如果输入的电压小于其稳压值, 那么稳压作用消失, 如果大于稳压值, 那么稳压二极管两端的电压总是等于稳压值. 由于稳压二极管两端的电压是恒定的, 其功率的含义就是最大通过的电流.
+由于有功率的限制, 所以必须要串联限流电阻使用, 避免电流太大烧坏稳压管,
+限流电阻的计算 首先, 稳压二极管有最小工作电流, 通常为3-5mA, 规定了限流电阻的最大值.
+其次, 限流电阻需要确保二极管工作在规定的功率内, 因为当负载过大(极限状态下是空接)时, 所有的电流都通过稳压二极管. 按照其功率的1/2, 除以其稳压值就是工作电流.
+我们通常说, 稳压二极管的带负载能力差. 这是因为保证稳压二极管的功率一般比较小, 最大通过的电流也就几十mA. 计算出的限流电阻的R和V(电源-稳压值)都是固定的, 则其通过的电流也是固定是, 是通过稳压二极管和通过负载的电流之和.
+提高稳压二极管带负载能力的方法 TODO
+自恢复保险丝 是一种热敏电阻(PTC), 原理是当电流超过一定值是, 材料发热, 阻值迅速增加, 相当于断路.
+参数 熔断电流 耐压值</description></item></channel></rss>

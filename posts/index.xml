@@ -61,7 +61,18 @@ YCM 插件对 python, vim 的版本均有要求。
 1# 编译并添加对C的提示支持 2python3 install.py --clangd-completer --verbose 3 4Searching Python 3.8 libraries... 5... 6Downloading Clangd from https://github.com/ycm-core/llvm/releases/download/13.0.0/clangd-13.0.0-x86_64-unknown-linux-gnu.tar.bz2... 使用--clangd-completer参数时, 脚本会去下载 clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2 文件, 比较慢. 也可以提前根据提示的网站自己手动下载压缩包.
 下载完成后, 放到本地目录下:
 1:~/.vim/plugged/YouCompleteMe/third_party/ycmd/third_party/clangd/cache$ ls 2clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2 还需对脚本YouCompleteMe/third_party/ycmd/build.py进行修改, 防止重新下载.
-1def DownloadClangd( printer ): 2 ... 3 MakeCleanDirectory( CLANGD_OUTPUT_DIR ) 4 5 if not p.exists( CLANGD_CACHE_DIR ): 6 os.makedirs( CLANGD_CACHE_DIR ) 7 # 注释下面的语句 8 # elif p.</description></item><item><title>Linux Buddy 内存分配器</title><link>https://wangloo.github.io/posts/os/linux/mem/buddy/</link><pubDate>Mon, 18 Sep 2023 17:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/mem/buddy/</guid><description>伙伴系统的优势 作为一个页分配器，伙伴系统主要解决外部碎片过多的问题， 保证系统中尽可能有大的连续空间可以使用。
+1def DownloadClangd( printer ): 2 ... 3 MakeCleanDirectory( CLANGD_OUTPUT_DIR ) 4 5 if not p.exists( CLANGD_CACHE_DIR ): 6 os.makedirs( CLANGD_CACHE_DIR ) 7 # 注释下面的语句 8 # elif p.</description></item><item><title>Linux mmap 函数</title><link>https://wangloo.github.io/posts/os/linux/addrspace/mmap/</link><pubDate>Fri, 06 Oct 2023 14:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/addrspace/mmap/</guid><description>在进程的地址空间中，栈和堆直接夹着的区域为文件映射区。 它的空间是动态的，和堆空间一起实现动态内存的分配与释放。
+文件映射区中包含了一段段的虚拟内存区域（也称线性区），代码里标识符是struct vm_area_struct。其中包含文件映射和匿名映射。
+匿名映射是malloc()的底层实现之一，当请求大块内存时，移动brk可能带来大碎片， 不如用匿名mmap()来的灵活。
+下图就展示了一个进程地址空间中即存在文件映射，又存在匿名映射的情况：
+Linux 地址空间线性区组织形式 不只是文件映射区包含线性区，所有其他的区域（代码段、数据段等）都可以用线性区来描述， 统一进行维护。代码里用struct vm_area_struct描述一个线性区，其中重要的成员有:
+vm_mm(struct mm_struct *): 指向所属的地址空间描述符 vm_start(unsigned long): 此线性区的开始 vm_end(unsigned long): 下一个线性区的开始(此线性区结束地址+1） vm_next(struct vm_area_struct *): 指向进程线性区的 next vm_rb(struct rb_node): 此线性区对应红黑树中的节点 此线性区的大小就可以表示为: vm_end - vm_start.
+双向链表和红黑树 进程虚拟内存空间中的所有 VMA 在内核中有两种组织形式：一种是双向链表，用于高效的遍历进程 VMA，这个 VMA 双向链表是有顺序的，所有 VMA 节点在双向链表中的排列顺序是按照虚拟内存低地址到高地址进行的。 第一个区在mm_struct-&amp;gt;mmap, 下一次通过vm_area_struct-&amp;gt;vm_next找到，依次类推。并且，mmstruct-&amp;gt;map_count成员记录了进程所有线性区的数量。
+另一种则是用红黑树进行组织，用于在进程空间中高效的查找 VMA， 正常来说，想要查找某个地址是否存在于进程的地址空间，遍历上述链表的效率是 O(n)。
+通常一个进程地址空间的文件映射区会有非常多的线性区。因此，Linux2.6 引入红黑树来优化查找速度， 所有线性区同时组织成一个红黑树， 首部通过mm_struct.mm_rb指向。 然后每个线性区的vm_area_struct.vm_rb 存储节点的颜色和双亲信息。
+现在，当需要插入/删除一个线性区描述符时，用红黑树查找前后元素，再操作链表进行插入。
+mmap()的使用方式 mmap()用于在文件映射区创建一个真实的文件映射或者匿名映射。
+1void* mmap(void* addr, size_t length, int prot, int flags, int fd, off_t offset); 参数prot 通过 mmap 系统调用中的参数 prot 来指定其在进程虚拟内存空间中映射出的这段虚拟内存区域 VMA 的访问权限，它的取值有如下四种, 组合使用：</description></item><item><title>Linux Buddy 内存分配器</title><link>https://wangloo.github.io/posts/os/linux/mem/buddy/</link><pubDate>Mon, 18 Sep 2023 17:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/mem/buddy/</guid><description>伙伴系统的优势 作为一个页分配器，伙伴系统主要解决外部碎片过多的问题， 保证系统中尽可能有大的连续空间可以使用。
 这也正是伙伴系统要设计成相邻内存块合并的原因。</description></item><item><title>ARMv8 内存模型</title><link>https://wangloo.github.io/posts/armv8/memory_model_and_barrier/</link><pubDate>Sun, 10 Sep 2023 18:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/memory_model_and_barrier/</guid><description>为什么要关心内存模型 内存模型是一个约定或者规则, 是体系结构决定的，定义了内存的某些属性和行为。 一般各个架构之间有所不同，比如 ARM 会做合并访存、乱序执行这类优化方法。
 所以，某些情况下，指令的执行顺序可能不与你程序设计的一模一样，只是为你呈现的结果相同罢了。 当然这里边还有编译器来优化（捣乱 hh）。
 一般程序无需关心内存模型带来的差异，除非你从事底层软件开发（嵌入式开发）这种需要和寄存器打交道， 涉及系统底层机制的实现时，你必须按照内存模型来合理的规划你的程序。
@@ -245,13 +256,13 @@ task_struct.tgid标识自己所归属的进程 ID，或者叫主线程 ID，反�
 mm成员=NULL，没有用户空间的数据，不能访问用户空间 每个内核线程有私有数据，用set_child_tid成员指向， 是一个struct kthread结构，用to_kthread()来访问私有数据 内核线程也像普通线程一样参与调度，其创建的地方在内核，使用kthread_create() 创建，不能由用户态创建。
 内核线程一般负责执行一些内核任务，比如软中断 就有一个内核线程，来专门执行到来中断的服务函数中不着急的部分。</description></item><item><title>ARMv8 基础概念</title><link>https://wangloo.github.io/posts/armv8/introduce/</link><pubDate>Tue, 09 May 2023 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/introduce/</guid><description>与 ARMv7 相比的改动 指令集： 新增 A64 指令集， 但也兼容原来的 A32 指令集 权限等级： AArch64 下新增 EL0-EL3 异常等级，对应 V7 的特权等级 通用寄存器：31 个通用寄存器，V7 15 个 虚拟地址长度：64 位的地址长度，理论支持 256TB 的寻址范围</description></item><item><title>C 和 C++ 的区别与联系</title><link>https://wangloo.github.io/posts/c/c_and_cpp/</link><pubDate>Tue, 09 May 2023 20:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/c/c_and_cpp/</guid><description>C++几乎是 C 的超集，只有很少的 C 的特性在 C++中不支持
 C++增加了需要方便实现面向对象特性的语法和封装，当然这些用 C 应该也能实现， 只不过 C++使其实现起来更简单。
-C++ 改进了一些 C 中的缺点，比如 new 自动计算大小避免出错 C++ 增加一些语法糖，比如迭代器等 C++ 原生支持一些方便的库文件，比如 STL 库</description></item><item><title>DWARF(2): basetype类型</title><link>https://wangloo.github.io/posts/binary/dwarf/1_basetype/</link><pubDate>Tue, 09 May 2023 16:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/binary/dwarf/1_basetype/</guid><description>想要描述一个变量，必须知道它类型信息，才能知道变量的大小、输出的格式等。
+C++ 改进了一些 C 中的缺点，比如 new 自动计算大小避免出错 C++ 增加一些语法糖，比如迭代器等 C++ 原生支持一些方便的库文件，比如 STL 库</description></item><item><title>Dwarf(2): basetype类型</title><link>https://wangloo.github.io/posts/binary/dwarf/1_basetype/</link><pubDate>Tue, 09 May 2023 16:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/binary/dwarf/1_basetype/</guid><description>想要描述一个变量，必须知道它类型信息，才能知道变量的大小、输出的格式等。
 Dwarf 为 C 语言定义了一些描述数据类型的 DIE，包括 basetype, array,pointer, structure&amp;hellip;
 basetype 今天我们先介绍最简单的 basetype。
 basetype 是指那些 C 语言自身定义的基础类型，像int, double这些。
 basetype 类型的 DIE 通常有属性:
 DW_AT_name: basetype 的名称 DW_AT_byte_size: 该 basetype 占空间大小 下面给出描述int和double的 DIE 展示(还是通过objdump工具输出）：
-1 &amp;lt;1&amp;gt;&amp;lt;43&amp;gt;: Abbrev Number: 3 (DW_TAG_base_type) 2 &amp;lt;44&amp;gt; DW_AT_byte_size : 4 3 &amp;lt;45&amp;gt; DW_AT_encoding : 5 (signed) 4 &amp;lt;46&amp;gt; DW_AT_name : int 5 6 &amp;lt;1&amp;gt;&amp;lt;60&amp;gt;: Abbrev Number: 4 (DW_TAG_base_type) 7 &amp;lt;61&amp;gt; DW_AT_byte_size : 8 8 &amp;lt;62&amp;gt; DW_AT_encoding : 4 (float) 9 &amp;lt;63&amp;gt; DW_AT_name : (indirect string, offset: 0x9): double Array 数组表示为 DW_TAG_array 的 DIE，通常含有属性:</description></item><item><title>DWARF(1): 基础</title><link>https://wangloo.github.io/posts/binary/dwarf/0_basic/</link><pubDate>Tue, 09 May 2023 15:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/binary/dwarf/0_basic/</guid><description>Dwarf 把源文件中每个可描述的模块（例如函数，变量，结构体的声明等）描述为一个 DIE (Debugging Information Entry)，所以每个源文件可以描述为若干 DIE 的组合。
+1 &amp;lt;1&amp;gt;&amp;lt;43&amp;gt;: Abbrev Number: 3 (DW_TAG_base_type) 2 &amp;lt;44&amp;gt; DW_AT_byte_size : 4 3 &amp;lt;45&amp;gt; DW_AT_encoding : 5 (signed) 4 &amp;lt;46&amp;gt; DW_AT_name : int 5 6 &amp;lt;1&amp;gt;&amp;lt;60&amp;gt;: Abbrev Number: 4 (DW_TAG_base_type) 7 &amp;lt;61&amp;gt; DW_AT_byte_size : 8 8 &amp;lt;62&amp;gt; DW_AT_encoding : 4 (float) 9 &amp;lt;63&amp;gt; DW_AT_name : (indirect string, offset: 0x9): double Array 数组表示为 DW_TAG_array 的 DIE，通常含有属性:</description></item><item><title>Dwarf(1): 基础</title><link>https://wangloo.github.io/posts/binary/dwarf/0_basic/</link><pubDate>Tue, 09 May 2023 15:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/binary/dwarf/0_basic/</guid><description>Dwarf 把源文件中每个可描述的模块（例如函数，变量，结构体的声明等）描述为一个 DIE (Debugging Information Entry)，所以每个源文件可以描述为若干 DIE 的组合。
 每个 DIE 由一个 tag 和若干 attribute-val 键值对构成:
 tag: 描述此 DIE 的类型 attribute-val: 描述此 DIE 的一些细节属性，项目根据 DIE 的类型不同而有差别 各个 DIE 之间会相互联系，一个 DIE 可能含有 parent，若干的 child 和 sibling， 它们之间组成树的结构。
 查看一个 ELF 的所有 DIE ELF 文件中的所有 DIE 存储在.debug_info section 中，通过 GNU utils 中的objdump工具 可以解析为可阅读的结构:
@@ -286,14 +297,22 @@ malloc()的实现 进程刚创建时，堆空间的大小为 0， 即bkr==start_
 当然，仅设计到这步是不行的，因为按理来说父子进程是独立的，对子进程的 修改不应该影响父进程的地址空间。
 所有，在 copy 完页表后，会将父子进程的所有地址空间（实际是页表项）设置 为只读属性，当父/子进程尝试修改地址空间时，触发异常，配合特定的 异常处理机制，为其创建一个新的屋里也，拷贝原来的+执行修改。
 下图是对上述情况的描述，仅给出一个页面的示例，可以推广到整个地址空间：
-1 VMA VMA 2 ┌───────┐ │ ┌───────┐ 3Parent │ │ │ Parent │ │ 4 │ │ │ │ │ 5 ├───────┤ │ ├───────┤ 6 │ ├────┐ │ │ ├────┐ 7 ├───────┤ │ PMA Write │ ├───────┤ │ PMA 8 │ │ │ ┌───────┐ ────┼───► │ │ │ ┌───────┐ 9 │ │ │ │ │ │ │ │ │ │ │ 10 │ │ │ │ │ │ │ │ │ │ │ 11 └───────┘ │ ├───────┤ │ └───────┘ │ ├───────┤ 12 ├────►│ │ Read │ └────►│ │ RW 13 ┌───────┐ │ ├───────┤ only │ ┌───────┐ ├───────┤ 14Child │ │ │ │ │ │ Child │ │ │ │ 15 │ │ │ │ │ │ │ │ ├───────┤ 16 ├───────┤ │ │ │ │ ├───────┤ ┌─►│ │ RW 17 │ ├────┘ └───────┘ │ │ ├───────┘ ├───────┤ 18 ├───────┤ │ ├───────┤ │ │ 19 │ │ │ │ │ └───────┘ 20 │ │ │ │ │ 21 │ │ │ │ │ 22 └───────┘ │ └───────┘ 23 │ 这样就完美了吗 实际上不是的，拷贝父进程的页表和vm_area_struct就不占内存了吗？</description></item><item><title>Linux 进程地址空间 概述</title><link>https://wangloo.github.io/posts/os/linux/addrspace/addrspace/</link><pubDate>Sun, 07 May 2023 14:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/addrspace/addrspace/</guid><description>何为进程地址空间? 进程地址空间由允许进程使用的若干线性地址区域(也称&amp;quot;虚拟内存区域&amp;quot;)构成。
+1 VMA VMA 2 ┌───────┐ │ ┌───────┐ 3Parent │ │ │ Parent │ │ 4 │ │ │ │ │ 5 ├───────┤ │ ├───────┤ 6 │ ├────┐ │ │ ├────┐ 7 ├───────┤ │ PMA Write │ ├───────┤ │ PMA 8 │ │ │ ┌───────┐ ────┼───► │ │ │ ┌───────┐ 9 │ │ │ │ │ │ │ │ │ │ │ 10 │ │ │ │ │ │ │ │ │ │ │ 11 └───────┘ │ ├───────┤ │ └───────┘ │ ├───────┤ 12 ├────►│ │ Read │ └────►│ │ RW 13 ┌───────┐ │ ├───────┤ only │ ┌───────┐ ├───────┤ 14Child │ │ │ │ │ │ Child │ │ │ │ 15 │ │ │ │ │ │ │ │ ├───────┤ 16 ├───────┤ │ │ │ │ ├───────┤ ┌─►│ │ RW 17 │ ├────┘ └───────┘ │ │ ├───────┘ ├───────┤ 18 ├───────┤ │ ├───────┤ │ │ 19 │ │ │ │ │ └───────┘ 20 │ │ │ │ │ 21 │ │ │ │ │ 22 └───────┘ │ └───────┘ 23 │ 这样就完美了吗 实际上不是的，拷贝父进程的页表和vm_area_struct就不占内存了吗？</description></item><item><title>Libdwarf 函数介绍及其实现方法</title><link>https://wangloo.github.io/posts/binary/dwarf/libdwarf_func/</link><pubDate>Sun, 07 May 2023 14:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/binary/dwarf/libdwarf_func/</guid><description>Function dwarf_alloc.c _dwarf_get_alloc() 1char * 2_dwarf_get_alloc(Dwarf_Debug dbg, 3 Dwarf_Small alloc_type, Dwarf_Unsigned count) 函数功能: 根据类型申请一块空间
+注意, 申请时大小会多DW_RESERVE, 此函数返回的地址是 mem_alloc()返回的地址+DW_RESERVE
+_dwarf_error() 1void 2_dwarf_error(Dwarf_Debug dbg, Dwarf_Error * error, Dwarf_Sword errval) 函数功能 错误处理的函数
+函数流程 判断传入参数error是否为空, 如果为空则跳转到 step 4. 分配一个新的Dwarf_Error空间 将传入的错误信息存入Dwarf_Error, 并将其作为指针返回 error为空时, 一般要在出错时执行一些方法,即 dbg-&amp;gt;de_errhand() 所以, 此时dbg 和 dbg-&amp;gt;de_errhand 必须非空. dwarf_elf_access.c dwarf_elf_object_access_init() 1int 2dwarf_elf_object_access_init(u64 elf_base_addr, 3 int libdwarf_owns_elf, 4 Dwarf_Obj_Access_Interface** ret_obj, 5 int *err) 函数功能 初始化 Dwarf_Obj_Access_Interface 结构
+函数流程 初始化其成员object, 使用的是dwarf_elf_object_access_internals_init方法 申请空间 为成员赋值 为全局变量_dwarf_get_elf_flags_func_ptr赋值, 为获取elf section flags的方法 _dwarf_get_elf_flags_func() 1static int 2_dwarf_get_elf_flags_func( 3 void* obj_in, 4 Dwarf_Half section_index, 5 Dwarf_Unsigned *flags_out, 6 Dwarf_Unsigned *addralign_out, 7 int *error) 函数功能 获取elf指定section的flags</description></item><item><title>Linux 进程地址空间 概述</title><link>https://wangloo.github.io/posts/os/linux/addrspace/addrspace/</link><pubDate>Sun, 07 May 2023 14:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/addrspace/addrspace/</guid><description>何为进程地址空间? 进程地址空间的含义是进程能访问的所有虚拟地址, 一般来说可以划分为若干线性地址区域(也称&amp;quot;虚拟内存区域&amp;quot;)。
 每个线性区域由起始地址、长度和属性来描述。
-在进程刚创建时，其地址空间仅包含 3 个线性区，分别是：代码段、数据段和堆区，其中 堆区的初始大小为 0。
-栈区虽然也属于进程使用的内存区域，但这个区域对用户是透明的，所以我们一般将其 归于内核管理，并非进程本身。
+在进程刚创建时，其地址空间仅包含 4 个线性区，分别是：代码段、数据段、栈区和堆区， 其中堆区的初始大小为 0，栈有一个默认大小。
+栈区对用户是透明的，所以我们一般将其归于内核管理，并非进程本身。
 线性区增加的典型情况:
 使用mmap()为一个文件映射内存空间 创建一个 IPC 共享线性区与其他进程协作 调用malloc()扩张自己的堆区 Linux 描述地址空间的数据结构 在进程的 tcb 中，描述地址空间相关的结构都保存在成员mm中，其类型为struct mm_struct, 其中重要的成员有：
-mmap(struct vm_area_struct*): 指向所有线性区的链表头 mm_rb(struct rb_root): 指向所有线性区对象红黑树的根 pgd(pgd_t *): 指向进程的页表 mmlist(struct list_head): 指向下一个地址空间描述符(所有进程的地址空间描述符 被链接起来) Linux 描述线性区的数据结构 用struct vm_area_struct描述一个线性去，其中重要的成员有:
-vm_mm(struct mm_struct *): 指向所属的地址空间描述符 vm_start(unsigned long): 此线性区的开始 vm_end(unsigned long): 下一个线性区的开始(此线性区结束地址+1） vm_next(struct vm_area_struct *): 指向进程线性区的 next vm_rb(struct rb_node): 此线性区对应红黑树中的节点 此线性区的大小就可以表示为: vm_end - vm_start.</description></item><item><title>操作系统：信号的由来和实现原理</title><link>https://wangloo.github.io/posts/os/linux/signal/</link><pubDate>Fri, 05 May 2023 20:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/signal/</guid><description>Linux 为什么要引入信号? 信号是用户进程感知外部事件的一种方式。内核可以发送信号给用户程序，当然用户程序之间也可以互相发送信号，进程通过对某个信号绑定Handler实现对信号的响应。
+mmap(struct vm_area_struct*): 指向所有线性区的链表头 mm_rb(struct rb_root): 指向所有线性区对象红黑树的根 pgd(pgd_t *): 指向进程的页表 mmlist(struct list_head): 指向下一个地址空间描述符(所有进程的地址空间描述符 被链接起来) Linux 描述线性区的数据结构 进程地址空间所有线性区的组织 进程拥有的所有线性区通过单链表串联（按地址排序），
+红黑树优化查找 正常来说，想要查找某个地址是否存在于进程的地址空间，遍历上述链表的效率是 O(n).
+因此，Linux2.6 引入红黑树来优化查找速度， 所有线性区同时组织成一个红黑树， 首部通过mm_struct.mm_rb指向。 然后每个线性区的vm_area_struct.vm_rb 存储节点的颜色和双亲信息。
+现在，当需要插入/删除一个线性区描述符时，用红黑树查找前后元素，再操作链表进行插入。
+分配一个线性区 接口是do_mmap(), 参数为:
+file, offset; 如果有文件映射 addr, len prot; 该线性区的权限 步骤大致包含:</description></item><item><title>操作系统：信号的由来和实现原理</title><link>https://wangloo.github.io/posts/os/linux/signal/</link><pubDate>Fri, 05 May 2023 20:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/signal/</guid><description>Linux 为什么要引入信号? 信号是用户进程感知外部事件的一种方式。内核可以发送信号给用户程序，当然用户程序之间也可以互相发送信号，进程通过对某个信号绑定Handler实现对信号的响应。
 所以说信号也属于进程通信的一种方式，但是这种通信比较简单直接，目标进程只能知道信号来源的PID，无法直接附带其他数据。
 信号传递的原理 每个进程的TCB里都有一条链表存该进程等待的所有信号，给某个进程发送信号就表示为挂一个节点到目标进程的此链表上，内核发送信号当然可以直接操作，进程之间的话会转换成系统调用间接完成。当目标进程被调度时会检查并处理等待的所有信号。
 目标进程只能同时有一个同种类型的信号处于挂起状态，也就是说，如果上一个同种信号没有被处理，那么之后到来的同类信号会被忽略。
@@ -388,7 +407,14 @@ Kconfig: Kconfig 不仅在根目录，还可能存在于各级子目录下。里
 然而对于底层软件的开发，比如说操作系统，用到的库都是自己工程中的文件，那么此时用&amp;quot;&amp;quot;和&amp;lt;&amp;gt;有时都能 work，那么它们的区别是什么呢？
 搜索相关关键词得到的结论是: 两种方式的区别是搜索文件的优先级， &amp;quot;&amp;quot;优先搜索的当前目录，而&amp;lt;&amp;gt;优先搜索系统库文件目录。对于这个系统库，即那些使用gcc -I&amp;lt;dir&amp;gt;参数指定的路径。 当然，如果第一优先级位置没有被找到，也会到另一个目录中搜索。这么两种方式均可，实际工程中也有部分人混合使用，毫不在意规则。但是有时会导致一些细节问题，比如说我们经常会用到-MMD或者类似选项生成目标文件的依赖，方便实现增量编译。此时就可能会产生一些问题。
 假设你有一个头文件inc/father.h, 它里面会引用inc/child.h, 对于根目录下的源文件main.c，其引用语句该如何写呢？以下列出的几种形式都可以，任意的排列组合
-1// 编译参数: -I. -MMD 2// main.c 3#include &amp;#34;inc/father.h&amp;#34;4#include &amp;lt;inc/father.h&amp;gt;5 6// father.h 7#include &amp;#34;inc/child.h&amp;#34;8#include &amp;lt;inc/child.h&amp;gt;9#include &amp;#34;child.h&amp;#34;10#include &amp;lt;child.h&amp;gt; 如果 main.c 是使用系统库路径(-I.)来找到的 father.h, 即上面 main.c 的第 2 种情况，那么其生成依赖文件的形式内容都是绝对路径，包括 father.h 中的引用（因为即便 child.h 是相对路径找到的，相对的也是 father.h，其基准就是绝对路径）。例如:main.o: main.c /home/xx/father.h /home/xx/child.h 否则即以相对路径找到 father.h,即上说 main.c 的第 1 种，那么生成 father.h 依赖的方式一定是相对路径，但 child.h 的形式却取决于其本身. 也就是说，如果 child.h 的寻找方式是绝对的（上面的第 1,2,4 种），那么依赖文件的形式就是main.o: main.c inc/father.h /home/xx/child.h. 如果 child.h 的寻找方式是相对的(上面的第 3 种)，那么依赖文件的形式是main.</description></item><item><title>行结束符在windows和linux的区别</title><link>https://wangloo.github.io/posts/os/linux/end-of-line/</link><pubDate>Sat, 24 Dec 2022 01:35:24 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/end-of-line/</guid><description>使用VIM 打开一个文件时, 有时会看到例如 ^M 这类字符出现. 下面我会挖一下其出现的原因.
+1// 编译参数: -I. -MMD 2// main.c 3#include &amp;#34;inc/father.h&amp;#34;4#include &amp;lt;inc/father.h&amp;gt;5 6// father.h 7#include &amp;#34;inc/child.h&amp;#34;8#include &amp;lt;inc/child.h&amp;gt;9#include &amp;#34;child.h&amp;#34;10#include &amp;lt;child.h&amp;gt; 如果 main.c 是使用系统库路径(-I.)来找到的 father.h, 即上面 main.c 的第 2 种情况，那么其生成依赖文件的形式内容都是绝对路径，包括 father.h 中的引用（因为即便 child.h 是相对路径找到的，相对的也是 father.h，其基准就是绝对路径）。例如:main.o: main.c /home/xx/father.h /home/xx/child.h 否则即以相对路径找到 father.h,即上说 main.c 的第 1 种，那么生成 father.h 依赖的方式一定是相对路径，但 child.h 的形式却取决于其本身. 也就是说，如果 child.h 的寻找方式是绝对的（上面的第 1,2,4 种），那么依赖文件的形式就是main.o: main.c inc/father.h /home/xx/child.h. 如果 child.h 的寻找方式是相对的(上面的第 3 种)，那么依赖文件的形式是main.</description></item><item><title>Sed/Awk/Grep 三剑客</title><link>https://wangloo.github.io/posts/tools/sed_awk_grep/</link><pubDate>Tue, 03 Jan 2023 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/sed_awk_grep/</guid><description>Sed Sed stands for Stream Editor.
+Basic sed syntax:
+1sed [options] {sed-commands} {input-file} Sed reads one line at a time from the {input-file} and executes the {sed-commands} on that particular line
+The input 并非必须是文件
+echo &amp;quot;Some string&amp;quot; | sed '' 当然也是支持的.
+Option: -n 通常sed是按照行来处理文本的, 然后打印处理后的结果. 然而并不是符合匹配的行被打印, 所有的行都会被打印. 例如sed 's/t/T/'会输出所有的行, 并且替换其中某些行的t.
+这样的结果不是我们想见的(大多数情况下), 所以, 我们可以添加-n option 来 禁止自动打印所有内容, 例如sed -n 's/t/T/' 不会输出任何结果.
+如果想要将匹配的结果单独打印, 则sed为我们提供了p命令. 例如, sed -n 's/t/T/p' 只会打印替换后的行.</description></item><item><title>行结束符在windows和linux的区别</title><link>https://wangloo.github.io/posts/os/linux/end-of-line/</link><pubDate>Sat, 24 Dec 2022 01:35:24 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/end-of-line/</guid><description>使用VIM 打开一个文件时, 有时会看到例如 ^M 这类字符出现. 下面我会挖一下其出现的原因.
 EOL 字符 EOL 或者说 end-of-line 表示一个新行的开始.
 EOL 字符在不同的操作系统中是不同的. 本文中仅以 Linux 和 Windows 为例说明.
 Windows中是以读到回车&amp;lt;CR&amp;gt;和换行&amp;lt;LF&amp;gt; 表示 EOL. Linux 中仅以换行作为EOL 回车&amp;lt;CR&amp;gt; : Carriage return. 将光标回到行首, 对应C语言中的 \r 换行&amp;lt;LF&amp;gt; : Line feed. 将光标下移一行, 对应C语言中的 \n 在 Linux 中打开 Windows 下的文件将多余的回车通常显示成 ^M 或者 Control-M
@@ -402,8 +428,20 @@ Ref End Of Line Characters</description></item><item><title>操作系统：浅�
 fast-forward three-way merger Fast-forward Merge 假设合并的双方为main为dev, 如果其中一个是另一个的祖先, 此时直接移动 HEAD 到前方即可, 称为 fast-forward.
 例如, 当前在 main, 执行git merge dev的过程如下:
 1 main main 2 | | 3M1 --- M2 ===&amp;gt; M1 --- M2 -- F1 4 \ | 5 \--- F1 dev 6 | 7 dev three-way Merge 合并的两者不构成直接的祖先-孩子关系, 产生了分叉. 此时进行合并就需要有个基准(参考), 对于两边相较于基准的每个 diff 来说:
-合并的两者都在基准上进行了改动, 且改动不一致, 标记为冲突 如果该 diff仅在其中一方有改动, 那么就保留此次改动 合并时使用的参考就是两个合并 commit 的最近公共祖先, 这种借助三个 commit(main, dev, 公共祖先)才能完成的合并操作就叫做 three-way merge.</description></item><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/os/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/gnu_tools/</guid><description>..
-nm - 列出符号 nm (GNU Binary Utilities) (sourceware.org)</description></item><item><title>Makefile 一些技巧</title><link>https://wangloo.github.io/posts/c/make/makefile_tricks/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/make/makefile_tricks/</guid><description>伪目标的依赖关系 Makefile 中的依赖关系指的是目标和依赖之间建立的关系，目标对应规则中的语句是否执行取决于依赖的状态。
+合并的两者都在基准上进行了改动, 且改动不一致, 标记为冲突 如果该 diff仅在其中一方有改动, 那么就保留此次改动 合并时使用的参考就是两个合并 commit 的最近公共祖先, 这种借助三个 commit(main, dev, 公共祖先)才能完成的合并操作就叫做 three-way merge.</description></item><item><title>电子电路基础笔记</title><link>https://wangloo.github.io/posts/ee/</link><pubDate>Wed, 07 Dec 2022 10:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/ee/</guid><description>PWM 占空比 占空比: 高电平持续的时间占整个周期的百分比
+输出的平均电压 = 高电压 x 占空比
+所以通过调整占空比就能调整输出的平均电压.
+频率 仅通过调整占空比, 只能完成高电平时电机全速转动, 低电平时停止转动的效果. 不能达到我们的预期, 所以还需要PWM的另一个参数: 频率
+通过提高频率使得电机还未停下来时就又到达下一个高电平.
+稳压二极管 特性 稳压二极管反向接入电路是能够实现两端电压恒定, 工作时的状态是反向击穿, 能一直稳定在这个状态不会坏.
+稳压二极管的参数有两个: 稳压值和功率. 如果输入的电压小于其稳压值, 那么稳压作用消失, 如果大于稳压值, 那么稳压二极管两端的电压总是等于稳压值. 由于稳压二极管两端的电压是恒定的, 其功率的含义就是最大通过的电流.
+由于有功率的限制, 所以必须要串联限流电阻使用, 避免电流太大烧坏稳压管,
+限流电阻的计算 首先, 稳压二极管有最小工作电流, 通常为3-5mA, 规定了限流电阻的最大值.
+其次, 限流电阻需要确保二极管工作在规定的功率内, 因为当负载过大(极限状态下是空接)时, 所有的电流都通过稳压二极管. 按照其功率的1/2, 除以其稳压值就是工作电流.
+我们通常说, 稳压二极管的带负载能力差. 这是因为保证稳压二极管的功率一般比较小, 最大通过的电流也就几十mA. 计算出的限流电阻的R和V(电源-稳压值)都是固定的, 则其通过的电流也是固定是, 是通过稳压二极管和通过负载的电流之和.
+提高稳压二极管带负载能力的方法 TODO
+自恢复保险丝 是一种热敏电阻(PTC), 原理是当电流超过一定值是, 材料发热, 阻值迅速增加, 相当于断路.
+参数 熔断电流 耐压值</description></item><item><title>GNU 二进制工具集</title><link>https://wangloo.github.io/posts/os/gnu_tools/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/os/gnu_tools/</guid><description>1# 输出源码和汇编 2objdump -DS your_binary 3# 仅输出汇编, 所有汇编, 不仅仅是代码相关 4objdump -D your_binary 5 6# 判断编译时有没有使用-g 7readelf -n bin 8 9# 输出Elf中的所有符号(基于符号表非调试信息) 10nm demo.elf</description></item><item><title>Makefile 一些技巧</title><link>https://wangloo.github.io/posts/c/make/makefile_tricks/</link><pubDate>Sat, 03 Dec 2022 19:08:22 +0800</pubDate><guid>https://wangloo.github.io/posts/c/make/makefile_tricks/</guid><description>伪目标的依赖关系 Makefile 中的依赖关系指的是目标和依赖之间建立的关系，目标对应规则中的语句是否执行取决于依赖的状态。
 最简单的依赖关系可以拿两个文件来举例:
 1# gcc语句执行当前仅当 main.c 新于 main.elf 2main.elf: main.c 3 gcc main.c -o main.elf make 在执行main.elf的规则时，会先判断依赖关系。拿上面的例子来说， gcc 语句是否执行取决于main.c 和 main.elf的修改时间，只有当 依赖新与目标时，规则语句才会执行。
 然而许多情况下，目标或者依赖并不是一个文件，而是虚拟目标。虚拟目标 并不是一个文件，即它没有修改时间这个属性，此时 make 就不能作比较，结果就是 如果目标是伪目标，那么不管依赖如何都执行规则语句；如果依赖是伪目标， 那么目标的规则语句也永远被执行。下面是两个例子：
