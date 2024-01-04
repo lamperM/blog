@@ -1,7 +1,7 @@
 ---
-title: "DWARF(2): basetype类型"
-tags: ["Binary", "ELF"]
-categories: ["Binary"]
+title: "Dwarf(2): basetype类型"
+tags: ["Dwarf"]
+categories: ["Dwarf"]
 date: 2023-05-09T16:51:49+08:00
 ---
 

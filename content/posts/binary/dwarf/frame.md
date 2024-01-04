@@ -1,7 +1,7 @@
 ---
 title: "Dwarf: Stack Unwinding"
-tags: ["Dwarf", "Binary"]
-categories: ["Binary"]
+tags: ["Dwarf"]
+categories: ["Dwarf"]
 date: 2023-12-16T15:51:49+08:00
 ---
 
