@@ -4,7 +4,22 @@
 还有我发现，有人愿意陪伴你一起看，比你自己看更加有趣， 而且也会帮助你坚持看下去。可惜，光阴似箭， 还有半年就要毕业了，我却刚刚发现这一点。
 感谢姐夫 在我刚上初中的时候，我姐毕业在青岛差不多稳定了下来，于是我放假便经常去青岛找她玩。 不久，我姐姐与我姐夫相识，姐夫对我不错，除了请我吃喝玩乐以外， 我现在想起仍然感慨万分的是：他帮助我建立厚脸皮、外向的性格。
 其实在此之前我是一个非常内向的人，也是大家口中的乖孩子， 跟圆滑、变通这些词毫无关系，而每当我在青岛的时候，我姐夫便以身作则， 给我展示一个小老板是如何圆滑处事，偶尔也让我开口去和外人交流。 我始终觉得就是这一段段时间，一件件事的影响和磨练，使我现在变得不那么自卑和内向。 面向陌生人也能大大方方的交流，起码不使人尴尬吧。
-这个点我的父母，甚至我的姐姐应该很难观察到，他们估计觉得姐夫就是带我玩而已， 而我自己将永远铭记在心。</description></item><item><title>Thinking: Config Linux Network</title><link>https://wangloo.github.io/posts/thinking/cfg_linux_ip/</link><pubDate>Fri, 08 Dec 2023 17:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/thinking/cfg_linux_ip/</guid><description>起因：今天与一位同学一起尝试去配置Linux静态IP，这中间有不少坎坷，想简单把思考的过程写下来， 复盘一下是不是应该有可以更快的定位到问题并解决的方案。
+这个点我的父母，甚至我的姐姐应该很难观察到，他们估计觉得姐夫就是带我玩而已， 而我自己将永远铭记在心。
+胶片风格摄影爆火 2023年08月20日
+富士的价格为什么被炒的越来越高？如果单说是外观，那尼康的zfc、索尼、佳能的一些微单并不输给他很多， 我觉得其中有一个很重要的原因就是富士的胶片模拟风格。
+作为一个程序员，我当然知道这些都是软件层面的东西， 其他厂家如果想做是完全可以做的，可能他们对这块也没什么兴趣。不得不承认富士可能在这方面做了一些 功夫，很可能并不单单只是颜色调整而已，它对于高光部分有更加细致的处理。
+今天主要想说的是为什么这种古老的风格会再次风靡？，如今数码时代的进步使得一张照片的清晰度、还原真实诚程度飙升， 为何还要去追求这种模糊与做旧呢？这是审美的倒退吗？
+我觉得，我们对美的认识或者说定义并不是随着科技的进步而进步的，有一些东西是不需要创新或者说无法进行创新的， 老的、旧的并不一定就差于现代的，衡量美的标准可能就是如此。
+那么我就想，其他东西是否也会这样呢？是否在过了几十年几百年的发展之后，我们回过头来再看，还不如原来固有的。 我想中华文化就在这之列，我们盲目的学习西方追求自由、绝对的平等，我相信时间会证明这不是适合中国人的社会风气。</description></item><item><title>杂乱的开发日记</title><link>https://wangloo.github.io/posts/thinking/dev_note/</link><pubDate>Sun, 17 Dec 2023 17:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/thinking/dev_note/</guid><description>零零碎碎的开发笔记，如果思考比较多应该写成单独的博文。
+spring OS 2023-07-01 如果kernel也用低地址， 其实是不行的，因为这样在切换到用户 进程的时候，需要切页表对吧。 但是切换之后用户进程的ttbr是 没有内核的页面映射的。 它们又都用了用一个页表。
+所以说看来是还是需要用两个页表实现起来比较方便些， 让内核用ttbr1，即映射在高地址。 做法是：
+首先boot阶段的代码是要在低地址的，因为此时没有开mmu（用uboot+PIC就没有这个顾虑）。 在boot代码中，mmu开启前需要建立映射，除了映射内核的代码段、数据段之外。 还有一个很重要的是恒等映射ttbr0，需要将boot代码建立恒等映射。 等到mmu启动后，访问的还是boot的代码，这时恒等映射生效。 但是当跳转到内核的代码时， 因为VMA是高地址， 所以用ttbr1，之前就映射好了。可以直接访问的。 2023-07-02 task_init():
+task-&amp;gt;affinity = -1
+如果不是内核任务, 默认情况下task-&amp;gt;state = TASK_STATE_WAIT_EVENT, 在create hook中进行的 内核任务的话, task-&amp;gt;state = TASK_STATE_SUSPEND, 在task_init()中进行的
+除了idle外, 其他task的task-&amp;gt;cpu = -1, 在task_init()中进行的
+wakeup_common(): task-&amp;gt;task = TASK_STATE_WAKING task-&amp;gt;pend_stat = pend_state
+task_ready():
+更新task-&amp;gt;cpu, 如果初始值是-1, 更新为NR_CPUS-1, 这是TBD, 否则是affinity 然后根据当前cpu是否为task-&amp;gt;cpu, 做出判断: 如果是, 那么直接调用add_task_to_ready_list() 将任务加到readylist中 否则,将任务加到new_list, 而不是readylist, 然后发送核间中断通知task-&amp;gt;cpu sched_tick_handler():</description></item><item><title>Thinking: Config Linux Network</title><link>https://wangloo.github.io/posts/thinking/cfg_linux_ip/</link><pubDate>Fri, 08 Dec 2023 17:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/thinking/cfg_linux_ip/</guid><description>起因：今天与一位同学一起尝试去配置Linux静态IP，这中间有不少坎坷，想简单把思考的过程写下来， 复盘一下是不是应该有可以更快的定位到问题并解决的方案。
 提出问题 Cl同学想要达到启动Linux后自动设置某个静态Ip的效果， 在我的理解里这并不是一件很复杂的事。
 他给我的想法是在Kernel Command Line参数中指定Ip， 我之前没有看到过这种方式配网，但是网上搜了一下确实有这样的例子。 所以他目前已经完成的是:
 Linux是通过Uboot起的，要增加Linux Command Line， 可能是在Uboot的bootargs中添加。 但是他在修改完bootargs并重启的时候，发现变量没有成功赋值， 即使已经成功saveenv。所以就邀请我和他一起讨论。
@@ -21,8 +36,4 @@ Dts中 Menuconfig中修改 没有尝试Menuconfig是因为他说“目前Menucon
 问题来了：修改/etc/network/interfaces并没有改变静态Ip， 这就使我产生了疑惑，想着可以先在系统启动之后修改试试嘛， 执行ip down和ipup发现确实没有成功修改，这不禁让我想问为什么？
 此时，我们突然想到一个问题，既然shell命令能成功修改Ip， 那么就在启动时增加一个脚本去执行设置Ip的行动，不就行了吗？
 确实是可以的，所以暂时先不管为什么interfaces不生效。 那就修改有关于/etc/init.d和/etc/inittab相关的知识了， 这一部分我就没参与了，网上的资料的非常全，最终是成功达到目的。
-感慨 虽然成功达到了目的，但是消耗了4个小时左右的时间，我觉得这件事并不应该这么复杂。 主要原因是Linux可以配置网络的方式太多了，以至于像我们这种不是非常熟悉的人一时间不知道如何下手。</description></item><item><title>Thinking: 胶片风格爆火</title><link>https://wangloo.github.io/posts/thinking/film/</link><pubDate>Sun, 20 Aug 2023 20:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/thinking/film/</guid><description>富士的价格为什么被炒的越来越高？如果单说是外观，那尼康的zfc、索尼、佳能的一些微单并不输给他很多， 我觉得其中有一个很重要的原因就是富士的胶片模拟风格。
-作为一个程序员，我当然知道这些都是软件层面的东西， 其他厂家如果想做是完全可以做的，可能他们对这块也没什么兴趣。不得不承认富士可能在这方面做了一些 功夫，很可能并不单单只是颜色调整而已，它对于高光部分有更加细致的处理。
-今天主要想说的是为什么这种古老的风格会再次风靡？，如今数码时代的进步使得一张照片的清晰度、还原真实诚程度飙升， 为何还要去追求这种模糊与做旧呢？这是审美的倒退吗？
-我觉得，我们对美的认识或者说定义并不是随着科技的进步而进步的，有一些东西是不需要创新或者说无法进行创新的， 老的、旧的并不一定就差于现代的，衡量美的标准可能就是如此。
-那么我就想，其他东西是否也会这样呢？是否在过了几十年几百年的发展之后，我们回过头来再看，还不如原来固有的。 我想中华文化就在这之列，我们盲目的学习西方追求自由、绝对的平等，我相信时间会证明这不是适合中国人的社会风气。</description></item></channel></rss>
+感慨 虽然成功达到了目的，但是消耗了4个小时左右的时间，我觉得这件事并不应该这么复杂。 主要原因是Linux可以配置网络的方式太多了，以至于像我们这种不是非常熟悉的人一时间不知道如何下手。</description></item></channel></rss>
