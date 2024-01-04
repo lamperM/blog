@@ -24,15 +24,14 @@ Hugo 引用图片有两种方式：
 今天主要想说的是为什么这种古老的风格会再次风靡？，如今数码时代的进步使得一张照片的清晰度、还原真实诚程度飙升， 为何还要去追求这种模糊与做旧呢？这是审美的倒退吗？
 我觉得，我们对美的认识或者说定义并不是随着科技的进步而进步的，有一些东西是不需要创新或者说无法进行创新的， 老的、旧的并不一定就差于现代的，衡量美的标准可能就是如此。
 那么我就想，其他东西是否也会这样呢？是否在过了几十年几百年的发展之后，我们回过头来再看，还不如原来固有的。 我想中华文化就在这之列，我们盲目的学习西方追求自由、绝对的平等，我相信时间会证明这不是适合中国人的社会风气。</description></item><item><title>杂乱的开发日记</title><link>https://wangloo.github.io/posts/thinking/dev_note/</link><pubDate>Sun, 17 Dec 2023 17:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/thinking/dev_note/</guid><description>零零碎碎的开发笔记，如果思考比较多应该写成单独的博文。
-spring OS 2023-07-01 如果kernel也用低地址， 其实是不行的，因为这样在切换到用户 进程的时候，需要切页表对吧。 但是切换之后用户进程的ttbr是 没有内核的页面映射的。 它们又都用了用一个页表。
-所以说看来是还是需要用两个页表实现起来比较方便些， 让内核用ttbr1，即映射在高地址。 做法是：
-首先boot阶段的代码是要在低地址的，因为此时没有开mmu（用uboot+PIC就没有这个顾虑）。 在boot代码中，mmu开启前需要建立映射，除了映射内核的代码段、数据段之外。 还有一个很重要的是恒等映射ttbr0，需要将boot代码建立恒等映射。 等到mmu启动后，访问的还是boot的代码，这时恒等映射生效。 但是当跳转到内核的代码时， 因为VMA是高地址， 所以用ttbr1，之前就映射好了。可以直接访问的。 2023-07-02 task_init():
-task-&amp;gt;affinity = -1
-如果不是内核任务, 默认情况下task-&amp;gt;state = TASK_STATE_WAIT_EVENT, 在create hook中进行的 内核任务的话, task-&amp;gt;state = TASK_STATE_SUSPEND, 在task_init()中进行的
-除了idle外, 其他task的task-&amp;gt;cpu = -1, 在task_init()中进行的
-wakeup_common(): task-&amp;gt;task = TASK_STATE_WAKING task-&amp;gt;pend_stat = pend_state
-task_ready():
-更新task-&amp;gt;cpu, 如果初始值是-1, 更新为NR_CPUS-1, 这是TBD, 否则是affinity 然后根据当前cpu是否为task-&amp;gt;cpu, 做出判断: 如果是, 那么直接调用add_task_to_ready_list() 将任务加到readylist中 否则,将任务加到new_list, 而不是readylist, 然后发送核间中断通知task-&amp;gt;cpu sched_tick_handler():</description></item><item><title>Vscode task.json &amp; launch.json</title><link>https://wangloo.github.io/posts/tools/vscode/task_launch/</link><pubDate>Sun, 17 Dec 2023 15:25:12 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/vscode/task_launch/</guid><description>Task.json Vscode中，可以为编译、打包等过程创建自动化任务，避免每次手动敲一些命令。 在我看来，Vscode Task就像是一个强大的、与Vscode联动的Shell脚本。
+6.828 还能这么拷贝代码 将一段汇编代码从一个地址拷贝到另一个地址，你会怎么做？
+我能想到的是利用链接脚本，将该段代码限定在某个段里，然后利用变量来定位代码所在的地址，执行拷贝。
+init.c的boot_aps()提供了一种新的思路：在代码的前后定义一个全局变量，就能在外面访问到代码的地址和范围了。
+转换函数的一种写法 我们经常会用到两种指代之间的转换，比如用id找到结构体指针（JOS中的envid2env），你会怎么设置函数的参数和返回值？
+我以前只能想到：
+1struct Env *envid2env(envid_t envid) 正常情况下返回转换完成的结构体指针，否则返回NULL。
+然而，JOS提供了一种别样的实现方式：
+1int 2envid2env(envid_t envid, struct Env **env_store, bool checkperm) 3{ 4 struct Env *e; 5 6 // If envid is zero, return the current environment. 7 if (envid == 0) { 8 *env_store = curenv; 9 return 0; 10 } 11 12 e = &amp;amp;envs[ENVX(envid)]; 13 if (e-&amp;gt;env_status == ENV_FREE || e-&amp;gt;env_id != envid) { 14 *env_store = 0; 15 return -E_BAD_ENV; 16 } 17 18 if (checkperm &amp;amp;&amp;amp; e !</description></item><item><title>Vscode task.json &amp; launch.json</title><link>https://wangloo.github.io/posts/tools/vscode/task_launch/</link><pubDate>Sun, 17 Dec 2023 15:25:12 +0800</pubDate><guid>https://wangloo.github.io/posts/tools/vscode/task_launch/</guid><description>Task.json Vscode中，可以为编译、打包等过程创建自动化任务，避免每次手动敲一些命令。 在我看来，Vscode Task就像是一个强大的、与Vscode联动的Shell脚本。
 创建一个Task 创建一个Task很简答，Terminal-Configure Tasks， 然后根据引导就可以创建一个默认的task，对他进行配置的文件是workspace/.vscode/task.json。
 展示一下我刚刚创建的一个编译并执行单元测试的任务，关键的参数是label也就是任务的名字， type除了shell不知道还有啥，command就是该任务会执行的shell命令。 更多的参数下面会介绍。
 1{ 2 // See https://go.microsoft.com/fwlink/?LinkId=733558 3 // for the documentation about the tasks.json format 4 &amp;#34;version&amp;#34;: &amp;#34;2.0.0&amp;#34;, 5 &amp;#34;tasks&amp;#34;: [ 6 { 7 &amp;#34;label&amp;#34;: &amp;#34;build-ut&amp;#34;, 8 &amp;#34;type&amp;#34;: &amp;#34;shell&amp;#34;, 9 &amp;#34;command&amp;#34;: &amp;#34;bash tools/vscode_build_ut.sh&amp;#34;, 10 &amp;#34;presentation&amp;#34;: { 11 &amp;#34;echo&amp;#34;: true, 12 &amp;#34;reveal&amp;#34;: &amp;#34;always&amp;#34;, 13 &amp;#34;focus&amp;#34;: true, 14 &amp;#34;panel&amp;#34;: &amp;#34;shared&amp;#34;, 15 &amp;#34;showReuseMessage&amp;#34;: true, 16 &amp;#34;clear&amp;#34;: false 17 }, 18 &amp;#34;problemMatcher&amp;#34;: [], 19 } 20 ] 21} 支持的参数 支持的参数很多，我主要介绍几个，Vscode的官方文档说的非常通俗易懂，修改参数时最好参考一下。</description></item><item><title>Dwarf: Stack Unwinding</title><link>https://wangloo.github.io/posts/binary/dwarf/frame/</link><pubDate>Sat, 16 Dec 2023 15:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/binary/dwarf/frame/</guid><description>前言 栈回溯是调试代码常用的功能之一，Gdb 中对应的命令是bt,info frame等。 这篇文件将介绍利用 Dwarf 生成的调试信息实现栈回溯的方法。
