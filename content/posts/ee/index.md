@@ -6,6 +6,8 @@ categories: ["电子电路"]
 featured_image: wyejg.png
 ---
 
+铜厚常规的**1盎司**，盎司是重量单位，1盎司的铜平铺到1平方米的面积上，
+其厚度就是35μm。
 
 ## PWM
 
