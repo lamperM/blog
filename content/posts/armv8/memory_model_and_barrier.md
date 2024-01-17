@@ -238,11 +238,7 @@ AArch64 提供了三种类型的屏障指令, 其中`DMB`和`DSB`属于*内存�
 用一张ARM用户编程手册中的图来解释, 黑色箭头代表每条指令最远能够reorder的路径.
 
 
-
-{{<remoteFigure
-link="https://gitee.com/wangloocn/image-bed/raw/master/20230910222217.png"
-command="Resize"
-options="400x" >}}
+{{< figure src="/ldar_stlr.jpg" caption="" width="60%" >}}
 
 
 ## 独占访问指令??

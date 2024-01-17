@@ -98,10 +98,7 @@ Shell command`ar -t libc.a`  可以查看`libc.a`中包含的所有object files.
 
 从一个C文件到一个ELF可执行文件包括**编译、链接**两个步骤，具体来说，共包含4个步骤：
 
-{{<remoteFigure
-link="https://gitee.com/wangloocn/image-bed/raw/master/20230924001351.png"
-command="Resize"
-options="800x" >}}
+{{< figure src="/elf_gen_flow.jpg" caption="" width="100%" >}}
 ## 预编译
 
 ```sh

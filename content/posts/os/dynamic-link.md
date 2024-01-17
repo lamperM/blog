@@ -77,7 +77,7 @@ GCC 生成动态库时需要添加参数`-fPIC`, 含义就是生成地址无关�
 
 > 这个说法可以通过看 elf 的 section 布局确定，got 表都会和一些其他的只读 section 放在一起，
 > 而与总是 RW 的 section 分开，这样布局以后设置 got 只读的时候更加方便。
-> {{<remoteFigure link="https://gitee.com/wangloocn/image-bed/raw/master/20230910184540.png" command="Resize" options="800x">}}
+>{{< figure src="/got_alone.jpg" caption="" width="100%" >}}
 > 这里图中的 got 虽然是可写入的，只是为了可以被重定位修改，改完之后由 ld.so 重映射为只读。
 
 加入动态加载之后，其实 got 表不能在主程序加载完后就设为只读，因为链接延后到了动态库加载到内存时，
@@ -85,7 +85,7 @@ GCC 生成动态库时需要添加参数`-fPIC`, 含义就是生成地址无关�
 就不能被设为只读，而为了兼容，.got 就会在主程序加载后被设为只读，因为里面没有需要执行时重定位的符号了。
 > 主程序编译时添加选项 `-Wl,-z,lazy` 启用动态加载
 
-> {{<remoteFigure link="https://gitee.com/wangloocn/image-bed/raw/master/20230910185759.png" command="Resize" options="800x">}}
+>{{< figure src="/got_plt.jpg" caption="" width="100%" >}}
 
 ## 动态链接和动态加载关系
 
