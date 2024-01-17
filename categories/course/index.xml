@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Course on BLOG</title><link>https://wangloo.github.io/categories/course/</link><description>Recent content in Course on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 17 Jul 2023 19:28:12 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/categories/course/index.xml" rel="self" type="application/rss+xml"/><item><title>课程学习：cs61a</title><link>https://wangloo.github.io/posts/course/cs61a/</link><pubDate>Mon, 17 Jul 2023 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/course/cs61a/</guid><description>学习日历 - 激励自己学习 因为最近在写论文，所以每两天能学习一次，并记录每次学习的事件
+2024年1月4日22点09分 配置环境
+lab00目录的组成：
+lab00.py: The template file you&amp;rsquo;ll be adding your code to ok: A program used to test and submit assignments lab00.ok: A configuration file for ok What Would Python Do? (WWPD)
+python3 ok -q python-basics -u --local 结尾的--local避免输入伯克利邮箱。
+解释一个函数的组成：
+The lines in the triple-quotes &amp;quot;&amp;quot;&amp;quot; are called a docstring, which is a description of what the function is supposed to do.</description></item></channel></rss>
