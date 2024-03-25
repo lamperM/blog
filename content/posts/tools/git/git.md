@@ -156,9 +156,9 @@ git merger-base dev main
 
 很简单的逻辑，主分支或者其他合作开发的分支并不是你一个人在用，并且需要最后同步到远程仓库，不符合使用 rebase 的准则
 
-# git log
+## git log
 
-## 参数:
+### 参数:
 
 | Parameter                | Description                                                        |
 | ------------------------ | ------------------------------------------------------------------ |
@@ -176,7 +176,7 @@ git merger-base dev main
 
 参考网站：https://www.cnblogs.com/bellkosmos/p/5923439.html
 
-## Example 1: 彩色显示重要信息
+### Example 1: 彩色显示重要信息
 
 ```sh
 git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
@@ -184,18 +184,42 @@ git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(
 
 ![](gitlog_1.png)
 
-## Example 2: 查看本地分支和对应远程分支的 commit 差异
+### Example 2: 查看本地分支和对应远程分支的 commit 差异
 
 ```sh
 git log --oneline main..origin/main
 ```
 
-# 子模块: submodule
+## 远程仓库
+### 克隆远程仓库
+
+默认克隆master分支
+```bash
+git clone <shortname> <url>
+```
+需要克隆指定的分支
+```bash
+git clone -b <branch> <shortname> <url>
+```
+克隆并指定文件名
+```bash
+git clone <shortname> <url> <dirname>
+```
+
+{{< notice note >}}
+clone或者fetch会将历史都下载到本地，内容可能很大。
+**使用`--depth`参数只克隆最近几次commit的内容**，减少下载的时间。
+```bash
+git clone <url> --depth=1 # Clone最近一次提交only
+```
+以后如果需要下载历史，执行`git fetch --unshallow`即可下载完整内容。
+
+{{< /notice >}}
 
 
+## 子模块: submodule
 
-
-## 新增一个子模块
+### 新增一个子模块
 
 (1) 将子模块上传到远端仓库上，或者使用已有的第三方项目
 
@@ -228,11 +252,11 @@ git submodule add [url] [path]
 
 
 
-## Submodule Command
+### Submodule Command
 
 Execute `git submodule --help` to get more info.
 
-### `git submodule init`
+#### `git submodule init`
 
 此命令clone新项目的时候会用到, 完整的命令是
 ```
@@ -253,27 +277,27 @@ git submodule init [path]
 - 在缺省参数下的含义是添加所有在.gitmodules中的子模块。
 - 未来`update`指令只会更新`.git/config`中的项目。
 
-### `git submodule update`
+#### `git submodule update`
 
 刚才说了，因为.gitmodules中的所有子模块并不一定都使用，
 所以新clone下来的项目并不会同时下载所有的子模块。
 在上面的init阶段生成了.git/config来指定需要哪些之后，
 update命令就是用于下载指定的子模块。
 
-#### --init
+##### --init
 由于此命令配合init命令使用，两者通常连续操作，所以可以合并为:
 ```
 git submodule update --init
 ```
 
-#### --remote
+##### --remote
 一般情况下，下载子模块都是checkout到.git/config指定的commit。
 `--remote`则会checkout到**追踪分支的最新commit**，下面会说到如何设置追踪分支，
 默认是master。
 
 如果最新的commit不等于.git/config指定的，那么执行完该指令后会产生一次同名文件的改动。
 
-### `git submoudle set-x`
+#### `git submoudle set-x`
 
 修改的是哪个文件？
 
@@ -302,10 +326,10 @@ git submodule update --init
 >`set-branch`修改了.gitmodules, 也同步到了.git/config中。如果你想手动修改.gitmodules来设置分支，不要忘了`submodule init`来同步到.git/config
 
 
-## 使用Submodule注意事项
+### 使用Submodule注意事项
 
 
-### 1.Submodule到底是追踪分支还是commit
+#### 1.Submodule到底是追踪分支还是commit
 
 事实证明子模块默认追踪的不是分支，容易验证。
 我们将子模块基于当前分支（假设master）新建一个子分支，并做一些修改，
@@ -316,7 +340,7 @@ git submodule update --init
 此时主项目中同名文件发生了改动。但是如果将子模块的分支切换回原来的master，
 子模块同名文件的改动就消失了。以我目前的见解我暂且这么认为。
 
-### 2. 同名文件发生了修改，应不应该stage？
+#### 2. 同名文件发生了修改，应不应该stage？
 
 分两种场景: (1)如果子项目的这些更新有意义同步到主项目中，那么就add并commit这个同名文件的改动，
 message为"更新submodule"。 (2)如若只是更新子项目而已，或许是为了其他依赖的项目所改的，并不
@@ -329,5 +353,5 @@ message为"更新submodule"。 (2)如若只是更新子项目而已，或许是�
 `submodule update`即可，
 
 
-## 子模块的优缺点
+### 子模块的优缺点
 TODO

@@ -37,9 +37,9 @@ date: 2023-07-17T19:28:12+08:00
 vscode的所有配置通过其内置的sync功能实现, 目前用的是Github账号同步。
 
 
-# Ubuntu2004源
+## Ubuntu2004源
 
-## 新版本的Clangd
+### 新版本的Clangd
 >Clangd用15+才能用vscode的inlay hint功能。
 
 获取签名
@@ -54,13 +54,22 @@ deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main
 deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main
 ```
 
-## 新版本的Vim
+### 新版本的Vim
 
 >Vim 8+才有pack插件管理
 
 ```sh
 sudo add-apt-repository ppa:jonathonf/vim
 ```
+
+### 安装和升级node
+
+```sh
+sudo apt install npm
+npm install -g n
+n stable
+```
+下载完成后 如果发现 `node -v` 仍然是之前的版本，根据不同的 shell 版本执行 `hash -r` 或者 `rehash` 即可。
 
 # 终端软件安装
 ## 源替换
@@ -70,7 +79,8 @@ sudo apt install python3-pip
 sudo apt install tmux
 sudo apt install fzf
 sudo apt install zsh
-sudo apt install cmake
+sudo apt install cmake # low version?
+sudo apt install tldr
 ```
 ## pip3
 ```shell
@@ -98,13 +108,6 @@ oh-my-zsh可以看作对zsh的配置文件做一层抽象，使配置更方便�
 
 
 
-# terminal
-ubuntu自带的终端我觉得还不错，有些人说Terminitor不错，分屏功能还是挺常用的！
-
-
-
-
-
 
 
 
@@ -114,22 +117,36 @@ ubuntu自带的终端我觉得还不错，有些人说Terminitor不错，分屏�
 ssh-keygen -t rsa -C "cnwanglu@icloud.com"
 ```
 
-# tmux
-tmux 在远程开发时比较有用。我们在用ssh连到服务器时经常需要有多窗口的需求，
-比起现有terminal软件自带的多窗口功能(Xshell,mobaxterm等)，使用tmux
-会更加方便。
-1. 窗口创建、切换等方式可以做到统一，不用追随终端软件
-2. 可以保存现场，即便因为网络问题ssh断开，也能随便恢复到之前的状态。因为
-   tmux是C/S架构，只要服务器上的server不死，永远可以恢复之前状态！
-3. 甚至，tmux提供了将现场保存到本地文件中的功能。
+## tmux
+tmux 在远程开发时比较有用，解决了以下几个痛点：
+1. ssh连接主机不稳定，在休眠或者网络波动时经常断开，以前进入的目录或者vim打开的文件就需要重新做。而tmux是CS架构，只要远程主机上的server不死，永远可以重新连接并恢复到之前的窗口。甚至，tmux提供了将现场保存到本地文件中的功能。在远程主机重启后，也可以从文件中恢复现场。
+2. ssh连接主机实现多窗口麻烦，一般需要在终端软件（如XShell，iterms）中开多个标签，多次连接ssh。tmux内置多窗口的实现方案，不依赖连接的终端，窗口创建、切换等方式可以做到统一。
 
 
-## reference
+### 问题：调整显示尺寸时，tmux未重新绘制窗口
+
+有时候我们在调整终端软件的显示大小时，发现tmux的显示窗口并没有跟着变化，而是在多余的串口中显示一些点。就像下面图片展示的那样。
+
+{{< figure src="/tmux_window.jpg" width="70%" >}}
+
+原因在于该会话有多个绑定的连接，而tmux将窗口绘制为所有连接中最的最小尺寸。最简单的方法是在连接的时候将其他客户端从会话中断开：
+```sh
+tmux attach -d
+```
+
+
+### reference
 
 1. [Tmux使用手册](http://louiszhai.github.io/2017/09/30/tmux/)
+2. [解决窗口尺寸问题](https://cloud.tencent.com/developer/ask/sof/49645)
 
+## 科学上网 
 
-# 科学上网 Clash for Linux
+Clash 最完整的教程，包括下载和安装使用：https://docs.gtk.pw/contents/macos/cfw.html#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85
+### Clash for Mac
+直接下载桌面版，镜像下载地址：https://github.com/clashdownload/Clash_for_Windows/releases
+
+### Clash for Linux
 
 目前clash的作者已经删除跑路，但是已经发布的版本还是可以正常使用的。这一章节介绍如何在Linux上用命令行配置Clash。
 
@@ -170,7 +187,7 @@ inbound mixed://:7890 则代表已经开启了http(含https)和socks代理，只
 
 RESTful API listening at: [::]:9090代表clash已经开启了ui控制面板，是的，Linux的clash有可视化控制面板。
 
-## 验证科学上网
+#### 验证科学上网
 根据我们之前前台运行可得知，默认是监控了自己的7890端口，验证方式可以通过`curl`向google发送一个请求看是否能正常返回。
 
 ```sh
@@ -179,7 +196,7 @@ curl --proxy 127.0.0.1:7890 www.google.com
 返回正常 Google成功返回数据，代表7890端口代理正常，clash运行正常。**注意目前必须手动指定代理的地址和端口，后面会介绍启用全局代理。**
 
 
-## Clash全局代理
+#### Clash全局代理
 
 可以添加这个配置到你的`.bashrc`/`.zshrc`中，使得终端的所有请求都走代理。
 ```sh
@@ -208,7 +225,7 @@ curl www.google.com
 ```
 
 
-## 将Clash作为一个服务
+#### 将Clash作为一个服务
 使clash一直运行在前台会占用一个终端，而且总感觉不是很优雅，更好的方法是将clash作为一个服务来操作。
 
 1. 在`/etc/systemd/system/`目录新建一个clash.service文件
@@ -236,7 +253,7 @@ curl www.google.com
     systemctl daemon-reload 如果修改了clash.service文件，需要此命令来重载被修改的服务文件
     ```
 
-## Reference
+### Reference
 1. [Linux中安装Clash并且实现全局代理（纯命令行）](https://www.zztongyun.com/article/clash%20for%20linux%20ubuntu)
 2. https://github.com/Kuingsmile/clash-core/releases
 3. [clash-for-linux](https://iyuantiao.me/clash-for-linux.html)

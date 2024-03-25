@@ -27,17 +27,20 @@ sudo mount # 输出当前已经挂载的分区
 ```
 
 
-# 通用
-### where and which
+## 通用
 
-which 查看可执行文件的位置
+查看当前用的是哪个shell:
+```shell
+echo $0
+```
+
+which 查看可执行文件的位置，whereis 除了可执行文件还能搜索其他类型的文件, 不常用, 详见 `man whereis`
+
 
 ```shell
 $ which python3
 /usr/bin/python3
 ```
-
-whereis 除了可执行文件还能搜索其他类型的文件, 不常用, 详见 `man whereis`
 
 ### `-` 的妙用
 

@@ -233,7 +233,24 @@ global 可以和 substitute 结合使用, 例如想要在包含某个字符串�
 
 [How to handle swapfiles in Vim (longwood.edu)](https://www.cs.longwood.edu/VimSwap.html)
 
-&nbsp;
+## 智能补全
+
+目前采用coc.vim插件做补全，安装方法请看【我的开发环境部署】，其中有介绍。这里想说明的是coc.vim插件的使用方法。
+
+安装完成后，You have to install coc extensions or configure language servers for LSP support.
+
+```sh
+# C/C++补全用coc-clangd插件，安装coc-json的原因是后续打开coc-setting.json方便修改
+:CocInstall coc-clangd coc-json
+```
+
+安装好coc-clangd的插件，还需要配置clangd服务端的位置，使coc能找到。
+配置Coc使用 `:CocConfig` 命令，
+:CocConfig opens your global coc-settings.json. :CocLocalConfig opens local configuration for your project ($PROJECTROOT/.vim/coc-settings.json)。不同语言的配置写法可以看这里：https://github.com/neoclide/coc.nvim/wiki/Language-servers。
+
+
+>一般我用的clangd服务端是clangd-xx，还有一个是[coc-clangd](https://github.com/clangd/coc-clangd)是另一种可选的方案。如果你只在vim里用clangd，可以直接安装coc-clangd，貌似是比较方便。
+
 
 ## Debug VIM key mapping
 
