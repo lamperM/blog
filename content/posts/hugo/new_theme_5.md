@@ -7,7 +7,7 @@ categories: ["Hugo"]
 
 通过 tag 可以实现对post进行分类，用到的支持是 HUGO Taxonomy Template（分类模板）
 
-# 原理
+## 原理
 
 实现tag的功能需要完成两类页面的设计： `/tags/` 和 `/tags/<one-tag>`
 
@@ -19,16 +19,18 @@ categories: ["Hugo"]
 
 更加详细的描述可以看官方文档: https://gohugobrasil.netlify.app/templates/taxonomy-templates/
 
-# 设计
+## 设计
 
 正与文档中所说，分类terms模板可以有多个查找的优先级：
->1. /layouts/taxonomy/<SINGULAR>.terms.html
->1. /layouts/_default/terms.html
->1. /themes/<THEME>/layouts/taxonomy/<SINGULAR>.terms.html
->1. /themes/<THEME>/layouts/_default/terms.html
+```
+/layouts/taxonomy/<SINGULAR>.terms.html
+/layouts/_default/terms.html
+/themes/<THEME>/layouts/taxonomy/<SINGULAR>.terms.html
+/themes/<THEME>/layouts/_default/terms.html
+```
 
 这样的好处是，比如说我有两种terms，tag和categories，我想在分类术语页面对这两种分类展示不用的页面，
-就可以定义`tags.terms.html`和`categories.terms.html`, 而我目前就用`terms.html`，简单。
+就可以定义`tag.terms.html`和`category.terms.html`，**注意是单数形式**。参考Commit：[拆分tag和category样式](https://github.com/wangloo/hugo-theme-puer/commit/99f4fdbc6ee1411de4127b55f6076e0c06056ad9)
 
 分类list模板也是，使用最通用的`list.html`, 和其他的list公用，并没有对分类list做单独的页面。
 
@@ -37,7 +39,7 @@ categories: ["Hugo"]
 > 上面的commit不小心提交了menu.html, 实际不属于taxonomy的目的，所以在这纠正: https://github.com/wangloo/hugo-theme-puer/commit/0af07f66807b540fd9d3be84e8d7faca7f962c4b
 
 
-# References
+## References
 
 - 中文博客介绍Taxonomy(1): https://hugo-in-action.foofun.cn/zh/docs/part1/chapter4/4/
 - 中文博客介绍Taxonomy(2): https://note.qidong.name/2017/10/hugo-taxonomy/

@@ -326,6 +326,11 @@ Myvar: "my value"
 ## Hugo pipes
 
 
+## Hugo相关参考
+
+- https://lewky233.top/categories/hugo%E7%B3%BB%E5%88%97/ 一系列的hugo配置和美化记录
+- https://github.com/heartnn/hugo-theme-test/blob/master/README.md hugo基础知识
+
 ## 支持 Emoji
 
 [Adding emoji tutorial](https://stackoverflow.com/questions/41047920/adding-emoji-to-a-hugo-page-variable)
