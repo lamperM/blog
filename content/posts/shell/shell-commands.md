@@ -26,8 +26,26 @@ sudo umount [dir]
 sudo mount # 输出当前已经挂载的分区
 ```
 
+## find
+```bash
+# 查找24小时内修改过的文件
+find . -mtime 0
+# 查找2小时内修改过的文件
+find . -mmin -$((2*60))
+# 查找24小时内访问过的文件
+find . -atime 0s
+
+```
 
 ## 通用
+
+搜索目录文件内容包含关键字
+```bash
+# n: print line number
+# r: recursive search
+grep -nr "pattern"
+```
+
 
 查看当前用的是哪个shell:
 ```shell
