@@ -5,7 +5,7 @@ categories: ["DevTools"]
 date: 2023-07-17T19:28:12+08:00
 ---
 
-# 前言
+## 前言
 
 写这篇博客的背景是**我实在忍受不了每次换新的开发机器都得费好大的劲来完全恢复以前的环境**， 而且，我平常喜欢搜集各种有用的工具、好看的主题，字体这些，如果零零散散的记录，大概率会忘记或者记不得某些细节。
 
@@ -18,21 +18,21 @@ date: 2023-07-17T19:28:12+08:00
 > 🥀 到目前为止，我还未发现一种方式能够完全达到“一键式布置”，这也不是本文的目的。
 > 付出至少半天的时间的一定的，希望未来能发现一种好的方法。
 
-# 字体
+## 字体
 
-## Fira Code
+### Fira Code
 
 这款字体适合做编程字体，蛮好看的。我在 vscode 和 terminal 下都使用了这款字体。
 
 详情及安装参考[github](https://github.com/tonsky/FiraCode)
 
-## 霞鹜文楷
+### 霞鹜文楷
 
 开源的中文字体，做博客、PPT 不错。
 
 详情及安装参考[github](https://github.com/lxgw/LxgwWenKai)
 
-# vscode
+## vscode
 
 vscode的所有配置通过其内置的sync功能实现, 目前用的是Github账号同步。
 
@@ -71,9 +71,9 @@ n stable
 ```
 下载完成后 如果发现 `node -v` 仍然是之前的版本，根据不同的 shell 版本执行 `hash -r` 或者 `rehash` 即可。
 
-# 终端软件安装
-## 源替换
-## apt
+## 终端软件安装
+### 源替换
+### apt
 ```sh
 sudo apt install python3-pip
 sudo apt install tmux
@@ -82,37 +82,65 @@ sudo apt install zsh
 sudo apt install cmake # low version?
 sudo apt install tldr
 ```
-## pip3
+### pip3
 ```shell
 # CLI 代码高亮
 sudo pip3 install pygments
 ```
 
-# shell
+## shell
 
-## zsh
-### oh-my-zsh
+### zsh
+#### oh-my-zsh
 oh-my-zsh可以看作对zsh的配置文件做一层抽象，使配置更方便。
-带来的缺点就是速度变慢。
+一键式安装：
+```bash
+sh -c "$(curl -fsSL https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
+```
 
-> 进入git目录下太卡
->
-> TODO： 是主题的原因，可以配置
-
-## 配置文件
-
-- .bashrc
-- .zshrc
-- .bash_aliase
-- .bash_path
+{{< notice warning >}}
+zsh默认的主题进入git目录下会比较卡，取消命令前缀显式git分支可以解决。
+我的方案下默认就没有展示分支。
+{{< /notice >}}
 
 
+#### OMZ 插件下载
+
+```bash
+# zsh-syntax-highlighting
+# 高亮语法，输入正确语法会显示绿色，错误的会显示红色，实时检查语法
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+# zsh-autosuggestions
+# 命令补全提示，我愿称之为OMZ插件之王
+# 以下两个地址都可以
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://gitee.com/phpxxo/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+```
+
+#### OMZ 插件安装
+OMZ配置文件`.zshrc`中写入如下，重新source之后即可生效。
+```bash
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(
+    git
+    zsh-syntax-highlighting
+    zsh-autosuggestions
+    rand-quote
+)
+```
+
+#### OMZ 插件参考博客
+
+- [oh my zsh插件安装详细教程及常用插件](https://segmentfault.com/a/1190000039860436) 宝可梦说话
+- [mac上使用oh my zsh有哪些必备的插件推荐？](https://www.zhihu.com/question/49284484) git缩写、🐄说话
 
 
 
-
-
-# ssh 密钥
+## ssh 密钥
 ```sh
 ssh-keygen -t rsa -C "cnwanglu@icloud.com"
 ```
@@ -261,14 +289,58 @@ curl www.google.com
 5. [Clash can't initial MMDB of Country.mmdb](https://zhuanlan.zhihu.com/p/472152669)
 
 
-# Windows下迁移WSL
+
+## MacOS 环境配置
+### XCode
+XCode下载官方网站很慢，跑不满带宽，通过这个下载工具可以跑满带宽[XCodeApp](https://github.com/XcodesOrg/XcodesApp/)，使用文档可以参考这个：[一分钟下载最新 XCode - 知乎](https://zhuanlan.zhihu.com/p/582912262)
+
+如果使用如下命令检测安装是否成功：
+```bash
+$ xcodebuild -version
+Xcode 12.5.1
+Build version 12E507
+```
+
+### brew
+
+#### 替换清华源
+参考：[homebrew | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/)
+1. 加入zshrc
+```bash
+export HOMEBREW_API_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/api"
+export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
+export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git"
+export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+export HOMEBREW_PIP_INDEX_URL="https://pypi.tuna.tsinghua.edu.cn/simple"
+```
+2. 执行
+```bash
+for tap in core cask{,-fonts,-versions} command-not-found services; do
+    brew tap --custom-remote --force-auto-update "homebrew/${tap}" "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-${tap}.git"
+done
+brew update
+```
+
+#### 其他指令
+```bash
+# 检查包的依赖是否安装好
+brew info <package> 
+# 检查包的依赖都有哪些
+brew deps <package>
+```
+
+[Homebrew 的设计哲学 | 楚权的世界](http://chuquan.me/2023/08/27/understand-the-design-of-homebrew/)
+
+[(42 封私信 / 58 条消息) brew的各种疑问？ - 知乎](https://www.zhihu.com/question/382533848)
+
+## Windows下迁移WSL
 
 WSL2目前已经相当好用了，在对性能要求不极致的场景下用WSL开发非常舒服。
 
 迁移WSL到别的位置/别的机器还是比较方便的，也有人写了[脚本](https://github.com/pxlrbt/move-wsl)来做这些，它是针对迁移到其他硬盘位置的，所以我这次还是自己手动做一遍，原理都是相同的。
 
-## 步骤
-### 1. 关闭WSL
+### 步骤
+#### 1. 关闭WSL
 ```sh
 # 检查WSL是否在运行
 wsl -l -v
@@ -278,17 +350,17 @@ wsl -l -v
 wsl --shutdown 
 ```
 
-### 2. 导出WSL镜像
+#### 2. 导出WSL镜像
 ```sh
 wsl --export Ubuntu2004 D:\Ubuntu2004_202311.tar
 ```
 
-### 3. 注销原系统(可选)
+#### 3. 注销原系统(可选)
 ```sh
 wsl --unregister Ubuntu2004
 ```
 
-### 4. 将镜像压缩文件复制到新机器/新位置
+#### 4. 将镜像压缩文件复制到新机器/新位置
 如果是新机器，还需要重新配置好WSL，开启一些选项:
 ```
 控制面板->程序->启用或关闭 windows 功能，开启 Windows 虚拟化和 Linux 子系统（WSL2)以及Hyper-V。
@@ -299,15 +371,15 @@ wsl --unregister Ubuntu2004
 ![](https://s2.loli.net/2023/11/23/xMOZ7yugXmcWJnG.png)
 
 
-### 5. 在新机器上导入镜像文件
+#### 5. 在新机器上导入镜像文件
 ```sh
 wsl --import Ubuntu2004 D:\wsl\Ubuntu2004\ D:\Ubuntu2004_202311.tar
 ```
 执行的时间比较长, 执行完后至此WSL就迁移完毕了，剩下的是一下配置的修正。
 
-### 6. 配置
+#### 6. 配置
 
-#### 设置默认用户
+##### 设置默认用户
 
 这样移过来现在登陆就是root，我们需要进行一些配置:
 
@@ -318,7 +390,7 @@ default=loo
 ```
 If the file doesn't exist create it manually. Then exit your distro, terminate it (`wsl -t Ubuntu2004`) and start it again.
 
-#### 设置默认distro
+##### 设置默认distro
 
 ```sh
 wsl -s Ubuntu2004
@@ -326,10 +398,10 @@ wsl -s Ubuntu2004
 
 这样完成后，所有的一切就OK了。
 
-## Reference
+### Reference
 1. https://zhuanlan.zhihu.com/p/622706723
 
-# Linux组织Dotfiles
+## Linux组织Dotfiles
 
 Linux开发环境中的许多软件都由配置文件，重新捣鼓一台新环境时去重新设置这些配置文件是非常复杂的一件事情，所以我想着用一种统一的方式进行管理。
 
@@ -340,12 +412,12 @@ Linux开发环境中的许多软件都由配置文件，重新捣鼓一台新环
 >不将vim插件也归于`mackup`管理的原因是: 我的`.vim/pack/xx/`下的所有插件都是通过submodule的方式管理,这样有利于维护和更新。但是在mackup的管理方式中是将整个`pack/`的内容拷贝过来，这就与submodule的理念冲突了。此时去改mackup的实现不如将vim的插件系统单独进行维护更容易。
 
 
-## 新环境恢复Dotfile
+### 新环境恢复Dotfile
 
 1. vimrcs的恢复方法: [wangloo/myvimrcs](https://github.com/wangloo/myvimrcs)
 2. vim插件的恢复方法: [wangloo/myvimpack](https://github.com/wangloo/myvimpack)
 2. 其他配置文件，教程参考：[wangloo/dotfiles](https://github.com/wangloo/dotfiles/tree/master)
 
 
-## Reference
+### Reference
 - [Installing Vim(8) plugins with the native pack system](https://medium.com/@paulodiovani/installing-vim-8-plugins-with-the-native-pack-system-39b71c351fea)

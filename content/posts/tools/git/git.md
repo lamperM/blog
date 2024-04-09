@@ -8,14 +8,14 @@ categories: ["Git"]
 
 ## 合并操作: git merge
 
-merge 有两种方式:
-
-- fast-forward
-- three-way merger
+merge行为的语义是将其他分支的修改合并到当前分支。由此就产生了两种内部的实现原理，
+以下均假设当前分支为main，其他分支为dev：
+- fast-forward：
+- three-way merger：
 
 ### Fast-forward Merge
 
-假设合并的双方为`main`为`dev`, 如果其中一个是另一个的祖先, 此时直接移动 HEAD 到前方即可, 称为 fast-forward.
+main是dev的某个直接祖先，或者说他们之间是一条线的关系。此时将dev的修改合并进来相当于移动main指针指向dev的最新commit(F1)。此时merge称为 fast-forward.
 
 例如, 当前在 main, 执行`git merge dev`的过程如下:
 
@@ -31,14 +31,13 @@ M1 --- M2          ===>    M1 --- M2 -- F1
 
 ### three-way Merge
 
-合并的两者不构成直接的祖先-孩子关系, 产生了分叉. 此时进行合并就需要有个基准(参考), 对于两边相较于基准的每个 diff 来说:
+合并的两者不构成直接的祖先-孩子关系，也就意味着main和dev分别位于两个分叉上（见下图左）。此时merge的步骤就相对复杂：
+1. 找到main和dev的公共祖先M2
+2. 列出main和dev分别基于公共祖先来说做了哪些修改
+   1. 如果两条分叉的修改不冲突，完美合并
+   2. 经常出现的是，两个分叉难免对同一片段做了不同修改，此时**标记为冲突**，等待用户解决
+3. 因为main和dev位于两个分叉，合并会新建一个节点（M4），commit的信息是“Merge dev into main”。如果步骤2中产生冲突了，那么解决冲突的行为就被记录到M4的diff。没有冲突时diff是空的。
 
-- 合并的两者都在基准上进行了改动, 且改动不一致, **标记为冲突**
-- 如果该 diff**仅在其中一方**有改动, 那么就保留此次改动
-
-合并时使用的参考就是**两个合并 commit 的最近公共祖先**, 这种借助三个 commit(main, dev, 公共祖先)才能完成的合并操作就叫做 three-way merge.
-
-例如, 当前在 main, 执行`git merge dev`的过程如下:
 
 ```
              main                                main
@@ -50,15 +49,8 @@ M1 --- M2 --- M3    ===>     M1 --- M2 --- M3 --- M4
              dev                         dev
 ```
 
-> three-way 的合并方式如果发生了冲突, 会产生一次额外的 merge commit, 下面介绍它
+因为此时merge需要借助三个 commit(main, dev, 公共祖先)，这种操作就叫做 three-way merge。
 
-### 什么情况下 merge commit 没有任何 diff?
-
-按照上面的例子, three-way merge 发生冲突后会产生一次额外的 merge commit, 即 M4. 如果这是去查看 M4 相较前一次 commit 的 diff, 有时是没有的, 有时又会产生 diff.
-
-如果在解决冲突的过程中, 我们仅仅是接收了 M2,M3 或者 F1 的修改, 那么此时 merge commit 就不会有 diff.
-
-然而, 在解决冲突时, 我们也可以不采用来自两条路径的修改, 做一次新的修改(可以说, 同时接收两条 diff 就是这种情况), 此时查看 merge commit 的 diff 就是有内容的.
 
 ## 变基: rebase
 
