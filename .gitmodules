@@ -6,4 +6,4 @@
 	url = git@github.com:wangloo/hugo-theme-puer.git
 [submodule "themes/hugo-notice"]
 	path = themes/hugo-notice
-	url = https://github.com/martignoni/hugo-notice.git
+	url =   git@github.com:wangloo/hugo-notice.git
