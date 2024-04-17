@@ -318,6 +318,12 @@ git submodule update --init
 >`set-branch`修改了.gitmodules, 也同步到了.git/config中。如果你想手动修改.gitmodules来设置分支，不要忘了`submodule init`来同步到.git/config
 
 
+### 修改URL
+1. 修改.gitmodules中对应子模块的URL
+2. `git submodule sync` 同步到`.git/config`文件中
+3. `git submodule update`  更新子模块内容
+
+
 ### 使用Submodule注意事项
 
 

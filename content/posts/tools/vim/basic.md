@@ -272,10 +272,20 @@ vim 的 dotfiles 主要包含`.vimrc`和`.vim/`中的插件.
 
 
 
-## Good plugins
-> Reference: [The Ultimate vimrc](https://github.com/amix/vimrc)
+## 插件
+> 优秀的vimrc配置: [The Ultimate vimrc](https://github.com/amix/vimrc)
 
-### TODO
+### LeaderF
+LeaderF可实现模糊查找文件，Tag。[Github](https://github.com/Yggdroot/LeaderF)
+
+LeaderF结合rg实现文件内容的模糊搜索，类似grep命令。[vim的grep插件Leaderf rg：grep和模糊匹配的完美结合 - 知乎](https://zhuanlan.zhihu.com/p/54865001)
+>安装rg的命令：
+>```bash
+>sudo apt install ripgrep
+>```
+
+模糊搜索的使用，`:Leaderf rg `，执行后是输入模式，如果想在选项中上下选择，按`Tab`键。
+
 
 ### Installed 
 [NERD Commneter - 快速注释](https://github.com/preservim/nerdcommenter#settings)
@@ -289,7 +299,6 @@ vim 的 dotfiles 主要包含`.vimrc`和`.vim/`中的插件.
 
 [Ack.vim - 快速定位内容](https://github.com/mileszs/ack.vim)
 
-[LeaderF - Like Ctrlp but better?](https://github.com/Yggdroot/LeaderF)
 
 [barbaric - normal模式切换英文输入法](https://github.com/rlue/vim-barbaric)
 

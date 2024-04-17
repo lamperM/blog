@@ -98,6 +98,31 @@ done
    unset IFS  # 恢复默认
    ```
 
+## 实战学习：自动更新Git仓库
+
+来源：南京大学ICS PA [ics-pa-gitbook/update.sh](https://github.com/NJU-ProjectN/ics-pa-gitbook/blob/master/update.sh)
+
+```bash
+#!/bin/sh
+
+git fetch origin master
+
+# Trick 1: 1:-'@{u}' ==>  1代表参数传入，如果为空就 当前分支所跟踪的远程分支('@{u}')
+UPSTREAM=${1:-'@{u}'} . 
+# Trick 2: @ ==> 当前分支
+# Trick 3: git rev-pase ==> 列出某个分支最新的commit ID
+LOCAL=$(git rev-parse @)
+REMOTE=$(git rev-parse "$UPSTREAM")
+
+if [ $LOCAL = $REMOTE ]; then
+  echo "Already up to date."
+  exit
+fi
+
+git reset --hard origin/master
+git gc
+```
+
 ## 统计代码量
 
 列出*所有的文件及其代码行数*, 只统计.c 和.h, 过滤`./scripts`目录.
