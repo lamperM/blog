@@ -3,8 +3,7 @@ X86 调用约定 函数调用 x86架构中, 函数调用以一条call指令为�
 在call指令执行之前, 所有的参数必须都躺在栈中, 参数入栈的规则是: 第一个参数最后入栈.
 另外, 执行call指令之前, 必须确保栈指针esp是16-byte对齐. 这项工作是编译器完成的, 如果它判断参数入栈之后的esp 不满足对齐条件, 则会手动调整esp使之对齐. 实现方式见下面例子.
 call 指令的语义是:
-1push pc+1 ;push next insttuction 2mov pc, func ;set pc = new function call 指令之后的下一条指令就是callee的内容了, 至此就算是进入新函数的地盘.
+1 2 push pc+1 ;push next insttuction mov pc, func ;set pc = new function call 指令之后的下一条指令就是callee的内容了, 至此就算是进入新函数的地盘.
 但是在执行新的任务之前, callee还需要完成栈的转换, 因为此时使用的栈还是caller的.
-1push ebp ;preserve location of caller&amp;#39;s stack 2mov ebp, esp ;new ebp is old esp 此时esp也就是栈指针等于ebp, 这是callee栈的初始条件. 万事俱备, 可以开始执行callee的实际任务了.
-ebp在整个函数执行过程中是固定的, 好处是: 能够快速的或者函数参数, 返回地址.
-函数返回 callee执行完毕后, 需要返回到caller继续执行. 刚才说过, callee的返回地址在栈中, 所以我们要做的是找到返回地址所在的位置, 然后使pc = 返回地址.</description></item></channel></rss>
+1 2 push ebp ;preserve location of caller&amp;#39;s stack mov ebp, esp ;new ebp is old esp 此时esp也就是栈指针等于ebp, 这是callee栈的初始条件. 万事俱备, 可以开始执行callee的实际任务了.
+ebp在整个函数执行过程中是固定的, 好处是: 能够快速的或者函数参数, 返回地址.</description></item></channel></rss>

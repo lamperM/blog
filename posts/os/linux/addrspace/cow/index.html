@@ -9,34 +9,57 @@
 推迟页表的申请，本身不怎么耗时。</p><p>但是创建<strong>线程</strong>时，确实使用同一张页表。</p></blockquote><p>当然，仅设计到这步是不行的，因为按理来说父子进程是独立的，对子进程的
 修改不应该影响父进程的地址空间。</p><p>所有，在 copy 完页表后，会将父子进程的所有地址空间（实际是页表项）设置
 为<strong>只读属性</strong>，当父/子进程尝试修改地址空间时，触发异常，配合特定的
-异常处理机制，为其创建一个新的屋里也，拷贝原来的+执行修改。</p><p>下图是对上述情况的描述，仅给出一个页面的示例，可以推广到整个地址空间：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>            VMA                                                              VMA
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>          ┌───────┐                                  │                     ┌───────┐
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>Parent    │       │                                  │           Parent    │       │
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>          │       │                                  │                     │       │
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>          ├───────┤                                  │                     ├───────┤
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>          │       ├────┐                             │                     │       ├────┐
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>          ├───────┤    │       PMA            Write  │                     ├───────┤    │       PMA
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>          │       │    │     ┌───────┐           ────┼───►                 │       │    │     ┌───────┐
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>          │       │    │     │       │               │                     │       │    │     │       │
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>          │       │    │     │       │               │                     │       │    │     │       │
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>          └───────┘    │     ├───────┤               │                     └───────┘    │     ├───────┤
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>                       ├────►│       │ Read          │                                  └────►│       │ RW
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>          ┌───────┐    │     ├───────┤ only          │                     ┌───────┐          ├───────┤
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span>Child     │       │    │     │       │               │           Child     │       │          │       │
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>          │       │    │     │       │               │                     │       │          ├───────┤
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>          ├───────┤    │     │       │               │                     ├───────┤       ┌─►│       │ RW
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span>          │       ├────┘     └───────┘               │                     │       ├───────┘  ├───────┤
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span>          ├───────┤                                  │                     ├───────┤          │       │
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span><span>          │       │                                  │                     │       │          └───────┘
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span><span>          │       │                                  │                     │       │
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21</span><span>          │       │                                  │                     │       │
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22</span><span>          └───────┘                                  │                     └───────┘
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23</span><span>                                                     │
-</span></span></code></pre></div><h2 id=这样就完美了吗>这样就完美了吗</h2><p>实际上不是的，拷贝父进程的页表和<code>vm_area_struct</code>就不占内存了吗？</p><p>当页表是稀疏的，<code>vm_area_struct</code>的数量过多时，其本身的数据结构
+异常处理机制，为其创建一个新的屋里也，拷贝原来的+执行修改。</p><p>下图是对上述情况的描述，仅给出一个页面的示例，可以推广到整个地址空间：</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>            VMA                                                              VMA
+</span></span><span style=display:flex><span>          ┌───────┐                                  │                     ┌───────┐
+</span></span><span style=display:flex><span>Parent    │       │                                  │           Parent    │       │
+</span></span><span style=display:flex><span>          │       │                                  │                     │       │
+</span></span><span style=display:flex><span>          ├───────┤                                  │                     ├───────┤
+</span></span><span style=display:flex><span>          │       ├────┐                             │                     │       ├────┐
+</span></span><span style=display:flex><span>          ├───────┤    │       PMA            Write  │                     ├───────┤    │       PMA
+</span></span><span style=display:flex><span>          │       │    │     ┌───────┐           ────┼───►                 │       │    │     ┌───────┐
+</span></span><span style=display:flex><span>          │       │    │     │       │               │                     │       │    │     │       │
+</span></span><span style=display:flex><span>          │       │    │     │       │               │                     │       │    │     │       │
+</span></span><span style=display:flex><span>          └───────┘    │     ├───────┤               │                     └───────┘    │     ├───────┤
+</span></span><span style=display:flex><span>                       ├────►│       │ Read          │                                  └────►│       │ RW
+</span></span><span style=display:flex><span>          ┌───────┐    │     ├───────┤ only          │                     ┌───────┐          ├───────┤
+</span></span><span style=display:flex><span>Child     │       │    │     │       │               │           Child     │       │          │       │
+</span></span><span style=display:flex><span>          │       │    │     │       │               │                     │       │          ├───────┤
+</span></span><span style=display:flex><span>          ├───────┤    │     │       │               │                     ├───────┤       ┌─►│       │ RW
+</span></span><span style=display:flex><span>          │       ├────┘     └───────┘               │                     │       ├───────┘  ├───────┤
+</span></span><span style=display:flex><span>          ├───────┤                                  │                     ├───────┤          │       │
+</span></span><span style=display:flex><span>          │       │                                  │                     │       │          └───────┘
+</span></span><span style=display:flex><span>          │       │                                  │                     │       │
+</span></span><span style=display:flex><span>          │       │                                  │                     │       │
+</span></span><span style=display:flex><span>          └───────┘                                  │                     └───────┘
+</span></span><span style=display:flex><span>                                                     │
+</span></span></code></pre></td></tr></table></div></div><h2 id=这样就完美了吗>这样就完美了吗</h2><p>实际上不是的，拷贝父进程的页表和<code>vm_area_struct</code>就不占内存了吗？</p><p>当页表是稀疏的，<code>vm_area_struct</code>的数量过多时，其本身的数据结构
 就会占用很大的空间。</p><p>就 AArch64 来说，针对页表过大的问题，提供了 2M 和 1G 的巨型页(Huge Page)
 可供选择，能在申请大而稀疏的页面时显著的减少页表的大小，同时也增加了 TLB 的
 命中率，因为同样大小的内存大页只需要一个 TLB 表项即可。</p><p>然而，还有一种情况更加严重，若<code>fork()</code>后父进程写了地址空间的内容，
 如上所说就要拷贝这些物理页面，此时如果写的页面过多可能发生<code>fork()</code>到<code>exec()</code>
 那一段间隔时间里的物理内存占用极高。虽然这种情况极少发生，前提必须是内存
 分配稀疏+父进程修改的内存也是稀疏的，但是并不能完全忽略这种情况。</p><p>当然，这个问题不能归根于 COW，而是<code>fork()</code>带来的，<code>fork()</code>应该提供参数
-给那些子进程立马调用<code>exec()</code>的场景，就不用拷贝父进程的这些数据结构了。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-08T09:51:49, Lastmod: 2023-09-24T18:08:59</p></main></div></body></html>
+给那些子进程立马调用<code>exec()</code>的场景，就不用拷贝父进程的这些数据结构了。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-08T09:51:49, Lastmod: 2023-09-24T18:08:59</p><script src=/js/clipboard.js></script></main></div></body></html>

@@ -25,4 +25,4 @@
 [图]</p><p>这个结构就差不多了，另外，如果让<code>kmem_cache</code>下的所有 slab 都放在一起，不好判断那些
 slab 中的 object 已经全部分配了，哪些 slab 是空的？为了方便管理和查找，slab 算法还
 封装了一个<code>struct kmem_cache_node</code>结构，组织了三条链表: free, partial, full。
-特定状态的 slab 挂在特定的链表上，方便查找。【图】</p><h2 id=reference>Reference</h2><p><a href=https://blog.csdn.net/u010923083/article/details/116518248>https://blog.csdn.net/u010923083/article/details/116518248</a></p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-20T17:51:49, Lastmod: 2023-09-24T18:08:59</p></main></div></body></html>
+特定状态的 slab 挂在特定的链表上，方便查找。【图】</p><h2 id=reference>Reference</h2><p><a href=https://blog.csdn.net/u010923083/article/details/116518248>https://blog.csdn.net/u010923083/article/details/116518248</a></p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-20T17:51:49, Lastmod: 2023-09-24T18:08:59</p><script src=/js/clipboard.js></script></main></div></body></html>

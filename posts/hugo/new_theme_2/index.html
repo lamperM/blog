@@ -2,84 +2,156 @@
 <script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Hugo 主题创建(2): 添加侧边栏</div></header><blockquote><p>commit: <a href=https://github.com/wangloo/hugo-theme-puer/commit/32abfccc6bafd3763e07b751f0315a5403c6eaff>https://github.com/wangloo/hugo-theme-puer/commit/32abfccc6bafd3763e07b751f0315a5403c6eaff</a></p></blockquote><p>与顶栏相比，我更喜欢侧边栏，现在的屏幕纵向空间很宝贵。</p><p>本文创建了侧边栏模板的框架，预留了未来实现各种功能的布局，这个过程也是第一次接触<code>partials/</code>
 下的文件的作用——页面的某个组成部分。而<code>_default/</code>下的模板则是描述不同类型的页面。</p><h1 id=布局>布局</h1><p>基于hugo模板的分类思想，侧边栏属于页表的一个部分，所以侧边栏的模板需要放在<code>partials/</code>下，
 同理的还有footer、toc、comment等。我们给侧边栏模板起一个名字<code>sidebar.html</code>。</p><p>因为想在站点所有的页面（section、single、list）都显示侧边栏，
-所以在<code>baseof.html</code>中需要引入sidebar模板：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span><span style=color:#c00;font-weight:700>&lt;!DOCTYPE html&gt;</span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>&lt;<span style=color:#b06;font-weight:700>html</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>&lt;<span style=color:#b06;font-weight:700>head</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>    {{- partial &#34;head.html&#34; . -}}
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>    &lt;<span style=color:#b06;font-weight:700>title</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>        {{ block &#34;title&#34; . }}
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>        {{ .Site.Title }}
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>        {{ end }}
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>    &lt;/<span style=color:#b06;font-weight:700>title</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>&lt;/<span style=color:#b06;font-weight:700>head</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span>&lt;<span style=color:#b06;font-weight:700>body</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>    &lt;<span style=color:#b06;font-weight:700>div</span> <span style=color:#369>id</span>=<span style=color:#d20;background-color:#fff0f0>&#34;app&#34;</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>        {{- partial &#34;sidebar.html&#34; . -}}
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span>        &lt;<span style=color:#b06;font-weight:700>main</span> <span style=color:#369>class</span>=<span style=color:#d20;background-color:#fff0f0>&#34;container&#34;</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span>            {{- block &#34;main&#34; . }}
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span><span>            {{- end }}
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span><span>        &lt;/<span style=color:#b06;font-weight:700>main</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21</span><span>    &lt;/<span style=color:#b06;font-weight:700>div</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22</span><span>&lt;/<span style=color:#b06;font-weight:700>body</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23</span><span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24</span><span>&lt;/<span style=color:#b06;font-weight:700>html</span>&gt;
-</span></span></code></pre></div><p><code>sidebar.html</code>的内容就比较简单了，目前的计划是添加<strong>首页、TAG和一个搜索框</strong>，
-不着急，先展位，以后再实现这些功能，本次先实现框架。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>&lt;<span style=color:#b06;font-weight:700>div</span> <span style=color:#369>id</span>=<span style=color:#d20;background-color:#fff0f0>&#34;sideContainer&#34;</span> <span style=color:#369>class</span>=<span style=color:#d20;background-color:#fff0f0>&#34;side-container&#34;</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>    &lt;<span style=color:#b06;font-weight:700>div</span> <span style=color:#369>class</span>=<span style=color:#d20;background-color:#fff0f0>&#34;nav-link-list&#34;</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>        {{/*  TODO: 回到首页  */}}
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>        &lt;<span style=color:#b06;font-weight:700>div</span> <span style=color:#369>class</span>=<span style=color:#d20;background-color:#fff0f0>&#34;a-block nav-link-item &#34;</span> <span style=color:#369>href</span>=<span style=color:#d20;background-color:#fff0f0>&#34;&#34;</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>            BACK
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>        &lt;/<span style=color:#b06;font-weight:700>div</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>        
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>        {{/*  TODO: articles...  */}}
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>        &lt;<span style=color:#b06;font-weight:700>div</span> <span style=color:#369>class</span>=<span style=color:#d20;background-color:#fff0f0>&#34;a-block nav-link-item &#34;</span> <span style=color:#369>href</span>=<span style=color:#d20;background-color:#fff0f0>&#34;&#34;</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>            POSTS
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>        &lt;/<span style=color:#b06;font-weight:700>div</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>        {{/*  TODO: tags  */}}
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span>        &lt;<span style=color:#b06;font-weight:700>div</span> <span style=color:#369>class</span>=<span style=color:#d20;background-color:#fff0f0>&#34;a-block nav-link-item &#34;</span> <span style=color:#369>href</span>=<span style=color:#d20;background-color:#fff0f0>&#34;&#34;</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>            TAGS
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>        &lt;/<span style=color:#b06;font-weight:700>div</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span>    &lt;/<span style=color:#b06;font-weight:700>div</span>&gt;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span>&lt;/<span style=color:#b06;font-weight:700>div</span>&gt;
-</span></span></code></pre></div><h1 id=样式>样式</h1><p>这是首次接触样式的修改，也就是用到css语言。顺便说下，我非常敬佩视频网站上那些对CSS玩的很溜
+所以在<code>baseof.html</code>中需要引入sidebar模板：</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span><span style=color:#c00;font-weight:700>&lt;!DOCTYPE html&gt;</span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#b06;font-weight:700>html</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#b06;font-weight:700>head</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    {{- partial &#34;head.html&#34; . -}}
+</span></span><span style=display:flex><span>    &lt;<span style=color:#b06;font-weight:700>title</span>&gt;
+</span></span><span style=display:flex><span>        {{ block &#34;title&#34; . }}
+</span></span><span style=display:flex><span>        {{ .Site.Title }}
+</span></span><span style=display:flex><span>        {{ end }}
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#b06;font-weight:700>title</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#b06;font-weight:700>head</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#b06;font-weight:700>body</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#b06;font-weight:700>div</span> <span style=color:#369>id</span>=<span style=color:#d20;background-color:#fff0f0>&#34;app&#34;</span>&gt;
+</span></span><span style=display:flex><span>        {{- partial &#34;sidebar.html&#34; . -}}
+</span></span><span style=display:flex><span>        &lt;<span style=color:#b06;font-weight:700>main</span> <span style=color:#369>class</span>=<span style=color:#d20;background-color:#fff0f0>&#34;container&#34;</span>&gt;
+</span></span><span style=display:flex><span>            {{- block &#34;main&#34; . }}
+</span></span><span style=display:flex><span>            {{- end }}
+</span></span><span style=display:flex><span>        &lt;/<span style=color:#b06;font-weight:700>main</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#b06;font-weight:700>div</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#b06;font-weight:700>body</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;/<span style=color:#b06;font-weight:700>html</span>&gt;
+</span></span></code></pre></td></tr></table></div></div><p><code>sidebar.html</code>的内容就比较简单了，目前的计划是添加<strong>首页、TAG和一个搜索框</strong>，
+不着急，先展位，以后再实现这些功能，本次先实现框架。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span>&lt;<span style=color:#b06;font-weight:700>div</span> <span style=color:#369>id</span>=<span style=color:#d20;background-color:#fff0f0>&#34;sideContainer&#34;</span> <span style=color:#369>class</span>=<span style=color:#d20;background-color:#fff0f0>&#34;side-container&#34;</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#b06;font-weight:700>div</span> <span style=color:#369>class</span>=<span style=color:#d20;background-color:#fff0f0>&#34;nav-link-list&#34;</span>&gt;
+</span></span><span style=display:flex><span>        {{/*  TODO: 回到首页  */}}
+</span></span><span style=display:flex><span>        &lt;<span style=color:#b06;font-weight:700>div</span> <span style=color:#369>class</span>=<span style=color:#d20;background-color:#fff0f0>&#34;a-block nav-link-item &#34;</span> <span style=color:#369>href</span>=<span style=color:#d20;background-color:#fff0f0>&#34;&#34;</span>&gt;
+</span></span><span style=display:flex><span>            BACK
+</span></span><span style=display:flex><span>        &lt;/<span style=color:#b06;font-weight:700>div</span>&gt;
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        {{/*  TODO: articles...  */}}
+</span></span><span style=display:flex><span>        &lt;<span style=color:#b06;font-weight:700>div</span> <span style=color:#369>class</span>=<span style=color:#d20;background-color:#fff0f0>&#34;a-block nav-link-item &#34;</span> <span style=color:#369>href</span>=<span style=color:#d20;background-color:#fff0f0>&#34;&#34;</span>&gt;
+</span></span><span style=display:flex><span>            POSTS
+</span></span><span style=display:flex><span>        &lt;/<span style=color:#b06;font-weight:700>div</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        {{/*  TODO: tags  */}}
+</span></span><span style=display:flex><span>        &lt;<span style=color:#b06;font-weight:700>div</span> <span style=color:#369>class</span>=<span style=color:#d20;background-color:#fff0f0>&#34;a-block nav-link-item &#34;</span> <span style=color:#369>href</span>=<span style=color:#d20;background-color:#fff0f0>&#34;&#34;</span>&gt;
+</span></span><span style=display:flex><span>            TAGS
+</span></span><span style=display:flex><span>        &lt;/<span style=color:#b06;font-weight:700>div</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#b06;font-weight:700>div</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#b06;font-weight:700>div</span>&gt;
+</span></span></code></pre></td></tr></table></div></div><h1 id=样式>样式</h1><p>这是首次接触样式的修改，也就是用到css语言。顺便说下，我非常敬佩视频网站上那些对CSS玩的很溜
 的人，我觉得CSS中的细节远比我的工作中的多，可能你糊弄一下能得到一个相同的效果，但是一个优秀的
 前端工程师是要清楚每个属性的作用，他们之间是如何搭配的，<strong>绝对不是凑出结果</strong>。</p><p>主题中如何添加css文件呢？创建模板时会自动创建目录 <code>static/css/</code>，其中可以放置一些css文件，
 比如我为sidebar.html创建的叫style.css, 在样式不多的情况下其他部分的样式也都可以放在这。</p><p>不在一个目录下，如何联系html和css呢？这就不得不提到<code>partials/</code>下的另一个重要模板<code>head.html</code>,
 通过<code>baseof.html</code>中它的位置就能大概知道它的作用：<code>&lt;head/></code>标签的模板，基本上就是描述样式的css语法嘛。
-这就是html和css连接的桥梁。</p><p>以下是<code>style.css</code>文件内容：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>.<span style=color:#b06;font-weight:700>container</span> {
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>    <span style=color:#080;font-weight:700>padding-left</span>: <span style=color:#00d;font-weight:700>25</span><span style=color:#888;font-weight:700>%</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span>    <span style=color:#080;font-weight:700>width</span>: <span style=color:#00d;font-weight:700>75</span><span style=color:#888;font-weight:700>%</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span>    <span style=color:#080;font-weight:700>min-height</span>: <span style=color:#00d;font-weight:700>100</span><span style=color:#888;font-weight:700>vh</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>    <span style=color:#080;font-weight:700>white-space</span>: <span style=color:#080;font-weight:700>normal</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>}
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>.<span style=color:#b06;font-weight:700>side-container</span> {
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>  <span style=color:#080;font-weight:700>position</span>: <span style=color:#080;font-weight:700>fixed</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>  <span style=color:#080;font-weight:700>top</span>: <span style=color:#00d;font-weight:700>0</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>  <span style=color:#080;font-weight:700>height</span>: <span style=color:#00d;font-weight:700>100</span><span style=color:#888;font-weight:700>vh</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>  <span style=color:#080;font-weight:700>width</span>: <span style=color:#00d;font-weight:700>25</span><span style=color:#888;font-weight:700>%</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span>  <span style=color:#080;font-weight:700>text-align</span>: <span style=color:#080;font-weight:700>left</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>  <span style=color:#080;font-weight:700>padding</span>: <span style=color:#00d;font-weight:700>20</span><span style=color:#888;font-weight:700>px</span> <span style=color:#00d;font-weight:700>0</span> <span style=color:#00d;font-weight:700>50</span><span style=color:#888;font-weight:700>px</span> <span style=color:#00d;font-weight:700>0</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>  <span style=color:#080;font-weight:700>display</span>: <span style=color:#080;font-weight:700>flex</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span>  <span style=color:#080;font-weight:700>flex-direction</span>: <span style=color:#080;font-weight:700>column</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span>  <span style=color:#080;font-weight:700>justify-content</span>: <span style=color:#080;font-weight:700>space-between</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span><span>}
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span><span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21</span><span>.<span style=color:#b06;font-weight:700>nav-link-list</span> {
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22</span><span>    <span style=color:#080;font-weight:700>flex-grow</span>: <span style=color:#00d;font-weight:700>1</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23</span><span>    <span style=color:#a61717;background-color:#e3d2d2>.nav-link-item</span> <span style=color:#a61717;background-color:#e3d2d2>{</span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24</span><span>      <span style=color:#080;font-weight:700>margin-bottom</span>: <span style=color:#00d;font-weight:700>10</span><span style=color:#888;font-weight:700>px</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25</span><span>      <span style=color:#080;font-weight:700>border-right</span>: <span style=color:#00d;font-weight:700>2</span><span style=color:#888;font-weight:700>px</span> <span style=color:#080;font-weight:700>solid</span> <span style=color:#080;font-weight:700>transparent</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26</span><span>      <span style=color:#888>/* padding: 8px 28px 8px 30px; */</span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27</span><span>      <span style=color:#080;font-weight:700>cursor</span>: hand;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28</span><span>      <span style=color:#080;font-weight:700>transition</span>: <span style=color:#080;font-weight:700>all</span> <span style=color:#00d;font-weight:700>0.2</span><span style=color:#888;font-weight:700>s</span> <span style=color:#080;font-weight:700>linear</span>;
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29</span><span>    }
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30</span><span>  <span style=color:#a61717;background-color:#e3d2d2>}</span>
-</span></span></code></pre></div><p>有了侧边栏后，我们需要启用内容的wrap line，且目前暂时用<code>padding-left+width=100%</code>的方式
+这就是html和css连接的桥梁。</p><p>以下是<code>style.css</code>文件内容：</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span>.<span style=color:#b06;font-weight:700>container</span> {
+</span></span><span style=display:flex><span>    <span style=color:#080;font-weight:700>padding-left</span>: <span style=color:#00d;font-weight:700>25</span><span style=color:#888;font-weight:700>%</span>;
+</span></span><span style=display:flex><span>    <span style=color:#080;font-weight:700>width</span>: <span style=color:#00d;font-weight:700>75</span><span style=color:#888;font-weight:700>%</span>;
+</span></span><span style=display:flex><span>    <span style=color:#080;font-weight:700>min-height</span>: <span style=color:#00d;font-weight:700>100</span><span style=color:#888;font-weight:700>vh</span>;
+</span></span><span style=display:flex><span>    <span style=color:#080;font-weight:700>white-space</span>: <span style=color:#080;font-weight:700>normal</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>.<span style=color:#b06;font-weight:700>side-container</span> {
+</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>position</span>: <span style=color:#080;font-weight:700>fixed</span>;
+</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>top</span>: <span style=color:#00d;font-weight:700>0</span>;
+</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>height</span>: <span style=color:#00d;font-weight:700>100</span><span style=color:#888;font-weight:700>vh</span>;
+</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>width</span>: <span style=color:#00d;font-weight:700>25</span><span style=color:#888;font-weight:700>%</span>;
+</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>text-align</span>: <span style=color:#080;font-weight:700>left</span>;
+</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>padding</span>: <span style=color:#00d;font-weight:700>20</span><span style=color:#888;font-weight:700>px</span> <span style=color:#00d;font-weight:700>0</span> <span style=color:#00d;font-weight:700>50</span><span style=color:#888;font-weight:700>px</span> <span style=color:#00d;font-weight:700>0</span>;
+</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>display</span>: <span style=color:#080;font-weight:700>flex</span>;
+</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>flex-direction</span>: <span style=color:#080;font-weight:700>column</span>;
+</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>justify-content</span>: <span style=color:#080;font-weight:700>space-between</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>.<span style=color:#b06;font-weight:700>nav-link-list</span> {
+</span></span><span style=display:flex><span>    <span style=color:#080;font-weight:700>flex-grow</span>: <span style=color:#00d;font-weight:700>1</span>;
+</span></span><span style=display:flex><span>    <span style=color:#a61717;background-color:#e3d2d2>.nav-link-item</span> <span style=color:#a61717;background-color:#e3d2d2>{</span>
+</span></span><span style=display:flex><span>      <span style=color:#080;font-weight:700>margin-bottom</span>: <span style=color:#00d;font-weight:700>10</span><span style=color:#888;font-weight:700>px</span>;
+</span></span><span style=display:flex><span>      <span style=color:#080;font-weight:700>border-right</span>: <span style=color:#00d;font-weight:700>2</span><span style=color:#888;font-weight:700>px</span> <span style=color:#080;font-weight:700>solid</span> <span style=color:#080;font-weight:700>transparent</span>;
+</span></span><span style=display:flex><span>      <span style=color:#888>/* padding: 8px 28px 8px 30px; */</span>
+</span></span><span style=display:flex><span>      <span style=color:#080;font-weight:700>cursor</span>: hand;
+</span></span><span style=display:flex><span>      <span style=color:#080;font-weight:700>transition</span>: <span style=color:#080;font-weight:700>all</span> <span style=color:#00d;font-weight:700>0.2</span><span style=color:#888;font-weight:700>s</span> <span style=color:#080;font-weight:700>linear</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  <span style=color:#a61717;background-color:#e3d2d2>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>有了侧边栏后，我们需要启用内容的wrap line，且目前暂时用<code>padding-left+width=100%</code>的方式
 来避免当文字过长出现滚动条时滑动会破坏布局。
-本质还是由于侧边栏的实现是通过padding方式，sidebar和内容互相不能感知对方。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-08-11T15:39:42, Lastmod: 2023-09-24T18:08:59</p></main></div></body></html>
+本质还是由于侧边栏的实现是通过padding方式，sidebar和内容互相不能感知对方。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-08-11T15:39:42, Lastmod: 2023-09-24T18:08:59</p><script src=/js/clipboard.js></script></main></div></body></html>

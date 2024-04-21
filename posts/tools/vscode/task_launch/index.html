@@ -3,49 +3,90 @@
 在我看来，Vscode Task就像是一个强大的、与Vscode联动的Shell脚本。</p><h3 id=创建一个task>创建一个Task</h3><p>创建一个Task很简答，<code>Terminal-Configure Tasks</code>，
 然后根据引导就可以创建一个默认的task，对他进行配置的文件是workspace/.vscode/task.json。</p><p>展示一下我刚刚创建的一个编译并执行单元测试的任务，关键的参数是<code>label</code>也就是任务的名字，
 <code>type</code>除了shell不知道还有啥，<code>command</code>就是该任务会执行的shell命令。
-更多的参数下面会介绍。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>{
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>  <span style=color:#888>// See https://go.microsoft.com/fwlink/?LinkId=733558
-</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span><span style=color:#888></span>  <span style=color:#888>// for the documentation about the tasks.json format
-</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span><span style=color:#888></span>  <span style=color:#b06;font-weight:700>&#34;version&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;2.0.0&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span>  <span style=color:#b06;font-weight:700>&#34;tasks&#34;</span>: [
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>    {
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>      <span style=color:#b06;font-weight:700>&#34;label&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;build-ut&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>      <span style=color:#b06;font-weight:700>&#34;type&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;shell&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>      <span style=color:#b06;font-weight:700>&#34;command&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;bash tools/vscode_build_ut.sh&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>      <span style=color:#b06;font-weight:700>&#34;presentation&#34;</span>: {
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>        <span style=color:#b06;font-weight:700>&#34;echo&#34;</span>: <span style=color:#080;font-weight:700>true</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>        <span style=color:#b06;font-weight:700>&#34;reveal&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;always&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>        <span style=color:#b06;font-weight:700>&#34;focus&#34;</span>: <span style=color:#080;font-weight:700>true</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span>        <span style=color:#b06;font-weight:700>&#34;panel&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;shared&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>        <span style=color:#b06;font-weight:700>&#34;showReuseMessage&#34;</span>: <span style=color:#080;font-weight:700>true</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>        <span style=color:#b06;font-weight:700>&#34;clear&#34;</span>: <span style=color:#080;font-weight:700>false</span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span>      },
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span>      <span style=color:#b06;font-weight:700>&#34;problemMatcher&#34;</span>: [],
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span><span>    }
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span><span>  ]
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21</span><span>}
-</span></span></code></pre></div><h3 id=支持的参数>支持的参数</h3><p>支持的参数很多，我主要介绍几个，Vscode的<a href=https://code.visualstudio.com/docs/editor/tasks>官方文档</a>说的非常通俗易懂，修改参数时最好参考一下。</p><ul><li>label: 此任务的名字</li><li>type：类型<ul><li>shell：作为shell命令执行</li><li>process：创建一个新进程执行</li></ul></li><li>command：任务实际执行的命令</li><li>group：任务的分组</li><li>presentation：定义如何处理Task的输出<ul><li>reveal：终端是否显示</li><li>echo：任务输出是否到终端中</li><li>focus：任务执行时是否聚焦到终端</li><li>showReuseMessage：是否显示最后的提示信息</li><li>clear：任务运行前是否清理终端输出</li></ul></li><li>options：定义当前目录和一些环境变量</li><li>runOptions：定义任务何时运行以及如何运行</li><li>problemMatcher: 自定义错误匹配机制，这个应该很强大，我这里单纯是为了运行时不需要再选一次所以用了一个默认值。具体怎么用可以参考: <a href=https://code.visualstudio.com/docs/editor/tasks#_defining-a-problem-matcher>https://code.visualstudio.com/docs/editor/tasks#_defining-a-problem-matcher</a></li></ul><h2 id=launchjson>Launch.json</h2><p>早就看Vscode左边的"Run and Debug"栏不爽了，呆在那也没啥用。
+更多的参数下面会介绍。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#888>// See https://go.microsoft.com/fwlink/?LinkId=733558
+</span></span></span><span style=display:flex><span><span style=color:#888></span>  <span style=color:#888>// for the documentation about the tasks.json format
+</span></span></span><span style=display:flex><span><span style=color:#888></span>  <span style=color:#b06;font-weight:700>&#34;version&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;2.0.0&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#b06;font-weight:700>&#34;tasks&#34;</span>: [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;label&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;build-ut&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;type&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;shell&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;command&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;bash tools/vscode_build_ut.sh&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;presentation&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:#b06;font-weight:700>&#34;echo&#34;</span>: <span style=color:#080;font-weight:700>true</span>,
+</span></span><span style=display:flex><span>        <span style=color:#b06;font-weight:700>&#34;reveal&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;always&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#b06;font-weight:700>&#34;focus&#34;</span>: <span style=color:#080;font-weight:700>true</span>,
+</span></span><span style=display:flex><span>        <span style=color:#b06;font-weight:700>&#34;panel&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;shared&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#b06;font-weight:700>&#34;showReuseMessage&#34;</span>: <span style=color:#080;font-weight:700>true</span>,
+</span></span><span style=display:flex><span>        <span style=color:#b06;font-weight:700>&#34;clear&#34;</span>: <span style=color:#080;font-weight:700>false</span>
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;problemMatcher&#34;</span>: [],
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=支持的参数>支持的参数</h3><p>支持的参数很多，我主要介绍几个，Vscode的<a href=https://code.visualstudio.com/docs/editor/tasks>官方文档</a>说的非常通俗易懂，修改参数时最好参考一下。</p><ul><li>label: 此任务的名字</li><li>type：类型<ul><li>shell：作为shell命令执行</li><li>process：创建一个新进程执行</li></ul></li><li>command：任务实际执行的命令</li><li>group：任务的分组</li><li>presentation：定义如何处理Task的输出<ul><li>reveal：终端是否显示</li><li>echo：任务输出是否到终端中</li><li>focus：任务执行时是否聚焦到终端</li><li>showReuseMessage：是否显示最后的提示信息</li><li>clear：任务运行前是否清理终端输出</li></ul></li><li>options：定义当前目录和一些环境变量</li><li>runOptions：定义任务何时运行以及如何运行</li><li>problemMatcher: 自定义错误匹配机制，这个应该很强大，我这里单纯是为了运行时不需要再选一次所以用了一个默认值。具体怎么用可以参考: <a href=https://code.visualstudio.com/docs/editor/tasks#_defining-a-problem-matcher>https://code.visualstudio.com/docs/editor/tasks#_defining-a-problem-matcher</a></li></ul><h2 id=launchjson>Launch.json</h2><p>早就看Vscode左边的"Run and Debug"栏不爽了，呆在那也没啥用。
 其实在实习的时候看过他用Vscode调试Qemu guest，
 抽时间把这个给研究了一下，感觉比直接执行gdb方便一些。</p><p>Launch.json就是定义一些运行与Debug的动作，结合Vscode的界面，
 比Gdb Tui还是好看了一些。这里列出我当前项目所使用的配置项。</p><blockquote><p>注意：如果同时在项目根目录有<code>.gitinit</code>文件，可能会导致错误，
-详细: <a href=https://stackoverflow.com/questions/5550555/qemu-terminated-via-gdbstub-error>QEMU: Terminated via GDBstub error</a></p></blockquote><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1</span><span>{
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2</span><span>  <span style=color:#888>// Use IntelliSense to learn about possible attributes.
-</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3</span><span><span style=color:#888></span>  <span style=color:#888>// Hover to view descriptions of existing attributes.
-</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4</span><span><span style=color:#888></span>  <span style=color:#888>// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-</span></span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5</span><span><span style=color:#888></span>  <span style=color:#b06;font-weight:700>&#34;version&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;0.2.0&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6</span><span>  <span style=color:#b06;font-weight:700>&#34;configurations&#34;</span>: [
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7</span><span>    {
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8</span><span>      <span style=color:#b06;font-weight:700>&#34;name&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;qemu-kernel&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9</span><span>      <span style=color:#b06;font-weight:700>&#34;type&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;cppdbg&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10</span><span>      <span style=color:#b06;font-weight:700>&#34;request&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;launch&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11</span><span>      <span style=color:#b06;font-weight:700>&#34;miDebuggerPath&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;/usr/bin/gdb-multiarch&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12</span><span>      <span style=color:#b06;font-weight:700>&#34;miDebuggerServerAddress&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;localhost:1234&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13</span><span>      <span style=color:#b06;font-weight:700>&#34;program&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;${workspaceFolder}/your/exec/file&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14</span><span>      <span style=color:#b06;font-weight:700>&#34;cwd&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;${workspaceFolder}&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15</span><span>      <span style=color:#b06;font-weight:700>&#34;MIMode&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;gdb&#34;</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16</span><span>      <span style=color:#b06;font-weight:700>&#34;stopAtConnect&#34;</span>: <span style=color:#080;font-weight:700>true</span>,
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17</span><span>    }
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18</span><span>
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19</span><span>  ]
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20</span><span>}
-</span></span></code></pre></div></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-12-17T15:25:12, Lastmod: 2023-12-24T13:12:32</p></main></div></body></html>
+详细: <a href=https://stackoverflow.com/questions/5550555/qemu-terminated-via-gdbstub-error>QEMU: Terminated via GDBstub error</a></p></blockquote><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#888>// Use IntelliSense to learn about possible attributes.
+</span></span></span><span style=display:flex><span><span style=color:#888></span>  <span style=color:#888>// Hover to view descriptions of existing attributes.
+</span></span></span><span style=display:flex><span><span style=color:#888></span>  <span style=color:#888>// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+</span></span></span><span style=display:flex><span><span style=color:#888></span>  <span style=color:#b06;font-weight:700>&#34;version&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;0.2.0&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#b06;font-weight:700>&#34;configurations&#34;</span>: [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;name&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;qemu-kernel&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;type&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;cppdbg&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;request&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;launch&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;miDebuggerPath&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;/usr/bin/gdb-multiarch&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;miDebuggerServerAddress&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;localhost:1234&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;program&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;${workspaceFolder}/your/exec/file&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;cwd&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;${workspaceFolder}&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;MIMode&#34;</span>: <span style=color:#d20;background-color:#fff0f0>&#34;gdb&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#b06;font-weight:700>&#34;stopAtConnect&#34;</span>: <span style=color:#080;font-weight:700>true</span>,
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-12-17T15:25:12, Lastmod: 2023-12-24T13:12:32</p><script src=/js/clipboard.js></script></main></div></body></html>

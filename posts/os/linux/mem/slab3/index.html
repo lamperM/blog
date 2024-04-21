@@ -8,4 +8,4 @@ SLUB 中只有一个 partial 链表。</li><li>放弃着色，效果不明显</l
 small, medium, large, 分别应对&lt;256b, &lt;1k, &lt;PAGESIZE 的请求，
 slab 直接挂在这三个链表上，因为 slab 中的内存分配大小可以不同，
 用三个链表可以加速查找。</p><blockquote><p>从思想上，SLOB 仅仅保留 slab 中分配小块内存的思想，舍弃了 cache
-的设计方案，所以实现上非常简单。</p></blockquote></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-26T18:51:49, Lastmod: 2023-09-24T18:08:59</p></main></div></body></html>
+的设计方案，所以实现上非常简单。</p></blockquote></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-26T18:51:49, Lastmod: 2023-09-24T18:08:59</p><script src=/js/clipboard.js></script></main></div></body></html>

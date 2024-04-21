@@ -11,18 +11,24 @@
 即可访问，<a href=https://gohugo.io/content-management/image-processing/#page-resource>Hugo 官方描述</a>。
 属于各自 blog 的图片放到各自的目录下，这样的好处是看起啦比较清晰。
 但是麻烦的地方就在于需要引用图片的博文都需要建立一个 Page bundle，
-而且我不喜欢 index.md 这种文件名，难以搜索。<div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>content/
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2</span><span>└── posts/
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3</span><span>    └── post-1/           &lt;-- page bundle
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4</span><span>        ├── index.md
-</span></span><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5</span><span>        └── sunset.jpg    &lt;-- page resource
-</span></span></code></pre></div></li><li>所有博文的图片都放到的<code>/static</code>目录下，统一管理。
+而且我不喜欢 index.md 这种文件名，难以搜索。<div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>content/
+</span></span><span style=display:flex><span>└── posts/
+</span></span><span style=display:flex><span>    └── post-1/           &lt;-- page bundle
+</span></span><span style=display:flex><span>        ├── index.md
+</span></span><span style=display:flex><span>        └── sunset.jpg    &lt;-- page resource
+</span></span></code></pre></td></tr></table></div></div></li><li>所有博文的图片都放到的<code>/static</code>目录下，统一管理。
 <code>/static</code>可能不是必须存在，可以手动创建。此时的图片通过
 <code>![](/sunset)</code> 的方式来访问，多了一条斜杠。
 <strong>Latex论文里的图片就是这样管理的</strong>，以前担心混乱，
 实际上因为图片不多，命名规范也还好。</li></ol><h3 id=shortcode>Shortcode</h3><p>Md支持的原生图片引用方式调整大小、对齐等操作比较麻烦，
 Hugo在这方面引入了默认的Shortcode:
 <a href=https://gohugo.io/content-management/shortcodes/#figure>figure</a>
-帮助实现引用本地图片。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1</span><span>{{&lt; figure src=&#34;/test.jpg&#34; width=&#34;100%&#34; &gt;}}
-</span></span></code></pre></div><p>另外，我自己根据网上的资料写了引用外部图片的shortcode:
-<a href=https://wangloo.github.io/posts/hugo/new_theme_6/>insertFigure</a>。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2024-01-03T13:39:42, Lastmod: 2024-01-03T15:57:20</p></main></div></body></html>
+帮助实现引用本地图片。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>{{&lt; figure src=&#34;/test.jpg&#34; width=&#34;100%&#34; &gt;}}
+</span></span></code></pre></td></tr></table></div></div><p>另外，我自己根据网上的资料写了引用外部图片的shortcode:
+<a href=https://wangloo.github.io/posts/hugo/new_theme_6/>insertFigure</a>。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2024-01-03T13:39:42, Lastmod: 2024-01-03T15:57:20</p><script src=/js/clipboard.js></script></main></div></body></html>

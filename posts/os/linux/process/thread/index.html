@@ -11,4 +11,4 @@
 链表来查找，但这里面即有子进程又有线程，需要过滤。</p><blockquote><p>有的地方会使用一个名词 <em>管理线程</em>， 其实就是线程共享的地址空间这些的原主。</p></blockquote><h2 id=内核线程>内核线程</h2><p>内核线程是一种特殊的进程，当然也是用<code>task_struct</code>来描述，内核线程的特殊点：</p><ol><li><code>mm</code>成员=NULL，没有用户空间的数据，不能访问用户空间</li><li>每个内核线程有私有数据，用<code>set_child_tid</code>成员指向，
 是一个<code>struct kthread</code>结构，用<code>to_kthread()</code>来访问私有数据</li></ol><p>内核线程也像普通线程一样参与调度，其创建的地方在内核，使用<code>kthread_create()</code>
 创建，不能由用户态创建。</p><p>内核线程一般负责执行一些内核任务，比如软中断
-就有一个内核线程，来专门执行到来中断的服务函数中不着急的部分。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-10T20:51:49, Lastmod: 2023-09-24T18:08:59</p></main></div></body></html>
+就有一个内核线程，来专门执行到来中断的服务函数中不着急的部分。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-10T20:51:49, Lastmod: 2023-09-24T18:08:59</p><script src=/js/clipboard.js></script></main></div></body></html>
