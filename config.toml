@@ -21,7 +21,7 @@ enableEmoji = true
     hl_inline = false         # 高亮 inline code, ver>=0.101.0
     lineAnchors = ''          #　与 anchorLineNos 配合
     lineNoStart = 1           # 行号开始
-    lineNos = true            # 是否显示行号
+    lineNos = false            # 是否显示行号
     lineNumbersInTable = false # 生成html中分开行号和代码
     noClasses = true          
     noHl = false
