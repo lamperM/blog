@@ -1,32 +1,6 @@
 <!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>杂乱的开发日记</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#6828 aria-label=6.828>6.828</a><ul><li><a href=#%e8%bf%98%e8%83%bd%e8%bf%99%e4%b9%88%e6%8b%b7%e8%b4%9d%e4%bb%a3%e7%a0%81 aria-label=还能这么拷贝代码>还能这么拷贝代码</a></li><li><a href=#%e8%bd%ac%e6%8d%a2%e5%87%bd%e6%95%b0%e7%9a%84%e4%b8%80%e7%a7%8d%e5%86%99%e6%b3%95 aria-label=转换函数的一种写法>转换函数的一种写法</a></li></ul></li><li><a href=#spring-os aria-label="spring OS">spring OS</a><ul><li><a href=#2023-07-01 aria-label=2023-07-01>2023-07-01</a></li><li><a href=#2023-07-02 aria-label=2023-07-02>2023-07-02</a></li></ul></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
-<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>杂乱的开发日记</div></header><p>零零碎碎的开发笔记，如果思考比较多应该写成单独的博文。</p><h2 id=6828>6.828</h2><h3 id=还能这么拷贝代码>还能这么拷贝代码</h3><p>将一段汇编代码从一个地址拷贝到另一个地址，你会怎么做？</p><p>我能想到的是利用链接脚本，将该段代码限定在某个段里，然后利用变量来定位代码所在的地址，执行拷贝。</p><p>init.c的boot_aps()提供了一种新的思路：在代码的前后定义一个全局变量，就能在外面访问到代码的地址和范围了。</p><h3 id=转换函数的一种写法>转换函数的一种写法</h3><p>我们经常会用到两种指代之间的转换，比如用id找到结构体指针（JOS中的<code>envid2env</code>），你会怎么设置函数的参数和返回值？</p><p>我以前只能想到：</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> Env *envid2env(envid_t envid)
-</span></span></code></pre></td></tr></table></div></div><p>正常情况下返回转换完成的结构体指针，否则返回NULL。</p><p>然而，JOS提供了一种别样的实现方式：</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>int</span>
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>杂乱的开发日记</div></header><p>零零碎碎的开发笔记，如果思考比较多应该写成单独的博文。</p><h2 id=6828>6.828</h2><h3 id=还能这么拷贝代码>还能这么拷贝代码</h3><p>将一段汇编代码从一个地址拷贝到另一个地址，你会怎么做？</p><p>我能想到的是利用链接脚本，将该段代码限定在某个段里，然后利用变量来定位代码所在的地址，执行拷贝。</p><p>init.c的boot_aps()提供了一种新的思路：在代码的前后定义一个全局变量，就能在外面访问到代码的地址和范围了。</p><h3 id=转换函数的一种写法>转换函数的一种写法</h3><p>我们经常会用到两种指代之间的转换，比如用id找到结构体指针（JOS中的<code>envid2env</code>），你会怎么设置函数的参数和返回值？</p><p>我以前只能想到：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> Env *envid2env(envid_t envid)
+</span></span></code></pre></div><p>正常情况下返回转换完成的结构体指针，否则返回NULL。</p><p>然而，JOS提供了一种别样的实现方式：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>int</span>
 </span></span><span style=display:flex><span><span style=color:#06b;font-weight:700>envid2env</span>(envid_t envid, <span style=color:#080;font-weight:700>struct</span> Env **env_store, <span style=color:#888;font-weight:700>bool</span> checkperm)
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>	<span style=color:#080;font-weight:700>struct</span> Env *e;
@@ -51,7 +25,7 @@
 </span></span><span style=display:flex><span>	*env_store = e;
 </span></span><span style=display:flex><span>	<span style=color:#080;font-weight:700>return</span> <span style=color:#00d;font-weight:700>0</span>;
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></td></tr></table></div></div><p>外面传入一个指针的地址（无需申请空间），是传出参数。这样的好处是<strong>空出一个返回地址，可以用来表示多种出错的类型</strong>。</p><h2 id=spring-os>spring OS</h2><h3 id=2023-07-01>2023-07-01</h3><p>如果kernel也用低地址， 其实是不行的，因为这样在切换到用户
+</span></span></code></pre></div><p>外面传入一个指针的地址（无需申请空间），是传出参数。这样的好处是<strong>空出一个返回地址，可以用来表示多种出错的类型</strong>。</p><h2 id=spring-os>spring OS</h2><h3 id=2023-07-01>2023-07-01</h3><p>如果kernel也用低地址， 其实是不行的，因为这样在切换到用户
 进程的时候，需要切页表对吧。 但是切换之后用户进程的ttbr是
 没有内核的页面映射的。 它们又都用了用一个页表。</p><p>所以说看来是还是需要用两个页表实现起来比较方便些，
 让内核用ttbr1，即映射在高地址。 做法是：</p><ol><li>首先boot阶段的代码是要在低地址的，因为此时没有开mmu（用uboot+PIC就没有这个顾虑）。</li><li>在boot代码中，mmu开启前需要建立映射，除了映射内核的代码段、数据段之外。

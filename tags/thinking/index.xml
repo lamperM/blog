@@ -24,9 +24,9 @@
 init.c的boot_aps()提供了一种新的思路：在代码的前后定义一个全局变量，就能在外面访问到代码的地址和范围了。
 转换函数的一种写法 我们经常会用到两种指代之间的转换，比如用id找到结构体指针（JOS中的envid2env），你会怎么设置函数的参数和返回值？
 我以前只能想到：
-1 struct Env *envid2env(envid_t envid) 正常情况下返回转换完成的结构体指针，否则返回NULL。
+struct Env *envid2env(envid_t envid) 正常情况下返回转换完成的结构体指针，否则返回NULL。
 然而，JOS提供了一种别样的实现方式：
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 int envid2env(envid_t envid, struct Env **env_store, bool checkperm) { struct Env *e; // If envid is zero, return the current environment. if (envid == 0) { *env_store = curenv; return 0; } e = &amp;amp;envs[ENVX(envid)]; if (e-&amp;gt;env_status == ENV_FREE || e-&amp;gt;env_id !</description></item><item><title>Thinking: Config Linux Network</title><link>https://wangloo.github.io/posts/thinking/cfg_linux_ip/</link><pubDate>Fri, 08 Dec 2023 17:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/thinking/cfg_linux_ip/</guid><description>起因：今天与一位同学一起尝试去配置Linux静态IP，这中间有不少坎坷，想简单把思考的过程写下来， 复盘一下是不是应该有可以更快的定位到问题并解决的方案。
+int envid2env(envid_t envid, struct Env **env_store, bool checkperm) { struct Env *e; // If envid is zero, return the current environment. if (envid == 0) { *env_store = curenv; return 0; } e = &amp;amp;envs[ENVX(envid)]; if (e-&amp;gt;env_status == ENV_FREE || e-&amp;gt;env_id != envid) { *env_store = 0; return -E_BAD_ENV; } if (checkperm &amp;amp;&amp;amp; e !</description></item><item><title>Thinking: Config Linux Network</title><link>https://wangloo.github.io/posts/thinking/cfg_linux_ip/</link><pubDate>Fri, 08 Dec 2023 17:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/thinking/cfg_linux_ip/</guid><description>起因：今天与一位同学一起尝试去配置Linux静态IP，这中间有不少坎坷，想简单把思考的过程写下来， 复盘一下是不是应该有可以更快的定位到问题并解决的方案。
 提出问题 Cl同学想要达到启动Linux后自动设置某个静态Ip的效果， 在我的理解里这并不是一件很复杂的事。
 他给我的想法是在Kernel Command Line参数中指定Ip， 我之前没有看到过这种方式配网，但是网上搜了一下确实有这样的例子。 所以他目前已经完成的是:
 Linux是通过Uboot起的，要增加Linux Command Line， 可能是在Uboot的bootargs中添加。 但是他在修改完bootargs并重启的时候，发现变量没有成功赋值， 即使已经成功saveenv。所以就邀请我和他一起讨论。

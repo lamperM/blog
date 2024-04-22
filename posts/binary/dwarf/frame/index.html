@@ -11,22 +11,7 @@
 因为 Arm64 下对叶子函数可能不会生成正确的 CFI 信息，
 因为这种情况不常见，所以我们先讨论普通的情况。
 另外，我知道这个计算 fibonacci 数的算法不是最优的，
-但是我们毕竟不是算法优化的主题，所以能够说明问题即可。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>int</span> <span style=color:#06b;font-weight:700>fiboncci</span>(<span style=color:#888;font-weight:700>int</span> n)
+但是我们毕竟不是算法优化的主题，所以能够说明问题即可。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>int</span> <span style=color:#06b;font-weight:700>fiboncci</span>(<span style=color:#888;font-weight:700>int</span> n)
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>if</span> (n &lt;= <span style=color:#00d;font-weight:700>2</span>)
 </span></span><span style=display:flex><span>    <span style=color:#080;font-weight:700>return</span> <span style=color:#00d;font-weight:700>1</span>;
@@ -41,55 +26,7 @@
 </span></span><span style=display:flex><span>  result = fiboncci(<span style=color:#00d;font-weight:700>10</span>);
 </span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>return</span> <span style=color:#00d;font-weight:700>0</span>;
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">39
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">40
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">41
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">42
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">43
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">44
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">45
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">46
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">47
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">48
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>int fiboncci(int n)
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>int fiboncci(int n)
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>  400594: a9bd7bfd  stp x29, x30, [sp, #-48]!
 </span></span><span style=display:flex><span>  400598: 910003fd  mov x29, sp
@@ -137,22 +74,9 @@
 </span></span><span style=display:flex><span>  400604: d503201f  nop
 </span></span><span style=display:flex><span>  400608: d503201f  nop
 </span></span><span style=display:flex><span>  40060c: d503201f  nop
-</span></span></code></pre></td></tr></table></div></div><p>因为在编译时添加了<code>-g</code>选项，所以 Gcc 默认会生成<code>.debug_frame</code>，
-让我们来看看里面的内容是什么。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>aarch64-none-linux-gnu-objdump --dwarf=frames-interp frame
-</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>00000088 0000000000000020 0000008c FDE cie=00000000 pc=0000000000400594..00000000004005e4
+</span></span></code></pre></div><p>因为在编译时添加了<code>-g</code>选项，所以 Gcc 默认会生成<code>.debug_frame</code>，
+让我们来看看里面的内容是什么。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>aarch64-none-linux-gnu-objdump --dwarf=frames-interp frame
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>00000088 0000000000000020 0000008c FDE cie=00000000 pc=0000000000400594..00000000004005e4
 </span></span><span style=display:flex><span>   LOC           CFA      x19   x29   ra
 </span></span><span style=display:flex><span>0000000000400594 sp+0     u     u     u
 </span></span><span style=display:flex><span>0000000000400598 sp+48    u     c-48  c-40
@@ -164,26 +88,20 @@
 </span></span><span style=display:flex><span>00000000004005e4 sp+0     u     u
 </span></span><span style=display:flex><span>00000000004005e8 sp+32    c-32  c-24
 </span></span><span style=display:flex><span>0000000000400600 sp+0     u     u
-</span></span></code></pre></td></tr></table></div></div><p>这是经过解释之后的<code>.debug_frame</code>，在实际存储的时候可能通过压缩。
+</span></span></code></pre></div><p>这是经过解释之后的<code>.debug_frame</code>，在实际存储的时候可能通过压缩。
 解释之后就明显展示出二维表格的样貌。上述代码里共有两段表，
 第一段对应我们在<code>fibonacci()</code>中如何查找上一个 Frame，
 第二段则是<code>main()</code>函数中的计算规则。</p><p>暂时到这里其实就 Ok 了，你只需要知道它起码看起来像是一个二维表格的结构，
 我们下面再说它到底是怎么帮助实现栈回溯的。</p><h2 id=解剖-debug_frmae>解剖 <code>.debug_frmae</code></h2><h3 id=cie--fde>CIE & FDE</h3><p>上面不是说表格中存的是栈回溯的规则吗，这张大表可以按照函数的界限来划分，
 FDE 就是对应某个函数的计算规则。一些函数共同的部分提取成一个 CIE。</p><h3 id=栈回溯的过程>栈回溯的过程</h3><p>还是以上面的代码为例，假设我们位于 Fibonacci()中的<code>4005a4</code>地址上，
 此时我们要进行栈回溯，找到 main()中的调用点。</p><p>首先，在第一个 FDE 里找到当前地址<code>4005a4</code>的计算规则，
-因为连续的一段地址可能计算规则不变，可以将他们存成一条，节约空间。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>00000088 0000000000000020 0000008c FDE cie=00000000 pc=0000000000400594..00000000004005e4
+因为连续的一段地址可能计算规则不变，可以将他们存成一条，节约空间。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>00000088 0000000000000020 0000008c FDE cie=00000000 pc=0000000000400594..00000000004005e4
 </span></span><span style=display:flex><span>   LOC           CFA      x19   x29   ra
 </span></span><span style=display:flex><span>0000000000400594 sp+0     u     u     u
 </span></span><span style=display:flex><span>0000000000400598 sp+48    u     c-48  c-40
 </span></span><span style=display:flex><span>00000000004005a0 sp+48    c-32  c-48  c-40
 </span></span><span style=display:flex><span>00000000004005e0 sp+0     u     u     u
-</span></span></code></pre></td></tr></table></div></div><p>第一列 LOC 是每个规则相同的连续地址块的起始地址，由此得到<code>4005a4</code>需要参考第三行规则。</p><p>再看到第二列，<strong>CFA 的含义是 caller 的 sp</strong>， 第三列<strong>ra 的含义是返回地址(Returen address)</strong>， 表格中的值 u 代表不变，c 代表 CFA。</p><p>所以说，由表格中的数据可知，<code>caller'sp=sp+48</code>，而返回地址就存储在<code>cfa-40</code>的地址上，
+</span></span></code></pre></div><p>第一列 LOC 是每个规则相同的连续地址块的起始地址，由此得到<code>4005a4</code>需要参考第三行规则。</p><p>再看到第二列，<strong>CFA 的含义是 caller 的 sp</strong>， 第三列<strong>ra 的含义是返回地址(Returen address)</strong>， 表格中的值 u 代表不变，c 代表 CFA。</p><p>所以说，由表格中的数据可知，<code>caller'sp=sp+48</code>，而返回地址就存储在<code>cfa-40</code>的地址上，
 这是一个栈的地址，由于函数调用不会破坏之前栈的内容，所以可以放心取出 ra，也就是返回地址。
 这就找到了 main 函数中的调用点，如果 main 之上还有 caller 的话，可以继续查 main 的 FDE 来寻找。</p><h3 id=原理-1>原理</h3><p>其实，这种方法就是利用了每次进入函数时时会在栈上保存返回地址 x30，
 基于 Fp 的栈回溯方法也是这样做，Fp 是通过记录每个栈的栈底，

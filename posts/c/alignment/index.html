@@ -2,32 +2,20 @@
 <script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>C 语言的内存对齐要求</div></header><h2 id=内存对齐为何被需要>内存对齐为何被需要</h2><p>架构规定了数据类型大小的同时，也规定了对这些类型的变量合法访问的对齐要求。
 也就是说，变量不能随便的放在内存的任意位置，起始地址必须满足特定的对齐要求，
 对不满足要求的变量强行访问就叫做<strong>非对齐访问</strong>， 非对齐访问通常会触发异常。</p><h3 id=一般数据类型的对齐要求>一般数据类型的对齐要求</h3><p>对于一般的数据类型，比如 int, long, char 这些，要求其变量地址对齐到自身大小，
-比如 ARM64 中，int 变量的地址必须对齐到 4 字节，long 变量地址必须对齐到 8 字节等等。</p><p>那么对于<code>*(int *)0x1001 = 1234;</code>, 这类的内存访问就叫非对齐的内存访问。</p><blockquote><p>即 （变量 addr % 变量 size) ！= 0, 就称为非对齐内存访问。</p></blockquote><h3 id=结构体的对齐要求>结构体的对齐要求</h3><p>上面说的还都是一般的数据类型，对于结构体这种复杂的类型，对齐的要求也复杂些。</p><ul><li>首先是结构体成员，每个成员都必须满足其自身的对齐要求</li><li>然后是结构体变量自身的起始地址的对齐要求是<strong>其所有成员的最大对齐要求</strong>。</li></ul><p>然而两个要求均满足有时候根本不可能，比如一个结构体声明为:</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> foo {
+比如 ARM64 中，int 变量的地址必须对齐到 4 字节，long 变量地址必须对齐到 8 字节等等。</p><p>那么对于<code>*(int *)0x1001 = 1234;</code>, 这类的内存访问就叫非对齐的内存访问。</p><blockquote><p>即 （变量 addr % 变量 size) ！= 0, 就称为非对齐内存访问。</p></blockquote><h3 id=结构体的对齐要求>结构体的对齐要求</h3><p>上面说的还都是一般的数据类型，对于结构体这种复杂的类型，对齐的要求也复杂些。</p><ul><li>首先是结构体成员，每个成员都必须满足其自身的对齐要求</li><li>然后是结构体变量自身的起始地址的对齐要求是<strong>其所有成员的最大对齐要求</strong>。</li></ul><p>然而两个要求均满足有时候根本不可能，比如一个结构体声明为:</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> foo {
 </span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>char</span>  mem1;
 </span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>int</span>   mem2;
 </span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>short</span> mem3;
 </span></span><span style=display:flex><span>};
-</span></span></code></pre></td></tr></table></div></div><p>不可能同时做到 foo 变量和其成员 mem2 同时满足对齐到 4 字节，所以<strong>编译器会依据
-上面的两条要求在成员之间添加 padding</strong>。</p><p>除了变量中间添加 padding 外，在末尾也会添加，<strong>使得结构体数组容易满足对齐需求</strong>。</p><p>最后 foo 变量在内存中的样子可能是:</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> foo {
+</span></span></code></pre></div><p>不可能同时做到 foo 变量和其成员 mem2 同时满足对齐到 4 字节，所以<strong>编译器会依据
+上面的两条要求在成员之间添加 padding</strong>。</p><p>除了变量中间添加 padding 外，在末尾也会添加，<strong>使得结构体数组容易满足对齐需求</strong>。</p><p>最后 foo 变量在内存中的样子可能是:</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> foo {
 </span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>char</span>  mem1;
 </span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>char</span>  _pad1[<span style=color:#00d;font-weight:700>3</span>];  <span style=color:#888>// 保证结构体和成员均对齐正确
 </span></span></span><span style=display:flex><span><span style=color:#888></span>  <span style=color:#888;font-weight:700>int</span>   mem2;
 </span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>short</span> mem3;
 </span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>char</span>  _pad2[<span style=color:#00d;font-weight:700>2</span>];  <span style=color:#888>// 保证【结构体数组】对齐正确
 </span></span></span><span style=display:flex><span><span style=color:#888></span>};
-</span></span></code></pre></td></tr></table></div></div><blockquote><p>若结构体的成员还是一个结构体，嵌套操作就可以了，编译器可以 handle。</p></blockquote><blockquote><p>对于结构体的定义来说，若不想添加 padding，可以使用<code>__attribute((packed))</code>
+</span></span></code></pre></div><blockquote><p>若结构体的成员还是一个结构体，嵌套操作就可以了，编译器可以 handle。</p></blockquote><blockquote><p>对于结构体的定义来说，若不想添加 padding，可以使用<code>__attribute((packed))</code>
 来声明。 常用于一些数据包的声明，除非你清楚自己为什么要这么做，要不别用。</p></blockquote><h2 id=如何做到内存对齐>如何做到内存对齐</h2><p>上面一节说明了各个类型的变量对于内存对齐的需求，只要是各个类型变量的地址满足要求了，
 对所有变量的访问也就 OK 了。那么<em>如何保证每个变量地址都满足需求呢？</em></p><p>对于静态分配的变量，即在编译链接时期就能确定地址，由编译器完成这项工作。编译器保证
 分配给这些变量的地址是满足对齐要求的，这个完全不用担心。</p><p>对于运行时动态分配的变量，例如<code>malloc()</code>接口返回的，其实 malloc 本身不知道要申请

@@ -3,15 +3,11 @@
 中断到来时就能判断是否为软中断。</p><p>这张“表”的建立是静态的，即编译时确定的。key 为 INTID，value 为描述一个软中断
 的数据结构，在下面会介绍。</p><blockquote><p><strong>软中断的服务函数必须是可重入的</strong>，即多个 CPU 可以同时执行同一个 softirq
 的处理函数，涉及到的全局结构可以用 spinlock 钳制。</p></blockquote><h3 id=表示-softirq-的数据结构>表示 softirq 的数据结构</h3><p><code>struct softirq_action</code>代表一个软中断，系统中所有支持的软中断组成一个数据
-<code>softirq_vec[]</code>, 所有的软中断按照优先级来分配下标。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> softirq_action {
+<code>softirq_vec[]</code>, 所有的软中断按照优先级来分配下标。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> softirq_action {
 </span></span><span style=display:flex><span>    <span style=color:#888>// 指向softirq的处理函数
 </span></span></span><span style=display:flex><span><span style=color:#888></span>    <span style=color:#888;font-weight:700>void</span> (*action)(<span style=color:#080;font-weight:700>struct</span> softirq_action *);
 </span></span><span style=display:flex><span>};
-</span></span></code></pre></td></tr></table></div></div><h3 id=softirq-的中断流程>softirq 的中断流程</h3><p>在中断的上部，如果识别到当前中断是一个 softirq， 那么系统会标记一个软中断发生，
+</span></span></code></pre></div><h3 id=softirq-的中断流程>softirq 的中断流程</h3><p>在中断的上部，如果识别到当前中断是一个 softirq， 那么系统会标记一个软中断发生，
 即<code>raise_softirq()</code>函数。其做的事情包括:</p><ol><li>标记某个软中断发生，记录的结构是<code>irq_cpustate_t.__softirq_pending</code>
 (这个字段使<code>loca_softirq_pending()</code>访问)</li><li>唤醒<code>ksoftirqd</code>内核线程，之后介绍</li></ol><p>光标记不行，那么什么时候执行它们的服务函数呢？</p><p>几个可能的检查点:(1) 中断退出前 (2)<code>ksoftirq</code>被唤醒时</p><p>如果在检查点发现有标记挂起的 softirq(<code>local_softirq_pending()</code> != 0),
 内核调用<code>do_softirq()</code>处理它们：</p><ol><li>如何<code>in_interrupt()</code>返回非 0， 直接返回。此时代表要么禁用了 softirq，要么当前是
@@ -23,16 +19,7 @@ softirq 到来，这里就有两种策略：</p><ol><li>不断的获取最新的
 softirq 的响应延迟。</p><p>实际上，softirq 的处理函数<code>do_softirq()</code>是采用折中的方案，它会在内部循环检查 10 次
 （是可配置的），检查有无新的 softirq 到来。对于那些在循环之后到来的 softirq，那么
 唤醒 ksoftirqd 线程来处理剩下的，不延迟用户态的运行。</p><h3 id=ksoftirqd-内核线程>ksoftirqd 内核线程</h3><p>ksoftirqd 是一个内核线程，每个 CPU 都有，它的任务是不断检查是否存在挂起的 softirq， 并
-执行其处理函数。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">9
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>for</span> (;;) {
+执行其处理函数。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>for</span> (;;) {
 </span></span><span style=display:flex><span>    set_current_state(TASK_INTERRUPTABLE);
 </span></span><span style=display:flex><span>    schedule();
 </span></span><span style=display:flex><span>    <span style=color:#080;font-weight:700>while</span> (local_softirq_pending()) {
@@ -41,21 +28,12 @@ softirq 的响应延迟。</p><p>实际上，softirq 的处理函数<code>do_sof
 </span></span><span style=display:flex><span>        preempt_enable();
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></td></tr></table></div></div><p>ksoftirqd 的优先级较低，这样当<code>do_softirq()</code>循环 10 次还有新的 softirq 时，
+</span></span></code></pre></div><p>ksoftirqd 的优先级较低，这样当<code>do_softirq()</code>循环 10 次还有新的 softirq 时，
 唤醒 ksoftirqd 线程不会耽误用户态的执行，但当系统空闲时间，挂起的 softirq 又
 会很快得到处理。</p><h2 id=tasklet>tasklet</h2><p>tasklet 是基于其中一个软中断(TASKLET_SOFTIRQ)构建，其关系有点像线程与用户态
 线程之间那种嵌套关系。</p><p>tasklet 的分配可以是运行时确定的(例如使用 insmod)增加新的 tasklet。</p><blockquote><p>内核对 tasklet 的服务函数进行了更加严格的控制：<strong>不能在多个 CPU 上同时运行同一个类型的
 tasklet 函数(不同类型的 tasklet 可以)。</strong>，这样就使得 tasklet 服务函数不必非得
-实现为可重入的， 简化驱动开发者的工作。</p></blockquote><h3 id=表示-tasklet-的数据结构>表示 tasklet 的数据结构</h3><p>描述一个 tasklet 的数据结构为<code>tasklet_struct</code>, 成员包括:</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">9
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> tasklet_struct {
+实现为可重入的， 简化驱动开发者的工作。</p></blockquote><h3 id=表示-tasklet-的数据结构>表示 tasklet 的数据结构</h3><p>描述一个 tasklet 的数据结构为<code>tasklet_struct</code>, 成员包括:</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> tasklet_struct {
 </span></span><span style=display:flex><span>    <span style=color:#888>// 指向下一个tasklet，所有tasklet链表串联
 </span></span></span><span style=display:flex><span><span style=color:#888></span>    <span style=color:#080;font-weight:700>struct</span> tasklet_struct *next;
 </span></span><span style=display:flex><span>    <span style=color:#888;font-weight:700>unsigned</span> <span style=color:#888;font-weight:700>long</span> state;
@@ -64,7 +42,7 @@ tasklet 函数(不同类型的 tasklet 可以)。</strong>，这样就使得 tas
 </span></span><span style=display:flex><span>    <span style=color:#888>// func 中可以使用的数据
 </span></span></span><span style=display:flex><span><span style=color:#888></span>    <span style=color:#888;font-weight:700>unsigned</span> <span style=color:#888;font-weight:700>long</span> data;
 </span></span><span style=display:flex><span>};
-</span></span></code></pre></td></tr></table></div></div><h3 id=tasklet-的中断流程>tasklet 的中断流程</h3><p><code>TASKLET_SOFTIRQ</code>的 action 指向遍历所有<code>tasklet_struct</code>的方法，该方法中
+</span></span></code></pre></div><h3 id=tasklet-的中断流程>tasklet 的中断流程</h3><p><code>TASKLET_SOFTIRQ</code>的 action 指向遍历所有<code>tasklet_struct</code>的方法，该方法中
 执行每个 tasklet 的<code>func()</code>。</p><h2 id=工作队列>工作队列</h2><p>工作队列创建了一个内核线程<code>kworker</code>, 原理与<code>ksoftirqd</code>差不多。</p><p>主要的区别是<code>ksoftirqd</code>运行在中断的上下文，因为其调用了<code>do_softirq()</code>,
 而中断上下文中是禁用用户抢占的，也就是说不能发生调度(不影响嵌套中断)。</p><blockquote><p>中断上下文中禁止抢占的原因是<strong>开启了中断嵌套</strong>，代价是必须禁止抢占。
 如果同时允许中断嵌套和抢占，那么“嵌套的”中断返回时如果发生了调度，

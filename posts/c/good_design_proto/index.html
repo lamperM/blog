@@ -1,30 +1,11 @@
 <!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Good Design: 抽象消息参数</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"></div></div><script src=/js/fuse.js></script>
 <script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Good Design: 抽象消息参数</div></header><p>在设计一个消息传递类似的子系统时，消息经常需要各种参数，
-通常消息的个数和类型是根据<strong>消息自身的类型</strong>决定的。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>void</span>
+通常消息的个数和类型是根据<strong>消息自身的类型</strong>决定的。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>void</span>
 </span></span><span style=display:flex><span><span style=color:#06b;font-weight:700>handle_open</span>(..., <span style=color:#888;font-weight:700>int</span> flags, <span style=color:#888;font-weight:700>int</span> mode);
 </span></span><span style=display:flex><span><span style=color:#888;font-weight:700>void</span>
 </span></span><span style=display:flex><span><span style=color:#06b;font-weight:700>handle_read</span>(..., size_t len, <span style=color:#888;font-weight:700>int</span> offset);
 </span></span><span style=display:flex><span><span style=color:#888>// ...
-</span></span></span></code></pre></td></tr></table></div></div><p>有的消息/命令参数比较多，不想写这么长的参数那就把这些参数封装到struct里</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> arg_open {
+</span></span></span></code></pre></div><p>有的消息/命令参数比较多，不想写这么长的参数那就把这些参数封装到struct里</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> arg_open {
 </span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>int</span> flag;
 </span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>int</span> mode;
 </span></span><span style=display:flex><span>};
@@ -38,37 +19,7 @@
 </span></span><span style=display:flex><span><span style=color:#06b;font-weight:700>handle_open</span>(..., <span style=color:#080;font-weight:700>struct</span> arg_open *arg);
 </span></span><span style=display:flex><span><span style=color:#888;font-weight:700>void</span>
 </span></span><span style=display:flex><span><span style=color:#06b;font-weight:700>handle_read</span>(..., <span style=color:#080;font-weight:700>struct</span> arg_read *arg);
-</span></span></code></pre></td></tr></table></div></div><p>这种方法有什么缺点呢?</p><ol><li>不具有通用性；无法用函数指针来实现进一步抽象，即跳表。</li><li>&mldr;（暂时没想到）</li></ol><p>所以说，<strong>一个更好的抽象方式来了</strong>，将所有的参数利用union放到一个结构体中。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> proto_open {
+</span></span></code></pre></div><p>这种方法有什么缺点呢?</p><ol><li>不具有通用性；无法用函数指针来实现进一步抽象，即跳表。</li><li>&mldr;（暂时没想到）</li></ol><p>所以说，<strong>一个更好的抽象方式来了</strong>，将所有的参数利用union放到一个结构体中。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>struct</span> proto_open {
 </span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>int</span> flag;
 </span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>int</span> mode;
 </span></span><span style=display:flex><span>};
@@ -98,4 +49,4 @@
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span><span style=color:#888;font-weight:700>void</span>
 </span></span><span style=display:flex><span><span style=color:#06b;font-weight:700>handle_read</span>(..., <span style=color:#080;font-weight:700>struct</span> proto *proto) {...}
-</span></span></code></pre></td></tr></table></div></div><p>这样做的最大好处<strong>就是可以用跳表来设计了</strong>，减少了代码量，增加了易读性！！</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-11-26T16:21:27, Lastmod: 2023-11-30T17:56:18</p><script src=/js/clipboard.js></script></main></div></body></html>
+</span></span></code></pre></div><p>这样做的最大好处<strong>就是可以用跳表来设计了</strong>，减少了代码量，增加了易读性！！</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-11-26T16:21:27, Lastmod: 2023-11-30T17:56:18</p><script src=/js/clipboard.js></script></main></div></body></html>

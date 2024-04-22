@@ -1,37 +1,7 @@
 <!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Elf 加载器的工作流程</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e5%88%86%e6%9e%90elf%e6%96%87%e4%bb%b6 aria-label=分析Elf文件>分析Elf文件</a></li><li><a href=#%e6%98%a0%e5%b0%84-segments aria-label="映射 Segments">映射 Segments</a></li><li><a href=#%e5%af%b9%e6%a0%88%e8%bf%9b%e8%a1%8c%e9%a2%84%e5%a4%84%e7%90%86 aria-label=对栈进行预处理>对栈进行预处理</a><ul><li><a href=#environment aria-label=Environment>Environment</a></li><li><a href=#auxiliary-vectors aria-label="Auxiliary Vectors">Auxiliary Vectors</a></li><li><a href=#%e6%b5%8b%e8%af%95%e4%bd%a0%e7%9a%84elf-loader aria-label="测试你的Elf Loader">测试你的Elf Loader</a></li></ul></li><li><a href=#%e8%ae%be%e7%bd%aeuser-context aria-label="设置User Context">设置User Context</a></li><li><a href=#reference aria-label=Reference>Reference</a></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
-<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Elf 加载器的工作流程</div></header><h1 id=分析elf文件>分析Elf文件</h1><h1 id=映射-segments>映射 Segments</h1><h1 id=对栈进行预处理>对栈进行预处理</h1><blockquote><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>int</span> <span style=color:#06b;font-weight:700>main</span>(<span style=color:#888;font-weight:700>int</span> argc, <span style=color:#888;font-weight:700>char</span> **argv, <span style=color:#888;font-weight:700>char</span> **envp) {...}
-</span></span></code></pre></td></tr></table></div></div><p>见到一个main函数的定义，你是否考虑过:</p><ol><li>main函数使用这些参数的作用分别是什么?</li><li>Elf运行前，他们是如何被正确放置的?</li><li>我们又如何正确的访问?</li></ol></blockquote><p>内核中的Elf加载器还需要将辅助向量和其他信息(argc,argv,envp)一起放在栈上。
-初始化后，进程的堆栈如下所示(64位架构下):</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>position            content                     size (bytes) + comment
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Elf 加载器的工作流程</div></header><h1 id=分析elf文件>分析Elf文件</h1><h1 id=映射-segments>映射 Segments</h1><h1 id=对栈进行预处理>对栈进行预处理</h1><blockquote><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>int</span> <span style=color:#06b;font-weight:700>main</span>(<span style=color:#888;font-weight:700>int</span> argc, <span style=color:#888;font-weight:700>char</span> **argv, <span style=color:#888;font-weight:700>char</span> **envp) {...}
+</span></span></code></pre></div><p>见到一个main函数的定义，你是否考虑过:</p><ol><li>main函数使用这些参数的作用分别是什么?</li><li>Elf运行前，他们是如何被正确放置的?</li><li>我们又如何正确的访问?</li></ol></blockquote><p>内核中的Elf加载器还需要将辅助向量和其他信息(argc,argv,envp)一起放在栈上。
+初始化后，进程的堆栈如下所示(64位架构下):</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>position            content                     size (bytes) + comment
 </span></span><span style=display:flex><span>  ------------------------------------------------------------------------
 </span></span><span style=display:flex><span>                    [ free used for process ]
 </span></span><span style=display:flex><span>  stack pointer -&gt;  [ argc = number of args ]     8
@@ -60,41 +30,16 @@
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>  (0xc0000000)      &lt; bottom of stack &gt;           0   (virtual)
 </span></span><span style=display:flex><span>  ------------------------------------------------------------------------
-</span></span></code></pre></td></tr></table></div></div><p>在这之上，我们最常用的是argc和argv，所以还是需要介绍一下envp和auxv。</p><h2 id=environment>Environment</h2><p>环境变量的结构和argv相同，都是一些字符串指针的方式去访问。
+</span></span></code></pre></div><p>在这之上，我们最常用的是argc和argv，所以还是需要介绍一下envp和auxv。</p><h2 id=environment>Environment</h2><p>环境变量的结构和argv相同，都是一些字符串指针的方式去访问。
 只不过没有用于表示数量的"envc"，而是以NULL表示结尾。</p><h2 id=auxiliary-vectors>Auxiliary Vectors</h2><p>Auxiliary Vectors 简称Auxv, OS内核在加载Elf时,
 可以将一些<strong>键值对</strong>类型的数值传递给用户态程序，
-即进程启动时内核向用户态传递信息的一种方式。</p><p>Auxv的存储结构不是argv和envp那样的间接形式，而是顺序存一些<code>Elf64_auxv_t</code>结构体，在Linux上，结构体的定义在<code>/usr/include/elf.h</code>中。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>typedef</span> <span style=color:#080;font-weight:700>struct</span>
+即进程启动时内核向用户态传递信息的一种方式。</p><p>Auxv的存储结构不是argv和envp那样的间接形式，而是顺序存一些<code>Elf64_auxv_t</code>结构体，在Linux上，结构体的定义在<code>/usr/include/elf.h</code>中。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#080;font-weight:700>typedef</span> <span style=color:#080;font-weight:700>struct</span>
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>	<span style=color:#888;font-weight:700>uint64_t</span> a_type;              <span style=color:#888>/* Entry type */</span>
 </span></span><span style=display:flex><span>	<span style=color:#888;font-weight:700>uint64_t</span> a_val;
 </span></span><span style=display:flex><span>} Elf64_auxv_t;
-</span></span></code></pre></td></tr></table></div></div><p>可以看到就是一个类型和数值，直接就能存下，不支持字符串的形式。</p><p>我们可以在Linux上测试Auxv，在启动一个用户程序之前加上<code>LD_SHOW_AUXV=1</code>,
-可以打印出所有的Auxv。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>~ $ <span style=color:#369>LD_SHOW_AUXV</span>=<span style=color:#00d;font-weight:700>1</span> /bin/ls
+</span></span></code></pre></div><p>可以看到就是一个类型和数值，直接就能存下，不支持字符串的形式。</p><p>我们可以在Linux上测试Auxv，在启动一个用户程序之前加上<code>LD_SHOW_AUXV=1</code>,
+可以打印出所有的Auxv。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>~ $ <span style=color:#369>LD_SHOW_AUXV</span>=<span style=color:#00d;font-weight:700>1</span> /bin/ls
 </span></span><span style=display:flex><span>AT_SYSINFO_EHDR:      0x7ffc3b3de000
 </span></span><span style=display:flex><span>AT_HWCAP:             1f8bfbff
 </span></span><span style=display:flex><span>AT_PAGESZ:            <span style=color:#00d;font-weight:700>4096</span>
@@ -114,22 +59,8 @@
 </span></span><span style=display:flex><span>AT_HWCAP2:            0x2
 </span></span><span style=display:flex><span>AT_EXECFN:            /bin/ls
 </span></span><span style=display:flex><span>AT_PLATFORM:          x86_64
-</span></span></code></pre></td></tr></table></div></div><p>一般来说，普通的用户程序不需要获取内核的信息，但对于一些位于用户态和内核态之间的、
-交互非常紧密的<strong>用户态程序</strong>而言则比较有用。比如说解释器、init进程、微内核OS中的root-service等等。</p><h2 id=测试你的elf-loader>测试你的Elf Loader</h2><p>在Elf中输出这些辅助信息，看是否能顺利读到。这里分别给出（1）只打印Auxv（2）打印所有</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#c00;font-weight:700>#include</span> <span style=color:#c00;font-weight:700>&lt;stdio.h&gt;</span><span style=color:#c00;font-weight:700>
+</span></span></code></pre></div><p>一般来说，普通的用户程序不需要获取内核的信息，但对于一些位于用户态和内核态之间的、
+交互非常紧密的<strong>用户态程序</strong>而言则比较有用。比如说解释器、init进程、微内核OS中的root-service等等。</p><h2 id=测试你的elf-loader>测试你的Elf Loader</h2><p>在Elf中输出这些辅助信息，看是否能顺利读到。这里分别给出（1）只打印Auxv（2）打印所有</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#c00;font-weight:700>#include</span> <span style=color:#c00;font-weight:700>&lt;stdio.h&gt;</span><span style=color:#c00;font-weight:700>
 </span></span></span><span style=display:flex><span><span style=color:#c00;font-weight:700>#include</span> <span style=color:#c00;font-weight:700>&lt;elf.h&gt;</span><span style=color:#c00;font-weight:700>
 </span></span></span><span style=display:flex><span><span style=color:#c00;font-weight:700></span>
 </span></span><span style=display:flex><span>main(<span style=color:#888;font-weight:700>int</span> argc, <span style=color:#888;font-weight:700>char</span>* argv[], <span style=color:#888;font-weight:700>char</span>* envp[])
@@ -143,30 +74,7 @@
 </span></span><span style=display:flex><span>      printf(<span style=color:#d20;background-color:#fff0f0>&#34;AT_SYSINFO is: 0x%x</span><span style=color:#04d;background-color:#fff0f0>\n</span><span style=color:#d20;background-color:#fff0f0>&#34;</span>, auxv-&gt;a_un.a_val);
 </span></span><span style=display:flex><span>  }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>int</span> <span style=color:#06b;font-weight:700>main</span>(<span style=color:#888;font-weight:700>int</span> argc, <span style=color:#888;font-weight:700>char</span> *argv[], <span style=color:#888;font-weight:700>char</span> *envp[])
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>int</span> <span style=color:#06b;font-weight:700>main</span>(<span style=color:#888;font-weight:700>int</span> argc, <span style=color:#888;font-weight:700>char</span> *argv[], <span style=color:#888;font-weight:700>char</span> *envp[])
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>int</span> i;
 </span></span><span style=display:flex><span>  
@@ -189,4 +97,4 @@
 </span></span><span style=display:flex><span>    } 
 </span></span><span style=display:flex><span>  }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></td></tr></table></div></div><h1 id=设置user-context>设置User Context</h1><h1 id=reference>Reference</h1><ul><li><a href=https://articles.manugarg.com/aboutelfauxiliaryvectors.html>About ELF Auxiliary Vectors</a></li></ul></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-11-24T16:21:27, Lastmod: 2024-01-04T21:41:57</p><script src=/js/clipboard.js></script></main></div></body></html>
+</span></span></code></pre></div><h1 id=设置user-context>设置User Context</h1><h1 id=reference>Reference</h1><ul><li><a href=https://articles.manugarg.com/aboutelfauxiliaryvectors.html>About ELF Auxiliary Vectors</a></li></ul></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-11-24T16:21:27, Lastmod: 2024-01-04T21:41:57</p><script src=/js/clipboard.js></script></main></div></body></html>
