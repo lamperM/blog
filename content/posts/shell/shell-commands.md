@@ -7,26 +7,26 @@ categories: ["Shell"]
 
 
 
-# 开发
+## 开发
 
-## mkfs.ext4
+### mkfs.ext4
 格式化文件为ext4分区
 ```sh
 mkfs.ext4 <file> # 将file格式化为ext4
 ```
 
-## dd
+### dd
 
 https://www.runoob.com/linux/linux-comm-dd.html
 
-## mount 
+### mount 
 ```sh
 sudo mount [file] [dir] # 挂载file到dir
 sudo umount [dir] 
 sudo mount # 输出当前已经挂载的分区
 ```
 
-## find
+### find
 ```bash
 # 查找24小时内修改过的文件
 find . -mtime 0
@@ -37,7 +37,13 @@ find . -atime 0s
 
 ```
 
-## 通用
+### 通用
+
+执行cp命令时，如果目录下有链接文件，拷贝源文件而不是链接文件，这在链接文件指向相对地址时非常有用。
+```bash
+cp -rL /path/to/ /path/from
+```
+
 
 搜索目录文件内容包含关键字
 ```bash
@@ -60,7 +66,7 @@ $ which python3
 /usr/bin/python3
 ```
 
-### `-` 的妙用
+#### `-` 的妙用
 
 一些命令支持使用 `-` 代替文件名, 输入输出都可以:
 

@@ -36,6 +36,26 @@ date: 2023-07-17T19:28:12+08:00
 
 vscode的所有配置通过其内置的sync功能实现, 目前用的是Github账号同步。
 
+- `Command+Shift+o` 或者搜索框中输入@ ==> 搜索outline
+- 搜索框中输入% ==> 全局快速搜索quick search
+
+vscode多个窗口群组（Group）可以有两种排列方式：自由排布和放大某一个。 使用`Toggle Editor Group Sizes`命令来切换。
+
+### vscode常用快捷键
+{{< figure src="/vscode_keyboard.png" width="70%" >}}
+
+### Remote SSH 连接失败
+
+使用Remote SSH插件总是连接失败，但终端使用指令可以连接成功。**这种情况下是插件挂了**，解决方法参考链接：
+1. [VS Code Remote SSH Connection not working - Stack Overflow](https://stackoverflow.com/questions/64034813/vs-code-remote-ssh-connection-not-working?newreg=16b90e6e036e470db7799a7a9608f339)
+2. 删除服务器上的`~/.vscode-server`目录，并重试连接
+
+### Release 1.88.0
+
+- 内置终端中按`Ctrl+Alt+R`执行历史命令。选择时按住Alt可以不自动执行
+- `// #MARK：`在minimap中标记region
+- Quick search中按`Command+⬆️/⬇️`来在一次跳转文件
+- 
 
 ## Ubuntu2004源
 

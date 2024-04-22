@@ -347,7 +347,31 @@ qemu-system-aarch64 \
 用`-hda`传入镜像可以，在 uboot 里用 `virtio ls` 命令可以看到，后面觉得算了
 没必要去折腾这些，用`--kernel` 也还行。
 
-# 增加 perf
+## 制作HOST共享目录
+
+QEMU8.1默认支持9p virtio文件系统，实现HOST与GUEST共享目录，
+在调试时比添加硬盘（-hda）更加方便：
+1. host中创建 `share/` 目录
+2. qemu启动参数指定
+```bash
+-fsdev local,security_model=passthrough,id=fsdev0,path=./share \
+-device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=hostshare \
+```
+3. 启动guest linux后，在命令行中挂载9p文件系统
+```bash
+mkdir /mnt/share
+mount -t 9p -o trans=virtio,version=9p2000.L hostshare /mnt/share
+```
+
+{{< notice info >}}
+添加到启动脚本中，自动挂载。
+```bash
+
+
+```
+{{< /notice >}}
+
+## 增加 perf
 
 **perf**已经集成到了 Linux 主分支中，源码的位置在`tools/perf`
 

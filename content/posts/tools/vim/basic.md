@@ -8,6 +8,13 @@ date: 2022-05-09T19:28:12+08:00
 Search a word quickly: put cursor on the word, press `/` and press `<C-R>` `<C-W>`.
 
 &nbsp;
+
+
+## Vim 启动参数
+- `view <file>` 只读方式打开
+- `vim -u NONE -N` 可以不加载vim配置和插件打开vim
+- `vim --startuptime vim.log` 生成vim启动的log
+
 ## 缩写的含义(Meaning of abbreviations)
 Operation
 * d - delete
@@ -26,6 +33,21 @@ Object
 * w - word
 * s - sentence
 * p - paragraph
+
+## 基础操作
+
+### 删除命令 d
+```bash
+# 删除当前行
+dd 
+# 从当前行开始，向下删除4行
+d4j
+# 从当前行开始，向上删除4行
+d4k
+# 删除到某一行，无论向上或是向下
+d10G
+```
+
 
 ## 窗口
 
@@ -274,6 +296,10 @@ vim 的 dotfiles 主要包含`.vimrc`和`.vim/`中的插件.
 
 ## 插件
 > 优秀的vimrc配置: [The Ultimate vimrc](https://github.com/amix/vimrc)
+
+### LeaderF
+
+介绍使用方法和配置的BLOG：[vim plugin介绍之LeaderF | Mingjian's Blog](https://retzzz.github.io/dc9af5aa/#%E5%85%B6%E4%BB%96%E6%90%9C%E7%B4%A2)
 
 ### LeaderF
 LeaderF可实现模糊查找文件，Tag。[Github](https://github.com/Yggdroot/LeaderF)
