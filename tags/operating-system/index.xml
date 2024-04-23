@@ -71,7 +71,8 @@ mm成员=NULL，没有用户空间的数据，不能访问用户空间 每个内
 首先是结构体成员，每个成员都必须满足其自身的对齐要求 然后是结构体变量自身的起始地址的对齐要求是其所有成员的最大对齐要求。 然而两个要求均满足有时候根本不可能，比如一个结构体声明为:
 struct foo { char mem1; int mem2; short mem3; }; 不可能同时做到 foo 变量和其成员 mem2 同时满足对齐到 4 字节，所以编译器会依据 上面的两条要求在成员之间添加 padding。
 除了变量中间添加 padding 外，在末尾也会添加，使得结构体数组容易满足对齐需求。
-最后 foo 变量在内存中的样子可能是:</description></item><item><title>Linux 进程地址空间 堆的管理</title><link>https://wangloo.github.io/posts/os/linux/addrspace/heap/</link><pubDate>Mon, 08 May 2023 10:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/addrspace/heap/</guid><description>当进程被创建时，就预留了一块特殊的线性区，其开始地址和结束地址单独保存在 mm_struct.start_brk和mm_strcut.brk成员中，并不由vm_area_struct 链接，这块特殊的线性区就叫堆。
+最后 foo 变量在内存中的样子可能是:
+struct foo { char mem1; char _pad1[3]; // 保证结构体和成员均对齐正确 int mem2; short mem3; char _pad2[2]; // 保证【结构体数组】对齐正确 }; 若结构体的成员还是一个结构体，嵌套操作就可以了，编译器可以 handle。</description></item><item><title>Linux 进程地址空间 堆的管理</title><link>https://wangloo.github.io/posts/os/linux/addrspace/heap/</link><pubDate>Mon, 08 May 2023 10:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/addrspace/heap/</guid><description>当进程被创建时，就预留了一块特殊的线性区，其开始地址和结束地址单独保存在 mm_struct.start_brk和mm_strcut.brk成员中，并不由vm_area_struct 链接，这块特殊的线性区就叫堆。
 进程使用的malloc()和free()等相关 API 都是操纵的堆空间。
 修改堆空间的接口 对用户态进程来说，提供brk()系统调用来修改自身的堆空间。
 brk(): 参数addr, 效果是修改mm_struct.brk到 addr，即修改一个堆的结束地址。
@@ -155,7 +156,10 @@ ebp在整个函数执行过程中是固定的, 好处是: 能够快速的或者�
 例如, 三个变量 a=10, b=20, c=30, 在内存中的布局可能就是:
 ┌────────────┐ │ │ │ 10 │ a ├────────────┤ │ │ │ 20 │ b ├────────────┤ │ │ │ 30 │ c ├────────────┤ │ │ │ │ │ │ │ │ │ │ └────────────┘ 但是我们最常使用的数据类型肯定有超过一个字节的, int类型在64位的系统中就占4个字节. 例如变量a=0xaabbccdd
 一个变量的大小一旦超过4个字节, 内存的存取又是以字节位单位的, 那么要把它塞到内存里就必然会产生两种不同存放方式: 先放0xaa还是先放0xdd
-首先, 0xdd是变量a的低8位, 0xaa是最高8位, 这是确定的.</description></item><item><title>操作系统：上下文切换</title><link>https://wangloo.github.io/posts/os/context/</link><pubDate>Mon, 14 Nov 2022 22:13:06 +0800</pubDate><guid>https://wangloo.github.io/posts/os/context/</guid><description>本文基于AArch64执行环境, 介绍现代操作系统中上下文切换的相关内容.
+首先, 0xdd是变量a的低8位, 0xaa是最高8位, 这是确定的.
+如果先放0xaa, 即低地址放高位, 就叫做大端, 如左图;
+如果先放0xdd, 即低地址放低位, 就叫小端, 如右图.
+startaddrof`a`startaddrof`a`┌────────────┐┌────────────┐│││││aa││dd│├────────────┤├────────────┤│││││bb││cc│├────────────┤├────────────┤│││││cc││bb│├────────────┤├────────────┤│││││dd││aa│├────────────┤├────────────┤││││││││└────────────┘└────────────┘什么情况?</description></item><item><title>操作系统：上下文切换</title><link>https://wangloo.github.io/posts/os/context/</link><pubDate>Mon, 14 Nov 2022 22:13:06 +0800</pubDate><guid>https://wangloo.github.io/posts/os/context/</guid><description>本文基于AArch64执行环境, 介绍现代操作系统中上下文切换的相关内容.
 何为上下文 我们正在看一本书的时候如果被其他的事情打断, 返回时为了能够从上次被打断的位置继续读, 就要在被打断的时候记下来当前是读到了哪个第几页的第几行.
 操作系统对待线程也是如此, 需要保存的用于恢复线程执行的信息就称为线程的上下文.
 那么对于线程来说需要记下的内容有什么呢? 寄存器和栈即可. 拿 AArch64 架构来距离, 线程的上下文就是:

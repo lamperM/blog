@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Linux 进程地址空间 写时复制</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e5%bd%93%e5%89%8d%e5%ad%98%e5%9c%a8%e7%9a%84%e9%97%ae%e9%a2%98 aria-label=当前存在的问题>当前存在的问题</a></li><li><a href=#%e5%86%99%e6%97%b6%e5%a4%8d%e5%88%b6%e7%9a%84%e4%bc%98%e5%8c%96 aria-label=写时复制的优化>写时复制的优化</a></li><li><a href=#%e8%bf%99%e6%a0%b7%e5%b0%b1%e5%ae%8c%e7%be%8e%e4%ba%86%e5%90%97 aria-label=这样就完美了吗>这样就完美了吗</a></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=/css/syntax_pastie.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Linux 进程地址空间 写时复制</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e5%bd%93%e5%89%8d%e5%ad%98%e5%9c%a8%e7%9a%84%e9%97%ae%e9%a2%98 aria-label=当前存在的问题>当前存在的问题</a></li><li><a href=#%e5%86%99%e6%97%b6%e5%a4%8d%e5%88%b6%e7%9a%84%e4%bc%98%e5%8c%96 aria-label=写时复制的优化>写时复制的优化</a></li><li><a href=#%e8%bf%99%e6%a0%b7%e5%b0%b1%e5%ae%8c%e7%be%8e%e4%ba%86%e5%90%97 aria-label=这样就完美了吗>这样就完美了吗</a></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
 <script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Linux 进程地址空间 写时复制</div></header><h2 id=当前存在的问题>当前存在的问题</h2><p>未启用写时复制时，<code>fork()</code>创建子进程地址空间的流程如下:</p><ol><li>动态申请子进程的页表</li><li>动态申请子进程的物理页面，大小和父进程的相同</li><li>创建<code>父进程虚拟地址-新物理页</code>的映射到子进程页表</li><li><code>memcpy()</code>将父进程所有页面拷贝到子进程地址空间下</li></ol><p>这样做有什么问题呢？ 在<code>fork()</code>的常规调用环境下，<code>fork()</code>之后
 接的一般是<code>exec()</code>类函数，即载入一个新的可执行文件，继续用父进程
 的情况不多。</p><p>这样的话，上述过程中<code>memcpy()</code>父进程的页面就是多余的，而且如果
@@ -9,29 +9,29 @@
 推迟页表的申请，本身不怎么耗时。</p><p>但是创建<strong>线程</strong>时，确实使用同一张页表。</p></blockquote><p>当然，仅设计到这步是不行的，因为按理来说父子进程是独立的，对子进程的
 修改不应该影响父进程的地址空间。</p><p>所有，在 copy 完页表后，会将父子进程的所有地址空间（实际是页表项）设置
 为<strong>只读属性</strong>，当父/子进程尝试修改地址空间时，触发异常，配合特定的
-异常处理机制，为其创建一个新的屋里也，拷贝原来的+执行修改。</p><p>下图是对上述情况的描述，仅给出一个页面的示例，可以推广到整个地址空间：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>            VMA                                                              VMA
-</span></span><span style=display:flex><span>          ┌───────┐                                  │                     ┌───────┐
-</span></span><span style=display:flex><span>Parent    │       │                                  │           Parent    │       │
-</span></span><span style=display:flex><span>          │       │                                  │                     │       │
-</span></span><span style=display:flex><span>          ├───────┤                                  │                     ├───────┤
-</span></span><span style=display:flex><span>          │       ├────┐                             │                     │       ├────┐
-</span></span><span style=display:flex><span>          ├───────┤    │       PMA            Write  │                     ├───────┤    │       PMA
-</span></span><span style=display:flex><span>          │       │    │     ┌───────┐           ────┼───►                 │       │    │     ┌───────┐
-</span></span><span style=display:flex><span>          │       │    │     │       │               │                     │       │    │     │       │
-</span></span><span style=display:flex><span>          │       │    │     │       │               │                     │       │    │     │       │
-</span></span><span style=display:flex><span>          └───────┘    │     ├───────┤               │                     └───────┘    │     ├───────┤
-</span></span><span style=display:flex><span>                       ├────►│       │ Read          │                                  └────►│       │ RW
-</span></span><span style=display:flex><span>          ┌───────┐    │     ├───────┤ only          │                     ┌───────┐          ├───────┤
-</span></span><span style=display:flex><span>Child     │       │    │     │       │               │           Child     │       │          │       │
-</span></span><span style=display:flex><span>          │       │    │     │       │               │                     │       │          ├───────┤
-</span></span><span style=display:flex><span>          ├───────┤    │     │       │               │                     ├───────┤       ┌─►│       │ RW
-</span></span><span style=display:flex><span>          │       ├────┘     └───────┘               │                     │       ├───────┘  ├───────┤
-</span></span><span style=display:flex><span>          ├───────┤                                  │                     ├───────┤          │       │
-</span></span><span style=display:flex><span>          │       │                                  │                     │       │          └───────┘
-</span></span><span style=display:flex><span>          │       │                                  │                     │       │
-</span></span><span style=display:flex><span>          │       │                                  │                     │       │
-</span></span><span style=display:flex><span>          └───────┘                                  │                     └───────┘
-</span></span><span style=display:flex><span>                                                     │
+异常处理机制，为其创建一个新的屋里也，拷贝原来的+执行修改。</p><p>下图是对上述情况的描述，仅给出一个页面的示例，可以推广到整个地址空间：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>            VMA                                                              VMA
+</span></span><span class=line><span class=cl>          ┌───────┐                                  │                     ┌───────┐
+</span></span><span class=line><span class=cl>Parent    │       │                                  │           Parent    │       │
+</span></span><span class=line><span class=cl>          │       │                                  │                     │       │
+</span></span><span class=line><span class=cl>          ├───────┤                                  │                     ├───────┤
+</span></span><span class=line><span class=cl>          │       ├────┐                             │                     │       ├────┐
+</span></span><span class=line><span class=cl>          ├───────┤    │       PMA            Write  │                     ├───────┤    │       PMA
+</span></span><span class=line><span class=cl>          │       │    │     ┌───────┐           ────┼───►                 │       │    │     ┌───────┐
+</span></span><span class=line><span class=cl>          │       │    │     │       │               │                     │       │    │     │       │
+</span></span><span class=line><span class=cl>          │       │    │     │       │               │                     │       │    │     │       │
+</span></span><span class=line><span class=cl>          └───────┘    │     ├───────┤               │                     └───────┘    │     ├───────┤
+</span></span><span class=line><span class=cl>                       ├────►│       │ Read          │                                  └────►│       │ RW
+</span></span><span class=line><span class=cl>          ┌───────┐    │     ├───────┤ only          │                     ┌───────┐          ├───────┤
+</span></span><span class=line><span class=cl>Child     │       │    │     │       │               │           Child     │       │          │       │
+</span></span><span class=line><span class=cl>          │       │    │     │       │               │                     │       │          ├───────┤
+</span></span><span class=line><span class=cl>          ├───────┤    │     │       │               │                     ├───────┤       ┌─►│       │ RW
+</span></span><span class=line><span class=cl>          │       ├────┘     └───────┘               │                     │       ├───────┘  ├───────┤
+</span></span><span class=line><span class=cl>          ├───────┤                                  │                     ├───────┤          │       │
+</span></span><span class=line><span class=cl>          │       │                                  │                     │       │          └───────┘
+</span></span><span class=line><span class=cl>          │       │                                  │                     │       │
+</span></span><span class=line><span class=cl>          │       │                                  │                     │       │
+</span></span><span class=line><span class=cl>          └───────┘                                  │                     └───────┘
+</span></span><span class=line><span class=cl>                                                     │
 </span></span></code></pre></div><h2 id=这样就完美了吗>这样就完美了吗</h2><p>实际上不是的，拷贝父进程的页表和<code>vm_area_struct</code>就不占内存了吗？</p><p>当页表是稀疏的，<code>vm_area_struct</code>的数量过多时，其本身的数据结构
 就会占用很大的空间。</p><p>就 AArch64 来说，针对页表过大的问题，提供了 2M 和 1G 的巨型页(Huge Page)
 可供选择，能在申请大而稀疏的页面时显著的减少页表的大小，同时也增加了 TLB 的

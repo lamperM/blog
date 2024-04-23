@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>C/C++ 符号管理的区别</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e8%83%8c%e6%99%af aria-label=背景>背景</a></li><li><a href=#%e6%80%9d%e8%80%83 aria-label=思考>思考</a></li><li><a href=#%e8%bf%9b%e4%b8%80%e6%ad%a5%e9%aa%8c%e8%af%81 aria-label=进一步验证>进一步验证</a></li><li><a href=#%e6%80%bb%e7%bb%93 aria-label=总结>总结</a></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=/css/syntax_pastie.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>C/C++ 符号管理的区别</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e8%83%8c%e6%99%af aria-label=背景>背景</a></li><li><a href=#%e6%80%9d%e8%80%83 aria-label=思考>思考</a></li><li><a href=#%e8%bf%9b%e4%b8%80%e6%ad%a5%e9%aa%8c%e8%af%81 aria-label=进一步验证>进一步验证</a></li><li><a href=#%e6%80%bb%e7%bb%93 aria-label=总结>总结</a></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
 <script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>C/C++ 符号管理的区别</div></header><h2 id=背景>背景</h2><p>今天在写 C 代码时，遇到一个问题，我忘记 include 头文件而调用某个函数，
 一般情况下在编译时会报警告 ⚠，然后也会链接成功，所以我这次就没管它因为只是暂时测试一下。
 然而令我费解的是函数的执行结果异常，检查汇编后发现，我声明的函数返回 u64 类型，
@@ -8,53 +8,53 @@
 还是能够成功编译，汇编只是把参数寄存器赋值，内部用不用得到无法判定。
 返回类型则统一认定为默认的<code>int</code>类型。</p><p>由此，我又产生了一个想法，既然C语言只使用符号名作为匹配的标准，
 <strong>那么必然不支持同名函数（参数、返回类型不同）。然而C++明确是支持的，</strong>
-那么C与C++的符号管理有什么不同吗？</p><h2 id=进一步验证>进一步验证</h2><p>我写了内容相同的C和C++两个文件来尝试解答问题：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888>// Same code in demo.c/demo.cpp
-</span></span></span><span style=display:flex><span><span style=color:#888></span><span style=color:#888;font-weight:700>void</span> <span style=color:#06b;font-weight:700>func</span>(<span style=color:#888;font-weight:700>int</span> a, <span style=color:#888;font-weight:700>int</span> b)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  func(b, a);
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>对他们进行编译，查看大小仅相差8字节，猜测是符号的管理有所不同。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ ls -al
-</span></span><span style=display:flex><span>total <span style=color:#00d;font-weight:700>8</span>
-</span></span><span style=display:flex><span>drwxr-xr-x <span style=color:#00d;font-weight:700>1</span> loo loo  <span style=color:#00d;font-weight:700>512</span> Dec <span style=color:#00d;font-weight:700>14</span> 14:09 .
-</span></span><span style=display:flex><span>drwxr-xr-x <span style=color:#00d;font-weight:700>1</span> loo loo  <span style=color:#00d;font-weight:700>512</span> Dec <span style=color:#00d;font-weight:700>14</span> 12:03 ..
-</span></span><span style=display:flex><span>-rw-r--r-- <span style=color:#00d;font-weight:700>1</span> loo loo   <span style=color:#00d;font-weight:700>42</span> Dec <span style=color:#00d;font-weight:700>14</span> 14:09 demo.c
-</span></span><span style=display:flex><span>-rw-r--r-- <span style=color:#00d;font-weight:700>1</span> loo loo <span style=color:#00d;font-weight:700>1480</span> Dec <span style=color:#00d;font-weight:700>14</span> 12:04 demo.c.o
-</span></span><span style=display:flex><span>-rw-r--r-- <span style=color:#00d;font-weight:700>1</span> loo loo   <span style=color:#00d;font-weight:700>42</span> Dec <span style=color:#00d;font-weight:700>14</span> 12:04 demo.cpp
-</span></span><span style=display:flex><span>-rw-r--r-- <span style=color:#00d;font-weight:700>1</span> loo loo <span style=color:#00d;font-weight:700>1488</span> Dec <span style=color:#00d;font-weight:700>14</span> 12:04 demo.cpp.o
+那么C与C++的符号管理有什么不同吗？</p><h2 id=进一步验证>进一步验证</h2><p>我写了内容相同的C和C++两个文件来尝试解答问题：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=c1>// Same code in demo.c/demo.cpp
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>func</span><span class=p>(</span><span class=kt>int</span> <span class=n>a</span><span class=p>,</span> <span class=kt>int</span> <span class=n>b</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>func</span><span class=p>(</span><span class=n>b</span><span class=p>,</span> <span class=n>a</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>对他们进行编译，查看大小仅相差8字节，猜测是符号的管理有所不同。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>$ ls -al
+</span></span><span class=line><span class=cl>total <span class=m>8</span>
+</span></span><span class=line><span class=cl>drwxr-xr-x <span class=m>1</span> loo loo  <span class=m>512</span> Dec <span class=m>14</span> 14:09 .
+</span></span><span class=line><span class=cl>drwxr-xr-x <span class=m>1</span> loo loo  <span class=m>512</span> Dec <span class=m>14</span> 12:03 ..
+</span></span><span class=line><span class=cl>-rw-r--r-- <span class=m>1</span> loo loo   <span class=m>42</span> Dec <span class=m>14</span> 14:09 demo.c
+</span></span><span class=line><span class=cl>-rw-r--r-- <span class=m>1</span> loo loo <span class=m>1480</span> Dec <span class=m>14</span> 12:04 demo.c.o
+</span></span><span class=line><span class=cl>-rw-r--r-- <span class=m>1</span> loo loo   <span class=m>42</span> Dec <span class=m>14</span> 12:04 demo.cpp
+</span></span><span class=line><span class=cl>-rw-r--r-- <span class=m>1</span> loo loo <span class=m>1488</span> Dec <span class=m>14</span> 12:04 demo.cpp.o
 </span></span></code></pre></div><p>进一步查看section的差别，忽略地址的差异，其实差异就在.shstrtab的大小，
-C++编译处的目标文件多了几个字节，而<code>.shstrtab</code>我们给的样例中也就是存符号<code>func</code>。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-diff data-lang=diff><span style=display:flex><span>$ diff &lt;(readelf -S demo.c.o) &lt;(readelf -S demo.cpp.o)
-</span></span><span style=display:flex><span>1c1
-</span></span><span style=display:flex><span>&lt; There are 13 section headers, starting at offset 0x288:
-</span></span><span style=display:flex><span><span style=color:#000;background-color:#fdd>---
-</span></span></span><span style=display:flex><span><span style=color:#000;background-color:#fdd></span>&gt; There are 13 section headers, starting at offset 0x290:
-</span></span><span style=display:flex><span>10c10
-</span></span><span style=display:flex><span>&lt;   [ 2] .rela.text        RELA             0000000000000000  000001e8
-</span></span><span style=display:flex><span><span style=color:#000;background-color:#fdd>---
-</span></span></span><span style=display:flex><span><span style=color:#000;background-color:#fdd></span>&gt;   [ 2] .rela.text        RELA             0000000000000000  000001f0
-</span></span><span style=display:flex><span>24c24
-</span></span><span style=display:flex><span>&lt;   [ 9] .rela.eh_frame    RELA             0000000000000000  00000200
-</span></span><span style=display:flex><span><span style=color:#000;background-color:#fdd>---
-</span></span></span><span style=display:flex><span><span style=color:#000;background-color:#fdd></span>&gt;   [ 9] .rela.eh_frame    RELA             0000000000000000  00000208
-</span></span><span style=display:flex><span>29,30c29,30
-</span></span><span style=display:flex><span>&lt;        000000000000000d  0000000000000000           0     0     1
-</span></span><span style=display:flex><span>&lt;   [12] .shstrtab         STRTAB           0000000000000000  00000218
-</span></span><span style=display:flex><span><span style=color:#000;background-color:#fdd>---
-</span></span></span><span style=display:flex><span><span style=color:#000;background-color:#fdd></span>&gt;        0000000000000014  0000000000000000           0     0     1
-</span></span><span style=display:flex><span>&gt;   [12] .shstrtab         STRTAB           0000000000000000  00000220
+C++编译处的目标文件多了几个字节，而<code>.shstrtab</code>我们给的样例中也就是存符号<code>func</code>。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-diff data-lang=diff><span class=line><span class=cl>$ diff &lt;(readelf -S demo.c.o) &lt;(readelf -S demo.cpp.o)
+</span></span><span class=line><span class=cl>1c1
+</span></span><span class=line><span class=cl>&lt; There are 13 section headers, starting at offset 0x288:
+</span></span><span class=line><span class=cl><span class=gd>---
+</span></span></span><span class=line><span class=cl><span class=gd></span>&gt; There are 13 section headers, starting at offset 0x290:
+</span></span><span class=line><span class=cl>10c10
+</span></span><span class=line><span class=cl>&lt;   [ 2] .rela.text        RELA             0000000000000000  000001e8
+</span></span><span class=line><span class=cl><span class=gd>---
+</span></span></span><span class=line><span class=cl><span class=gd></span>&gt;   [ 2] .rela.text        RELA             0000000000000000  000001f0
+</span></span><span class=line><span class=cl>24c24
+</span></span><span class=line><span class=cl>&lt;   [ 9] .rela.eh_frame    RELA             0000000000000000  00000200
+</span></span><span class=line><span class=cl><span class=gd>---
+</span></span></span><span class=line><span class=cl><span class=gd></span>&gt;   [ 9] .rela.eh_frame    RELA             0000000000000000  00000208
+</span></span><span class=line><span class=cl>29,30c29,30
+</span></span><span class=line><span class=cl>&lt;        000000000000000d  0000000000000000           0     0     1
+</span></span><span class=line><span class=cl>&lt;   [12] .shstrtab         STRTAB           0000000000000000  00000218
+</span></span><span class=line><span class=cl><span class=gd>---
+</span></span></span><span class=line><span class=cl><span class=gd></span>&gt;        0000000000000014  0000000000000000           0     0     1
+</span></span><span class=line><span class=cl>&gt;   [12] .shstrtab         STRTAB           0000000000000000  00000220
 </span></span></code></pre></div><p>继续查看.shstrtab的内容，就能得到最终的结果，<strong>确实C语言只存储符号名，
-而C++则既有符号名，也有参数和返回值类型。</strong></p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ readelf -p .strtab demo.c.o
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>String dump of section <span style=color:#d20;background-color:#fff0f0>&#39;.strtab&#39;</span>:
-</span></span><span style=display:flex><span>  [     1]  demo.c
-</span></span><span style=display:flex><span>  [     8]  func
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>$ readelf -p .strtab demo.cpp.o
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>String dump of section <span style=color:#d20;background-color:#fff0f0>&#39;.strtab&#39;</span>:
-</span></span><span style=display:flex><span>  [     1]  demo.cpp
-</span></span><span style=display:flex><span>  [     a]  _Z4funcii
-</span></span></code></pre></div><blockquote><p>通过<code>nm</code>命令也一样能够查看</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ nm demo.cpp.o
-</span></span><span style=display:flex><span><span style=color:#00d;font-weight:700>0000000000000000</span> T _Z4funcii
+而C++则既有符号名，也有参数和返回值类型。</strong></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>$ readelf -p .strtab demo.c.o
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>String dump of section <span class=s1>&#39;.strtab&#39;</span>:
+</span></span><span class=line><span class=cl>  <span class=o>[</span>     1<span class=o>]</span>  demo.c
+</span></span><span class=line><span class=cl>  <span class=o>[</span>     8<span class=o>]</span>  func
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>$ readelf -p .strtab demo.cpp.o
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>String dump of section <span class=s1>&#39;.strtab&#39;</span>:
+</span></span><span class=line><span class=cl>  <span class=o>[</span>     1<span class=o>]</span>  demo.cpp
+</span></span><span class=line><span class=cl>  <span class=o>[</span>     a<span class=o>]</span>  _Z4funcii
+</span></span></code></pre></div><blockquote><p>通过<code>nm</code>命令也一样能够查看</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>$ nm demo.cpp.o
+</span></span><span class=line><span class=cl><span class=m>0000000000000000</span> T _Z4funcii
 </span></span></code></pre></div></blockquote><h2 id=总结>总结</h2><p>确实C语言只存储符号名，而C++则既有符号名，也有参数和返回值类型。
 这是C++能够支持重载的本质。 有时我们在写C++时，如果找不到函数会报一个乱码的函数名，
 其实也就是这种经过压缩存储的符号。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-12-14T12:21:27, Lastmod: 2023-12-14T14:28:32</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>

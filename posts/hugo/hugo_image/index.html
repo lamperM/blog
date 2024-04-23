@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Hugo 引用图片</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e5%9b%be%e5%ba%8a aria-label=图床>图床</a></li><li><a href=#hugo aria-label=Hugo>Hugo</a><ul><li><a href=#shortcode aria-label=Shortcode>Shortcode</a></li></ul></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=/css/syntax_pastie.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Hugo 引用图片</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e5%9b%be%e5%ba%8a aria-label=图床>图床</a></li><li><a href=#hugo aria-label=Hugo>Hugo</a><ul><li><a href=#shortcode aria-label=Shortcode>Shortcode</a></li></ul></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
 <script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Hugo 引用图片</div></header><p>写博文时避免不了插入一些图片，总结了几种方式。</p><h2 id=图床>图床</h2><p>最早在其他平台写博客时，因为 Markdown 格式编辑，不方便内嵌图片（好像听说支持 Base64 编码，
 没试过）， 此时想要维护单个 md 文件，最好的方式就是用网络图片，
 本地引用必须同时维护图片和文件在同一个目录，而且一些博客平台上传图片太麻烦。</p><p>Markdown 插入图像的语法本就支持网络图片，这里防一张图片作为演示：</p><p><img src=https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png alt=百度Logo></p><p>以前用的 Gitee（码云）搭建图床，后面码云官方禁止这种行为，考虑过换成其他收费的平台，
@@ -11,11 +11,11 @@
 即可访问，<a href=https://gohugo.io/content-management/image-processing/#page-resource>Hugo 官方描述</a>。
 属于各自 blog 的图片放到各自的目录下，这样的好处是看起啦比较清晰。
 但是麻烦的地方就在于需要引用图片的博文都需要建立一个 Page bundle，
-而且我不喜欢 index.md 这种文件名，难以搜索。<div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>content/
-</span></span><span style=display:flex><span>└── posts/
-</span></span><span style=display:flex><span>    └── post-1/           &lt;-- page bundle
-</span></span><span style=display:flex><span>        ├── index.md
-</span></span><span style=display:flex><span>        └── sunset.jpg    &lt;-- page resource
+而且我不喜欢 index.md 这种文件名，难以搜索。<div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>content/
+</span></span><span class=line><span class=cl>└── posts/
+</span></span><span class=line><span class=cl>    └── post-1/           &lt;-- page bundle
+</span></span><span class=line><span class=cl>        ├── index.md
+</span></span><span class=line><span class=cl>        └── sunset.jpg    &lt;-- page resource
 </span></span></code></pre></div></li><li>所有博文的图片都放到的<code>/static</code>目录下，统一管理。
 <code>/static</code>可能不是必须存在，可以手动创建。此时的图片通过
 <code>![](/sunset)</code> 的方式来访问，多了一条斜杠。
@@ -23,6 +23,6 @@
 实际上因为图片不多，命名规范也还好。</li></ol><h3 id=shortcode>Shortcode</h3><p>Md支持的原生图片引用方式调整大小、对齐等操作比较麻烦，
 Hugo在这方面引入了默认的Shortcode:
 <a href=https://gohugo.io/content-management/shortcodes/#figure>figure</a>
-帮助实现引用本地图片。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>{{&lt; figure src=&#34;/test.jpg&#34; width=&#34;100%&#34; &gt;}}
+帮助实现引用本地图片。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>{{&lt; figure src=&#34;/test.jpg&#34; width=&#34;100%&#34; &gt;}}
 </span></span></code></pre></div><p>另外，我自己根据网上的资料写了引用外部图片的shortcode:
 <a href=https://wangloo.github.io/posts/hugo/new_theme_6/>insertFigure</a>。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2024-01-03T13:39:42, Lastmod: 2024-01-03T15:57:20</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>

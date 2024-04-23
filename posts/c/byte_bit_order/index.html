@@ -1,63 +1,63 @@
-<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Byte/Bit Order</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e5%ad%97%e8%8a%82%e5%ba%8f%e4%b8%8e%e6%af%94%e7%89%b9%e5%ba%8f aria-label=字节序与比特序>字节序与比特序</a></li><li><a href=#%e5%ad%97%e8%8a%82%e5%ba%8f%e4%b8%8e%e6%af%94%e7%89%b9%e5%ba%8f%e8%bd%ac%e6%8d%a2 aria-label=字节序与比特序转换>字节序与比特序转换</a><ul><li><a href=#%e5%ad%97%e8%8a%82%e5%ba%8f%e8%bd%ac%e6%8d%a2 aria-label=字节序转换>字节序转换</a></li><li><a href=#%e6%af%94%e7%89%b9%e5%ba%8f%e8%bd%ac%e6%8d%a2 aria-label=比特序转换>比特序转换</a></li></ul></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
-<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Byte/Bit Order</div></header><h1 id=字节序与比特序>字节序与比特序</h1><p>字节序又称大小段，网络中传输的是大端，在CPU上处理的一般是小端。</p><h1 id=字节序与比特序转换>字节序与比特序转换</h1><h2 id=字节序转换>字节序转换</h2><h2 id=比特序转换>比特序转换</h2><p>两种方法，一种直接法，<strong>另外有一种优化的技巧</strong>。</p><p>（1）</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888>// Bit reverse
-</span></span></span><span style=display:flex><span><span style=color:#888></span><span style=color:#888;font-weight:700>unsigned</span> <span style=color:#888;font-weight:700>char</span>
-</span></span><span style=display:flex><span><span style=color:#06b;font-weight:700>bit_reverse</span>(<span style=color:#888;font-weight:700>unsigned</span> <span style=color:#888;font-weight:700>char</span> x)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>unsigned</span> <span style=color:#888;font-weight:700>char</span> newx = <span style=color:#00d;font-weight:700>0</span>;
-</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>for</span> (<span style=color:#888;font-weight:700>int</span> i = <span style=color:#00d;font-weight:700>0</span>; i &lt; <span style=color:#00d;font-weight:700>8</span>; i++) {
-</span></span><span style=display:flex><span>    newx |= (((x &gt;&gt; i) &amp; <span style=color:#00d;font-weight:700>1</span>) &lt;&lt; (<span style=color:#00d;font-weight:700>7</span>-i));
-</span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>return</span> newx;
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>(2) <a href=https://mp.weixin.qq.com/s/KNUH_RmIhUHhuSZLSmN4LQ>https://mp.weixin.qq.com/s/KNUH_RmIhUHhuSZLSmN4LQ</a></p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888>// Bit reverse(faster)
-</span></span></span><span style=display:flex><span><span style=color:#888>// 碟式交换法
-</span></span></span><span style=display:flex><span><span style=color:#888></span><span style=color:#888;font-weight:700>unsigned</span> <span style=color:#888;font-weight:700>char</span>
-</span></span><span style=display:flex><span><span style=color:#06b;font-weight:700>bit_reverse_faster</span>(<span style=color:#888;font-weight:700>unsigned</span> <span style=color:#888;font-weight:700>char</span> x)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  x = (x&lt;&lt;<span style=color:#00d;font-weight:700>4</span>) | (x&gt;&gt;<span style=color:#00d;font-weight:700>4</span>); <span style=color:#888>// [ 5678 1234 ]
-</span></span></span><span style=display:flex><span><span style=color:#888></span>  x = ((x&lt;&lt;<span style=color:#00d;font-weight:700>2</span>)&amp;<span style=color:#00d;font-weight:700>0xcc</span>) | ((x&gt;&gt;<span style=color:#00d;font-weight:700>2</span>)&amp;<span style=color:#00d;font-weight:700>0x33</span>); <span style=color:#888>// [ 78 56 34 12 ]
-</span></span></span><span style=display:flex><span><span style=color:#888></span>  x = ((x&lt;&lt;<span style=color:#00d;font-weight:700>1</span>)&amp;<span style=color:#00d;font-weight:700>0xaa</span>) | ((x&gt;&gt;<span style=color:#00d;font-weight:700>1</span>)&amp;<span style=color:#00d;font-weight:700>0x55</span>); <span style=color:#888>// [ 8 7 6 5 4 3 2 1 ]
-</span></span></span><span style=display:flex><span><span style=color:#888></span>  <span style=color:#080;font-weight:700>return</span> x;
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>测试工具函数:</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>int</span>
-</span></span><span style=display:flex><span><span style=color:#06b;font-weight:700>to_binary_str</span>(<span style=color:#888;font-weight:700>unsigned</span> <span style=color:#888;font-weight:700>long</span> val, <span style=color:#888;font-weight:700>char</span> *bin_str, <span style=color:#888;font-weight:700>int</span> *len)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>char</span> *p, *q;
-</span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>int</span> cnt = <span style=color:#00d;font-weight:700>0</span>;
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>while</span> (val) {
-</span></span><span style=display:flex><span>    <span style=color:#888;font-weight:700>char</span> tmp = val &amp; <span style=color:#00d;font-weight:700>1</span>;
-</span></span><span style=display:flex><span>    bin_str[cnt++] = tmp+<span style=color:#d20;background-color:#fff0f0>&#39;0&#39;</span>;
-</span></span><span style=display:flex><span>    val = val &gt;&gt; <span style=color:#00d;font-weight:700>1</span>;
-</span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  p = bin_str, q = bin_str+cnt-<span style=color:#00d;font-weight:700>1</span>;
-</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>while</span> (p &lt; q) {
-</span></span><span style=display:flex><span>    <span style=color:#888;font-weight:700>char</span> tmp = *p;
-</span></span><span style=display:flex><span>    *p = *q;
-</span></span><span style=display:flex><span>    *q = tmp;
-</span></span><span style=display:flex><span>    p++, q--;
-</span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  bin_str[cnt] = <span style=color:#00d;font-weight:700>0</span>;
-</span></span><span style=display:flex><span>  *len = cnt;
-</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>return</span> <span style=color:#00d;font-weight:700>0</span>;
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#888;font-weight:700>int</span> <span style=color:#06b;font-weight:700>main</span>(<span style=color:#888;font-weight:700>void</span>)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>char</span> bin[<span style=color:#00d;font-weight:700>65</span>];
-</span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>int</span> len;
-</span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>unsigned</span> <span style=color:#888;font-weight:700>char</span> x = <span style=color:#00d;font-weight:700>0</span>b11110000;
-</span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>unsigned</span> <span style=color:#888;font-weight:700>char</span> y = <span style=color:#00d;font-weight:700>0</span>b10101010;
-</span></span><span style=display:flex><span>  to_binary_str(bit_reverse(x), bin, &amp;len);
-</span></span><span style=display:flex><span>  printf(<span style=color:#d20;background-color:#fff0f0>&#34;bin: %s</span><span style=color:#04d;background-color:#fff0f0>\n</span><span style=color:#d20;background-color:#fff0f0>&#34;</span>, bin);
-</span></span><span style=display:flex><span>  to_binary_str(bit_reverse(y), bin, &amp;len);
-</span></span><span style=display:flex><span>  printf(<span style=color:#d20;background-color:#fff0f0>&#34;bin: %s</span><span style=color:#04d;background-color:#fff0f0>\n</span><span style=color:#d20;background-color:#fff0f0>&#34;</span>, bin);
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  assert(bit_reverse(x) == bit_reverse_faster(x));
-</span></span><span style=display:flex><span>  assert(bit_reverse(y) == bit_reverse_faster(y));
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>return</span> <span style=color:#00d;font-weight:700>0</span>;
-</span></span><span style=display:flex><span>}  
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=/css/syntax_pastie.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Byte/Bit Order</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e5%ad%97%e8%8a%82%e5%ba%8f%e4%b8%8e%e6%af%94%e7%89%b9%e5%ba%8f aria-label=字节序与比特序>字节序与比特序</a></li><li><a href=#%e5%ad%97%e8%8a%82%e5%ba%8f%e4%b8%8e%e6%af%94%e7%89%b9%e5%ba%8f%e8%bd%ac%e6%8d%a2 aria-label=字节序与比特序转换>字节序与比特序转换</a><ul><li><a href=#%e5%ad%97%e8%8a%82%e5%ba%8f%e8%bd%ac%e6%8d%a2 aria-label=字节序转换>字节序转换</a></li><li><a href=#%e6%af%94%e7%89%b9%e5%ba%8f%e8%bd%ac%e6%8d%a2 aria-label=比特序转换>比特序转换</a></li></ul></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Byte/Bit Order</div></header><h1 id=字节序与比特序>字节序与比特序</h1><p>字节序又称大小段，网络中传输的是大端，在CPU上处理的一般是小端。</p><h1 id=字节序与比特序转换>字节序与比特序转换</h1><h2 id=字节序转换>字节序转换</h2><h2 id=比特序转换>比特序转换</h2><p>两种方法，一种直接法，<strong>另外有一种优化的技巧</strong>。</p><p>（1）</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=c1>// Bit reverse
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>unsigned</span> <span class=kt>char</span>
+</span></span><span class=line><span class=cl><span class=nf>bit_reverse</span><span class=p>(</span><span class=kt>unsigned</span> <span class=kt>char</span> <span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>unsigned</span> <span class=kt>char</span> <span class=n>newx</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=mi>8</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>newx</span> <span class=o>|=</span> <span class=p>(((</span><span class=n>x</span> <span class=o>&gt;&gt;</span> <span class=n>i</span><span class=p>)</span> <span class=o>&amp;</span> <span class=mi>1</span><span class=p>)</span> <span class=o>&lt;&lt;</span> <span class=p>(</span><span class=mi>7</span><span class=o>-</span><span class=n>i</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>newx</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>(2) <a href=https://mp.weixin.qq.com/s/KNUH_RmIhUHhuSZLSmN4LQ>https://mp.weixin.qq.com/s/KNUH_RmIhUHhuSZLSmN4LQ</a></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=c1>// Bit reverse(faster)
+</span></span></span><span class=line><span class=cl><span class=c1>// 碟式交换法
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>unsigned</span> <span class=kt>char</span>
+</span></span><span class=line><span class=cl><span class=nf>bit_reverse_faster</span><span class=p>(</span><span class=kt>unsigned</span> <span class=kt>char</span> <span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>x</span> <span class=o>=</span> <span class=p>(</span><span class=n>x</span><span class=o>&lt;&lt;</span><span class=mi>4</span><span class=p>)</span> <span class=o>|</span> <span class=p>(</span><span class=n>x</span><span class=o>&gt;&gt;</span><span class=mi>4</span><span class=p>);</span> <span class=c1>// [ 5678 1234 ]
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>x</span> <span class=o>=</span> <span class=p>((</span><span class=n>x</span><span class=o>&lt;&lt;</span><span class=mi>2</span><span class=p>)</span><span class=o>&amp;</span><span class=mh>0xcc</span><span class=p>)</span> <span class=o>|</span> <span class=p>((</span><span class=n>x</span><span class=o>&gt;&gt;</span><span class=mi>2</span><span class=p>)</span><span class=o>&amp;</span><span class=mh>0x33</span><span class=p>);</span> <span class=c1>// [ 78 56 34 12 ]
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>x</span> <span class=o>=</span> <span class=p>((</span><span class=n>x</span><span class=o>&lt;&lt;</span><span class=mi>1</span><span class=p>)</span><span class=o>&amp;</span><span class=mh>0xaa</span><span class=p>)</span> <span class=o>|</span> <span class=p>((</span><span class=n>x</span><span class=o>&gt;&gt;</span><span class=mi>1</span><span class=p>)</span><span class=o>&amp;</span><span class=mh>0x55</span><span class=p>);</span> <span class=c1>// [ 8 7 6 5 4 3 2 1 ]
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>return</span> <span class=n>x</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>测试工具函数:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span>
+</span></span><span class=line><span class=cl><span class=nf>to_binary_str</span><span class=p>(</span><span class=kt>unsigned</span> <span class=kt>long</span> <span class=n>val</span><span class=p>,</span> <span class=kt>char</span> <span class=o>*</span><span class=n>bin_str</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>len</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>char</span> <span class=o>*</span><span class=n>p</span><span class=p>,</span> <span class=o>*</span><span class=n>q</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>int</span> <span class=n>cnt</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>while</span> <span class=p>(</span><span class=n>val</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>char</span> <span class=n>tmp</span> <span class=o>=</span> <span class=n>val</span> <span class=o>&amp;</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>bin_str</span><span class=p>[</span><span class=n>cnt</span><span class=o>++</span><span class=p>]</span> <span class=o>=</span> <span class=n>tmp</span><span class=o>+</span><span class=sc>&#39;0&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>val</span> <span class=o>=</span> <span class=n>val</span> <span class=o>&gt;&gt;</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>p</span> <span class=o>=</span> <span class=n>bin_str</span><span class=p>,</span> <span class=n>q</span> <span class=o>=</span> <span class=n>bin_str</span><span class=o>+</span><span class=n>cnt</span><span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>while</span> <span class=p>(</span><span class=n>p</span> <span class=o>&lt;</span> <span class=n>q</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>char</span> <span class=n>tmp</span> <span class=o>=</span> <span class=o>*</span><span class=n>p</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=o>*</span><span class=n>p</span> <span class=o>=</span> <span class=o>*</span><span class=n>q</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=o>*</span><span class=n>q</span> <span class=o>=</span> <span class=n>tmp</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>p</span><span class=o>++</span><span class=p>,</span> <span class=n>q</span><span class=o>--</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>bin_str</span><span class=p>[</span><span class=n>cnt</span><span class=p>]</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=o>*</span><span class=n>len</span> <span class=o>=</span> <span class=n>cnt</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>char</span> <span class=n>bin</span><span class=p>[</span><span class=mi>65</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>  <span class=kt>int</span> <span class=n>len</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>unsigned</span> <span class=kt>char</span> <span class=n>x</span> <span class=o>=</span> <span class=mi>0</span><span class=n>b11110000</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>unsigned</span> <span class=kt>char</span> <span class=n>y</span> <span class=o>=</span> <span class=mi>0</span><span class=n>b10101010</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>to_binary_str</span><span class=p>(</span><span class=n>bit_reverse</span><span class=p>(</span><span class=n>x</span><span class=p>),</span> <span class=n>bin</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>len</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>printf</span><span class=p>(</span><span class=s>&#34;bin: %s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>bin</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>to_binary_str</span><span class=p>(</span><span class=n>bit_reverse</span><span class=p>(</span><span class=n>y</span><span class=p>),</span> <span class=n>bin</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>len</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>printf</span><span class=p>(</span><span class=s>&#34;bin: %s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>bin</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>assert</span><span class=p>(</span><span class=n>bit_reverse</span><span class=p>(</span><span class=n>x</span><span class=p>)</span> <span class=o>==</span> <span class=n>bit_reverse_faster</span><span class=p>(</span><span class=n>x</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>  <span class=n>assert</span><span class=p>(</span><span class=n>bit_reverse</span><span class=p>(</span><span class=n>y</span><span class=p>)</span> <span class=o>==</span> <span class=n>bit_reverse_faster</span><span class=p>(</span><span class=n>y</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>  
 </span></span></code></pre></div></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-11-25T16:21:27, Lastmod: 2023-11-30T17:56:18</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>

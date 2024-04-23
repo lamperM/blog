@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Dwarf: Stack Unwinding</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e5%89%8d%e8%a8%80 aria-label=前言>前言</a></li><li><a href=#%e5%8e%9f%e7%90%86 aria-label=原理>原理</a><ul><li><a href=#demo aria-label=Demo>Demo</a></li></ul></li><li><a href=#%e8%a7%a3%e5%89%96-debug_frmae aria-label="解剖 .debug_frmae">解剖 <code>.debug_frmae</code></a><ul><li><a href=#cie--fde aria-label="CIE &amp;amp; FDE">CIE & FDE</a></li><li><a href=#%e6%a0%88%e5%9b%9e%e6%ba%af%e7%9a%84%e8%bf%87%e7%a8%8b aria-label=栈回溯的过程>栈回溯的过程</a></li><li><a href=#%e5%8e%9f%e7%90%86-1 aria-label=原理>原理</a></li><li><a href=#%e5%85%b3%e4%ba%8e-caller-saved-regs aria-label="关于 Caller-saved Regs">关于 Caller-saved Regs</a></li></ul></li><li><a href=#%e6%b3%a8%e6%84%8f aria-label=注意>注意</a></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=/css/syntax_pastie.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Dwarf: Stack Unwinding</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e5%89%8d%e8%a8%80 aria-label=前言>前言</a></li><li><a href=#%e5%8e%9f%e7%90%86 aria-label=原理>原理</a><ul><li><a href=#demo aria-label=Demo>Demo</a></li></ul></li><li><a href=#%e8%a7%a3%e5%89%96-debug_frmae aria-label="解剖 .debug_frmae">解剖 <code>.debug_frmae</code></a><ul><li><a href=#cie--fde aria-label="CIE &amp;amp; FDE">CIE & FDE</a></li><li><a href=#%e6%a0%88%e5%9b%9e%e6%ba%af%e7%9a%84%e8%bf%87%e7%a8%8b aria-label=栈回溯的过程>栈回溯的过程</a></li><li><a href=#%e5%8e%9f%e7%90%86-1 aria-label=原理>原理</a></li><li><a href=#%e5%85%b3%e4%ba%8e-caller-saved-regs aria-label="关于 Caller-saved Regs">关于 Caller-saved Regs</a></li></ul></li><li><a href=#%e6%b3%a8%e6%84%8f aria-label=注意>注意</a></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
 <script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Dwarf: Stack Unwinding</div></header><h2 id=前言>前言</h2><p>栈回溯是调试代码常用的功能之一，Gdb 中对应的命令是<code>bt</code>,<code>info frame</code>等。
 这篇文件将介绍利用 Dwarf 生成的调试信息实现栈回溯的方法。</p><h2 id=原理>原理</h2><p>Dwarf v2 开始提供一种叫做 Call Frame Information（简称 CFI）的信息，
 它存储在<code>.debug_frame</code>中，调试器可以通过解析这个 Section 完成栈回溯。
@@ -11,83 +11,83 @@
 因为 Arm64 下对叶子函数可能不会生成正确的 CFI 信息，
 因为这种情况不常见，所以我们先讨论普通的情况。
 另外，我知道这个计算 fibonacci 数的算法不是最优的，
-但是我们毕竟不是算法优化的主题，所以能够说明问题即可。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>int</span> <span style=color:#06b;font-weight:700>fiboncci</span>(<span style=color:#888;font-weight:700>int</span> n)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>if</span> (n &lt;= <span style=color:#00d;font-weight:700>2</span>)
-</span></span><span style=display:flex><span>    <span style=color:#080;font-weight:700>return</span> <span style=color:#00d;font-weight:700>1</span>;
-</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>else</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-weight:700>return</span> fiboncci(n-<span style=color:#00d;font-weight:700>1</span>) + fiboncci(n-<span style=color:#00d;font-weight:700>2</span>);
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#888;font-weight:700>int</span> <span style=color:#06b;font-weight:700>main</span>(<span style=color:#888;font-weight:700>void</span>)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  <span style=color:#888;font-weight:700>int</span> result;
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  result = fiboncci(<span style=color:#00d;font-weight:700>10</span>);
-</span></span><span style=display:flex><span>  <span style=color:#080;font-weight:700>return</span> <span style=color:#00d;font-weight:700>0</span>;
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>int fiboncci(int n)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  400594: a9bd7bfd  stp x29, x30, [sp, #-48]!
-</span></span><span style=display:flex><span>  400598: 910003fd  mov x29, sp
-</span></span><span style=display:flex><span>  40059c: f9000bf3  str x19, [sp, #16]
-</span></span><span style=display:flex><span>  4005a0: b9002fe0  str w0, [sp, #44]
-</span></span><span style=display:flex><span>  if (n &lt;= 2)
-</span></span><span style=display:flex><span>  4005a4: b9402fe0  ldr w0, [sp, #44]
-</span></span><span style=display:flex><span>  4005a8: 7100081f  cmp w0, #0x2
-</span></span><span style=display:flex><span>  4005ac: 5400006c  b.gt  4005b8 &lt;fiboncci+0x24&gt;
-</span></span><span style=display:flex><span>    return 1;
-</span></span><span style=display:flex><span>  4005b0: 52800020  mov w0, #0x1                    // #1
-</span></span><span style=display:flex><span>  4005b4: 14000009  b 4005d8 &lt;fiboncci+0x44&gt;
-</span></span><span style=display:flex><span>  else
-</span></span><span style=display:flex><span>    return fiboncci(n-1) + fiboncci(n-2);
-</span></span><span style=display:flex><span>  4005b8: b9402fe0  ldr w0, [sp, #44]
-</span></span><span style=display:flex><span>  4005bc: 51000400  sub w0, w0, #0x1
-</span></span><span style=display:flex><span>  4005c0: 97fffff5  bl  400594 &lt;fiboncci&gt;
-</span></span><span style=display:flex><span>  4005c4: 2a0003f3  mov w19, w0
-</span></span><span style=display:flex><span>  4005c8: b9402fe0  ldr w0, [sp, #44]
-</span></span><span style=display:flex><span>  4005cc: 51000800  sub w0, w0, #0x2
-</span></span><span style=display:flex><span>  4005d0: 97fffff1  bl  400594 &lt;fiboncci&gt;
-</span></span><span style=display:flex><span>  4005d4: 0b000260  add w0, w19, w0
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span>  4005d8: f9400bf3  ldr x19, [sp, #16]
-</span></span><span style=display:flex><span>  4005dc: a8c37bfd  ldp x29, x30, [sp], #48
-</span></span><span style=display:flex><span>  4005e0: d65f03c0  ret
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>00000000004005e4 &lt;main&gt;:
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>int main(void)
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  4005e4: a9be7bfd  stp x29, x30, [sp, #-32]!
-</span></span><span style=display:flex><span>  4005e8: 910003fd  mov x29, sp
-</span></span><span style=display:flex><span>  int result;
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  result = fiboncci(10);
-</span></span><span style=display:flex><span>  4005ec: 52800140  mov w0, #0xa                    // #10
-</span></span><span style=display:flex><span>  4005f0: 97ffffe9  bl  400594 &lt;fiboncci&gt;
-</span></span><span style=display:flex><span>  4005f4: b9001fe0  str w0, [sp, #28]
-</span></span><span style=display:flex><span>  return 0;
-</span></span><span style=display:flex><span>  4005f8: 52800000  mov w0, #0x0                    // #0
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span>  4005fc: a8c27bfd  ldp x29, x30, [sp], #32
-</span></span><span style=display:flex><span>  400600: d65f03c0  ret
-</span></span><span style=display:flex><span>  400604: d503201f  nop
-</span></span><span style=display:flex><span>  400608: d503201f  nop
-</span></span><span style=display:flex><span>  40060c: d503201f  nop
+但是我们毕竟不是算法优化的主题，所以能够说明问题即可。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=nf>fiboncci</span><span class=p>(</span><span class=kt>int</span> <span class=n>n</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>n</span> <span class=o>&lt;=</span> <span class=mi>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>else</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>fiboncci</span><span class=p>(</span><span class=n>n</span><span class=o>-</span><span class=mi>1</span><span class=p>)</span> <span class=o>+</span> <span class=n>fiboncci</span><span class=p>(</span><span class=n>n</span><span class=o>-</span><span class=mi>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>int</span> <span class=n>result</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>result</span> <span class=o>=</span> <span class=n>fiboncci</span><span class=p>(</span><span class=mi>10</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>int fiboncci(int n)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>  400594: a9bd7bfd  stp x29, x30, [sp, #-48]!
+</span></span><span class=line><span class=cl>  400598: 910003fd  mov x29, sp
+</span></span><span class=line><span class=cl>  40059c: f9000bf3  str x19, [sp, #16]
+</span></span><span class=line><span class=cl>  4005a0: b9002fe0  str w0, [sp, #44]
+</span></span><span class=line><span class=cl>  if (n &lt;= 2)
+</span></span><span class=line><span class=cl>  4005a4: b9402fe0  ldr w0, [sp, #44]
+</span></span><span class=line><span class=cl>  4005a8: 7100081f  cmp w0, #0x2
+</span></span><span class=line><span class=cl>  4005ac: 5400006c  b.gt  4005b8 &lt;fiboncci+0x24&gt;
+</span></span><span class=line><span class=cl>    return 1;
+</span></span><span class=line><span class=cl>  4005b0: 52800020  mov w0, #0x1                    // #1
+</span></span><span class=line><span class=cl>  4005b4: 14000009  b 4005d8 &lt;fiboncci+0x44&gt;
+</span></span><span class=line><span class=cl>  else
+</span></span><span class=line><span class=cl>    return fiboncci(n-1) + fiboncci(n-2);
+</span></span><span class=line><span class=cl>  4005b8: b9402fe0  ldr w0, [sp, #44]
+</span></span><span class=line><span class=cl>  4005bc: 51000400  sub w0, w0, #0x1
+</span></span><span class=line><span class=cl>  4005c0: 97fffff5  bl  400594 &lt;fiboncci&gt;
+</span></span><span class=line><span class=cl>  4005c4: 2a0003f3  mov w19, w0
+</span></span><span class=line><span class=cl>  4005c8: b9402fe0  ldr w0, [sp, #44]
+</span></span><span class=line><span class=cl>  4005cc: 51000800  sub w0, w0, #0x2
+</span></span><span class=line><span class=cl>  4005d0: 97fffff1  bl  400594 &lt;fiboncci&gt;
+</span></span><span class=line><span class=cl>  4005d4: 0b000260  add w0, w19, w0
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>  4005d8: f9400bf3  ldr x19, [sp, #16]
+</span></span><span class=line><span class=cl>  4005dc: a8c37bfd  ldp x29, x30, [sp], #48
+</span></span><span class=line><span class=cl>  4005e0: d65f03c0  ret
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>00000000004005e4 &lt;main&gt;:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int main(void)
+</span></span><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>  4005e4: a9be7bfd  stp x29, x30, [sp, #-32]!
+</span></span><span class=line><span class=cl>  4005e8: 910003fd  mov x29, sp
+</span></span><span class=line><span class=cl>  int result;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  result = fiboncci(10);
+</span></span><span class=line><span class=cl>  4005ec: 52800140  mov w0, #0xa                    // #10
+</span></span><span class=line><span class=cl>  4005f0: 97ffffe9  bl  400594 &lt;fiboncci&gt;
+</span></span><span class=line><span class=cl>  4005f4: b9001fe0  str w0, [sp, #28]
+</span></span><span class=line><span class=cl>  return 0;
+</span></span><span class=line><span class=cl>  4005f8: 52800000  mov w0, #0x0                    // #0
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>  4005fc: a8c27bfd  ldp x29, x30, [sp], #32
+</span></span><span class=line><span class=cl>  400600: d65f03c0  ret
+</span></span><span class=line><span class=cl>  400604: d503201f  nop
+</span></span><span class=line><span class=cl>  400608: d503201f  nop
+</span></span><span class=line><span class=cl>  40060c: d503201f  nop
 </span></span></code></pre></div><p>因为在编译时添加了<code>-g</code>选项，所以 Gcc 默认会生成<code>.debug_frame</code>，
-让我们来看看里面的内容是什么。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>aarch64-none-linux-gnu-objdump --dwarf=frames-interp frame
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>00000088 0000000000000020 0000008c FDE cie=00000000 pc=0000000000400594..00000000004005e4
-</span></span><span style=display:flex><span>   LOC           CFA      x19   x29   ra
-</span></span><span style=display:flex><span>0000000000400594 sp+0     u     u     u
-</span></span><span style=display:flex><span>0000000000400598 sp+48    u     c-48  c-40
-</span></span><span style=display:flex><span>00000000004005a0 sp+48    c-32  c-48  c-40
-</span></span><span style=display:flex><span>00000000004005e0 sp+0     u     u     u
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>000000ac 0000000000000020 000000b0 FDE cie=00000000 pc=00000000004005e4..0000000000400604
-</span></span><span style=display:flex><span>   LOC           CFA      x29   ra
-</span></span><span style=display:flex><span>00000000004005e4 sp+0     u     u
-</span></span><span style=display:flex><span>00000000004005e8 sp+32    c-32  c-24
-</span></span><span style=display:flex><span>0000000000400600 sp+0     u     u
+让我们来看看里面的内容是什么。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>aarch64-none-linux-gnu-objdump --dwarf<span class=o>=</span>frames-interp frame
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>00000088 0000000000000020 0000008c FDE cie=00000000 pc=0000000000400594..00000000004005e4
+</span></span><span class=line><span class=cl>   LOC           CFA      x19   x29   ra
+</span></span><span class=line><span class=cl>0000000000400594 sp+0     u     u     u
+</span></span><span class=line><span class=cl>0000000000400598 sp+48    u     c-48  c-40
+</span></span><span class=line><span class=cl>00000000004005a0 sp+48    c-32  c-48  c-40
+</span></span><span class=line><span class=cl>00000000004005e0 sp+0     u     u     u
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>000000ac 0000000000000020 000000b0 FDE cie=00000000 pc=00000000004005e4..0000000000400604
+</span></span><span class=line><span class=cl>   LOC           CFA      x29   ra
+</span></span><span class=line><span class=cl>00000000004005e4 sp+0     u     u
+</span></span><span class=line><span class=cl>00000000004005e8 sp+32    c-32  c-24
+</span></span><span class=line><span class=cl>0000000000400600 sp+0     u     u
 </span></span></code></pre></div><p>这是经过解释之后的<code>.debug_frame</code>，在实际存储的时候可能通过压缩。
 解释之后就明显展示出二维表格的样貌。上述代码里共有两段表，
 第一段对应我们在<code>fibonacci()</code>中如何查找上一个 Frame，
@@ -95,12 +95,12 @@
 我们下面再说它到底是怎么帮助实现栈回溯的。</p><h2 id=解剖-debug_frmae>解剖 <code>.debug_frmae</code></h2><h3 id=cie--fde>CIE & FDE</h3><p>上面不是说表格中存的是栈回溯的规则吗，这张大表可以按照函数的界限来划分，
 FDE 就是对应某个函数的计算规则。一些函数共同的部分提取成一个 CIE。</p><h3 id=栈回溯的过程>栈回溯的过程</h3><p>还是以上面的代码为例，假设我们位于 Fibonacci()中的<code>4005a4</code>地址上，
 此时我们要进行栈回溯，找到 main()中的调用点。</p><p>首先，在第一个 FDE 里找到当前地址<code>4005a4</code>的计算规则，
-因为连续的一段地址可能计算规则不变，可以将他们存成一条，节约空间。</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>00000088 0000000000000020 0000008c FDE cie=00000000 pc=0000000000400594..00000000004005e4
-</span></span><span style=display:flex><span>   LOC           CFA      x19   x29   ra
-</span></span><span style=display:flex><span>0000000000400594 sp+0     u     u     u
-</span></span><span style=display:flex><span>0000000000400598 sp+48    u     c-48  c-40
-</span></span><span style=display:flex><span>00000000004005a0 sp+48    c-32  c-48  c-40
-</span></span><span style=display:flex><span>00000000004005e0 sp+0     u     u     u
+因为连续的一段地址可能计算规则不变，可以将他们存成一条，节约空间。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>00000088 0000000000000020 0000008c FDE cie=00000000 pc=0000000000400594..00000000004005e4
+</span></span><span class=line><span class=cl>   LOC           CFA      x19   x29   ra
+</span></span><span class=line><span class=cl>0000000000400594 sp+0     u     u     u
+</span></span><span class=line><span class=cl>0000000000400598 sp+48    u     c-48  c-40
+</span></span><span class=line><span class=cl>00000000004005a0 sp+48    c-32  c-48  c-40
+</span></span><span class=line><span class=cl>00000000004005e0 sp+0     u     u     u
 </span></span></code></pre></div><p>第一列 LOC 是每个规则相同的连续地址块的起始地址，由此得到<code>4005a4</code>需要参考第三行规则。</p><p>再看到第二列，<strong>CFA 的含义是 caller 的 sp</strong>， 第三列<strong>ra 的含义是返回地址(Returen address)</strong>， 表格中的值 u 代表不变，c 代表 CFA。</p><p>所以说，由表格中的数据可知，<code>caller'sp=sp+48</code>，而返回地址就存储在<code>cfa-40</code>的地址上，
 这是一个栈的地址，由于函数调用不会破坏之前栈的内容，所以可以放心取出 ra，也就是返回地址。
 这就找到了 main 函数中的调用点，如果 main 之上还有 caller 的话，可以继续查 main 的 FDE 来寻找。</p><h3 id=原理-1>原理</h3><p>其实，这种方法就是利用了每次进入函数时时会在栈上保存返回地址 x30，

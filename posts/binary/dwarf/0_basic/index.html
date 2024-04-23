@@ -1,28 +1,28 @@
-<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Dwarf(1): 基础</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e6%9f%a5%e7%9c%8b%e4%b8%80%e4%b8%aa-elf-%e7%9a%84%e6%89%80%e6%9c%89-die aria-label="查看一个 ELF 的所有 DIE">查看一个 ELF 的所有 DIE</a></li><li><a href=#%e5%b0%8f%e7%bb%93 aria-label=小结>小结</a></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=/css/syntax_pastie.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Dwarf(1): 基础</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item" href>BACK</div><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e6%9f%a5%e7%9c%8b%e4%b8%80%e4%b8%aa-elf-%e7%9a%84%e6%89%80%e6%9c%89-die aria-label="查看一个 ELF 的所有 DIE">查看一个 ELF 的所有 DIE</a></li><li><a href=#%e5%b0%8f%e7%bb%93 aria-label=小结>小结</a></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
 <script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Dwarf(1): 基础</div></header><p>Dwarf 把源文件中每个可描述的模块（例如函数，变量，结构体的声明等）描述为一个 DIE
 (Debugging Information Entry)，所以每个源文件可以描述为若干 DIE 的组合。</p><p>每个 DIE 由一个 tag 和若干 attribute-val 键值对构成:</p><ul><li>tag: 描述此 DIE 的类型</li><li>attribute-val: 描述此 DIE 的一些细节属性，项目根据 DIE 的类型不同而有差别</li></ul><p>各个 DIE 之间会相互联系，一个 DIE 可能含有 parent，若干的 child 和 sibling，
 它们之间组成树的结构。</p><h2 id=查看一个-elf-的所有-die>查看一个 ELF 的所有 DIE</h2><p>ELF 文件中的所有 DIE 存储在<code>.debug_info</code> section 中，通过 GNU utils 中的<code>objdump</code>工具
-可以解析为可阅读的结构:</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>objdump --dwarf=info &lt;file&gt;
-</span></span></code></pre></div><p>若我们有一个 <code>demo.c</code> 如下:</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#888;font-weight:700>void</span> <span style=color:#06b;font-weight:700>func</span>(<span style=color:#888;font-weight:700>void</span>) {
-</span></span><span style=display:flex><span>    <span style=color:#888;font-weight:700>int</span> var_local;
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>编译为可执行文件后， 执行上述的<code>objdump</code>命令， 可以得到如下的输出（节选）：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span> &lt;1&gt;&lt;68&gt;: Abbrev Number: <span style=color:#00d;font-weight:700>5</span> (DW_TAG_subprogram)
-</span></span><span style=display:flex><span>    &lt;69&gt;   DW_AT_external    : <span style=color:#00d;font-weight:700>1</span>
-</span></span><span style=display:flex><span>    &lt;69&gt;   DW_AT_name        : (indirect string, offset: 0x32): func
-</span></span><span style=display:flex><span>    &lt;6d&gt;   DW_AT_decl_file   : <span style=color:#00d;font-weight:700>1</span>
-</span></span><span style=display:flex><span>    &lt;6e&gt;   DW_AT_decl_line   : <span style=color:#00d;font-weight:700>3</span>
-</span></span><span style=display:flex><span>    &lt;6f&gt;   DW_AT_decl_column : <span style=color:#00d;font-weight:700>6</span>
-</span></span><span style=display:flex><span>    &lt;70&gt;   DW_AT_prototyped  : <span style=color:#00d;font-weight:700>1</span>
-</span></span><span style=display:flex><span>    &lt;70&gt;   DW_AT_low_pc      : 0x1129
-</span></span><span style=display:flex><span>    &lt;78&gt;   DW_AT_high_pc     : 0xb
-</span></span><span style=display:flex><span>    &lt;80&gt;   DW_AT_frame_base  : <span style=color:#00d;font-weight:700>1</span> byte block: 9c 	(DW_OP_call_frame_cfa)
-</span></span><span style=display:flex><span>    &lt;82&gt;   DW_AT_GNU_all_call_sites: <span style=color:#00d;font-weight:700>1</span>
-</span></span><span style=display:flex><span> &lt;2&gt;&lt;82&gt;: Abbrev Number: <span style=color:#00d;font-weight:700>6</span> (DW_TAG_variable)
-</span></span><span style=display:flex><span>    &lt;83&gt;   DW_AT_name        : (indirect string, offset: 0x28): var_local
-</span></span><span style=display:flex><span>    &lt;87&gt;   DW_AT_decl_file   : <span style=color:#00d;font-weight:700>1</span>
-</span></span><span style=display:flex><span>    &lt;88&gt;   DW_AT_decl_line   : <span style=color:#00d;font-weight:700>4</span>
-</span></span><span style=display:flex><span>    &lt;89&gt;   DW_AT_decl_column : <span style=color:#00d;font-weight:700>9</span>
-</span></span><span style=display:flex><span>    &lt;8a&gt;   DW_AT_type        : &lt;0x43&gt;
+可以解析为可阅读的结构:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>objdump --dwarf<span class=o>=</span>info &lt;file&gt;
+</span></span></code></pre></div><p>若我们有一个 <code>demo.c</code> 如下:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>void</span> <span class=nf>func</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>var_local</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>编译为可执行文件后， 执行上述的<code>objdump</code>命令， 可以得到如下的输出（节选）：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl> &lt;1&gt;&lt;68&gt;: Abbrev Number: <span class=m>5</span> <span class=o>(</span>DW_TAG_subprogram<span class=o>)</span>
+</span></span><span class=line><span class=cl>    &lt;69&gt;   DW_AT_external    : <span class=m>1</span>
+</span></span><span class=line><span class=cl>    &lt;69&gt;   DW_AT_name        : <span class=o>(</span>indirect string, offset: 0x32<span class=o>)</span>: func
+</span></span><span class=line><span class=cl>    &lt;6d&gt;   DW_AT_decl_file   : <span class=m>1</span>
+</span></span><span class=line><span class=cl>    &lt;6e&gt;   DW_AT_decl_line   : <span class=m>3</span>
+</span></span><span class=line><span class=cl>    &lt;6f&gt;   DW_AT_decl_column : <span class=m>6</span>
+</span></span><span class=line><span class=cl>    &lt;70&gt;   DW_AT_prototyped  : <span class=m>1</span>
+</span></span><span class=line><span class=cl>    &lt;70&gt;   DW_AT_low_pc      : 0x1129
+</span></span><span class=line><span class=cl>    &lt;78&gt;   DW_AT_high_pc     : 0xb
+</span></span><span class=line><span class=cl>    &lt;80&gt;   DW_AT_frame_base  : <span class=m>1</span> byte block: 9c 	<span class=o>(</span>DW_OP_call_frame_cfa<span class=o>)</span>
+</span></span><span class=line><span class=cl>    &lt;82&gt;   DW_AT_GNU_all_call_sites: <span class=m>1</span>
+</span></span><span class=line><span class=cl> &lt;2&gt;&lt;82&gt;: Abbrev Number: <span class=m>6</span> <span class=o>(</span>DW_TAG_variable<span class=o>)</span>
+</span></span><span class=line><span class=cl>    &lt;83&gt;   DW_AT_name        : <span class=o>(</span>indirect string, offset: 0x28<span class=o>)</span>: var_local
+</span></span><span class=line><span class=cl>    &lt;87&gt;   DW_AT_decl_file   : <span class=m>1</span>
+</span></span><span class=line><span class=cl>    &lt;88&gt;   DW_AT_decl_line   : <span class=m>4</span>
+</span></span><span class=line><span class=cl>    &lt;89&gt;   DW_AT_decl_column : <span class=m>9</span>
+</span></span><span class=line><span class=cl>    &lt;8a&gt;   DW_AT_type        : &lt;0x43&gt;
 </span></span></code></pre></div><p>上述例子中节选了两个 DIE，分别是函数<code>func()</code>和局部变量<code>var_local</code>, 可以看到它们的
 tag 是不同的，且都具有一系列属性。</p><p>并且，值得注意的是，这两个 DIE 的关系可以从首列<code>&lt;></code>中的数字得知，数字代表 DIE 构成树的
 深度，此例子中&lt;1>下面紧靠的&lt;2>就表示&lt;2>是&lt;1>的 child。理论上也是如此，因为局部变量
