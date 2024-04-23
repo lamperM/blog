@@ -18,4 +18,4 @@
 则依次执行其 hook</li><li>用于注册 hook 的接口；为该 tracepoint 添加新的 hook</li><li>注销某个 hook 的接口；</li></ol><h2 id=tracepoint-工作原理>tracepoint 工作原理</h2><p>类似于一般的日志记录函数， 在合适的位置放置<code>trace_##event()</code>作为“插桩”，运行到
 此处代表该做一些事了，至于做什么事不是 tracepoint 该管的。它只能负责提供给你一些接口
 ，让你能把“做事”的函数与 tracepoint 联系起来，到时候触发时调用它们。</p><p>这就是上面说的，tracepoint 仅负责 data source 这一部分。</p><h2 id=小结>小结</h2><p>下一节将介绍如何 Linux trace system 中的<strong>数据记录</strong>组件，毕竟每次触发都输出到控制台还是
-太乱了，而且不是 trace 这个系统的工作内容（log 系统应该是干这个的）。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-04-23T23:51:49, Lastmod: 2023-09-24T18:08:59</p><script src=/js/clipboard.js></script></main></div></body></html>
+太乱了，而且不是 trace 这个系统的工作内容（log 系统应该是干这个的）。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-04-23T23:51:49, Lastmod: 2023-09-24T18:08:59</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>

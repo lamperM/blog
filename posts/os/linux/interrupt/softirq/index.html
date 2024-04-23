@@ -49,4 +49,4 @@ tasklet 函数(不同类型的 tasklet 可以)。</strong>，这样就使得 tas
 返回别的高优先级的进程去了，此时初级的中断还未结束。如此时在新进程里
 又发生了初级类型同样的中断，就很有可能发生数据不一定或者死锁。</p></blockquote><p>工作队列是运行在进程的上下文中的，也就是一般情况下。此时当然可以发生
 抢占，所以工作队列<strong>适用于那种需要中断服务函数需要发生调度的情况</strong>，
-比如说调用了<code>sleep()</code>.</p><h3 id=工作队列-1>工作队列</h3></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-13T20:51:49, Lastmod: 2023-09-24T18:08:59</p><script src=/js/clipboard.js></script></main></div></body></html>
+比如说调用了<code>sleep()</code>.</p><h3 id=工作队列-1>工作队列</h3></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-13T20:51:49, Lastmod: 2023-09-24T18:08:59</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>

@@ -39,4 +39,4 @@
 如上所说就要拷贝这些物理页面，此时如果写的页面过多可能发生<code>fork()</code>到<code>exec()</code>
 那一段间隔时间里的物理内存占用极高。虽然这种情况极少发生，前提必须是内存
 分配稀疏+父进程修改的内存也是稀疏的，但是并不能完全忽略这种情况。</p><p>当然，这个问题不能归根于 COW，而是<code>fork()</code>带来的，<code>fork()</code>应该提供参数
-给那些子进程立马调用<code>exec()</code>的场景，就不用拷贝父进程的这些数据结构了。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-08T09:51:49, Lastmod: 2023-09-24T18:08:59</p><script src=/js/clipboard.js></script></main></div></body></html>
+给那些子进程立马调用<code>exec()</code>的场景，就不用拷贝父进程的这些数据结构了。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-08T09:51:49, Lastmod: 2023-09-24T18:08:59</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>

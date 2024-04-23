@@ -3,4 +3,4 @@
 才能实现某些信号是发送给整个进程组的，比如<code>kill()</code>，而一些是指定某个进程的，
 比如<code>tkill()</code>.</p><h2 id=信号被处理>信号被处理</h2><p>对目标进程来说，它可以提前设置自定义的handler，所以在其TCB中还需要记录对于每个信号的处理方式。可能有三种：ignore, default handler, user-defined handler。</p><p><strong>当进程被调度获得CPU时，在返回用户态执行代码之前会检查是否有挂起的信号</strong>。如果有则执行对应的handler。</p><blockquote><p>这个过程对应内核函数<code>do_signal()</code>。</p></blockquote><p>有一个问题是，自定义的信号处理函数是在用户态的, 而<code>do_signal()</code>是发生在
 内核态，所以内核要做一些特殊的操作：</p><ol><li>创建一个临时的用户栈，不能破坏保存的原来用户态环境</li><li>ELR(返回地址) = 自定义处理程序，和其他的用户态环境构建</li><li>返回用户态，CPU 会执行处理函数</li><li>执行完毕后，通过之前对用户栈的特殊构建，使得程序接下来会运行一个 syscall
-(<code>sys_sigreturn</code>), 返回内核态</li><li>如上述操作检查完所有挂起的信号</li><li>当所有信号都被处理完成后，则恢复用户进程的原有环境，继续执行</li></ol></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-05T20:51:49, Lastmod: 2023-11-22T18:09:39</p><script src=/js/clipboard.js></script></main></div></body></html>
+(<code>sys_sigreturn</code>), 返回内核态</li><li>如上述操作检查完所有挂起的信号</li><li>当所有信号都被处理完成后，则恢复用户进程的原有环境，继续执行</li></ol></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-05-05T20:51:49, Lastmod: 2023-11-22T18:09:39</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>

@@ -108,4 +108,4 @@ FDE 就是对应某个函数的计算规则。一些函数共同的部分提取�
 而每次保存 x30 的位置相对于栈底都是固定的，所以知道栈底也就能取出 x30。</p><p><code>.debug_frame</code>可以看作将每次函数调用的栈底存在本地成为一张表，
 这就省了一个通用寄存器。</p><h3 id=关于-caller-saved-regs>关于 Caller-saved Regs</h3><h2 id=注意>注意</h2><ol><li>上面说到，用<code>.debug_frame</code>实现栈回溯时，起点不能是叶子函数。
 叶子函数不会调用任何函数，所以 Arm64 会优化而不保存 Lr 在栈上（反正你也不调用其他函数，x30 不会被破坏）。
-我们的方法就不奏效，可以验证叶子函数的 FDE 是空的。</li></ol></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-12-16T15:51:49, Lastmod: 2024-01-04T16:59:55</p><script src=/js/clipboard.js></script></main></div></body></html>
+我们的方法就不奏效，可以验证叶子函数的 FDE 是空的。</li></ol></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-12-16T15:51:49, Lastmod: 2024-01-04T16:59:55</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>

@@ -13,4 +13,4 @@
 </span></span><span style=display:flex><span>            curr = &amp;entry-&gt;next;
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>指针的内容就是地址, <code>int *p = a</code> 也就意味着变量<code>p</code> 中保存着变量<code>a</code>的地址. 所以参数<code>head</code>在内存中的含义为:</p><p><img src=./mem.png alt=list的内存布局></p><p>假如要删除node2, 那么改变<code>*curr</code>实际上就是<strong>改了node1的<code>next</code>成员</strong>.</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2022-11-20T23:40:30, Lastmod: 2023-09-24T18:08:59</p><script src=/js/clipboard.js></script></main></div></body></html>
+</span></span></code></pre></div><p>指针的内容就是地址, <code>int *p = a</code> 也就意味着变量<code>p</code> 中保存着变量<code>a</code>的地址. 所以参数<code>head</code>在内存中的含义为:</p><p><img src=./mem.png alt=list的内存布局></p><p>假如要删除node2, 那么改变<code>*curr</code>实际上就是<strong>改了node1的<code>next</code>成员</strong>.</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2022-11-20T23:40:30, Lastmod: 2023-09-24T18:08:59</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>

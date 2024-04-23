@@ -14,4 +14,4 @@ inner-cacheable 是实现定义的，可能指进 L1 cache/L2 cache， outer-cac
 如果不能保证 cache 的一致性，想要启用 shareable 就必须是 non-cacheable</li><li>对于 non-cacheable 的内存，一定是 shareable 的，
 不需要配置。因为此时对数据的修改直接操作内存，读取操作亦是如此，一定
 是外部可见的</li></ul><h1 id=如何设置内存属性>如何设置内存属性</h1><blockquote><p>相关内容可以在 ARMv8 arm 手册 D5.3.3 Attuibute fields in stage 1
-VMSAv8-64 Block and Page descriptors 中找到参考</p></blockquote><p>对于每一个表示内存块(block)的页表项，都有两个属性字段: <strong>lower attr 和 upper attr</strong>.</p><p>以下任何类型或者属性的设置都是通过这两个字段完成的。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-04-12T08:01:33, Lastmod: 2023-09-24T18:08:59</p><script src=/js/clipboard.js></script></main></div></body></html>
+VMSAv8-64 Block and Page descriptors 中找到参考</p></blockquote><p>对于每一个表示内存块(block)的页表项，都有两个属性字段: <strong>lower attr 和 upper attr</strong>.</p><p>以下任何类型或者属性的设置都是通过这两个字段完成的。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-04-12T08:01:33, Lastmod: 2023-09-24T18:08:59</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>

@@ -12,4 +12,4 @@
 原子操作。</p><p>在关键步骤之前，需要调用<code>preempt_disable()</code>，此时 linux 会在 tcb 中会改变
 <code>preempt_count</code>的值，这个操作不是关闭中断，而是在中断返回时即使有更高优先级的其他进程，
 只要该值不符合要求，重调度也不会发生。</p><p>关键步骤执行完，调用<code>preempt_enable()</code>，此时为了去满足关键区域内可能
-有新加入的高优先级进程，会调用一次重调度，这也正是上面所说需要重调度的场景之一。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-04-13T23:51:49, Lastmod: 2023-09-24T18:08:59</p><script src=/js/clipboard.js></script></main></div></body></html>
+有新加入的高优先级进程，会调用一次重调度，这也正是上面所说需要重调度的场景之一。</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2023-04-13T23:51:49, Lastmod: 2023-09-24T18:08:59</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>
