@@ -61,12 +61,35 @@ Intel Itanium等架构使用一种称为超长指令字（Very Long InstructionW
 - 写未分配（No-Write-Allocate）；不使用Cache，直接对低层次存储进行修改。
 
 ## 性能分析中的术语
-
 指令和数据都可能发生缓存未命中。根据TMA分析方法（见6.1节），
 指令缓存未命中被归类为前端停滞，数据缓存未命中被归类为后端停滞。
 当获取指令时发生指令缓存未命中，会被归类为前端问题。
 
+## 性能分析【指标】
+
+性能指标：
+- IPC：IPC=INST_RETIRED / CPU_CYCLES，IPC并不能单独判断
+  是否性能比较好，比如说在某个处理器上，前端最多一个Cycle发射4
+  条指令，那么IPC是不是越接近4越好呢？其实不是，**还要结合CPU
+  此时正在做什么事情**，如果是死循环，那么就不代表什么。
+- Pipeline Stalls
+  - Stall Front-end rate=STALL_FRONTEND/CPU_CYCLES
+  - Stall Back-end rate=STALL_BACKEND/CPU_CYCLES
+- Frontend Bound
+  - ITLB events
+  - I-Cache events
+- Backend Bound
+  - DTLB events
+  - Memory System related events
+  - D-Cache events
+- Retiring
+  - Instruct Mix
+- Bad Speculation
+  - Branch Effectiveness events
+
+
 ## 性能分析方法
+性能的问题可能出在前端，称为前端Stall，在后端时则称为后端Stall。
 
 程序运行时硬件和软件都可以采集性能数据，这里的硬件是指运行程序的CPU，软件是指操作系统和所有可用于分析的工具。通常软件栈提供上层指标，比如时间、上下文切换次数和缺页次数，而CPU则可以观察缓存未命中、分支预测错误等。根据要解决的问题，各指标的重要程度是不一样的。所以，并不是说硬件指标总能给我们提供更准确的程序执行信息。有些指标是CPU提供不了的，比如上下文切换次数。一般，性能分析工具—比如Linuxperf，可以同时使用来自操作系统和CPU的数据。
 
@@ -123,3 +146,14 @@ EBS使用硬件PMC触发中断。
 ### 编译器优化报告
 编译器提供了性能优化报告，开发者可以使用这些报告进行性能分析。
 有时，我们想知道某个函数是否被内联，或者某个循环是否被向量化、展开等。如果循环被展开，展开因子是多少？一种比较困难的分析方法是分析生成的汇编指令。但是，并不是所有人都喜欢阅读汇编代码。如果函数比较大，这可能会特别困难，因为可能会调用其他函数或者包含许多同样被向量化的循环，甚至包含编译器创建的同一循环的多个版本。幸运的是，包括GCC、ICC和Clang在内的大多数编译器都提供了优化报告，供开发者检查编译器对特定代码段做了哪些优化。
+
+
+## 性能分析工具 Perf
+```sh
+# Counting
+perf stat -e <event list>
+# Event based sampling
+perf record -e <event list>
+# SPE sampling
+perf record -e árm_spe_0/ts_enable=1'
+```

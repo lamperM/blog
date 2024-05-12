@@ -7,7 +7,134 @@ date: 2024-04-16T19:28:12+08:00
 
 ISA: RISCV32
 
+
+## 编译一个客户程序
+
+### 内存布局
+
+貌似所有的格式，所有的平台都使用同一个链接脚本。
+- 栈空间在ELF中预留，好处是统一，缺点是增加了ELF的大小。
+- bss跟在数据段后面，导致数据段的filesz和memsz可能不同。NanOS是加载APP的时候，load segment时直接清零，而不是需要单独遍历一下bss，更加方便。
+
+```c
+ENTRY(_start)
+PHDRS { text PT_LOAD; data PT_LOAD; }
+
+SECTIONS {
+  /* _pmem_start and _entry_offset are defined in LDFLAGS */
+  . = _pmem_start + _entry_offset;
+  .text : {
+    *(entry)
+    *(.text*)
+  } : text
+  etext = .;
+  _etext = .;
+  .rodata : {
+    *(.rodata*)
+  }
+  .data : {
+    *(.data)
+  } : data
+  edata = .;
+  _data = .;
+  .bss : {  /* bss段跟在.data的后面，会被放入同一个segment，所以加载时需要清零 */
+	_bss_start = .;
+    *(.bss*)
+    *(.sbss*)
+    *(.scommon)
+  }
+  /* 栈空间在ELF中定义 */
+  _stack_top = ALIGN(0x1000);
+  . = _stack_top + 0x8000;
+  _stack_pointer = .;
+  end = .;
+  _end = .;
+  _heap_start = ALIGN(0x1000);
+}
+
+```
+
+
+
+## Difftest 的设计理念
+
+揭开Difftest的魔法。
+
+进行DiffTest需要提供一个和DUT(Design Under Test, 测试对象) 功能相同但实现方式不同的REF(Reference, 参考实现), 然后让它们接受相同的有定义的输入, 观测它们的行为是否相同.
+
+
+拿NEMU作为DUT，Spike作为REF来说，Difftest的原理就是：
+1. 微调REF，使得两者初始化环境相同，同时输入的客户机程序也相同。
+2. DUT执行一条指令
+3. 发送信号让REF执行一条指令。
+4. 拷贝REF的运行环境（寄存器）到DUT中
+5. 在DUT中检查是否一致。
+6. DUT和REF继续执行指令，直至客户程序结束
+
+
+```c
+// (1) 如何保证两者初始环境相同？
+init_difftest() // NEMU
+  => dlopen()  // 打开REF的动态链接库（Spike）
+  => dlsym()   // 过动态链接对动态库中的上述API符号进行符号解析和重定位
+               // 返回REF中函数的地址，可以在DUT里强制调用
+  => ref_difftest_init() // REF初始化，等待DUT的命令
+                         // Spike怎么做的不清楚，但是QEMU是用Gdb监听，DUT给Gdb发命令
+  => ref_difftest_memcpy() // 将DUT的guest memory拷贝到REF中
+  => ref_difftest_regcpy() // 将DUT的寄存器状态拷贝到REF中
+// (2) DUT执行一条指令
+exec_once() 
+// (3) 并让REF也执行指令，比较结果
+difftest_step() 
+  => ref_difftest_exec(1) // REF执行一条指令，QEMU来说就是让Gdb发送一条si命令
+  => ref_difftest_regcpy(DIFFTEST_TO_DUT); // 将REF的寄存器拷贝过来，准备比较
+  => checkregs(); // 比较DUT和REF的寄存器值
+```
+
+NEMU的简化会导致某些指令的行为与REF有所差异, 因而无法进行对比。
+Difftest支持跳过对比某些指令，大概的过程如下：
+```C
+// (1) 情况1: NEMU执行一条指令，但是QEMU如果也执行会发生差异，
+//     所以让QEMU跳过执行这条指令。
+difftest_skip_ref() // 在执行NEMU指令的任意阶段调用
+  => is_skip_ref = true // 标记跳过下次REF指令执行阶段
+  => skip_dut_nr_inst = 0 // 与情况2有关，下面再介绍
+
+difftest_step() {
+  if (is_skip_ref) {
+    ref_difftest_regcpy(DIFFTEST_TO_REF); // 同步DUT到REF，相当于跳过
+    is_skip_ref = false;
+    return;   // 跳过REF，直接返回到下一条指令
+  }
+}
+
+// (2) 情况2: NEMU跳过执行，让REF执行
+difftest_skip_dut() // 在执行NEMU指令的任意阶段调用
+  => skip_dut_nr_inst += 1
+  => ref_difftest_exec(1) // REF先执行一次，更新了REF上下文
+
+difftest_step() {
+  if (skip_dut_nr_inst > 0) {
+    ref_difftest_regcpy(DIFFTEST_TO_DUT); // 不管NEMU此次的结果，同步REF到DUT
+    if (ref_r.pc == npc) {
+      skip_dut_nr_inst = 0;
+      checkregs(&ref_r, npc);
+      return;
+    }
+    skip_dut_nr_inst --;
+    return;
+  }
+}
+
+```
+
 ## 构建系统
+
+### 编译Guest程序并追加参数
+
+```bash
+make ARCH=$ISA-nemu run mainargs=I-love-PA
+```
 
 ### 编译Guest程序流程分析
 

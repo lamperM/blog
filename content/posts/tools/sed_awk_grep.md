@@ -134,33 +134,4 @@ sed -i "\:$pushed_dir:d" input_file
 
 > See: [Using different delimiters in sed « \1 (backreference.org)](https://backreference.org/2010/02/20/using-different-delimiters-in-sed/index.html)
 
-## Grep
-
-Grep stands for *Global Regular Expression Print*.
-
-```shell
-grep [OPTION]... PATTERN [FILE]...
-```
-
-Search for `PATTERN` in each `FILE` or standard input.
-
-> Pattern 并没有强制使用 double/single quote!
-
-> Pattern 默认使用基础正则表达式, `-E` option 可以使用扩展正则表达式. 
-
-### Options
-
-#### `-l` 列出匹配模式所在的文件
-
-#### `-r` 递归搜索多级目录
-
-Example: 列出当前目录(包含子目录)的所有匹配`main`关键字的文件名.
-
-```c
-grep -r -l "main" .
-```
-
-> `-R` is same as `-r`.
-
-#### `--exclude`/`--exlude-dir` 排除路径和文件
 

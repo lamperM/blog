@@ -38,10 +38,10 @@ draft: true
 slab分配器的核心思想是
 
 ## ARMv8的页表属性和权限
-[ARMv8 内存属性]({{< ref "posts/armv8/memory_attr" >}})
+[ARMv8 内存属性]({{< ref "posts/arch/armv8/memory_attr" >}})
 
 ## ARMv8Cache分为几级,分别位于哪里
-[ARMv8 cache 相关知识]({{< ref "posts/armv8/cache" >}})
+[ARMv8 cache 相关知识]({{< ref "posts/arch/armv8/cache" >}})
 ## ARMv8有几个通用寄存器?
 
 拿64位来说, 有31个通用寄存器, x0~x30

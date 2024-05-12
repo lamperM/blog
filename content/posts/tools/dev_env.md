@@ -87,13 +87,16 @@ sudo add-apt-repository ppa:jonathonf/vim
 ```sh
 sudo apt install npm
 npm install -g n
-n stable
+sudo n stable
 ```
 下载完成后 如果发现 `node -v` 仍然是之前的版本，根据不同的 shell 版本执行 `hash -r` 或者 `rehash` 即可。
 
 ## 终端软件安装
-### 源替换
-### apt
+源替换
+https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/
+
+
+
 ```sh
 sudo apt install python3-pip
 sudo apt install tmux
@@ -101,12 +104,17 @@ sudo apt install fzf
 sudo apt install zsh
 sudo apt install cmake # low version?
 sudo apt install tldr
-```
-### pip3
-```shell
+
 # CLI 代码高亮
 sudo pip3 install pygments
+
+# hstr 是一款可以轻松查看、导航和搜索历史命令的小工具，它支持 Bash 和 Zsh。
+# hstr 配置：https://blog.csdn.net/easylife206/article/details/107925366
+sudo add-apt-repository ppa:ultradvorka/ppa && sudo apt-get update && sudo apt-get install hstr
+# brew install hstr # MACOS
 ```
+
+
 
 ## shell
 

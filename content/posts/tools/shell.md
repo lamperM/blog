@@ -4,11 +4,20 @@ tags: ["Shellscript"]
 categories: ["Shellscript"]
 date: 2022-07-20T11:54:13+08:00
 ---
+## sh 是个啥
+busybox 的 shell 是 ash，ash 不同于主机上的 sh bash tcsh，它是个精简版，很多标准shell 支持的特性它都不支持。
 
->:information_source: 如未特殊说明，以下的命令在bash和zsh中都能正确生效。
+sh 的含义是默认的 shell，可能是bash、可能是dash，一般来说只是一个软链接。
 
+{{< notice info "sh与$0之间的关系？" >}}
+$0 具体代表什么含义是每个shell程序实现的，如果sh是指向dash，那么此时 `$0` 就会输出dash。
+{{< /notice >}}
+
+>[bash和dash的语法区别 - 博客园](https://www.cnblogs.com/exmyth/p/15876568.html)
 
 ## 常用Shell命令
+
+>:information_source: 如未特殊说明，以下的命令在bash和zsh中都能正确生效。
 
 ### Grep - 内容匹配
 

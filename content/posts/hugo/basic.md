@@ -127,8 +127,9 @@ Usage:
 hugo server 的常用flag:
 
 ```
--D              包含标记为草稿的post. 默认不构建草稿.
---theme strings 使用[strings]主题进行构建
+-D                  包含标记为草稿的post（默认不构建草稿）
+--theme strings     使用[strings]主题进行构建
+--disableFastRender 强制刷新页面，不使用缓存
 ```
 
 **hugo [flags]**

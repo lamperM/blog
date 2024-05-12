@@ -213,11 +213,26 @@ debugfs /sys/kernel/debug debugfs defaults 0 0
 tracefs /sys/kernel/tracing tracefs defaults        0       0
 ```
 
+{{< notice tip 测试fstab >}}
+fstab可以直接在guest中执行`mount -a`测试
+{{< /notice >}}
+
 创建 inittab 文件:
+TODO
 
-打包 initrd，此时的目录为:`/home/loo/linux-qemu/myinitramfs`
+#### 打包与拆包的命令
+```bash
+# 拆包到test/目录下
+gunzip -c rootfs.cpio.gz > rootfs.cpio
+cpio -D test -idmv < ./rootfs.cpio
 
-```sh
+# 将test/打包到为根文件系统格式
+cd test/
+find . | cpio -H newc -o > ../rootfs.cpio
+cd ..
+gzip -c rootfs.cpio > rootfs.cpio.gz
+
+# 打包也可以整合为
 find . | cpio -o -H newc | gzip -c > ../myinitramfs.cpio.gz
 ```
 
@@ -414,4 +429,28 @@ make LDFLAGS+='-static -pthread' -j16
 
 # 拷贝到 _install 目录
 make install
+```
+
+
+## 编译内核模块的脚本
+将Makefile和nlk.c放在同一目录下。
+
+```makefile
+# 最终生成的ko名，可以同时指定多个
+obj-m := nlk.o  
+
+# 指定内核源码路径：这里有交叉编译和host两种路径，按需选择
+KERNEL_PATH := $$HOME/qemu_atf/linux
+# KERNEL_PATH := /lib/modules/$(shell uname -r)/build
+PWD         := $(shell pwd)         # 当前目录
+MAKE        := make --no-print-directory 
+ 
+all: 
+  @$(MAKE) -C $(KERNEL_PATH) M=$(PWD) modules
+
+install:
+  cp ./nlu ./nlk.ko ../share
+clean-ko: 
+  @$(MAKE) -C $(KERNEL_PATH) M=$(PWD) clean
+
 ```
