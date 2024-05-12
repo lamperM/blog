@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>电子电路 on BLOG</title><link>https://wangloo.github.io/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/</link><description>Recent content in 电子电路 on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 07 Dec 2022 10:30:35 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/index.xml" rel="self" type="application/rss+xml"/><item><title>电子电路基础笔记</title><link>https://wangloo.github.io/posts/ee/</link><pubDate>Wed, 07 Dec 2022 10:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/ee/</guid><description>铜厚常规的1盎司，盎司是重量单位，1盎司的铜平铺到1平方米的面积上， 其厚度就是35μm。
+整流电路 整流：交流转直流，最简单的整流电路就是串联一个二极管。 逆变：直流转交流。 倍压整流 没有变压器的情况下，220V经过阻容降压+倍压整流给芯片供电。
+桥式整流电路 220V交流电先经过变压器变为12V左右交流电 整流器将其转为直流电 16V左右 滤波电容滤波 7812稳压12V 再滤波（大电解+小无极） 先整流再变压 现代开关电源的工作大致是：整流&amp;mdash;经过开关电路&amp;mdash;变成高频交流&amp;mdash;经高频变压器变压&amp;mdash;整流、滤波&amp;mdash;直流。 因为市电是50Hz低频，220V直接变压的话，频率低导致变压器绕线要长，从而使得变压器体积会很大。 所以都是要两次整流操作。
 PWM 占空比 占空比: 高电平持续的时间占整个周期的百分比
 输出的平均电压 = 高电压 x 占空比
 所以通过调整占空比就能调整输出的平均电压.
@@ -8,8 +10,4 @@ PWM 占空比 占空比: 高电平持续的时间占整个周期的百分比
 稳压二极管的参数有两个: 稳压值和功率. 如果输入的电压小于其稳压值, 那么稳压作用消失, 如果大于稳压值, 那么稳压二极管两端的电压总是等于稳压值. 由于稳压二极管两端的电压是恒定的, 其功率的含义就是最大通过的电流.
 由于有功率的限制, 所以必须要串联限流电阻使用, 避免电流太大烧坏稳压管,
 限流电阻的计算 首先, 稳压二极管有最小工作电流, 通常为3-5mA, 规定了限流电阻的最大值.
-其次, 限流电阻需要确保二极管工作在规定的功率内, 因为当负载过大(极限状态下是空接)时, 所有的电流都通过稳压二极管. 按照其功率的1/2, 除以其稳压值就是工作电流.
-我们通常说, 稳压二极管的带负载能力差. 这是因为保证稳压二极管的功率一般比较小, 最大通过的电流也就几十mA. 计算出的限流电阻的R和V(电源-稳压值)都是固定的, 则其通过的电流也是固定是, 是通过稳压二极管和通过负载的电流之和.
-提高稳压二极管带负载能力的方法 TODO
-自恢复保险丝 是一种热敏电阻(PTC), 原理是当电流超过一定值是, 材料发热, 阻值迅速增加, 相当于断路.
-参数 熔断电流 耐压值</description></item></channel></rss>
+其次, 限流电阻需要确保二极管工作在规定的功率内, 因为当负载过大(极限状态下是空接)时, 所有的电流都通过稳压二极管. 按照其功率的1/2, 除以其稳压值就是工作电流.</description></item></channel></rss>
