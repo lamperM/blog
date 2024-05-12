@@ -98,6 +98,11 @@ class A:
 ```
 >结束时间:22点08分，完成了lab06和Ants
 
+### 2024年2月3日13点05分
+
+>结束时间:22点12分，完成了lab07和lab08
+
+
 ## 参考链接
 * [CS 61A Fall 2023 Lab](https://inst.eecs.berkeley.edu/~cs61a/fa23/)
 * [CS61A 学习经验&感想 - 知乎](https://zhuanlan.zhihu.com/p/486323075)
