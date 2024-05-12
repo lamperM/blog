@@ -1,4 +1,13 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Operating System on BLOG</title><link>https://wangloo.github.io/tags/operating-system/</link><description>Recent content in Operating System on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 06 Oct 2023 14:51:49 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/operating-system/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux mmap 函数</title><link>https://wangloo.github.io/posts/os/linux/addrspace/mmap/</link><pubDate>Fri, 06 Oct 2023 14:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/addrspace/mmap/</guid><description>在进程的地址空间中，栈和堆直接夹着的区域为文件映射区。 它的空间是动态的，和堆空间一起实现动态内存的分配与释放。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Operating System on BLOG</title><link>https://wangloo.github.io/tags/operating-system/</link><description>Recent content in Operating System on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 19 Apr 2024 19:28:12 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/operating-system/index.xml" rel="self" type="application/rss+xml"/><item><title>虚拟化：Virtio基础</title><link>https://wangloo.github.io/posts/os/virt/virtio/</link><pubDate>Fri, 19 Apr 2024 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/os/virt/virtio/</guid><description>从最近开始接触虚拟化的基础知识，一直不太理解设备虚拟化的理念。然而通过最近对Virtio的了解，可能稍微有一些见解，在这里记录下。
+设备虚拟化 我喜欢从简单、熟悉的事物中开始理解。串口是相对简单的一个设备，我在日常开发中也经常会用到，所以我想拿串口当作一个例子进行说明Virtio的初衷及原理。
+设备虚拟化，实际就是GuestOS(kernel)与VMM之间通信，VMM如何将GuestOS发出的设备请求转换为物理设备的状态转换。
+为什么选择virtio virtio 设计的初衷是简化设计、提高性能。
+virtio 是一种接口规范，位于VM的前端和VMM的后端都可以随意设计，只要满足约定就能实现设备虚拟化。
+站在VM、VMM的角度，互相更换不需要重新思考如何设计设备虚拟的方法，只要双方都支持Virtio，就能相互通信。
+站在VMM的角度，如果是VMM自己实现硬件驱动的形式，Virtio能帮你节约大量开发时间、节约工程量。 因为VM可能需要很多设备的驱动（看Linux支持多少驱动），难道作为VMM要为每个驱动都设计映射方案？有那么多类型的串口设备，每个设备的数据寄存器都不同，VMM要知道每个设备寄存器的含义，并转换成真实设备的行为。这个工作量太大了！
+Virtio在QEMU上如何提升性能 为了方便，启用ARM VHE特定，Linux kernel和Hyper都在EL2，避免二者之间的切换。
+VM APP想要在串口输出一串字符，未启用virtio时（全虚拟化）：
+VM kernel: 向串口的数据寄存器写一个字符 ==&amp;gt; trap to Hyper Hyper: 设备请求处理不了，交给QEMU ==〉 back to Qemu Qemu: 调用putchar打印 ==&amp;gt; syscall to Host kernel Host Kernel: 写到真实的物理串口寄存器上 我是一个VMM开发者，如何支持Virtio 我是一个Linux驱动开发者，如何支持Virtio 我是一个设备厂商，如何支持Virtio</description></item><item><title>Linux mmap 函数</title><link>https://wangloo.github.io/posts/os/linux/addrspace/mmap/</link><pubDate>Fri, 06 Oct 2023 14:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/os/linux/addrspace/mmap/</guid><description>在进程的地址空间中，栈和堆直接夹着的区域为文件映射区。 它的空间是动态的，和堆空间一起实现动态内存的分配与释放。
 文件映射区中包含了一段段的虚拟内存区域（也称线性区），代码里标识符是struct vm_area_struct。其中包含文件映射和匿名映射。
 匿名映射是malloc()的底层实现之一，当请求大块内存时，移动brk可能带来大碎片， 不如用匿名mmap()来的灵活。
 下图就展示了一个进程地址空间中即存在文件映射，又存在匿名映射的情况：
@@ -143,7 +152,7 @@ struct tracepoint { const char *name; #define TP_STATE_DISABLE 0 #define TP_STAT
 extern int *__errno_location (void); # define errno (*__errno_location ()) 这种方式下其实现原理大概是: __errno_location 函数返回一个int指针, 而这个函数的实现中, 返回的就恰好是实际的errno 变量(与宏同名)的地址, 所以对其解引用就相当于对其值进行操作. 所以, 这种定义规则下, 左值和右值表达式均成立.
 errno = 10; // *__errno_location () = 10 int x = errno; // x = *__errno_location (); __errno_location 的实现就至关重要, 因为如果其返回的变量地址不包含任何技巧的话, 就和原先直接定义全局变量的方式没差了, 说到底能否实现线程安全, 还得看实际保存errno的变量是否为线程独有的. 目前还没有发掘到其精髓, 只是套壳而已.
 以下给出/csu/errno-loc.c中__errno_location 的实现, 与我们预期一致, 返回变量的地址. 而同名变量errno则定义在/csu/errno.c中, 决定了能够实现errno的线程安全.
-int * __errno_location (void) { return &amp;amp;errno; } __thread int errno; &amp;ldquo;__thread&amp;rdquo; 是GCC提供的扩展前缀, 表示该变量将被库处理为线程私有的, 注意这一步是C库完成的, 对程序员透明.</description></item><item><title>AArch64/X86 函数调用约定</title><link>https://wangloo.github.io/posts/armv8/function-call-conventions/</link><pubDate>Mon, 21 Nov 2022 10:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/function-call-conventions/</guid><description>符合调用约定使得调用函数能够正常获取参数, callee结束之后能够回到原来位置继续执行.
+int * __errno_location (void) { return &amp;amp;errno; } __thread int errno; &amp;ldquo;__thread&amp;rdquo; 是GCC提供的扩展前缀, 表示该变量将被库处理为线程私有的, 注意这一步是C库完成的, 对程序员透明.</description></item><item><title>AArch64/X86 函数调用约定</title><link>https://wangloo.github.io/posts/arch/armv8/function-call-conventions/</link><pubDate>Mon, 21 Nov 2022 10:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/armv8/function-call-conventions/</guid><description>符合调用约定使得调用函数能够正常获取参数, callee结束之后能够回到原来位置继续执行.
 X86 调用约定 函数调用 x86架构中, 函数调用以一条call指令为分界.
 在call指令执行之前, 所有的参数必须都躺在栈中, 参数入栈的规则是: 第一个参数最后入栈.
 另外, 执行call指令之前, 必须确保栈指针esp是16-byte对齐. 这项工作是编译器完成的, 如果它判断参数入栈之后的esp 不满足对齐条件, 则会手动调整esp使之对齐. 实现方式见下面例子.

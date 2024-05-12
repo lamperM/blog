@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>armv8 on BLOG</title><link>https://wangloo.github.io/tags/armv8/</link><description>Recent content in armv8 on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 10 Sep 2023 18:02:04 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/armv8/index.xml" rel="self" type="application/rss+xml"/><item><title>ARMv8 内存模型</title><link>https://wangloo.github.io/posts/armv8/memory_model_and_barrier/</link><pubDate>Sun, 10 Sep 2023 18:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/memory_model_and_barrier/</guid><description>为什么要关心内存模型 内存模型是一个约定或者规则, 是体系结构决定的，定义了内存的某些属性和行为。 一般各个架构之间有所不同，比如 ARM 会做合并访存、乱序执行这类优化方法。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>armv8 on BLOG</title><link>https://wangloo.github.io/tags/armv8/</link><description>Recent content in armv8 on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 10 Sep 2023 18:02:04 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/armv8/index.xml" rel="self" type="application/rss+xml"/><item><title>ARMv8 内存模型</title><link>https://wangloo.github.io/posts/arch/armv8/memory_model_and_barrier/</link><pubDate>Sun, 10 Sep 2023 18:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/armv8/memory_model_and_barrier/</guid><description>为什么要关心内存模型 内存模型是一个约定或者规则, 是体系结构决定的，定义了内存的某些属性和行为。 一般各个架构之间有所不同，比如 ARM 会做合并访存、乱序执行这类优化方法。
 所以，某些情况下，指令的执行顺序可能不与你程序设计的一模一样，只是为你呈现的结果相同罢了。 当然这里边还有编译器来优化（捣乱 hh）。
 一般程序无需关心内存模型带来的差异，除非你从事底层软件开发（嵌入式开发）这种需要和寄存器打交道， 涉及系统底层机制的实现时，你必须按照内存模型来合理的规划你的程序。
 各种内存模型 不同的处理器架构有不同的内存模型.
@@ -7,20 +7,14 @@
 顺序一致性模型 Sequential Consistency Model 指令的执行顺序总是和可执行文件一致.不论是否存在内存访问指令重排等优化操作.
 举个例子,
 先写后读内存的模型中, 总是能实现读内存时值是新的(不会被优化成先读后写). 多条ldr指令的执行顺序也是严格按照程序所写 多处理器环境下, 每个核的执行顺序都是可执行文件中的指令顺序. 多核之间的同步需要程序员来保证.
-宽松一致性模型 Relaxed Consistency Model 各种优化 buff 叠满，一般加载/存储指令的执行顺序不能保证，需要程序员自行维护。</description></item><item><title>Cortex-A53 PMU介绍</title><link>https://wangloo.github.io/posts/armv8/pmu/</link><pubDate>Sat, 02 Sep 2023 22:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/pmu/</guid><description>关于PMU PMU是一个独立的单元，不和体系结构绑定。而是每个SOC都可以不同。比如说Cortex-A53实现了PMUv3架构，但别的基于ARMv8架构的Soc可能实现PMUv4或者其他版本。
-PMU内部有六个计数器，所以可以记录六个事件的发生次数。计数器的数值不一定绝对的正确，因为管道的存在，所以一般来说还是通过长时间计数来减弱影响。
-PMU和ETM的区别 1. 记录的事件不同 PMU：Cache Miss、分支预测失败、TLB Miss等 ETM：记录分支指令、内存屏障指令等所有指令的执行，包括地址、结果等。 另外还可以记录数据读写的地址、结果（可选）。 2. 记录的粒度不同 PMU：仅用计数器来记录事件发生的次数 ETM：指令的类型、地址、执行结果等。数据访问也类似。 所以说，ETM的信息量大，需要专门的缓存机制。而PMU只需在定时器结束时记录发生的次数就行， 不需要什么缓存，没有实际的数据流。</description></item><item><title>ARMv8: cache相关知识</title><link>https://wangloo.github.io/posts/armv8/cache/</link><pubDate>Mon, 14 Aug 2023 22:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/cache/</guid><description>之前在特斯拉面试的时候被问到了 cache 的 maintain 操作有哪些, 一时间竟想不起一个准确的词来, 这里就再学习一下, 把这个坑填上吧。
+宽松一致性模型 Relaxed Consistency Model 各种优化 buff 叠满，一般加载/存储指令的执行顺序不能保证，需要程序员自行维护。</description></item><item><title>ARMv8: cache相关知识</title><link>https://wangloo.github.io/posts/arch/armv8/cache/</link><pubDate>Mon, 14 Aug 2023 22:02:04 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/armv8/cache/</guid><description>之前在特斯拉面试的时候被问到了 cache 的 maintain 操作有哪些, 一时间竟想不起一个准确的词来, 这里就再学习一下, 把这个坑填上吧。
 可能不会说的很细，目的只是把一些概念复习，做到心中大致有数。
 cache 是个硬件 cache 的本质是一种 SRAM, 容量很小, 速度很快(ns 级)。
 拿 Cortex-A53 来说，共有三级 Cache：
 L1 cache 是 Core 单独的，分为数据 cache 和指令 cache，容量是 KB 级 L2 cache 一般是 cluster 内共享，容量是 MB 级 L3 cache 是所有 core 共享，容量是 MB 级 cache 控制器 单独的 cache 就是一个存储设备，得有一个控制器告诉它存什么以及什么时候存。
-cache 控制器的任务举个例子说：比如 cache miss 的时候，需要从主存向 cache 回填数据，然而此时 CPU 那边记着要数据，我们都知道 cache 操作的单位 是 cache line 嘛，但这是 cache 控制器会有限填充一个 cache line 中 CPU 要的那一条（或几条），最后在后台默默填充完剩下的。</description></item><item><title>ARMv8 基础概念</title><link>https://wangloo.github.io/posts/armv8/introduce/</link><pubDate>Tue, 09 May 2023 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/introduce/</guid><description>指令执行的过程：取指、译码、执行和写回。 根据这个将Core分为两部分：
-前端：指令从内存预取到Cpu，解码，发射。在Arm中， 前端的流程是顺序的。一个cycle里最多可以解码4条指令给后端。 后端：后端的作用是执行指令。后端一般包含几个执行单元， 整数、浮点数、Load/Store、Branch相关的执行单元。 后端中，如果指令之间没有依赖，支持乱序执行。 Core中的Cache分布：Icache在前端，Dcache属于后端。
-Core中的Tlb分布：ITlb在前端，DTlb在后端
-指令执行完后，到达Retire，指令退役。
-程序性能的分析方法 性能的问题可能出在前端，称为前端Stall，在后端时则称为后端Stall。
-性能指标：
-IPC：IPC=INST_RETIRED / CPU_CYCLES，IPC并不能单独判断 是否性能比较好，比如说在某个处理器上，前端最多一个Cycle发射4 条指令，那么IPC是不是越接近4越好呢？其实不是，还要结合CPU 此时正在做什么事情，如果是死循环，那么就不代表什么。 Pipeline Stalls Stall Front-end rate=STALL_FRONTEND/CPU_CYCLES Stall Back-end rate=STALL_BACKEND/CPU_CYCLES Frontend Bound ITLB events I-Cache events Backend Bound DTLB events Memory System related events D-Cache events Retiring Instruct Mix Bad Speculation Branch Effectiveness events 程序性能的分析工具 Linux Perf # Counting perf stat -e &amp;lt;event list&amp;gt; # Event based sampling perf record -e &amp;lt;event list&amp;gt; # SPE sampling perf record -e árm_spe_0/ts_enable=1&amp;#39; 与 ARMv7 相比的改动 指令集： 新增 A64 指令集， 但也兼容原来的 A32 指令集 权限等级： AArch64 下新增 EL0-EL3 异常等级，对应 V7 的特权等级 通用寄存器：31 个通用寄存器，V7 15 个 虚拟地址长度：64 位的地址长度，理论支持 256TB 的寻址范围 Arm 处理器的架构与微架构 架构可以理解为由指令集、内存模型等组成的一个行为规范， 或叫做 specification。相当于一种标准，会定义 Cpu 工作行为的预期， 并不会限制具体是如何实现。</description></item><item><title>ARMv8 中断管理(3): 中断服务程序</title><link>https://wangloo.github.io/posts/armv8/gicv3/3/</link><pubDate>Thu, 13 Apr 2023 23:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/3/</guid><description>从进入 IRQ/FIQ 中断向量开始，中断处理的完整流程:
+cache 控制器的任务举个例子说：比如 cache miss 的时候，需要从主存向 cache 回填数据，然而此时 CPU 那边记着要数据，我们都知道 cache 操作的单位 是 cache line 嘛，但这是 cache 控制器会有限填充一个 cache line 中 CPU 要的那一条（或几条），最后在后台默默填充完剩下的。</description></item><item><title>ARMv8 基础</title><link>https://wangloo.github.io/posts/arch/armv8/introduce/</link><pubDate>Tue, 09 May 2023 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/armv8/introduce/</guid><description>ARMv8 与 ARMv7 相比的改动 指令集： 新增 A64 指令集， 但也兼容原来的 A32 指令集 权限等级： AArch64 下新增 EL0-EL3 异常等级，对应 V7 的特权等级 通用寄存器：31 个通用寄存器，V7 15 个 虚拟地址长度：64 位的地址长度，理论支持 256TB 的寻址范围 关于 Spsel 寄存器的使用 linux 内核里，内核（EL1）和用户态（EL0）都使用各自的栈空间，即 spsel 始终为 1。 这种情况下，当内核里时，sp_el0 是可以复用的寄存器。进入内核前保存原值，然后将其保存当前进程 task_strcut 结构体的地址。因为内核中经常会调用 current 宏，这时可以快很多。
+atf 中，在 EL3 用 sp_el0 作为运行时栈空间，而 sp_el3 保存一个重要结构上下文的地址。在进入 EL3 时，系统会自动切换到 spsel=1，即 sp_el3，此时 （1）保存当前的上下文到 sp_el3 （2）切换到 sp_el0 当作 c 调用栈 看起来好像是反过来，我能想到的原因是：
+ATF 在 ELF 如果用 sp_el0 指向结构体，在外面有可能被破坏？而用 sp_el3 在外面不会被动 https://developer.</description></item><item><title>ARMv8 中断管理(3): 中断服务程序</title><link>https://wangloo.github.io/posts/arch/armv8/gicv3/3/</link><pubDate>Thu, 13 Apr 2023 23:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/armv8/gicv3/3/</guid><description>从进入 IRQ/FIQ 中断向量开始，中断处理的完整流程:
 保存上下文 切换中断栈，为进入“真正的”中断服务程序做准备 执行真正的中断服务程序 恢复之前的上下文 “真正的”中断服务程序 “真正的”意为不算那些对于所有异常、中断来说都相同的“套话” ，只讨论对于中断特有的行为。
 承认一个中断 真正的中断服务程序从接受 CPU Interface 传来的中断 开始算起，这一步的实现通过读取ICC_IAR1_EL1, 返回当前 中断的 INTID。
 拿到 INTID 后，就根据不同的 ID 调用各自对应场景下的服务函数， 比如若 INTID 是对应与时钟中断，那么此步需要清楚状态寄存器、 重新开启时钟定时器。
@@ -31,7 +25,7 @@ GICv3 支持将这两步合为一次操作，实际我们也是这样做的，�
 中断的上下部机制 中断服务函数的停留时间应该越短越好，否则影响其他任务占用 CPU，这是老生常谈的。
 以上观点存在的原因是：中断服务函数中是关闭中断的，CPU 只有串行的处理完当前 中断后， 才能继续做下一件事情，即便是高优先级任务也得等待，因为时钟中断被关闭！
 所以 Linux 在 2.6 引入了中断的上下部机制，将整个中断服务函数拆分为上部和下部:
-上部：那些不能被打断的步骤，比如保存上下文，承认和标记中断完成等 下部：宽松的管理方式，执行过程就算被打断也没关系，指的就是上面说的对应各自中断 应用场景下的服务函数，比如一个按键触发代表的实际行为 ARMv8 如何支持中断上下部 ARMv8 中，进入异常向量是自动关中断的，可执行msr DAIFClr, #imm来手动开启。</description></item><item><title>ARMv8 中断管理(2): 中断的生命周期</title><link>https://wangloo.github.io/posts/armv8/gicv3/2/</link><pubDate>Wed, 12 Apr 2023 23:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/2/</guid><description>一个中断完整的生命周期大概包括:
+上部：那些不能被打断的步骤，比如保存上下文，承认和标记中断完成等 下部：宽松的管理方式，执行过程就算被打断也没关系，指的就是上面说的对应各自中断 应用场景下的服务函数，比如一个按键触发代表的实际行为 ARMv8 如何支持中断上下部 ARMv8 中，进入异常向量是自动关中断的，可执行msr DAIFClr, #imm来手动开启。</description></item><item><title>ARMv8 中断管理(2): 中断的生命周期</title><link>https://wangloo.github.io/posts/arch/armv8/gicv3/2/</link><pubDate>Wed, 12 Apr 2023 23:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/armv8/gicv3/2/</guid><description>一个中断完整的生命周期大概包括:
 产生中断 中断分发: by Distributor or Redistributor 中断传递: deliver to CPU Interface 中断激活: pending-&amp;gt;active 优先级下降: priority drop 中断失效: active-&amp;gt;inactive 中断的产生 外设传来中断信号，或者处理器触发 SGI， GIC 此时将该中断标记为pending状态。
 中断的分发 中断生命周期中的重要部分，根据中断的类型不同可能由 Distributor 和 Redistributor 负责分发工作。
 分发器查配置得到此中断的优先级，目的 CPU 等信息。此时可能有多个中断想要发往同一 CPU， 优先级决定先分发哪个中断。将其顺利分发目的 CPU 的 CPU Interface
@@ -41,10 +35,10 @@ TODO: 关于running priority 和 highest pending priority的解释
 中断激活 CPU 此时将触发 IRQ/FIQ，执行对应的中断服务程序。
 中断服务程序中需要显式的执行一些操作将中断状态由 pending 置为 active。
 异常向量（中断处理函数）的详细步骤见下一节
-优先级下降和中断失效 优先级下降和中断的失效可以配置为同时发生，实际中我们也是这么使用的。</description></item><item><title>ARMv8 中断管理(1): 架构与GICv3</title><link>https://wangloo.github.io/posts/armv8/gicv3/1/</link><pubDate>Wed, 12 Apr 2023 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/gicv3/1/</guid><description>ARMv8 中断系统的架构 GIC 的输入为许多的中断线，但输出到 CPU 的只有 IRQ 和 FIQ 两种， 所以就要由 GIC 做中断的分发和过滤工作。
+优先级下降和中断失效 优先级下降和中断的失效可以配置为同时发生，实际中我们也是这么使用的。</description></item><item><title>ARMv8 中断管理(1): 架构与GICv3</title><link>https://wangloo.github.io/posts/arch/armv8/gicv3/1/</link><pubDate>Wed, 12 Apr 2023 21:51:49 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/armv8/gicv3/1/</guid><description>ARMv8 中断系统的架构 GIC 的输入为许多的中断线，但输出到 CPU 的只有 IRQ 和 FIQ 两种， 所以就要由 GIC 做中断的分发和过滤工作。
 总体来说，整个中断系统架构从底向上可分为三部分:
 硬件接口；外设的引脚 中断控制器；桥梁，向下提供引脚连接外设，向上连接 CPU 在合适的时间 触发中断信号，充当中断系统的主管 中断处理函数；GIC 将中断信号传递到 CPU 后，CPU 执行中断处理函数 +-----------+ +-----------+ | Process | | Process | +---------+-+ ++----------+ | | +-+--------+----+ | | | GIC | | | +-------+-------+ | +-------------+----------+ | Peripheral Device | +------------------------+ 中断控制器 GICv3 GIC 的有许多版本，本文皆以 GIC version3 为例介绍, 简称为 GICv3
-如上所述，GIC 在中断系统中充当“管家”的作用。如果将 CPU 比作老板， 到来的中断比作约见老板的员工，那么 GIC 就是秘书，统筹安排何人何时 与老板谈话。</description></item><item><title>AArch64 内存属性与内存类型</title><link>https://wangloo.github.io/posts/armv8/memory_attr/</link><pubDate>Wed, 12 Apr 2023 08:01:33 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/memory_attr/</guid><description>有了虚拟内存系统之后，MMU 可以抽象出一些可配置的内存属性。
+如上所述，GIC 在中断系统中充当“管家”的作用。如果将 CPU 比作老板， 到来的中断比作约见老板的员工，那么 GIC 就是秘书，统筹安排何人何时 与老板谈话。</description></item><item><title>AArch64 内存属性与内存类型</title><link>https://wangloo.github.io/posts/arch/armv8/memory_attr/</link><pubDate>Wed, 12 Apr 2023 08:01:33 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/armv8/memory_attr/</guid><description>有了虚拟内存系统之后，MMU 可以抽象出一些可配置的内存属性。
 例如，配置某个虚拟内存区域为不可执行、不被 cache 等，不可执行的属性 有助于防范攻击，不进入 cache 经常划分给外设 Memory-mapped 区域。
 内存属性和内存类型 首先，我们没法直接设置内存类型，我们能设置的是一些细粒度的内存属性字段， 比如说权限(WRX)、cacheable、shareable 等。
 我们说的内存类型也就是某些有意义的属性字段相互组合，ARM 给出了两种内存类型: 普通内存和设备内存。
@@ -57,7 +51,7 @@ cacheable&amp;amp;shareable 傻傻分不清 先说 cacheable，一段内存被�
 要注意，只有普通内存才支持配置是否进入 cache，所有的设备内存需要 non-cacheable。
 内存支持配置为是否被 cacheable，这在mair_el1的字段中配置。
 shareable 说的是一块内存的外部可见性，外部不可见并不是真的看不到，只是说不保证值的正确性。
-shareable 属性和 cacheable 其实是有关联的，他们俩比如配合使用，不能随便设置:</description></item><item><title>AArch64/X86 函数调用约定</title><link>https://wangloo.github.io/posts/armv8/function-call-conventions/</link><pubDate>Mon, 21 Nov 2022 10:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/function-call-conventions/</guid><description>符合调用约定使得调用函数能够正常获取参数, callee结束之后能够回到原来位置继续执行.
+shareable 属性和 cacheable 其实是有关联的，他们俩比如配合使用，不能随便设置:</description></item><item><title>AArch64/X86 函数调用约定</title><link>https://wangloo.github.io/posts/arch/armv8/function-call-conventions/</link><pubDate>Mon, 21 Nov 2022 10:30:35 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/armv8/function-call-conventions/</guid><description>符合调用约定使得调用函数能够正常获取参数, callee结束之后能够回到原来位置继续执行.
 X86 调用约定 函数调用 x86架构中, 函数调用以一条call指令为分界.
 在call指令执行之前, 所有的参数必须都躺在栈中, 参数入栈的规则是: 第一个参数最后入栈.
 另外, 执行call指令之前, 必须确保栈指针esp是16-byte对齐. 这项工作是编译器完成的, 如果它判断参数入栈之后的esp 不满足对齐条件, 则会手动调整esp使之对齐. 实现方式见下面例子.
@@ -68,7 +62,7 @@ push ebp ;preserve location of caller&amp;#39;s stack mov ebp, esp ;new ebp is o
 ebp在整个函数执行过程中是固定的, 好处是: 能够快速的或者函数参数, 返回地址.
 函数返回 callee执行完毕后, 需要返回到caller继续执行. 刚才说过, callee的返回地址在栈中, 所以我们要做的是找到返回地址所在的位置, 然后使pc = 返回地址.</description></item><item><title>ARM64 上实现 setjmp/longjmp</title><link>https://wangloo.github.io/posts/c/setjmp_and_longjmp/</link><pubDate>Tue, 01 Nov 2022 23:38:54 +0800</pubDate><guid>https://wangloo.github.io/posts/c/setjmp_and_longjmp/</guid><description>介绍 setjmp() and longjmp() 是一对组合使用的函数, 可以实现全局的goto.
 setjmp() 构造一个运行环境, 调用longjmp() 则将执行流切换到该环境.
-/* setjmp() 保存当前的运行环境(上下文)到 env 参数中 */ int setjmp(jmp_buf env); /* longjmp() 将控制流切换到 env 指定的运行环境 */ void longjmp(jmp_buf env, int val); 使用方法 #include &amp;lt;setjmp.h&amp;gt;#include &amp;lt;stdio.h&amp;gt; jmp_buf e; void foo() { longjmp(e, 1); } int main(void) { int ret; /* After calling longjmp(), the execution flow back to setjmp(), and setjmp() will return not 0. */ ret = setjmp(e); if (ret == 0) { printf(&amp;#34;Return from setjmp\n&amp;#34;); foo(); } else { printf(&amp;#34;Return from longjmp\n&amp;#34;); } return 0; } 基于 AArch64 的实现 .</description></item><item><title>AArch64 MMU介绍</title><link>https://wangloo.github.io/posts/armv8/mmu/</link><pubDate>Thu, 29 Sep 2022 08:01:33 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/mmu/</guid><description>Introduction MMU: 专用于将虚拟地址转换为物理地址. 通常配合分页机制来工作.
+/* setjmp() 保存当前的运行环境(上下文)到 env 参数中 */ int setjmp(jmp_buf env); /* longjmp() 将控制流切换到 env 指定的运行环境 */ void longjmp(jmp_buf env, int val); 使用方法 #include &amp;lt;setjmp.h&amp;gt;#include &amp;lt;stdio.h&amp;gt; jmp_buf e; void foo() { longjmp(e, 1); } int main(void) { int ret; /* After calling longjmp(), the execution flow back to setjmp(), and setjmp() will return not 0. */ ret = setjmp(e); if (ret == 0) { printf(&amp;#34;Return from setjmp\n&amp;#34;); foo(); } else { printf(&amp;#34;Return from longjmp\n&amp;#34;); } return 0; } 基于 AArch64 的实现 .</description></item><item><title>AArch64 MMU介绍</title><link>https://wangloo.github.io/posts/arch/armv8/mmu/</link><pubDate>Thu, 29 Sep 2022 08:01:33 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/armv8/mmu/</guid><description>Introduction MMU: 专用于将虚拟地址转换为物理地址. 通常配合分页机制来工作.
 页表: 页表中的表项包含提供虚拟地址和物理地址之间的映射.
 MMU就是直接访问页表, 并且通过将频繁使用的映射缓存到TLB中.
 MMU 的结构 MMU是一种硬件, 可以通过在适当的安全状态下对其进行配置. 每个Core都有自己的MMU, 每个MMU包括:
@@ -80,21 +74,4 @@ MMU 地址转换的过程 对于每个转换请求, MMU首先检查TLB是否已�
 页表中的每个表项对应着一块虚拟地址空间中的块, 表项的值就是这块虚拟地址空间对应的物理地址块, 以及访问物理地址时要使用的属性.
 在查表过程中, 将虚拟地址分为两部分:
 高阶位用作页表的索引. 用来找到对应的物理块 低地址是块内的偏移量, 不会因为映射而改变. 页表项中的物理地址与该偏移组合形成用于访问内存的物理地址. 多级页表 实际实现中, 多采用多级页表的方案, 各级页表自定向下组成树的形式, 协作实现虚拟到物理地址的转换.
-树中的分支成为页目录, 页目录中的表项不是直接存储目标物理地址, 而是下一级页表的地址; 最后一级页表的表项中保存着目标物理地址.</description></item><item><title>AArch64 异常等级切换</title><link>https://wangloo.github.io/posts/armv8/exception_return/</link><pubDate>Sat, 24 Sep 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/exception_return/</guid><description>ARMv8 异常返回指令 当异常处理程序结束后，需要执行异常返回指令恢复进入异常之前的状态.
-具体要做的事情包括:
-恢复发生异常前的PC
-从SPSR中恢复PSTATE寄存器(现场)
-异常返回的指令根据当前执行状态为AArch32还是AArch64有所不同.
-AArch32 AArch32的异常返回指令在不同的模式下也有所不同:
-若异常是在Hyp模式下处理: 仅可执行ERET指令从异常返回.
-若异常是在其他模式下处理, AArch32提供了以下的异常返回指令:
-ERET 指令
-使用带S后缀的数据处理指令直接操作PC(例如, MOVS, PC, LR), 恢复PSTATE
-RFE 指令: RFE &amp;lt;Rn&amp;gt;. 从基址寄存器指向的地址依次加载PC和PSTATE
-LDM 指令: LDM &amp;lt;Rn&amp;gt; {pc..}. 若目标寄存器中包含PC, 则会同时恢复PSTATE
-AArch64 AArch64下统一使用 ERET 指令进行异常返回.
-指令格式及用法参考 ERET ERET指令完成了:
-从ELR_ELx中恢复PC指针
-从SPSR_ELx中恢复PSTATE寄存器的状态.
-LDM(Load Multiple) 格式: LDM &amp;lt;Rn&amp;gt; {registers}
-含义: 从基址寄存器&amp;lt;Rn&amp;gt;指向的地址开始依次加载多个寄存器值.</description></item><item><title>AArch64 寄存器</title><link>https://wangloo.github.io/posts/armv8/register/</link><pubDate>Sat, 07 May 2022 20:19:44 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/register/</guid><description>寄存器分类 通用寄存器 x0-x7 参数寄存器: Restore function parameters and return vaule. x9-x15 caller-saved 临时寄存器: callee 默认可以直接使用来保存临时变量, 不需要保存和恢复. 如果 caller 在里面存储了非临时信息, 那么在函数调用之前应当由 caller 负责保存. x19-x28 callee-saved 寄存器: callee 应该避免使用. 如果必须要使用，那么在返回前必须恢复. special registers: x8 restore indirect result. Commonly used when returning a struct. x18 platform reserved register. x29 frame pointer register(FP). x30 link register(LR). All general-purpose register xN is 64-bit width. They all have corresponding wN register using the lower 32-bit of xN.</description></item></channel></rss>
+树中的分支成为页目录, 页目录中的表项不是直接存储目标物理地址, 而是下一级页表的地址; 最后一级页表的表项中保存着目标物理地址.</description></item></channel></rss>

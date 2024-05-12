@@ -7,7 +7,7 @@
 struct foo { char mem1; int mem2; short mem3; }; 不可能同时做到 foo 变量和其成员 mem2 同时满足对齐到 4 字节，所以编译器会依据 上面的两条要求在成员之间添加 padding。
 除了变量中间添加 padding 外，在末尾也会添加，使得结构体数组容易满足对齐需求。
 最后 foo 变量在内存中的样子可能是:
-struct foo { char mem1; char _pad1[3]; // 保证结构体和成员均对齐正确 int mem2; short mem3; char _pad2[2]; // 保证【结构体数组】对齐正确 }; 若结构体的成员还是一个结构体，嵌套操作就可以了，编译器可以 handle。</description></item><item><title>AArch64 A64 指令集</title><link>https://wangloo.github.io/posts/armv8/a64/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/armv8/a64/</guid><description>Load/Store 指令 寻址模式 Base register - w0=[x1]
+struct foo { char mem1; char _pad1[3]; // 保证结构体和成员均对齐正确 int mem2; short mem3; char _pad2[2]; // 保证【结构体数组】对齐正确 }; 若结构体的成员还是一个结构体，嵌套操作就可以了，编译器可以 handle。</description></item><item><title>A64 指令集</title><link>https://wangloo.github.io/posts/arch/armv8/a64/</link><pubDate>Sat, 07 May 2022 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/armv8/a64/</guid><description>Load/Store 指令 寻址模式 Base register - w0=[x1]
 ldr w0, [x1] Offset addressing mode - w0=[x1+12]
 ldr w0, [x1, 12] Pre-index addressing mode - x1+=12; w0=[x1]
 ldr w0, [x1, 12]! Post-index addressing mode - w0=[x1]; x1+=12

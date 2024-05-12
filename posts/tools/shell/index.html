@@ -1,0 +1,212 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=/css/syntax_pastie.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Shell 命令技巧</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#sh-%e6%98%af%e4%b8%aa%e5%95%a5 aria-label="sh 是个啥">sh 是个啥</a></li><li><a href=#%e5%b8%b8%e7%94%a8shell%e5%91%bd%e4%bb%a4 aria-label=常用Shell命令>常用Shell命令</a><ul><li><a href=#grep---%e5%86%85%e5%ae%b9%e5%8c%b9%e9%85%8d aria-label="Grep - 内容匹配">Grep - 内容匹配</a></li><li><a href=#mkfsext4---%e6%a0%bc%e5%bc%8f%e5%8c%96%e6%96%87%e4%bb%b6 aria-label="mkfs.ext4 - 格式化文件">mkfs.ext4 - 格式化文件</a></li><li><a href=#dd---%e7%94%9f%e6%88%90%e5%92%8c%e8%bd%ac%e6%8d%a2%e6%96%87%e4%bb%b6 aria-label="dd - 生成和转换文件">dd - 生成和转换文件</a></li><li><a href=#mount---%e6%8c%82%e8%bd%bd%e7%a1%ac%e7%9b%98%e5%88%86%e5%8c%ba aria-label="mount - 挂载硬盘分区">mount - 挂载硬盘分区</a></li><li><a href=#find---%e6%9f%a5%e6%89%be%e6%96%87%e4%bb%b6 aria-label="find - 查找文件">find - 查找文件</a></li><li><a href=#tee---%e6%a0%87%e5%87%86%e8%be%93%e5%85%a5%e5%88%b0%e6%96%87%e4%bb%b6 aria-label="tee - 标准输入到文件">tee - 标准输入到文件</a></li><li><a href=#echo---%e8%be%93%e5%87%ba%e5%ad%97%e7%ac%a6%e4%b8%b2 aria-label="echo - 输出字符串">echo - 输出字符串</a></li><li><a href=#whichwhereis---%e5%ae%9a%e4%bd%8d%e6%96%87%e4%bb%b6%e8%b7%af%e5%be%84 aria-label="which/whereis - 定位文件路径">which/whereis - 定位文件路径</a></li></ul></li><li><a href=#%e5%b0%8f%e6%8a%80%e5%b7%a7 aria-label=小技巧>小技巧</a><ul><li><a href=#%e5%a6%82%e4%bd%95%e7%90%86%e8%a7%a321 aria-label=如何理解2&amp;amp;&amp;gt;1?>如何理解2&>1?</a></li><li><a href=#--%e7%9a%84%e5%a6%99%e7%94%a8 aria-label="- 的妙用"><code>-</code> 的妙用</a></li><li><a href=#sort-%e5%ba%94%e4%bb%98%e5%a4%9a%e7%a7%8d%e5%9c%ba%e6%99%af aria-label="sort 应付多种场景">sort 应付多种场景</a></li><li><a href=#cp%e6%ad%a3%e7%a1%ae%e9%93%be%e6%8e%a5%e6%96%87%e4%bb%b6 aria-label=cp正确链接文件>cp正确链接文件</a></li><li><a href=#%e6%9f%a5%e7%9c%8b%e5%bd%93%e5%89%8dshell aria-label=查看当前shell>查看当前shell</a></li><li><a href=#find-%e5%88%a0%e9%99%a4%e6%96%87%e4%bb%b6 aria-label="find 删除文件">find 删除文件</a></li><li><a href=#%e7%bb%9f%e8%ae%a1%e4%bb%a3%e7%a0%81%e9%87%8f aria-label=统计代码量>统计代码量</a></li><li><a href=#%e5%85%b6%e4%bb%96 aria-label=其他>其他</a></li></ul></li><li><a href=#shell%e8%84%9a%e6%9c%ac%e5%88%86%e6%9e%90 aria-label=Shell脚本分析>Shell脚本分析</a><ul><li><a href=#shift-%e7%94%a8%e4%ba%8e%e5%a4%84%e7%90%86%e5%8f%82%e6%95%b0 aria-label="shift 用于处理参数">shift 用于处理参数</a></li><li><a href=#%e5%ae%9e%e6%88%98%e5%ad%a6%e4%b9%a0%e8%87%aa%e5%8a%a8%e6%9b%b4%e6%96%b0git%e4%bb%93%e5%ba%93 aria-label=实战学习：自动更新Git仓库>实战学习：自动更新Git仓库</a></li><li><a href=#%e5%8f%98%e9%87%8f%e7%9a%84%e5%ae%9a%e4%b9%89%e5%92%8c%e5%bc%95%e7%94%a8 aria-label=变量的定义和引用>变量的定义和引用</a></li><li><a href=#%e5%88%a4%e6%96%ad%e6%89%a7%e8%a1%8c%e8%84%9a%e6%9c%ac%e6%97%b6%e5%b8%a6%e7%9a%84%e5%8f%82%e6%95%b0 aria-label=判断执行脚本时带的参数>判断执行脚本时带的参数</a></li><li><a href=#%e8%87%aa%e5%8a%a8%e6%8b%b7%e8%b4%9d%e6%96%87%e4%bb%b6%e5%88%b0-sd-card aria-label="自动拷贝文件到 SD Card">自动拷贝文件到 SD Card</a></li><li><a href=#%e8%8e%b7%e5%8f%96%e6%89%80%e6%9c%89%e6%96%87%e4%bb%b6%e4%bf%a1%e6%81%af%e5%8f%af%e9%80%92%e5%bd%92%e8%bf%9b%e5%85%a5%e5%ad%90%e7%9b%ae%e5%bd%95 aria-label=获取所有文件信息(可递归进入子目录)>获取所有文件信息(可递归进入子目录)</a></li><li><a href=#%e5%b8%a6%e9%a2%9c%e8%89%b2%e7%9a%84%e8%be%93%e5%87%ba aria-label=带颜色的输出>带颜色的输出</a></li></ul></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Shell 命令技巧</div></header><h2 id=sh-是个啥>sh 是个啥</h2><p>busybox 的 shell 是 ash，ash 不同于主机上的 sh bash tcsh，它是个精简版，很多标准shell 支持的特性它都不支持。</p><p>sh 的含义是默认的 shell，可能是bash、可能是dash，一般来说只是一个软链接。</p><style type=text/css>.notice{--root-color:#444;--root-background:#eff;--title-color:#fff;--title-background:#7bd;--warning-title:#c33;--warning-content:#fee;--info-title:#fb7;--info-content:#fec;--note-title:#6be;--note-content:#e7f2fa;--tip-title:#5a5;--tip-content:#efe}@media(prefers-color-scheme:dark){.notice{--root-color:#ddd;--root-background:#eff;--title-color:#fff;--title-background:#7bd;--warning-title:#800;--warning-content:#400;--info-title:#a50;--info-content:#420;--note-title:#069;--note-content:#023;--tip-title:#363;--tip-content:#121}}body.dark .notice{--root-color:#ddd;--root-background:#eff;--title-color:#fff;--title-background:#7bd;--warning-title:#800;--warning-content:#400;--info-title:#a50;--info-content:#420;--note-title:#069;--note-content:#023;--tip-title:#363;--tip-content:#121}.notice{padding:18px;line-height:24px;margin-bottom:24px;border-radius:4px;color:var(--root-color);background:var(--root-background)}.notice p:last-child{margin-bottom:0}.notice-title{margin:-18px -18px 12px;padding:4px 18px;border-radius:4px 4px 0 0;font-weight:700;color:var(--title-color);background:var(--title-background)}.notice.warning .notice-title{background:var(--warning-title)}.notice.warning{background:var(--warning-content)}.notice.info .notice-title{background:var(--info-title)}.notice.info{background:var(--info-content)}.notice.note .notice-title{background:var(--note-title)}.notice.note{background:var(--note-content)}.notice.tip .notice-title{background:var(--tip-title)}.notice.tip{background:var(--tip-content)}.icon-notice{display:inline-flex;align-self:center;margin-right:8px}.icon-notice img,.icon-notice svg{height:1em;width:1em;fill:currentColor}.icon-notice img,.icon-notice.baseline svg{top:.125em;position:relative}</style><div class="notice info" id=sh与$0之间的关系？><p class=notice-title><span class="icon-notice baseline"><svg xmlns="http://www.w3.org/2000/svg" viewBox="92 59.5 300 300"><path d="M292 303.25V272c0-3.516-2.734-6.25-6.25-6.25H267v-1e2c0-3.516-2.734-6.25-6.25-6.25h-62.5c-3.516.0-6.25 2.734-6.25 6.25V197c0 3.516 2.734 6.25 6.25 6.25H217v62.5h-18.75c-3.516.0-6.25 2.734-6.25 6.25v31.25c0 3.516 2.734 6.25 6.25 6.25h87.5c3.516.0 6.25-2.734 6.25-6.25zm-25-175V97c0-3.516-2.734-6.25-6.25-6.25h-37.5c-3.516.0-6.25 2.734-6.25 6.25v31.25c0 3.516 2.734 6.25 6.25 6.25h37.5c3.516.0 6.25-2.734 6.25-6.25zm125 81.25c0 82.813-67.188 150-150 150-82.813.0-150-67.188-150-150 0-82.813 67.188-150 150-150 82.813.0 150 67.188 150 150z"/></svg></span><span>sh与$0之间的关系？</span></p><p>$0 具体代表什么含义是每个shell程序实现的，如果sh是指向dash，那么此时 <code>$0</code> 就会输出dash。</p></div><blockquote><p><a href=https://www.cnblogs.com/exmyth/p/15876568.html>bash和dash的语法区别 - 博客园</a></p></blockquote><h2 id=常用shell命令>常用Shell命令</h2><blockquote><p>ℹ️ 如未特殊说明，以下的命令在bash和zsh中都能正确生效。</p></blockquote><h3 id=grep---内容匹配>Grep - 内容匹配</h3><p>Grep stands for <em>Global Regular Expression Print</em>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 语法结构，PATTERN是正则表达式，所以不需要像find命令用*号</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 参数</span>
+</span></span><span class=line><span class=cl><span class=c1># -n ==&gt; print line number</span>
+</span></span><span class=line><span class=cl><span class=c1># -r ==&gt; recursive search</span>
+</span></span><span class=line><span class=cl><span class=c1># -E ==&gt; 扩展正则表达式</span>
+</span></span><span class=line><span class=cl><span class=c1># -I ==&gt; 跳过二进制文件</span>
+</span></span><span class=line><span class=cl><span class=c1># --exclude/--exlude-dir ==&gt; 排除路径和文件</span>
+</span></span><span class=line><span class=cl>grep -Inr page_fault 
+</span></span></code></pre></div><h3 id=mkfsext4---格式化文件>mkfs.ext4 - 格式化文件</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl><span class=c1># 格式化文件为ext4分区</span>
+</span></span><span class=line><span class=cl>mkfs.ext4 &lt;file&gt; 
+</span></span></code></pre></div><h3 id=dd---生成和转换文件>dd - 生成和转换文件</h3><p><a href=https://www.runoob.com/linux/linux-comm-dd.html>https://www.runoob.com/linux/linux-comm-dd.html</a></p><h3 id=mount---挂载硬盘分区>mount - 挂载硬盘分区</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>sudo mount <span class=o>[</span>file<span class=o>]</span> <span class=o>[</span>dir<span class=o>]</span> <span class=c1># 挂载file到dir</span>
+</span></span><span class=line><span class=cl>sudo umount <span class=o>[</span>dir<span class=o>]</span> 
+</span></span><span class=line><span class=cl>sudo mount <span class=c1># 输出当前已经挂载的分区</span>
+</span></span></code></pre></div><h3 id=find---查找文件>find - 查找文件</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># 查找24小时内修改过的文件</span>
+</span></span><span class=line><span class=cl>find . -mtime <span class=m>0</span>
+</span></span><span class=line><span class=cl><span class=c1># 查找2小时内修改过的文件</span>
+</span></span><span class=line><span class=cl>find . -mmin -<span class=k>$((</span><span class=m>2</span><span class=o>*</span><span class=m>60</span><span class=k>))</span>
+</span></span><span class=line><span class=cl><span class=c1># 查找24小时内访问过的文件</span>
+</span></span><span class=line><span class=cl>find . -atime 0s
+</span></span></code></pre></div><h3 id=tee---标准输入到文件>tee - 标准输入到文件</h3><p>常用的情景是，执行一些命令的输出<strong>不仅想要打印要屏幕，同时想输出到文件中保存</strong>。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># 与tee结合，同时输出到屏幕和文件</span>
+</span></span><span class=line><span class=cl>make 2&gt;<span class=p>&amp;</span><span class=m>1</span> <span class=p>|</span> tee log.txt 
+</span></span><span class=line><span class=cl><span class=c1># 使用tee命令可以将一条命令的输出同时传递给多个命令进行处理。</span>
+</span></span><span class=line><span class=cl>ls <span class=p>|</span> tee &gt; <span class=o>(</span>grep keyword<span class=o>)</span> &gt; <span class=o>(</span>wc -l<span class=o>)</span> 
+</span></span></code></pre></div><h3 id=echo---输出字符串>echo - 输出字符串</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl><span class=c1># echo不自动换行</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> -n <span class=s2>&#34;some-string&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># echo转义特殊字符</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span>    <span class=s2>&#34;some-string\n&#34;</span> <span class=c1># 不转义\</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> -e <span class=s2>&#34;some-string\n&#34;</span> <span class=c1># 正确转义换行</span>
+</span></span></code></pre></div><blockquote><p>Zsh中，echo默认带<code>-e</code>，bash中则不是。
+所以说，<strong>如果输出的字符串有转义字符，不管要不要转义，都显式指定一下</strong>。</p><ul><li><code>-e</code> 强制转义</li><li><code>-E</code> 强制不转义</li></ul></blockquote><h3 id=whichwhereis---定位文件路径>which/whereis - 定位文件路径</h3><p>which 查看可执行文件的位置，whereis 除了可执行文件还能搜索其他类型的文件, 不常用, 详见 <code>man whereis</code></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ which python3
+</span></span><span class=line><span class=cl>/usr/bin/python3
+</span></span></code></pre></div><h2 id=小技巧>小技巧</h2><h3 id=如何理解21>如何理解2&>1?</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>make               <span class=c1># stdout和stderr，会输出到屏幕上</span>
+</span></span><span class=line><span class=cl>make 1&gt; stdout.log <span class=c1># 仅将标准输出重定向到stdout.log文件</span>
+</span></span><span class=line><span class=cl>make &gt; stdout.log  <span class=c1># 同上，简略写法</span>
+</span></span><span class=line><span class=cl>make 2&gt; stderr.log <span class=c1># 将stderr输出重定向到文件，有错误语句</span>
+</span></span><span class=line><span class=cl>make 2&gt;1           <span class=c1># 将stderr输出重定向到文件名1的文件</span>
+</span></span><span class=line><span class=cl>make 2&gt;<span class=p>&amp;</span><span class=m>1</span>          <span class=c1># 将stderr输出重定向stdout</span>
+</span></span></code></pre></div><p>将stdout和stderr结合，有啥用呢？</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>make 2&gt;<span class=p>&amp;</span><span class=m>1</span> &gt;all.log      <span class=c1># stdout和stderr都会被存到all.log中</span>
+</span></span><span class=line><span class=cl>make 2&gt;<span class=p>&amp;</span><span class=m>1</span> <span class=p>|</span> tee log.txt <span class=c1># 与tee结合，同时输出到屏幕和文件</span>
+</span></span></code></pre></div><h3 id=--的妙用><code>-</code> 的妙用</h3><p>一些命令支持使用 <code>-</code> 代替文件名, 输入输出都可以:</p><ul><li>代替标准输出; 一些命令会将<code>-o/-O</code> 后面的<code>-</code>判定为输出到<em>STDOUT</em>, 详见下面示例.</li><li>代替标准输入;</li></ul><p>下面给出两个同时代替输入输出的例子:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl><span class=c1># 将标准输入(STDIN)的内容作为gcc的输入, 编译后的结果输出到标准输出(STDOUT)</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s1>&#39;void foo() {}&#39;</span> <span class=p>|</span> gcc -x c -o - -
+</span></span><span class=line><span class=cl><span class=c1># 将下载的文件输出到标准输出, 同时作为tar命令的输入文件, 进行解压</span>
+</span></span><span class=line><span class=cl>wget -O - <span class=s2>&#34;https://www.dropbox.com/download?plat=lnx.x86_64&#34;</span> <span class=p>|</span> tar xzf -
+</span></span></code></pre></div><div class="notice tip"><p class=notice-title><span class="icon-notice baseline"><svg xmlns="http://www.w3.org/2000/svg" viewBox="300.5 134 300 300"><path d="M551.281 252.36c0-3.32-1.172-6.641-3.515-8.985l-17.774-17.578c-2.344-2.344-5.469-3.711-8.789-3.711-3.32.0-6.445 1.367-8.789 3.71l-79.687 79.493-44.141-44.14c-2.344-2.344-5.469-3.712-8.79-3.712-3.32.0-6.444 1.368-8.788 3.711l-17.774 17.579c-2.343 2.343-3.515 5.664-3.515 8.984s1.172 6.445 3.515 8.789l70.704 70.703c2.343 2.344 5.664 3.711 8.789 3.711 3.32.0 6.64-1.367 8.984-3.71l106.055-106.056c2.343-2.343 3.515-5.468 3.515-8.789zM600.5 284c0 82.813-67.188 150-150 150-82.813.0-150-67.188-150-150 0-82.813 67.188-150 150-150 82.813.0 150 67.188 150 150z"/></svg></span><span></span></p><p><code>-</code> 如何被解析是<strong>取决于命令的实现</strong>, 非标准. 比如 <code>cd -</code> 就有特殊的含义</p></div><h3 id=sort-应付多种场景>sort 应付多种场景</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl><span class=c1># 对版本号进行排序(x.y.z)</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> -ne <span class=s2>&#34;1.2.3\n4.5.6\n3.4.5&#34;</span> <span class=p>|</span> sort -V
+</span></span></code></pre></div><h3 id=cp正确链接文件>cp正确链接文件</h3><p>执行cp命令时，如果目录下有链接文件，拷贝源文件而不是链接文件，这在链接文件指向相对地址时非常有用。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>cp -rL /path/to/ /path/from
+</span></span></code></pre></div><h3 id=查看当前shell>查看当前shell</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=nb>echo</span> <span class=nv>$0</span>
+</span></span></code></pre></div><h3 id=find-删除文件>find 删除文件</h3><p>rm和find结合，find过滤要删除的文件，传递给rm。<strong>建议删除前先输出到屏幕检查</strong>。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>find . -maxdepth <span class=m>1</span> -executable -type f <span class=p>|</span> xargs rm
+</span></span></code></pre></div><h3 id=统计代码量>统计代码量</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 列出*所有的文件及其代码行数*, 只统计.c 和.h, 过滤`./scripts`目录.</span>
+</span></span><span class=line><span class=cl>find -name <span class=s1>&#39;*.[c|h]&#39;</span> ! -path <span class=s1>&#39;./scripts/*&#39;</span> <span class=p>|</span> xargs  wc -l
+</span></span><span class=line><span class=cl><span class=c1># +将内容按照代码行数降序排列</span>
+</span></span><span class=line><span class=cl>find -name <span class=s1>&#39;*.[c|h]&#39;</span> ! -path <span class=s1>&#39;./scripts/*&#39;</span> <span class=p>|</span> xargs  wc -l <span class=p>|</span> sort -rn
+</span></span><span class=line><span class=cl><span class=c1># 若仅列出*总的代码行数*, 去除**空行**</span>
+</span></span><span class=line><span class=cl><span class=o>(</span>find ./ -name <span class=s1>&#39;*.[c|h]&#39;</span> -print0 <span class=p>|</span> xargs -0 cat<span class=o>)</span> <span class=p>|</span> sed <span class=s1>&#39;/^\s*$/d&#39;</span> <span class=p>|</span> wc -l
+</span></span></code></pre></div><h3 id=其他>其他</h3><ol><li>Bash脚本正式语句开始前加 <code>set -e</code>, 使得任何命令返回非0时立即退出整个Shell脚本。</li><li>规定分隔符。<strong>默认Shell会采用空格、tab、换行都作为分隔符</strong>，
+有时需要屏蔽某些，仅使用空格<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl><span class=nb>export</span> <span class=nv>IFS</span><span class=o>=</span><span class=s1>&#39; &#39;</span> <span class=c1># 启用空格分隔only</span>
+</span></span><span class=line><span class=cl><span class=nv>flag</span><span class=o>=</span><span class=s2>&#34;false&#34;</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> str in <span class=nv>$qemu_ver</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>do</span>
+</span></span><span class=line><span class=cl>  <span class=c1># do something</span>
+</span></span><span class=line><span class=cl><span class=k>done</span>
+</span></span><span class=line><span class=cl><span class=nb>unset</span> IFS  <span class=c1># 恢复默认</span>
+</span></span></code></pre></div></li></ol><h2 id=shell脚本分析>Shell脚本分析</h2><h3 id=shift-用于处理参数>shift 用于处理参数</h3><p><code>shift</code>命令将参数左移，应用场景:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl><span class=c1># 场景1：提取第二个参数及后面的所有</span>
+</span></span><span class=line><span class=cl><span class=c1># ./shell qemu-system-aarch64 -machine raspi3b -smp</span>
+</span></span><span class=line><span class=cl><span class=nv>qemu</span><span class=o>=</span><span class=nv>$1</span>
+</span></span><span class=line><span class=cl><span class=nb>shift</span>  <span class=c1># 默认左移1</span>
+</span></span><span class=line><span class=cl><span class=nv>qemu_opt</span><span class=o>=</span><span class=nv>$@</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>## 场景2: 处理多参数且位置不定的情况</span>
+</span></span><span class=line><span class=cl><span class=k>while</span> <span class=o>[</span> <span class=s2>&#34;</span><span class=nv>$#</span><span class=s2>&#34;</span> -gt <span class=m>0</span> <span class=o>]</span><span class=p>;</span> <span class=k>do</span>
+</span></span><span class=line><span class=cl>  <span class=k>case</span> <span class=s2>&#34;</span><span class=nv>$1</span><span class=s2>&#34;</span> in
+</span></span><span class=line><span class=cl>    -f<span class=p>|</span>--file<span class=o>)</span>
+</span></span><span class=line><span class=cl>      <span class=nv>file</span><span class=o>=</span><span class=s2>&#34;</span><span class=nv>$2</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=nb>shift</span> <span class=m>2</span>
+</span></span><span class=line><span class=cl>      <span class=p>;;</span>
+</span></span><span class=line><span class=cl>    -d<span class=p>|</span>--directory<span class=o>)</span>
+</span></span><span class=line><span class=cl>      <span class=nv>directory</span><span class=o>=</span><span class=s2>&#34;</span><span class=nv>$2</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=nb>shift</span> <span class=m>2</span>
+</span></span><span class=line><span class=cl>      <span class=p>;;</span>
+</span></span><span class=line><span class=cl>    -m<span class=p>|</span>--mode<span class=o>)</span>
+</span></span><span class=line><span class=cl>      <span class=nv>mode</span><span class=o>=</span><span class=s2>&#34;</span><span class=nv>$2</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=nb>shift</span> <span class=m>2</span>
+</span></span><span class=line><span class=cl>      <span class=p>;;</span>
+</span></span><span class=line><span class=cl>    *<span class=o>)</span>
+</span></span><span class=line><span class=cl>      <span class=nb>echo</span> <span class=s2>&#34;Unknown option: </span><span class=nv>$1</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=nb>exit</span> <span class=m>1</span>
+</span></span><span class=line><span class=cl>      <span class=p>;;</span>
+</span></span><span class=line><span class=cl>  <span class=k>esac</span>
+</span></span><span class=line><span class=cl><span class=k>done</span>
+</span></span></code></pre></div><h3 id=实战学习自动更新git仓库>实战学习：自动更新Git仓库</h3><p>来源：南京大学ICS PA <a href=https://github.com/NJU-ProjectN/ics-pa-gitbook/blob/master/update.sh>ics-pa-gitbook/update.sh</a></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=cp>#!/bin/sh
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl>git fetch origin master
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Trick 1: 1:-&#39;@{u}&#39; ==&gt;  1代表参数传入，如果为空就 当前分支所跟踪的远程分支(&#39;@{u}&#39;)</span>
+</span></span><span class=line><span class=cl><span class=nv>UPSTREAM</span><span class=o>=</span><span class=si>${</span><span class=nv>1</span><span class=k>:-</span><span class=s1>&#39;@{u}&#39;</span><span class=si>}</span> . 
+</span></span><span class=line><span class=cl><span class=c1># Trick 2: @ ==&gt; 当前分支</span>
+</span></span><span class=line><span class=cl><span class=c1># Trick 3: git rev-pase ==&gt; 列出某个分支最新的commit ID</span>
+</span></span><span class=line><span class=cl><span class=nv>LOCAL</span><span class=o>=</span><span class=k>$(</span>git rev-parse @<span class=k>)</span>
+</span></span><span class=line><span class=cl><span class=nv>REMOTE</span><span class=o>=</span><span class=k>$(</span>git rev-parse <span class=s2>&#34;</span><span class=nv>$UPSTREAM</span><span class=s2>&#34;</span><span class=k>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=o>[</span> <span class=nv>$LOCAL</span> <span class=o>=</span> <span class=nv>$REMOTE</span> <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+</span></span><span class=line><span class=cl>  <span class=nb>echo</span> <span class=s2>&#34;Already up to date.&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=nb>exit</span>
+</span></span><span class=line><span class=cl><span class=k>fi</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>git reset --hard origin/master
+</span></span><span class=line><span class=cl>git gc
+</span></span></code></pre></div><h3 id=变量的定义和引用>变量的定义和引用</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl><span class=c1># 何时变量赋值要加&#34;&#34;?</span>
+</span></span><span class=line><span class=cl><span class=c1># =&gt; 包含分隔符，空格或tab时</span>
+</span></span><span class=line><span class=cl><span class=nv>qemu_opt</span><span class=o>=</span><span class=s2>&#34;-machine raspi3b&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 引用变量时为什么加{}? ${var}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 引用变量时为什么加&#34;&#34;? &#34;$var&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 变量赋值为什么$()?</span>
+</span></span><span class=line><span class=cl><span class=c1># =&gt; ()里面是shell命令时用</span>
+</span></span><span class=line><span class=cl><span class=nv>qemu_ver</span><span class=o>=</span><span class=k>$(</span><span class=nv>$qemu</span> --version <span class=p>|</span> head -n 1<span class=k>)</span> 
+</span></span></code></pre></div><h3 id=判断执行脚本时带的参数>判断执行脚本时带的参数</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=k>if</span> <span class=o>[</span> <span class=nv>$#</span> -ne <span class=m>1</span> <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+</span></span><span class=line><span class=cl>    <span class=nb>echo</span> <span class=s2>&#34;ONE parameter is needed&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nb>exit</span> -1
+</span></span><span class=line><span class=cl><span class=k>fi</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=o>[</span> <span class=nv>$1</span> <span class=o>==</span> <span class=s1>&#39;build&#39;</span> <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+</span></span><span class=line><span class=cl>    <span class=c1># do something</span>
+</span></span><span class=line><span class=cl><span class=k>elif</span> <span class=o>[</span> <span class=nv>$1</span> <span class=o>==</span> <span class=s1>&#39;run&#39;</span> <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+</span></span><span class=line><span class=cl>    <span class=c1># do something</span>
+</span></span><span class=line><span class=cl><span class=k>elif</span> <span class=o>[</span> <span class=nv>$1</span> <span class=o>==</span> <span class=s1>&#39;gdb&#39;</span> <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+</span></span><span class=line><span class=cl>    <span class=c1># do something</span>
+</span></span><span class=line><span class=cl><span class=k>else</span>
+</span></span><span class=line><span class=cl>    <span class=nb>echo</span> <span class=s2>&#34;Not supported command&#34;</span>
+</span></span><span class=line><span class=cl><span class=k>fi</span>
+</span></span></code></pre></div><h3 id=自动拷贝文件到-sd-card>自动拷贝文件到 SD Card</h3><blockquote><p>TODO</p><ol><li>添加进度条</li></ol></blockquote><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=cp>#!/bin/bash
+</span></span></span><span class=line><span class=cl><span class=cp></span><span class=nv>sd_path</span><span class=o>=</span><span class=k>$(</span>find /media/<span class=nv>$USER</span> -maxdepth <span class=m>1</span> -type d -name <span class=s2>&#34;*-*&#34;</span><span class=k>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>while</span> <span class=o>[</span> ! -d <span class=s2>&#34;</span><span class=si>${</span><span class=nv>sd_path</span><span class=si>}</span><span class=s2>&#34;</span> <span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=k>do</span>
+</span></span><span class=line><span class=cl>    sleep <span class=m>1</span>
+</span></span><span class=line><span class=cl>    <span class=nb>echo</span> <span class=s2>&#34;waiting for inserting SD-Card&#34;</span>
+</span></span><span class=line><span class=cl><span class=k>done</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s2>&#34;SD-Card is inserted&#34;</span>
+</span></span><span class=line><span class=cl>cp ./output/kernel/kernel.bin  <span class=si>${</span><span class=nv>sd_path</span><span class=si>}</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s2>&#34;Copy completely&#34;</span>
+</span></span></code></pre></div><h3 id=获取所有文件信息可递归进入子目录>获取所有文件信息(可递归进入子目录)</h3><p>获取<code>dir</code>路径下的所有文件的信息, 这里获取的是文件的<strong>完整路径</strong>.</p><blockquote><p>TODO</p><ol><li>操作数组下标的方式可能有待改进? <code>filenum</code>感觉没必要, 暂时还不会改</li><li>通过拼接获得文件信息(路径)的方式也有点怪异</li></ol></blockquote><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=nv>dir</span><span class=o>=</span>./
+</span></span><span class=line><span class=cl><span class=nv>files</span><span class=o>=()</span>
+</span></span><span class=line><span class=cl><span class=nv>filenum</span><span class=o>=</span><span class=m>0</span>
+</span></span><span class=line><span class=cl><span class=k>function</span> getfiles<span class=o>()</span>
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> file in <span class=sb>`</span>ls <span class=nv>$dir</span><span class=sb>`</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>do</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=o>[</span> -d <span class=nv>$file</span> <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+</span></span><span class=line><span class=cl>            <span class=nb>cd</span> <span class=nv>$file</span>
+</span></span><span class=line><span class=cl>            getfiles
+</span></span><span class=line><span class=cl>            <span class=nb>cd</span> ..
+</span></span><span class=line><span class=cl>        <span class=k>else</span>
+</span></span><span class=line><span class=cl>            files<span class=o>[</span><span class=nv>$filenum</span><span class=o>]=</span><span class=k>$(</span><span class=nb>pwd</span> <span class=nv>$file</span><span class=k>)</span>/<span class=k>$(</span>basename <span class=nv>$file</span><span class=k>)</span>
+</span></span><span class=line><span class=cl>            <span class=c1># echo file=$(pwd $file)/$(basename $file)</span>
+</span></span><span class=line><span class=cl>            <span class=nb>let</span> filenum++
+</span></span><span class=line><span class=cl>        <span class=k>fi</span>
+</span></span><span class=line><span class=cl>    <span class=k>done</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></div><h3 id=带颜色的输出>带颜色的输出</h3><p>使用<a href=https://en.wikipedia.org/wiki/ANSI_escape_code>ANSI escape code</a></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>Black        0;30     Dark Gray     1;30
+</span></span><span class=line><span class=cl>Red          0;31     Light Red     1;31
+</span></span><span class=line><span class=cl>Green        0;32     Light Green   1;32
+</span></span><span class=line><span class=cl>Brown/Orange 0;33     Yellow        1;33
+</span></span><span class=line><span class=cl>Blue         0;34     Light Blue    1;34
+</span></span><span class=line><span class=cl>Purple       0;35     Light Purple  1;35
+</span></span><span class=line><span class=cl>Cyan         0;36     Light Cyan    1;36
+</span></span><span class=line><span class=cl>Light Gray   0;37     White         1;37
+</span></span></code></pre></div><p>Code example:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=cp>#!/bin/bash
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=nv>RED</span><span class=o>=</span><span class=s1>&#39;\033[0;31m&#39;</span>
+</span></span><span class=line><span class=cl><span class=nv>GREEN</span><span class=o>=</span><span class=s1>&#39;\033[0;32m&#39;</span>
+</span></span><span class=line><span class=cl><span class=nv>YELLOW</span><span class=o>=</span><span class=s1>&#39;\033[1;33m&#39;</span>
+</span></span><span class=line><span class=cl><span class=nv>BLUE</span><span class=o>=</span><span class=s1>&#39;\033[0;34m&#39;</span>
+</span></span><span class=line><span class=cl><span class=nv>CYAN</span><span class=o>=</span><span class=s1>&#39;\033[0;36m&#39;</span>
+</span></span><span class=line><span class=cl><span class=nv>NC</span><span class=o>=</span><span class=s1>&#39;\033[0m&#39;</span> <span class=c1># No Color</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> -e <span class=s2>&#34;</span><span class=si>${</span><span class=nv>YELLOW</span><span class=si>}</span><span class=s2>HELLO, YELLOW</span><span class=si>${</span><span class=nv>NC</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> -e <span class=s2>&#34;</span><span class=si>${</span><span class=nv>GREEN</span><span class=si>}</span><span class=s2>HELLO, GREEN</span><span class=si>${</span><span class=nv>NC</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> -e <span class=s2>&#34;</span><span class=si>${</span><span class=nv>RED</span><span class=si>}</span><span class=s2>HELLO, RED</span><span class=si>${</span><span class=nv>NC</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> -e <span class=s2>&#34;</span><span class=si>${</span><span class=nv>BLUE</span><span class=si>}</span><span class=s2>HELLO, BLUE</span><span class=si>${</span><span class=nv>NC</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> -e <span class=s2>&#34;</span><span class=si>${</span><span class=nv>CYAN</span><span class=si>}</span><span class=s2>HELLO, CYAN</span><span class=si>${</span><span class=nv>NC</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#########################################################</span>
+</span></span><span class=line><span class=cl><span class=c1># generic functions #####################################</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>function</span> ERROR<span class=o>(){</span>
+</span></span><span class=line><span class=cl>    <span class=nb>echo</span> -e <span class=s2>&#34;</span><span class=si>${</span><span class=nv>RED</span><span class=si>}</span><span class=s2>[error] </span><span class=nv>$*</span><span class=si>${</span><span class=nv>NC</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=nb>exit</span> <span class=m>1</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>function</span> INFO <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=nb>echo</span> -e <span class=s2>&#34;</span><span class=si>${</span><span class=nv>BLUE</span><span class=si>}</span><span class=s2>[info] </span><span class=nv>$*</span><span class=si>${</span><span class=nv>NC</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>function</span> WARN <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=nb>echo</span> -e <span class=s2>&#34;</span><span class=si>${</span><span class=nv>YELLOW</span><span class=si>}</span><span class=s2>[warn] </span><span class=nv>$*</span><span class=si>${</span><span class=nv>NC</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>function</span> LOG <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=nb>echo</span> -e <span class=s2>&#34;</span><span class=si>${</span><span class=nv>GREEN</span><span class=si>}</span><span class=s2>[log] </span><span class=nv>$*</span><span class=si>${</span><span class=nv>NC</span><span class=si>}</span><span class=s2>&#34;</span> &gt;&gt; <span class=nv>$LOG</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>INFO <span class=s2>&#34;This is an infomation&#34;</span>
+</span></span><span class=line><span class=cl>WARN  <span class=s2>&#34;This is a log&#34;</span>
+</span></span></code></pre></div></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2022-07-20T11:54:13, Lastmod: 2024-05-12T21:54:13</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>

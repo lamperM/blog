@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>arch on BLOG</title><link>https://wangloo.github.io/tags/arch/</link><description>Recent content in arch on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sat, 11 May 2024 21:19:01 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/arch/index.xml" rel="self" type="application/rss+xml"/><item><title>计算机体系结构基础</title><link>https://wangloo.github.io/posts/arch/arch/</link><pubDate>Sat, 11 May 2024 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/arch/</guid><description>指令执行过程 指令执行的过程：取指、译码、执行和写回。 根据这个将 Core 分为两部分：
+前端：指令从内存预取到 Cpu，解码，发射。在 Arm 中， 前端的流程是顺序的。一个 cycle 里最多可以解码 4 条指令给后端。 后端：后端的作用是执行指令。后端一般包含几个执行单元， 整数、浮点数、Load/Store、Branch 相关的执行单元。 后端中，如果指令之间没有依赖，支持乱序执行。 Core 中的 Cache 分布：Icache 在前端，Dcache 属于后端。
+Core 中的 Tlb 分布：ITlb 在前端，DTlb 在后端
+指令执行完后，到达 Retire，指令退役。
+Arm 处理器的架构与微架构 架构可以理解为由指令集、内存模型等组成的一个行为规范， 或叫做 specification。相当于一种标准，会定义 Cpu 工作行为的预期， 并不会限制具体是如何实现。
+微架构就是整个流水线的设计，包括前端和后端具体的设计与实现， 由芯片厂商自行开发。
+CS152 课程 CS152 课程笔记</description></item><item><title>ARMv8 基础</title><link>https://wangloo.github.io/posts/arch/armv8/introduce/</link><pubDate>Tue, 09 May 2023 21:19:01 +0800</pubDate><guid>https://wangloo.github.io/posts/arch/armv8/introduce/</guid><description>ARMv8 与 ARMv7 相比的改动 指令集： 新增 A64 指令集， 但也兼容原来的 A32 指令集 权限等级： AArch64 下新增 EL0-EL3 异常等级，对应 V7 的特权等级 通用寄存器：31 个通用寄存器，V7 15 个 虚拟地址长度：64 位的地址长度，理论支持 256TB 的寻址范围 关于 Spsel 寄存器的使用 linux 内核里，内核（EL1）和用户态（EL0）都使用各自的栈空间，即 spsel 始终为 1。 这种情况下，当内核里时，sp_el0 是可以复用的寄存器。进入内核前保存原值，然后将其保存当前进程 task_strcut 结构体的地址。因为内核中经常会调用 current 宏，这时可以快很多。
+atf 中，在 EL3 用 sp_el0 作为运行时栈空间，而 sp_el3 保存一个重要结构上下文的地址。在进入 EL3 时，系统会自动切换到 spsel=1，即 sp_el3，此时 （1）保存当前的上下文到 sp_el3 （2）切换到 sp_el0 当作 c 调用栈 看起来好像是反过来，我能想到的原因是：
+ATF 在 ELF 如果用 sp_el0 指向结构体，在外面有可能被破坏？而用 sp_el3 在外面不会被动 https://developer.</description></item></channel></rss>
