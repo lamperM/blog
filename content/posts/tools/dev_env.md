@@ -104,6 +104,7 @@ sudo apt install fzf
 sudo apt install zsh
 sudo apt install cmake # low version?
 sudo apt install tldr
+sudo apt install coreutils # tar包含在其中
 
 # CLI 代码高亮
 sudo pip3 install pygments

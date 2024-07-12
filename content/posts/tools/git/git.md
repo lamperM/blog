@@ -198,7 +198,7 @@ git clone -b <branch> <shortname> <url>
 git clone <shortname> <url> <dirname>
 ```
 
-{{< notice note >}}
+{{< notice note >}}``
 clone或者fetch会将历史都下载到本地，内容可能很大。
 **使用`--depth`参数只克隆最近几次commit的内容**，减少下载的时间。
 ```bash
@@ -208,6 +208,12 @@ git clone <url> --depth=1 # Clone最近一次提交only
 
 {{< /notice >}}
 
+## 分支操作
+
+```sh
+# 创建远程分支关联的本地分支，假设已经存在origin/v5.10
+git checkout v5.10
+```
 
 ## 子模块: submodule
 
