@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=/css/syntax_pastie.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Zephry：编译</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e9%85%8d%e7%bd%ae aria-label=配置>配置</a></li><li><a href=#%e7%bc%96%e8%af%91%e5%b9%b6%e5%9c%a8qemu-x86%e4%b8%8a%e4%bb%bf%e7%9c%9f%e8%bf%90%e8%a1%8c-hello-world aria-label="编译并在qemu-x86上仿真运行 hello-world">编译并在qemu-x86上仿真运行 hello-world</a></li><li><a href=#ref aria-label=Ref>Ref</a></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Zephry：编译</div></header><h2 id=配置>配置</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 下载源代码</span>
+</span></span><span class=line><span class=cl>git clone https://gitee.com/coollh/zephyr.git
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 下载SDK</span>
+</span></span><span class=line><span class=cl>wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.8/zephyr-sdk-0.16.8_linux-x86_64.tar.xz
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 进入 sdk 目录，setup</span>
+</span></span><span class=line><span class=cl>tar xvf zephyr-sdk-0.16.8_linux-x86_64.tar.xz 
+</span></span><span class=line><span class=cl><span class=nb>cd</span> zephyr-sdk-0.16.8/
+</span></span><span class=line><span class=cl>./setup.sh
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 加入环境变量到 zephyr-env.sh</span>
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>ZEPHYR_GCC_VARIANT</span><span class=o>=</span>zephyr
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>ZEPHYR_SDK_INSTALL_DIR</span><span class=o>=</span>../zephyr-sdk-0.16.8   <span class=c1>## Zephyr SDK 安装路径</span>
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>ZEPHYR_BASE</span><span class=o>=</span>. <span class=c1>## Zephyr 源码路径</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># source 环境变量文件</span>
+</span></span><span class=line><span class=cl><span class=nb>source</span> zephyr-env.sh
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 安装依赖的库</span>
+</span></span><span class=line><span class=cl>pip3 install --user -r ~/zephyr/scripts/requirements.txt
+</span></span></code></pre></div><h2 id=编译并在qemu-x86上仿真运行-hello-world>编译并在qemu-x86上仿真运行 hello-world</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl><span class=nb>cd</span> zephyr/samples/hello_world/
+</span></span><span class=line><span class=cl>mkcd build
+</span></span><span class=line><span class=cl>cmake -GNinja -DBOARD<span class=o>=</span>qemu_x86 ..
+</span></span><span class=line><span class=cl>ninja <span class=c1># build</span>
+</span></span><span class=line><span class=cl>ninja run <span class=c1># build and run</span>
+</span></span></code></pre></div><h2 id=ref>Ref</h2><ul><li><a href=https://blog.bruceou.cn/2020/09/2-zephyr-compilation-environment-setup-linux/237/>《嵌入式系统 – Zephyr开发笔记》 第2章 Zephyr 编译环境搭建（Linux） - BruceOu的博客</a></li></ul></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2024-07-29T19:28:12, Lastmod: 2024-07-29T21:58:50</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>
