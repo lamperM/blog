@@ -52,6 +52,41 @@ M1 --- M2 --- M3    ===>     M1 --- M2 --- M3 --- M4
 因为此时merge需要借助三个 commit(main, dev, 公共祖先)，这种操作就叫做 three-way merge。
 
 
+## 检出: Checkout
+
+> ps: 就不能想出更易懂的名词吗？非得用一个“检出”？
+
+checkout是一个非常综合的命令，其后面既可以接 分支名、commitid、文件。其实也很难用一个词概括它的行为吧。
+
+### 初版:  `checkout <file>`
+我感觉checkout最初的功能是+文件名，使工作区恢复为HEAD的状态，但不影响暂存区（这是和reset命令不同的地方）。==> 通俗来说，该文件先回到HEAD，再应用暂存区的修改 ==> 再通俗点，放弃工作区中没有被暂存的改动。
+
+这种case下的checkout命令等价于 `git restore`。
+
+### 扩展1:  `checkout <commit>`
+扩展基础功能，`git checkout <commit>` 将仓库管理的所有文件都恢复到commit的状态。**也是只影响在工作区中的改动，这个和初版相同**。如果commit是HEAD以前的，那么此时如何标记分支状态？ ==> 用一个特殊的detached状态来标定。
+
+### 特殊case1: `checkout <branch>`
+分支切换，跟扩展1不同，不会影响工作区的改动，仅仅是切换分支，如果有文件冲突，执行就会失败。
+
+这种case下的checkout命令等价于 `git switch`
+
+## 特殊case2: `checkout <commit> <file>`
+特殊的case，`git checkout <commmit> <file>`，如果指定了commit，就不再只影响工作区了，也会影响暂存区。
+
+效果等同于`git reset --hard <file>`。
+**这个貌似也太难理解了，只能记住了。**
+
+## 使用技巧
+太麻烦了，还是少用git checkout。git也是感觉到了，所以才新建了restore和switch命令来代替。只是为了兼容不得不继续支持以前的功能。总结来说：
+1. 首先暂时切换到某个commit，用checkout detached state还是比较方便的。
+2. 分支切换和新建，也习惯了，继续用也行。
+3. 至于放弃某个文件工作区的状态，还是用新的restore命令吧。checkout万一用错了（初版和特殊case2），会造成暂存区内容的丢失。
+
+
+
+
+
 ## 变基: rebase
 
 rebase 命令需要指定一个**基准分支**，`git rebase <base-branch>`，
