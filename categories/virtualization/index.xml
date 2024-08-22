@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Virtualization on BLOG</title><link>https://wangloo.github.io/categories/virtualization/</link><description>Recent content in Virtualization on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 08 Aug 2024 19:28:12 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/categories/virtualization/index.xml" rel="self" type="application/rss+xml"/><item><title>虚拟化：中断虚拟化</title><link>https://wangloo.github.io/posts/virtualization/intr_virt/</link><pubDate>Thu, 08 Aug 2024 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/virtualization/intr_virt/</guid><description>探究中断虚拟化的方案，按照 GIC 的不同版本架构进行说明。
+带有 Hypervisor 的架构来说，如何处理外部物理设备的中断就变得更加复杂：
+有些中断是给 Hypervisor 处理的 有些中断是给 VM 处理的 甚至，当分配给这个 VM 处理的中断到来的时候，这个 VM 没有被调度 在引入虚拟化之后，这些条件都是需要被考虑的。所以说，在设计中断虚拟化时，我们要从以下两个部分进行实现。分块也更加便于我们逐步理解中断虚拟化实现中软件/硬件的任务界限划分。
+一套能在 EL2 处理 Hypervisor 中断的机制 一套能将部分中断映射转发到 VM 的机制 中断虚拟化的历史 知道历史才能更加清楚一个技术的巧妙。GIC 硬件支持虚拟化是从 GICv2 开始引入的，GICv3 又增加了和虚拟化相关的更多新功能。
+软件做&amp;ndash;性能太差/实现太复杂&amp;ndash;硬件做
+中断虚拟化的相关配置 vFIQ/vIRQ 是新加入的两条中断线，也就是说现在连接到 CPU 上共有四条中断线（IRQ/FIQ/vIRQ/vFIQ）。vFIQ/vIRQ 的特点是只能在 EL0 和 EL1 触发，而且只能在 NSecure 状态触发。
+To recap, support for virtualization in Secure state was introduced in Armv8.4A. For a virtual interrupt to be signaled in Secure EL0/1, Secure EL2 needs to be supported and enabled.</description></item><item><title>虚拟化：Virtio</title><link>https://wangloo.github.io/posts/os/virt/virtio/</link><pubDate>Fri, 19 Apr 2024 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/os/virt/virtio/</guid><description>从最近开始接触虚拟化的基础知识，一直不太理解设备虚拟化的理念。然而通过最近对 Virtio 的了解，可能稍微有一些见解，在这里记录下。
+Virtio 是干啥的 虚拟化中，设备的虚拟化是很复杂、很关键的一点，Linux 代码中大量的设备驱动，如何对这些驱动的行为进行模拟成为了一个很难解决的问题。 Virtio 提供了一种高性能的设备虚拟化方案。
+以前的设备虚拟化为什么性能低 最早，虚拟化技术刚刚提出的时候，实现虚拟化的是的方案是&amp;ndash;设备“全虚拟化”。关键的点是：VM 不必知道自己运行在 Hypervisor 之上，也不用修改任何的代码，直接就能实现设备的访问。
+实现这种方案的关键是：对所有的设备访问都要 Trap 到 Hypervisor 处理。OS 和设备交互的方式是 MMIO 和中断，以串口举例，我们要发送一个字符到串口中，就需要不断的读 busy 寄存器，直到空闲然后写 data 寄存器。
+不能直接把设备 MMIO 地址给 VM 操作，因为 hypervisor 之上运行着多个 VM，他们不知道其他人是否在占用设备，会造成冲突。 所以唯一的方法就是：每一次 MMIO 的访问，都 Trap 到 Hypervisor，它能看到所有 VM 的状态，在合适的时候将这个请求转发给物理设备。中断也是如此，Hypervisor 拦截所有的中断。 这种做法显然造成了频繁的 Trap，性能很差！！
+Virtio 如何提高性能 Virtio 的设计原则是：放弃一部分设备全虚拟化的优势，VM 得知道自己运行在 Hypervisor 之上。然后，在 VM 上运行“改良过的”设备驱动，来提高性能。
+这个改良做的是什么呢？
+Virtio 分为前后端，前端在 VM 中，替换原来的设备驱动。 后端在 Hypervisor/HostVM 中，相当于是原来对物理设备实际操作的代码。 原来的全虚拟化，不是每次寄存器操作都要 Trap 吗？现在的方案是，</description></item></channel></rss>

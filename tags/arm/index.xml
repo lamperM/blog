@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ARM on BLOG</title><link>https://wangloo.github.io/tags/arm/</link><description>Recent content in ARM on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Thu, 08 Aug 2024 19:28:12 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/arm/index.xml" rel="self" type="application/rss+xml"/><item><title>虚拟化：中断虚拟化</title><link>https://wangloo.github.io/posts/virtualization/intr_virt/</link><pubDate>Thu, 08 Aug 2024 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/virtualization/intr_virt/</guid><description>探究中断虚拟化的方案，按照 GIC 的不同版本架构进行说明。
+带有 Hypervisor 的架构来说，如何处理外部物理设备的中断就变得更加复杂：
+有些中断是给 Hypervisor 处理的 有些中断是给 VM 处理的 甚至，当分配给这个 VM 处理的中断到来的时候，这个 VM 没有被调度 在引入虚拟化之后，这些条件都是需要被考虑的。所以说，在设计中断虚拟化时，我们要从以下两个部分进行实现。分块也更加便于我们逐步理解中断虚拟化实现中软件/硬件的任务界限划分。
+一套能在 EL2 处理 Hypervisor 中断的机制 一套能将部分中断映射转发到 VM 的机制 中断虚拟化的历史 知道历史才能更加清楚一个技术的巧妙。GIC 硬件支持虚拟化是从 GICv2 开始引入的，GICv3 又增加了和虚拟化相关的更多新功能。
+软件做&amp;ndash;性能太差/实现太复杂&amp;ndash;硬件做
+中断虚拟化的相关配置 vFIQ/vIRQ 是新加入的两条中断线，也就是说现在连接到 CPU 上共有四条中断线（IRQ/FIQ/vIRQ/vFIQ）。vFIQ/vIRQ 的特点是只能在 EL0 和 EL1 触发，而且只能在 NSecure 状态触发。
+To recap, support for virtualization in Secure state was introduced in Armv8.4A. For a virtual interrupt to be signaled in Secure EL0/1, Secure EL2 needs to be supported and enabled.</description></item></channel></rss>

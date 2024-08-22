@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Virtio on BLOG</title><link>https://wangloo.github.io/tags/virtio/</link><description>Recent content in Virtio on BLOG</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Fri, 19 Apr 2024 19:28:12 +0800</lastBuildDate><atom:link href="https://wangloo.github.io/tags/virtio/index.xml" rel="self" type="application/rss+xml"/><item><title>虚拟化：Virtio</title><link>https://wangloo.github.io/posts/os/virt/virtio/</link><pubDate>Fri, 19 Apr 2024 19:28:12 +0800</pubDate><guid>https://wangloo.github.io/posts/os/virt/virtio/</guid><description>从最近开始接触虚拟化的基础知识，一直不太理解设备虚拟化的理念。然而通过最近对 Virtio 的了解，可能稍微有一些见解，在这里记录下。
+Virtio 是干啥的 虚拟化中，设备的虚拟化是很复杂、很关键的一点，Linux 代码中大量的设备驱动，如何对这些驱动的行为进行模拟成为了一个很难解决的问题。 Virtio 提供了一种高性能的设备虚拟化方案。
+以前的设备虚拟化为什么性能低 最早，虚拟化技术刚刚提出的时候，实现虚拟化的是的方案是&amp;ndash;设备“全虚拟化”。关键的点是：VM 不必知道自己运行在 Hypervisor 之上，也不用修改任何的代码，直接就能实现设备的访问。
+实现这种方案的关键是：对所有的设备访问都要 Trap 到 Hypervisor 处理。OS 和设备交互的方式是 MMIO 和中断，以串口举例，我们要发送一个字符到串口中，就需要不断的读 busy 寄存器，直到空闲然后写 data 寄存器。
+不能直接把设备 MMIO 地址给 VM 操作，因为 hypervisor 之上运行着多个 VM，他们不知道其他人是否在占用设备，会造成冲突。 所以唯一的方法就是：每一次 MMIO 的访问，都 Trap 到 Hypervisor，它能看到所有 VM 的状态，在合适的时候将这个请求转发给物理设备。中断也是如此，Hypervisor 拦截所有的中断。 这种做法显然造成了频繁的 Trap，性能很差！！
+Virtio 如何提高性能 Virtio 的设计原则是：放弃一部分设备全虚拟化的优势，VM 得知道自己运行在 Hypervisor 之上。然后，在 VM 上运行“改良过的”设备驱动，来提高性能。
+这个改良做的是什么呢？
+Virtio 分为前后端，前端在 VM 中，替换原来的设备驱动。 后端在 Hypervisor/HostVM 中，相当于是原来对物理设备实际操作的代码。 原来的全虚拟化，不是每次寄存器操作都要 Trap 吗？现在的方案是，</description></item></channel></rss>
