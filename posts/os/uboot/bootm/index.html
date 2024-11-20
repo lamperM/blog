@@ -1,0 +1,90 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=/css/syntax_pastie.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>UBoot: boom 命令的执行流</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"></div></div><script src=/js/fuse.js></script>
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>UBoot: boom 命令的执行流</div></header><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=c1>// bootm 命令的入口
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>int</span> <span class=nf>do_bootm</span><span class=p>(</span><span class=n>cmd_tbl_t</span> <span class=o>*</span><span class=n>cmdtp</span><span class=p>,</span> <span class=kt>int</span> <span class=n>flag</span><span class=p>,</span> <span class=kt>int</span> <span class=n>argc</span><span class=p>,</span> <span class=kt>char</span> <span class=o>*</span> <span class=k>const</span> <span class=n>argv</span><span class=p>[])</span>
+</span></span><span class=line><span class=cl>    <span class=o>==&gt;</span> <span class=c1>// CONFIG_NEEDS_MANUAL_RELOC 这个选项没开，暂时不研究
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>    <span class=o>==&gt;</span> <span class=k>if</span> <span class=p>(</span><span class=err>有其他的子命令，除了</span><span class=sc>&#39;:&#39;</span><span class=p>,</span><span class=sc>&#39;#&#39;</span><span class=p>)</span> <span class=c1>// 这里我们也一般不加
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=o>==&gt;</span> <span class=n>do_bootm_subcommand</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=o>==&gt;</span> <span class=n>state</span> <span class=o>|=</span> <span class=n>BOOTM_STATE_FINDOTHER</span> <span class=c1>// 这个 flag 是一定set的
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=o>==&gt;</span> <span class=n>state</span> <span class=o>|=</span> <span class=n>BOOTM_STATE_RAMDISK</span>   <span class=c1>// ifdef CONFIG_SYS_BOOT_RAMDISK_HIGH，
+</span></span></span><span class=line><span class=cl><span class=c1></span>                                       <span class=c1>// 这个是比较关键的，设置 ramdisk 搬移到高地址的 FLAG
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=o>==&gt;</span> <span class=k>return</span> <span class=n>do_bootm_states</span><span class=p>(</span><span class=n>cmdtp</span><span class=p>,</span> <span class=n>flag</span><span class=p>,</span> <span class=n>argc</span><span class=p>,</span> <span class=n>argv</span><span class=p>,</span> <span class=n>state</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>do_bootm_states</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=o>==&gt;</span> <span class=n>bootm_find_other</span>
+</span></span><span class=line><span class=cl>        <span class=o>==&gt;</span> <span class=n>bootm_find_images</span>
+</span></span><span class=line><span class=cl>            <span class=c1>// 设置 images.rd_start, images.rd_end
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=o>==&gt;</span> <span class=n>boot_get_ramdisk</span><span class=p>(</span><span class=n>argc</span><span class=p>,</span> <span class=n>argv</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>images</span><span class=p>,</span> <span class=n>IH_INITRD_ARCH</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>			                        <span class=o>&amp;</span><span class=n>images</span><span class=p>.</span><span class=n>rd_start</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>images</span><span class=p>.</span><span class=n>rd_end</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// 如果启用了 重定位 的config，就会做RAMDISK的搬运。
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// 搬运完成后，设置相应的环境变量，最后会传递给内核，内核启动时就从这里找
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=o>==&gt;</span> <span class=n>boot_ramdisk_high</span><span class=p>()</span> <span class=c1>// ifdef CONFIG_SYS_BOOT_RAMDISK_HIGH，
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=o>==&gt;</span> <span class=n>env_set_hex</span><span class=p>(</span><span class=s>&#34;initrd_start&#34;</span><span class=p>,</span> <span class=n>images</span><span class=o>-&gt;</span><span class=n>initrd_start</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	    <span class=n>env_set_hex</span><span class=p>(</span><span class=s>&#34;initrd_end&#34;</span><span class=p>,</span> <span class=n>images</span><span class=o>-&gt;</span><span class=n>initrd_end</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=o>==&gt;</span> <span class=n>boot_selected_os</span><span class=p>()</span> <span class=c1>// never return
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 这个函数的功能是 赋值 images.rd_start，即ramdisk的位置
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>int</span> <span class=n>boot_get_ramdisk</span><span class=p>(</span><span class=kt>int</span> <span class=n>argc</span><span class=p>,</span> <span class=kt>char</span> <span class=o>*</span> <span class=k>const</span> <span class=n>argv</span><span class=p>[],</span> <span class=n>bootm_headers_t</span> <span class=o>*</span><span class=n>images</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>		<span class=kt>uint8_t</span> <span class=n>arch</span><span class=p>,</span> <span class=n>ulong</span> <span class=o>*</span><span class=n>rd_start</span><span class=p>,</span> <span class=n>ulong</span> <span class=o>*</span><span class=n>rd_end</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 他的逻辑好像是，kernel 后面就是 ramdisk 镜像
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=o>==&gt;</span> <span class=n>android_image_get_ramdisk</span><span class=p>((</span><span class=kt>void</span> <span class=o>*</span><span class=p>)</span><span class=n>images</span><span class=o>-&gt;</span><span class=n>os</span><span class=p>.</span><span class=n>start</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>rd_data</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>rd_len</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=o>==&gt;</span> <span class=o>*</span><span class=n>rd_data</span> <span class=o>=</span> <span class=p>(</span><span class=kt>unsigned</span> <span class=kt>long</span><span class=p>)</span><span class=n>hdr</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=o>==&gt;</span> <span class=o>*</span><span class=n>rd_data</span> <span class=o>+=</span> <span class=n>hdr</span><span class=o>-&gt;</span><span class=n>page_size</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=o>==&gt;</span> <span class=o>*</span><span class=n>rd_data</span> <span class=o>+=</span> <span class=n>ALIGN</span><span class=p>(</span><span class=n>hdr</span><span class=o>-&gt;</span><span class=n>kernel_size</span><span class=p>,</span> <span class=n>hdr</span><span class=o>-&gt;</span><span class=n>page_size</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=o>==&gt;</span> <span class=o>*</span><span class=n>rd_len</span> <span class=o>=</span> <span class=n>hdr</span><span class=o>-&gt;</span><span class=n>ramdisk_size</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 这个函数的功能是赋值 images.os 的各个成员
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>int</span> <span class=n>bootm_find_os</span><span class=p>(</span><span class=n>cmd_tbl_t</span> <span class=o>*</span><span class=n>cmdtp</span><span class=p>,</span> <span class=kt>int</span> <span class=n>flag</span><span class=p>,</span> <span class=kt>int</span> <span class=n>argc</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>			 <span class=kt>char</span> <span class=o>*</span> <span class=k>const</span> <span class=n>argv</span><span class=p>[])</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 关键成员的来源，images.os.start 就是 Kernel Image Header的起始地址，
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// 会被用于加载
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=o>==&gt;</span> <span class=n>os_hdr</span> <span class=o>=</span> <span class=n>boot_get_kernel</span><span class=p>(</span><span class=o>&amp;</span><span class=n>images</span><span class=p>.</span><span class=n>os</span><span class=p>.</span><span class=n>image_start</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=o>==&gt;</span> <span class=n>images</span><span class=p>.</span><span class=n>os</span><span class=p>.</span><span class=n>start</span> <span class=o>=</span> <span class=n>map_to_sysmem</span><span class=p>(</span><span class=n>os_hdr</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm> * boot_get_kernel - find kernel image
+</span></span></span><span class=line><span class=cl><span class=cm> * @os_data: pointer to a ulong variable, will hold os data start address
+</span></span></span><span class=line><span class=cl><span class=cm> * @os_len: pointer to a ulong variable, will hold os data length
+</span></span></span><span class=line><span class=cl><span class=cm> *
+</span></span></span><span class=line><span class=cl><span class=cm> * boot_get_kernel() tries to find a kernel image, verifies its integrity
+</span></span></span><span class=line><span class=cl><span class=cm> * and locates kernel data. 得到 Kernel 镜像的地址
+</span></span></span><span class=line><span class=cl><span class=cm> *
+</span></span></span><span class=line><span class=cl><span class=cm> * returns:
+</span></span></span><span class=line><span class=cl><span class=cm> *     pointer to image header if valid image was found, plus kernel start
+</span></span></span><span class=line><span class=cl><span class=cm> *     address and length, otherwise NULL
+</span></span></span><span class=line><span class=cl><span class=cm> */</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=o>*</span><span class=nf>boot_get_kernel</span><span class=p>(</span><span class=n>cmd_tbl_t</span> <span class=o>*</span><span class=n>cmdtp</span><span class=p>,</span> <span class=kt>int</span> <span class=n>flag</span><span class=p>,</span> <span class=kt>int</span> <span class=n>argc</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>				   <span class=kt>char</span> <span class=o>*</span> <span class=k>const</span> <span class=n>argv</span><span class=p>[],</span> <span class=n>bootm_headers_t</span> <span class=o>*</span><span class=n>images</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>				   <span class=n>ulong</span> <span class=o>*</span><span class=n>os_data</span><span class=p>,</span> <span class=n>ulong</span> <span class=o>*</span><span class=n>os_len</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1>// image header 从 bootm 的第一个参数拿
+</span></span></span><span class=line><span class=cl><span class=c1>// 校验之后，赋值给 os_data，以真正的镜像起始地址
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 这个函数比较重要，单独拿出来说一下
+</span></span></span><span class=line><span class=cl><span class=c1>// 函数的功能就是加载ramdisk到高地址
+</span></span></span><span class=line><span class=cl><span class=c1>// 参数 rd_data: ramdisk 现在所在的内存地址
+</span></span></span><span class=line><span class=cl><span class=c1>// 参数 initrd_start: ramdisk 可能被relocation后的新 高地址
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>boot_ramdisk_high</span><span class=p>(</span><span class=n>ulong</span> <span class=n>rd_data</span><span class=p>,</span> <span class=n>ulong</span> <span class=n>rd_len</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>		  <span class=n>ulong</span> <span class=o>*</span><span class=n>initrd_start</span><span class=p>,</span> <span class=n>ulong</span> <span class=o>*</span><span class=n>initrd_end</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// initrd_high 的含义是：重定位的最高地址。
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// 环境变量里可以设置成 ~0，代表禁止 重定位，这是从运行参数中禁止重定位的一种方法！
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=o>==&gt;</span> <span class=k>if</span> <span class=n>env_get</span><span class=p>(</span><span class=s>&#34;initrd_high&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>initrd_high</span> <span class=err>从</span> <span class=n>env里取</span> <span class=o>==</span> <span class=o>~</span><span class=mi>0</span><span class=p>)</span> <span class=c1>// 设置 禁止重定位 标志
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=o>==&gt;</span> <span class=k>else</span> <span class=n>initrd_high</span> <span class=o>=</span> <span class=n>bootm</span> <span class=err>能访问的地址上限</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// 如果允许重定位，则动态分配一个地址，进行内存拷贝
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=o>==&gt;</span> <span class=k>if</span> <span class=o>!</span><span class=err>禁止重定位</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 满足 initrd_high 的限制条件下，动态申请一个地址，
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=o>==&gt;</span> <span class=o>*</span><span class=n>initrd_start</span> <span class=o>=</span> <span class=p>(</span><span class=n>ulong</span><span class=p>)</span><span class=n>lmb_alloc_base</span><span class=p>(</span><span class=n>lmb</span><span class=p>,</span> <span class=n>rd_len</span><span class=p>,</span> <span class=mh>0x1000</span><span class=p>,</span> <span class=n>initrd_high</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 重定位 的内存拷贝
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=o>==&gt;</span> <span class=n>memmove_wd</span><span class=p>((</span><span class=kt>void</span> <span class=o>*</span><span class=p>)</span><span class=o>*</span><span class=n>initrd_start</span><span class=p>,</span> <span class=p>(</span><span class=kt>void</span> <span class=o>*</span><span class=p>)</span><span class=n>rd_data</span><span class=p>,</span> <span class=n>rd_len</span><span class=p>,</span> <span class=n>CHUNKSZ</span><span class=p>);</span>
+</span></span></code></pre></div><p>TODO：打包的时候，在哪里确定 RAMDISK 紧跟在 kernel 的后面？</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2024-09-06T19:28:12, Lastmod: 2024-11-20T21:14:21</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>

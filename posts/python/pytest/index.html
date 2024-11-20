@@ -1,0 +1,49 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=/css/syntax_pastie.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Python：Pytest框架学习</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#config aria-label=Config>Config</a></li><li><a href=#marker aria-label=Marker>Marker</a><ul><li><a href=#%e4%bd%bf%e7%94%a8-marker-%e5%af%b9%e7%94%a8%e4%be%8b%e5%88%86%e7%b1%bb aria-label="使用 Marker 对用例分类">使用 Marker 对用例分类</a></li><li><a href=#%e4%bd%bf%e7%94%a8-marker-%e9%85%8d%e7%bd%ae-skip-%e7%94%a8%e4%be%8b aria-label="使用 Marker 配置 Skip 用例">使用 Marker 配置 Skip 用例</a></li></ul></li><li><a href=#%e6%b5%8b%e8%af%95%e5%87%bd%e6%95%b0%e7%9a%84%e5%8f%82%e6%95%b0 aria-label=测试函数的参数>测试函数的参数</a></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Python：Pytest框架学习</div></header><h2 id=config>Config</h2><h2 id=marker>Marker</h2><h3 id=使用-marker-对用例分类>使用 Marker 对用例分类</h3><p>Maker 帮助我们对用例进行分类，区分不同的场景和平台。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 使用 @pytest.mark.smoke 标记一个冒烟测试</span>
+</span></span><span class=line><span class=cl><span class=nd>@pytest</span><span class=o>.</span><span class=n>mark</span><span class=o>.</span><span class=n>smoke</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>test_login</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=o>...</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 使用 @pytest.mark.integration 标记一个集成测试</span>
+</span></span><span class=line><span class=cl><span class=nd>@pytest</span><span class=o>.</span><span class=n>mark</span><span class=o>.</span><span class=n>integration</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>TestPaymentSystem</span><span class=p>:</span>
+</span></span></code></pre></div><p>一个用例支持有多个 Marker，比如说某个用例可能 smoke 和 dailybuild 都要跑，就可以为它指定两个 maker。</p><p>Pytest 运行时，通过 <code>-m</code>/ <code>--maker</code> 参数来指定本次测试的 marker 表达式。支持与或非的组合。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 执行所有标记为 smoke 的测试</span>
+</span></span><span class=line><span class=cl>pytest -m smoke
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 执行标记为 smoke 或 integration 的测试</span>
+</span></span><span class=line><span class=cl>pytest -m <span class=s2>&#34;smoke or integration&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 执行既非 slow 也非 integration 的测试</span>
+</span></span><span class=line><span class=cl>pytest -m <span class=s2>&#34;not slow and not integration&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 运行同时带有 unit 和 integration 的测试</span>
+</span></span><span class=line><span class=cl>pytest -m <span class=s2>&#34;unit and integration&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 复杂组合筛选</span>
+</span></span><span class=line><span class=cl>pytest -m <span class=s2>&#34;(system or integration) and not unit&#34;</span>  <span class=c1>#运行system或integration，且不运行带有unit的测试</span>
+</span></span></code></pre></div><p>代码中也可以修改 Marker。比如说在 config 里加了一个属性，有这个属性的情况下就自动加上一个 marker，这样就不用在运行命令参数里写两遍了。</p><h3 id=使用-marker-配置-skip-用例>使用 Marker 配置 Skip 用例</h3><p>分类按理说用 marker 正向的指定就行，但是 Pytest 也提供了反向过滤的方法，更加的灵活。特别是<code>skipif</code> 我觉得更加适合于对运行时变量的条件过滤。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># @pytest.mark.skip(跳过原因)</span>
+</span></span><span class=line><span class=cl><span class=c1># @pytest.mark.skipif(跳过条件,跳过原因)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 示例</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>TestDemo</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>workage2</span> <span class=o>=</span> <span class=mi>5</span>
+</span></span><span class=line><span class=cl>    <span class=n>workage3</span> <span class=o>=</span> <span class=mi>20</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nd>@pytest</span><span class=o>.</span><span class=n>mark</span><span class=o>.</span><span class=n>skip</span><span class=p>(</span><span class=n>reason</span><span class=o>=</span><span class=s2>&#34;无理由跳过&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>test_demo1</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;我被跳过了&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nd>@pytest</span><span class=o>.</span><span class=n>mark</span><span class=o>.</span><span class=n>skipif</span><span class=p>(</span><span class=n>workage2</span><span class=o>&lt;</span><span class=mi>10</span><span class=p>,</span><span class=n>reason</span><span class=o>=</span><span class=s2>&#34;工作经验少于10年跳过&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>test_demo2</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;由于经验不足，我被跳过了&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nd>@pytest</span><span class=o>.</span><span class=n>mark</span><span class=o>.</span><span class=n>skipif</span><span class=p>(</span><span class=n>workage3</span><span class=o>&lt;</span><span class=mi>10</span><span class=p>,</span><span class=n>reason</span><span class=o>=</span><span class=s2>&#34;工作经验少于10年跳过&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>test_demo3</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;由于经验过关，我被执行了&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>test_demo3</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;我没有跳过条件，所以我被执行了&#34;</span><span class=p>)</span>
+</span></span></code></pre></div><h2 id=测试函数的参数>测试函数的参数</h2><p>在使用中我看到每个测试函数的参数都不是固定的，而且这种自动化的测试框架找不到每个函数的调用点，🤔 这些参数是怎么就可以随便指定，在传入的时候又能正确呢？</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2024-10-06T19:28:12, Lastmod: 2024-11-20T21:14:21</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>
