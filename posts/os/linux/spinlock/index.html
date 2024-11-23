@@ -1,0 +1,55 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=/css/syntax_pastie.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>Linux spinlock 实现分析（ARM）</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e8%83%8c%e6%99%af aria-label=背景>背景</a></li><li><a href=#%e5%9f%ba%e7%a1%80%e7%ae%97%e6%b3%95 aria-label=基础算法>基础算法</a></li><li><a href=#smp_mb aria-label=smp_mb()>smp_mb()</a></li><li><a href=#dsb_sev aria-label=dsb_sev()>dsb_sev()</a></li><li><a href=#spinlock-%e7%9a%84%e5%8f%91%e5%b1%95 aria-label="spinlock 的发展">spinlock 的发展</a></li></ul></div></details></div></div></div><script src=/js/fuse.js></script>
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>Linux spinlock 实现分析（ARM）</div></header><h2 id=背景>背景</h2><p>本文介绍 Linux 内核【票据自旋锁】的实现逻辑，票据自旋锁是为了解决原始自旋锁的公平问题。具体来说，因为有 cache 的存在，刚释放锁的 CPU 会比其他 CPU 更快到达获取锁的路径（可能不用访存），进而更有可能获得锁。</p><p>票据自旋锁大概的逻辑就是：给每个锁拍号，即便你先来的，锁也只分配给下一个被叫到号的 CPU。</p><h2 id=基础算法>基础算法</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>typedef</span> <span class=k>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=k>union</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=n>u32</span> <span class=n>slock</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=k>struct</span> <span class=n>__raw_tickets</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=n>u16</span> <span class=n>next</span><span class=p>;</span>  <span class=c1>// 每个CPU的local变量中，指代自己的号
+</span></span></span><span class=line><span class=cl><span class=c1></span>			<span class=n>u16</span> <span class=n>owner</span><span class=p>;</span> <span class=c1>// 当前叫到的号，每次锁更新需要更新该值
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=p>}</span> <span class=n>tickets</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=n>arch_spinlock_t</span><span class=p>;</span>
+</span></span></code></pre></div><p>汇编中对 lock->slock 进行原子加，实际上是操作的 lock->tickets->next 成员（低地址）。</p><p>这个值+1 成功并不代表获得了锁，只表明你取了一个号。每个 CPU 自己的号保存到 lockval 变量中，叫号机下一个号的数字存储在原子变量 lock->slock 中，这个变量必须是原子操作的，保证每个 CPU 叫到的号都非重复。</p><p>下面的 while 循环就是叫号的过程，owner 就是当前叫到的号，每个 CPU 和自己本地存储的号对比，如果相等说明到了自己，可以拥有锁，继续往下执行。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>static</span> <span class=kr>inline</span> <span class=kt>void</span> <span class=nf>arch_spin_lock</span><span class=p>(</span><span class=n>arch_spinlock_t</span> <span class=o>*</span><span class=n>lock</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>unsigned</span> <span class=kt>long</span> <span class=n>tmp</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>u32</span> <span class=n>newval</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>arch_spinlock_t</span> <span class=n>lockval</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>prefetchw</span><span class=p>(</span><span class=o>&amp;</span><span class=n>lock</span><span class=o>-&gt;</span><span class=n>slock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>__asm__</span> <span class=n>__volatile__</span><span class=p>(</span>
+</span></span><span class=line><span class=cl><span class=s>&#34;1:	ldrex	%0, [%3]</span><span class=se>\n</span><span class=s>&#34;</span>
+</span></span><span class=line><span class=cl><span class=s>&#34;	add	%1, %0, %4</span><span class=se>\n</span><span class=s>&#34;</span>
+</span></span><span class=line><span class=cl><span class=s>&#34;	strex	%2, %1, [%3]</span><span class=se>\n</span><span class=s>&#34;</span>
+</span></span><span class=line><span class=cl><span class=s>&#34;	teq	%2, #0</span><span class=se>\n</span><span class=s>&#34;</span>
+</span></span><span class=line><span class=cl><span class=s>&#34;	bne	1b&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>:</span> <span class=s>&#34;=&amp;r&#34;</span> <span class=p>(</span><span class=n>lockval</span><span class=p>),</span> <span class=s>&#34;=&amp;r&#34;</span> <span class=p>(</span><span class=n>newval</span><span class=p>),</span> <span class=s>&#34;=&amp;r&#34;</span> <span class=p>(</span><span class=n>tmp</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=o>:</span> <span class=s>&#34;r&#34;</span> <span class=p>(</span><span class=o>&amp;</span><span class=n>lock</span><span class=o>-&gt;</span><span class=n>slock</span><span class=p>),</span> <span class=s>&#34;I&#34;</span> <span class=p>(</span><span class=mi>1</span> <span class=o>&lt;&lt;</span> <span class=n>TICKET_SHIFT</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=o>:</span> <span class=s>&#34;cc&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>while</span> <span class=p>(</span><span class=n>lockval</span><span class=p>.</span><span class=n>tickets</span><span class=p>.</span><span class=n>next</span> <span class=o>!=</span> <span class=n>lockval</span><span class=p>.</span><span class=n>tickets</span><span class=p>.</span><span class=n>owner</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=n>wfe</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>		<span class=n>lockval</span><span class=p>.</span><span class=n>tickets</span><span class=p>.</span><span class=n>owner</span> <span class=o>=</span> <span class=n>READ_ONCE</span><span class=p>(</span><span class=n>lock</span><span class=o>-&gt;</span><span class=n>tickets</span><span class=p>.</span><span class=n>owner</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>smp_mb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>static</span> <span class=kr>inline</span> <span class=kt>void</span> <span class=nf>arch_spin_unlock</span><span class=p>(</span><span class=n>arch_spinlock_t</span> <span class=o>*</span><span class=n>lock</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=n>smp_mb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>lock</span><span class=o>-&gt;</span><span class=n>tickets</span><span class=p>.</span><span class=n>owner</span><span class=o>++</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>dsb_sev</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h2 id=smp_mb>smp_mb()</h2><p>这是一个证明 smp_mb()意义的例子，多个 CPU 可能同时执行这段代码，
+屏障保证当一个 CPU 拿到锁后，其他 CPU 能够及时得到锁的最新状态，因为和预取的值是不同的。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=c1>// 多CPU同时执行这段代码
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>spin_lock</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>opt_share_vars</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>spin_unlock</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h2 id=dsb_sev>dsb_sev()</h2><p>当一个锁被释放，需要通知所有等待叫号的 CPU，每个 CPU 再看是不是轮到自己了。</p><p>思考：为什么不能定向唤醒到下一位等待者，不影响其他 wfe 的 CPU。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>static</span> <span class=kr>inline</span> <span class=kt>void</span> <span class=nf>dsb_sev</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>dsb</span><span class=p>(</span><span class=n>ishst</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>__asm__</span><span class=p>(</span><span class=n>SEV</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h2 id=spinlock-的发展>spinlock 的发展</h2><p>其他 CPU 循环死等 ==> 其他 CPU 可以 wfe 休眠，释放时唤醒 ==> 更加公平的票据自旋锁</p></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2024-08-18T10:51:49, Lastmod: 2024-11-23T10:45:07</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>
