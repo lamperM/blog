@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/style.css><link rel=stylesheet href=/css/syntax_pastie.css><link rel=stylesheet href=https://gcore.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><title>setvbuf: 更改文件缓冲区的行为</title></head><body><div id=app><div id=sideContainer class=side-container><div class=nav-link-list><div class="a-block nav-link-item"><a href=/posts>最近修改</a></div><div class="a-block nav-link-item"><a href=/categories>分类 Categories</a></div><div class="a-block nav-link-item"><a href=/tags>标签 Tags</a></div><div class="a-block nav-link-item"><a href=/index.xml>RSS Feed</a></div></div></div><div id=extraContainer class=extra-container><div class="a-block nav-link-item" href><div id=fastSearch><input id=searchInput placeholder="Press '/' to focus on me"><ul id=searchResults></ul></div></div><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"></div></div><script src=/js/fuse.js></script>
+<script src=/js/fastsearch.js></script><main class=container><article><header><div class=post-title>setvbuf: 更改文件缓冲区的行为</div></header><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm> * setbuf()和setvbuf()函数的实际意义在于：用户打开一个文件后，可以建立自己的文件缓冲区，
+</span></span></span><span class=line><span class=cl><span class=cm> * 而不必使用fopen()函数打开文件时设定的默认缓冲区。这样就可以让用户自己来控制缓冲区，
+</span></span></span><span class=line><span class=cl><span class=cm> * 包括改变缓冲区大小、定时刷新缓冲区、改变缓冲区类型、删除流中默认的缓冲区、为不带缓冲区的流开辟缓冲区等。
+</span></span></span><span class=line><span class=cl><span class=cm> */</span>
+</span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;stdio.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;unistd.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>while</span> <span class=p>(</span><span class=mi>1</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=cp>#if 0</span><span class=c>
+</span></span></span><span class=line><span class=cl><span class=c>    // 1. 默认行为
+</span></span></span><span class=line><span class=cl><span class=c>    // 检验stdout默认是基于行的缓冲，即输出道stdout的字符都会被缓冲，
+</span></span></span><span class=line><span class=cl><span class=c>    // 直到碰到一个换行符，或者buf满，才会被输出到屏幕上
+</span></span></span><span class=line><span class=cl><span class=c>    printf(&#34;Hello stdout&#34;);
+</span></span></span><span class=line><span class=cl><span class=c>    // stderr 模式是不缓冲的
+</span></span></span><span class=line><span class=cl><span class=c>    perror(&#34;Hello stderr&#34;);
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#if 0</span><span class=c>
+</span></span></span><span class=line><span class=cl><span class=c>    // 2. stdout添加换行后立马输出
+</span></span></span><span class=line><span class=cl><span class=c>    printf(&#34;Hello stdout\n&#34;);
+</span></span></span><span class=line><span class=cl><span class=c></span><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#if 1
+</span></span></span><span class=line><span class=cl><span class=cp></span>    <span class=c1>// 3. 更改stdout的默认缓冲行为，将line buffered修改为unbuffered
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>setvbuf</span><span class=p>(</span><span class=n>stdout</span><span class=p>,</span> <span class=nb>NULL</span><span class=p>,</span> <span class=n>_IONBF</span><span class=p>,</span> <span class=mi>0</span><span class=p>);</span> <span class=c1>// 其实在外面设置一次就行
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;Hello stdout&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl>    <span class=n>sleep</span><span class=p>(</span><span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div></article></body><hr width=100% id=EOF><p style=color:#777>创建于: 2025-01-09T20:51:49, Lastmod: 2025-01-09T23:30:54</p><script src=/js/copy-to-clipboard.js></script></main></div></body></html>
